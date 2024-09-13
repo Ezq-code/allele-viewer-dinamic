@@ -99,7 +99,6 @@ class PdbFilesAdmin(admin.ModelAdmin):
         "custom_name",
         "description",
         "original_file",
-        "file",
         "pdb_content",
     ]
     fields = [

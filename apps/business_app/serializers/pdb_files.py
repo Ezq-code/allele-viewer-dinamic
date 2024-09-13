@@ -11,7 +11,6 @@ class PdbFilesSerializer(serializers.ModelSerializer):
             "id",
             "custom_name",
             "description",
-            "file",
             "pdb_content",
         ]
-        read_only_fields = ["id", "file"]
+        read_only_fields = ["id", "pdb_content"]
