@@ -6,7 +6,6 @@ import itertools
 
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.utils.excel_nomenclators import ExcelNomenclators
-from django.core.files.base import ContentFile
 
 
 logger = logging.getLogger(__name__)
@@ -82,12 +81,10 @@ class ExcelReader:
     ):
         file_content = memory_file.getvalue()
         custom_name = f"{pdb_filename_base}-{suffix}.pdb"
-        # file_obj = ContentFile(file_content, name=custom_name)
         PdbFiles.objects.create(
             custom_name=custom_name,
             description="",
             original_file_id=uploaded_file_id,
-            # file=file_obj,
             pdb_content=file_content,
         )
         memory_file.close()
