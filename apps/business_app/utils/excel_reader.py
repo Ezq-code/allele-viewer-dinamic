@@ -82,11 +82,12 @@ class ExcelReader:
     ):
         file_content = memory_file.getvalue()
         custom_name = f"{pdb_filename_base}-{suffix}.pdb"
-        file_obj = ContentFile(file_content, name=custom_name)
+        # file_obj = ContentFile(file_content, name=custom_name)
         PdbFiles.objects.create(
             custom_name=custom_name,
             description="",
             original_file_id=uploaded_file_id,
-            file=file_obj,
+            # file=file_obj,
+            pdb_content=file_content,
         )
         memory_file.close()

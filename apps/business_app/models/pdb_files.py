@@ -32,6 +32,11 @@ class PdbFiles(models.Model):
     file = models.FileField(
         verbose_name=_("Processed File"),
         upload_to=user_processed_directory_path,
+        null=True,
+    )
+    pdb_content = models.TextField(
+        verbose_name=_("Processed File Content"),
+        null=True,
     )
 
     class Meta:
