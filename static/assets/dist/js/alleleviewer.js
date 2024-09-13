@@ -84,7 +84,7 @@ function poblarListasAllele() {
       var option = new Option(element.custom_name, element.id);
       $selectfile.add(option);
     });
-     poblarListasPdb(response.data.results[0].pdb_files);
+    poblarListasPdb(response.data.results[0].pdb_files);
     console.log("✌️file --->");
 
     poblarListasCopy(response.data.results[0].id);
@@ -92,7 +92,7 @@ function poblarListasAllele() {
 }
 // Función para poblar la lista desplegable de los pdb
 function poblarListasPdb(versionAllele) {
-console.log('✌️versionAllele --->', versionAllele);
+  console.log("✌️versionAllele --->", versionAllele);
   var $selectPdb = document.getElementById("selectPdb");
 
   $selectPdb.innerHTML = "";
@@ -105,7 +105,6 @@ console.log('✌️versionAllele --->', versionAllele);
 function poblarListasCopy(uploadFileId) {
   console.log('✌️localStorage.getItem("id") --->', localStorage.getItem("id"));
   if (localStorage.getItem("id") !== null) {
-
     var userId = localStorage.getItem("id");
     var url =
       "/business-gestion/working-copy-of-original-file-for-user/?system_user=" +
@@ -276,11 +275,11 @@ function sendRSControlValues() {
   load.hidden = false;
   $("#modal-xl").modal("hide");
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
-   axios
+  axios
     .post("/business-gestion/new-coordinate-processor/", data)
     .then(function (response) {
-      console.log("mi data:", response.data.file);
-      graficar(response.data.file);
+      console.log("mi data:", response.data.pdb_content);
+      graficar_string(response.data.pdb_content);
       load.hidden = true;
     })
     .catch(function (error) {
@@ -301,10 +300,9 @@ function selectPdbContainer() {
     .then(function (response) {
       const elemento = response.data;
       let versionAllele = elemento.pdb_files;
-console.log('✌️versionAllele --->', versionAllele);
+      console.log("✌️versionAllele --->", versionAllele);
       poblarListasPdb(versionAllele);
       poblarListasCopy(elemento.id);
-      
     })
     .catch(function (error) {
       Toast.fire({
@@ -325,13 +323,13 @@ function selectUrl() {
     .get("/business-gestion/uploaded-files/" + idFile + "/")
     .then(function (response) {
       const elemento = response.data;
-       let pos = findPosition(elemento.pdb_files, $selectPdb.value);
-      let versionAllele = elemento.pdb_files[pos].file;
+      let pos = findPosition(elemento.pdb_files, $selectPdb.value);
+      let versionAllele = elemento.pdb_files[pos].pdb_content;
 
       console.log(" versionAllele:", elemento.pdb_files[0].id);
       console.log(" versionAllele2:", versionAllele);
       localStorage.setItem("uploadFileId", idFile);
-      graficar(versionAllele);
+      graficar_string(versionAllele);
 
       // To enable the button
       loadOriginalXYZ();
@@ -454,7 +452,9 @@ function showInfo(atom) {
             "," +
             atom.z +
             ')">bookmark</button>' +
-            '<button type="button" class="btn btn-block btn-primary" onclick="allelereg(' +elemento.number+')">Region</button>' +
+            '<button type="button" class="btn btn-block btn-primary" onclick="allelereg(' +
+            elemento.number +
+            ')">Region</button>' +
             "<hr> Data Control(temp):<br> X: " +
             atom.x +
             " | Y " +
@@ -841,8 +841,8 @@ function sendExpantionValues() {
   axios
     .post("/business-gestion/xyz-expansion/", data)
     .then(function (response) {
-      console.log("mi data:", response.data.file);
-      graficar(response.data.file);
+      console.log("mi data:", response.data.pdb_content);
+      graficar_string(response.data.pdb_content);
       load.hidden = true;
     })
     .catch(function (error) {
