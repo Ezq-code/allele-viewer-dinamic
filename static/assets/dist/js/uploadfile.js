@@ -76,7 +76,7 @@ $(document).ready(function () {
                     data: "",
                     title: "Acciones",
                     render: (data, type, row) => {
-console.log('✌️row --->', row.custom_name);
+
                         return `<div class="btn-group">
                         <button type="button" title="Edit" class="btn bg-info" data-toggle="modal" data-target="#modal-crear-elemento" data-id="${row.id}" data-type="edit" data-name="${row.custom_name}" id="${row.id}"  >
                           <i class="fas fa-edit"></i></button>                       
@@ -233,7 +233,7 @@ form.addEventListener("submit", function (event) {
         );
     }
     const url = "/business-gestion/uploaded-files/";
-    console.log(data);
+    
 
     if (edit_elemento) {
         $("#modal-crear-elemento").modal("hide");
