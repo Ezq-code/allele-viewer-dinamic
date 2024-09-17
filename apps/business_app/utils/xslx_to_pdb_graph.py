@@ -29,6 +29,8 @@ class XslxToPdbGraph(ExcelReader):
         como base de datos de nodos y ejes. 
         """
         # Construyendo el grafo con una instancia de NetworkX
+        nodes_list = [] 
+        edges_list = []
         try:
             # Loop over each row in the Excel file
             for _, row in self.output_df.iterrows():
@@ -40,6 +42,7 @@ class XslxToPdbGraph(ExcelReader):
                     row[ExcelNomenclators.output_number_column_name]
                 ):
                     break
+
                 self.G.add_node(
                     allele_number,
                     name=allele_name,
@@ -48,18 +51,23 @@ class XslxToPdbGraph(ExcelReader):
                     parent=row[ExcelNomenclators.output_number_column_name],
                     regions=row[ExcelNomenclators.output_region_column_name],
                 )
-                parents = []
                 parents_info = row[ExcelNomenclators.output_parent_column_name]
+                parents = []
                 if not pd.isna(parents_info):
                     parents = (
                         (parent.strip()) for parent in str(parents_info).split(",")
                     )
                 for parent in parents:
-                    if parent == allele_number:
-                        continue
-                    # Encuentra la fila en la que esta el padre
-                    self.G.add_edge(allele_number, parent)
+                    if int(parent) == int(allele_number):
+                        continue                      
+                    #self.G.add_edge(int(parent), allele_number)#Adiciona la conexion
+                    if (int(parent), int(allele_number)) not in edges_list:
+                        edges_list.append((int(parent), int(allele_number)))
 
+            #Recorrer el diccionario de nodos
+            self.G.add_edges_from(edges_list)   #Add a edges list   
+            edges_list = []      
+            
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
