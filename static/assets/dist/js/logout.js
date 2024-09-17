@@ -26,9 +26,9 @@ function clearLocalStorageItems() {
   items.forEach((item) => {
     if (localStorage.getItem(item) !== null) {
       localStorage.setItem(item, null);
-      console.log(`${item} se ha establecido en null.`);
+      
     } else {
-      console.log(`${item} no existe en localStorage.`);
+    
     }
   });
 }

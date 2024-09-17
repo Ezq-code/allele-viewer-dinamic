@@ -28,10 +28,9 @@ class PdbFiles(models.Model):
         on_delete=models.CASCADE,
         related_name="pdb_files",
     )
-
-    file = models.FileField(
-        verbose_name=_("Processed File"),
-        upload_to=user_processed_directory_path,
+    pdb_content = models.TextField(
+        verbose_name=_("Processed File Content"),
+        null=True,
     )
 
     class Meta:
