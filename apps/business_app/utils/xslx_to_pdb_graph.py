@@ -106,13 +106,13 @@ class XslxToPdbGraph(ExcelReader):
                                 allele_number=int(node),
                                 element=element,
                                 x_coordinate=int(
-                                    node_coordinates[graph_x_index] * 100
+                                    node_coordinates[graph_x_index] * 400
                                 ),  # Esto correcto, TODO este 100 es por algún motivo en particular? Si es porque son valores entre 0 y 1, no se porque aún
                                 y_coordinate=int(
-                                    node_coordinates[graph_y_index] * 100
+                                    node_coordinates[graph_y_index] * 400
                                 ),  # Esto correcto, TODO este 100 es por algún motivo en particular?
                                 z_coordinate=int(
-                                    node_coordinates[graph_z_index] * 100
+                                    node_coordinates[graph_z_index] * 400
                                 ),  # Esto correcto, TODO este 100 es por algún motivo en particular?
                             )
                         )
