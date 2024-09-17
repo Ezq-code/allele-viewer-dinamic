@@ -1,6 +1,6 @@
 window.onload = function () {
-  
-  if (localStorage.getItem("user") !== "null") {
+  console.log("✌️internal_status --->", localStorage.getItem("user"));
+ 
     // esta función llama a un endpoint para desloguear al usuario o a cualquier otro antes de un nuevo login
     axios
       .get("../user-gestion/users/logout/")
@@ -8,7 +8,7 @@ window.onload = function () {
        
       })
       .catch();
-  }
+  
   clearLocalStorageItems()
 };
 
