@@ -251,9 +251,9 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Map</h3>
+                                <h3 class="card-title">Map - CYP2D6 Alleles-Expansions</h3>
                                 <div class="card-tools">
-								  <button type="button" class="btn btn-tool" title="Human Migrations" data-widget="control-sidebar"
+								  <button type="button" class="btn btn-tool" title="CYP2D6 Alleles-Expansions" data-widget="control-sidebar"
 								  data-controlsidebar-slide="true">
 								  <i class="fas fa-walking"></i>
 								</button>
@@ -331,7 +331,7 @@
 
                                     //Base Layers
                                     var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";  //"http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
-                                    var osmAttrib = "Human Migrations";
+                                    var osmAttrib = "CYP2D6 Alleles-Expansions";
                                     var osmcountriesLayers = L.tileLayer(countriesLayers, {
                                         //maxZoom: 18,
 										minZoom: 2,
@@ -379,13 +379,13 @@
                                     function updateList(timeline) {
 
                                     if (timeline.time < -70000) 
-                                      { map.setView(new L.LatLng(23, 120), 2);} //155
+                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
                                     else
                                     if ((timeline.time >= -70000) && (timeline.time <= -61051)) 
                                       { map.setView(new L.LatLng(-3, 20), 4);}
                                     else
                                     if (timeline.time > -61051) 
-                                      { map.setView(new L.LatLng(23, 120), 2);} //155
+                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
 
                                       if (timeline.time <= -64864 && labeled == true)
                                          {
@@ -432,24 +432,23 @@
                                     function eqfeed_callback(data) {
 
                                         var getInterval = function (quake) {
-
                                             if ((quake.properties.id == 100) || (quake.properties.id == 160) || (quake.properties.id == 220) || (quake.properties.id == 280) || (quake.properties.id == 340) || (quake.properties.id == 400) || (quake.properties.id == 480) || (quake.properties.id == 560) || (quake.properties.id == 640) || (quake.properties.id == 700) || (quake.properties.id == 750) || ((quake.properties.id >= 1000) && (quake.properties.id <= 4500))) {
                                                 return {
                                                     start: quake.properties.timefinal, //quake.properties.time,
                                                     end: quake.properties.time
                                                 };
                                             }
-                                             else {
+                                         /*    else {
                                                 return {
                                                     start: quake.properties.timefinal, //quake.properties.time,
                                                     end: -1//-15000 //851				   
                                                 };
-                                            }
+                                            }*/
                                         };
                                         
                                         var getShortInterval = function (quake) {
 
-                                            if (quake.properties.id == 10) {
+                                            if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9)))  {
                                                 return {
                                                     start: quake.properties.timefinal,
                                                     end: -1//-15000 //quake.properties.timefinal + (-15000 - quake.properties.timefinal)  //851
@@ -469,7 +468,7 @@
                                                 //return "Human Migrations Timeline";
                                            // },
                                             //steps: 200000,
-                                            duration: 200000, //50000,
+                                            duration: 315000, //200000 50000, 315000
                                         });
 
                                         var migrationTraceRoute = L.timeline(data, {
@@ -493,17 +492,7 @@
                                                         opacity: 1,
                                                     }
                                                 }
-                                              /*  else if ((feature.properties.id == 1000) || (feature.properties.id == 1100) || (feature.properties.id == 1200) || (feature.properties.id == 1300) || (feature.properties.id == 1400)) {
-                                                    return {
-                                                        color: "#556B2F", //"#6699FF",
-                                                        fillColor: '#556B2F',
-                                                        fillOpacity: 1,
-                                                        weight: 2,
-                                                        opacity: 1,
-                                                    }
-                                                } */
-
-                                                else if (feature.properties.id != 10) {
+                                             /*   else if (feature.properties.id != 10) {
                                                     return {
                                                         color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
                                                         fillColor: "#171717",//"#2b2c27",//'#EFFF08',
@@ -511,18 +500,7 @@
                                                         weight: 6,
                                                         opacity: 1,
                                                     }
-                                                }
-                                               /* else 
-                                                {
-                                                    return L.circleMarker([feature.geometry.coordinates[1],feature.geometry.coordinates[0]], {
-                                                    radius: feature.properties.id,
-                                                    color: "#050400", //"#000000",
-                                                    fillColor: "#f5d843",//"#000000",
-                                                    fillOpacity: 0.7,
-                                                    weight: 3,
-                                                    opacity: 0.8,
-                                                }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(feature.properties.place)).openPopup();
-                                                } */
+                                                }*/
                                             },
                                             pointToLayer: function (data, latlng) {
 
@@ -531,7 +509,8 @@
                                                         color: 'red'
                                                     });
                                                 } 
-                                                else if (data.properties.id == 10) {
+                                                else
+                                                 if (data.properties.id == 10) {
                                                     return L.circleMarker(latlng, {
                                                     radius: data.properties.id,
                                                     color: "#050400", //"#000000",
@@ -559,7 +538,30 @@
                                         
                                         var migrationPoints = L.timeline(data, {
                                             getInterval: getShortInterval,
+                                           style: function (feature) {
+                                                if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
+
+                                                    return {
+                                                        color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
+                                                        fillColor: "#171717",//"#2b2c27",//'#EFFF08',
+                                                        fillOpacity: 1,
+                                                        weight: 6,
+                                                        opacity: 1,
+                                                    }
+                                                }
+                                           /*      else if (feature.properties.id == 10) {
+                                                    return L.circleMarker(latlng, {
+                                                    radius: data.properties.id,
+                                                    color: "#050400", //"#000000",
+                                                    fillColor: "#f5d843",//"#000000",
+                                                    fillOpacity: 0.7,
+                                                    weight: 3,
+                                                    opacity: 0.8,
+                                                }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place));
+                                                } */
+                                            }, 
                                             pointToLayer: function (data, latlng) {
+                                                if (data.properties.id == 10) {   
                                                 return L.circleMarker(latlng, {
                                                     radius: data.properties.id,
                                                     color: "#050400", //"#000000",
@@ -568,6 +570,18 @@
                                                     weight: 3,
                                                     opacity: 0.8,
                                                 }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place));//.openPopup(); //data.properties.place
+                                            }
+                                          /*  else 
+                                            if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
+
+                                              return  {
+                                                color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
+                                                fillColor: "#171717",//"#2b2c27",//'#EFFF08',
+                                                fillOpacity: 1,
+                                                weight: 6,
+                                                opacity: 1,
+                                              }
+                                            }*/ 
                                             },
                                         });
 
@@ -708,7 +722,7 @@
 													if ((aLayer.name == "LandLGMShapefile") && (aLayer.is_visible == false) ) {layerControl.removeLayer(LandLGMShapefile)}	
 													if ((aLayer.name == "migrationTraceRoute") && (aLayer.is_visible == false) ) {layerControl.removeLayer(migrationTraceRoute)}	
 													if ((aLayer.name == "migrationPoints") && (aLayer.is_visible == false) ) {layerControl.removeLayer(migrationPoints)}
-													if ((aLayer.name == "markerLayer") && (aLayer.is_visible == true) ) {layerControl.removeLayer(markerLayer)}																																																																
+													if ((aLayer.name == "markerLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(markerLayer)}																																																																
                                                 }); 
                                             }
                                         });
@@ -1273,13 +1287,12 @@
                                      element.classList.toggle("showSideBar");
                                     }
 
-
+                                        
       //const popup = L.popup({ closeOnClick: false, autoClose:false}).setContent("It's Movable.\n(Draggable)");
       //L.circleMarker([37.75,140.47]).addTo(map).bindPopup(popup).openPopup();
 
                                 </script>
                                 <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/migration-timeline.geojsonp' %}"></script>
-                                </div>
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -1299,7 +1312,7 @@
 		<!-- Control sidebar content goes here -->
 		<div class="p-3 d-flex flex-column">
 		 <div class="d-flex align-items-center">
-				<h6 class="mr-3">Human Migrations</h6>
+				<h6 class="mr-3">CYP2D6 Alleles-Expansions</h6>
 				<a class="nav-link ml-auto" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
 				  <i class="fas fa-times"></i>
 				</a>
