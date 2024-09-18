@@ -251,9 +251,9 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Map</h3>
+                                <h3 class="card-title">Map - CYP2D6 Alleles-Expansions</h3>
                                 <div class="card-tools">
-								  <button type="button" class="btn btn-tool" title="Human Migrations" data-widget="control-sidebar"
+								  <button type="button" class="btn btn-tool" title="CYP2D6 Alleles-Expansions" data-widget="control-sidebar"
 								  data-controlsidebar-slide="true">
 								  <i class="fas fa-walking"></i>
 								</button>
@@ -331,7 +331,7 @@
 
                                     //Base Layers
                                     var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";  //"http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
-                                    var osmAttrib = "Human Migrations";
+                                    var osmAttrib = "CYP2D6 Alleles-Expansions";
                                     var osmcountriesLayers = L.tileLayer(countriesLayers, {
                                         //maxZoom: 18,
 										minZoom: 2,
@@ -379,13 +379,13 @@
                                     function updateList(timeline) {
 
                                     if (timeline.time < -70000) 
-                                      { map.setView(new L.LatLng(23, 120), 2);} //155
+                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
                                     else
                                     if ((timeline.time >= -70000) && (timeline.time <= -61051)) 
                                       { map.setView(new L.LatLng(-3, 20), 4);}
                                     else
                                     if (timeline.time > -61051) 
-                                      { map.setView(new L.LatLng(23, 120), 2);} //155
+                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
 
                                       if (timeline.time <= -64864 && labeled == true)
                                          {
@@ -469,7 +469,7 @@
                                                 //return "Human Migrations Timeline";
                                            // },
                                             //steps: 200000,
-                                            duration: 200000, //50000,
+                                            duration: 200000, //200000 50000, 315000
                                         });
 
                                         var migrationTraceRoute = L.timeline(data, {
@@ -708,7 +708,7 @@
 													if ((aLayer.name == "LandLGMShapefile") && (aLayer.is_visible == false) ) {layerControl.removeLayer(LandLGMShapefile)}	
 													if ((aLayer.name == "migrationTraceRoute") && (aLayer.is_visible == false) ) {layerControl.removeLayer(migrationTraceRoute)}	
 													if ((aLayer.name == "migrationPoints") && (aLayer.is_visible == false) ) {layerControl.removeLayer(migrationPoints)}
-													if ((aLayer.name == "markerLayer") && (aLayer.is_visible == true) ) {layerControl.removeLayer(markerLayer)}																																																																
+													if ((aLayer.name == "markerLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(markerLayer)}																																																																
                                                 }); 
                                             }
                                         });
@@ -1273,13 +1273,12 @@
                                      element.classList.toggle("showSideBar");
                                     }
 
-
+                                        
       //const popup = L.popup({ closeOnClick: false, autoClose:false}).setContent("It's Movable.\n(Draggable)");
       //L.circleMarker([37.75,140.47]).addTo(map).bindPopup(popup).openPopup();
 
                                 </script>
                                 <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/migration-timeline.geojsonp' %}"></script>
-                                </div>
                             </div>
                         </div>
                         <!-- /.card-header -->
@@ -1299,7 +1298,7 @@
 		<!-- Control sidebar content goes here -->
 		<div class="p-3 d-flex flex-column">
 		 <div class="d-flex align-items-center">
-				<h6 class="mr-3">Human Migrations</h6>
+				<h6 class="mr-3">CYP2D6 Alleles-Expansions</h6>
 				<a class="nav-link ml-auto" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
 				  <i class="fas fa-times"></i>
 				</a>
