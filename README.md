@@ -24,7 +24,7 @@ pip install -r requirements.txt
 python manage.py migrate
 
 6. Create some dummy user objects (300):
-python manage.py create_test_users
+python manage.py create_test_users 10
 
 7. run server:
 python manage.py runserver
