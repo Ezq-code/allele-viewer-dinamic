@@ -1,0 +1,24 @@
+diff --git a/apps/business_app/utils/xslx_to_pdb_graph.py b/apps/business_app/utils/xslx_to_pdb_graph.py
+index a1cb3f1..96eed9b 100644
+--- a/apps/business_app/utils/xslx_to_pdb_graph.py
++++ b/apps/business_app/utils/xslx_to_pdb_graph.py
+@@ -32,9 +32,7 @@ class XslxToPdbGraph(ExcelReader):
+         try:
+             # Loop over each row in the Excel file
+             for _, row in self.output_df.iterrows():
+-                allele_name = row[
+-                    ExcelNomenclators.output_allele_column_name
+-                ]  # Solo modifique esta línea
++                allele_name = row[ExcelNomenclators.output_allele_column_name]  # Solo modifique esta línea
+                 allele_number = row[ExcelNomenclators.output_number_column_name]
+                 if pd.isna(allele_name) or pd.isna(
+                     row[ExcelNomenclators.output_number_column_name]
+@@ -58,7 +56,7 @@ class XslxToPdbGraph(ExcelReader):
+                     if parent == allele_number:
+                         continue
+                     # Encuentra la fila en la que esta el padre
+-                    self.G.add_edge(allele_number, parent)
++                    self.G.add_edge(parent, allele_number)
+ 
+         except Exception as e:
+             raise ValueError(f"An error occurred during file parsing: {e}.")
