@@ -432,24 +432,23 @@
                                     function eqfeed_callback(data) {
 
                                         var getInterval = function (quake) {
-
                                             if ((quake.properties.id == 100) || (quake.properties.id == 160) || (quake.properties.id == 220) || (quake.properties.id == 280) || (quake.properties.id == 340) || (quake.properties.id == 400) || (quake.properties.id == 480) || (quake.properties.id == 560) || (quake.properties.id == 640) || (quake.properties.id == 700) || (quake.properties.id == 750) || ((quake.properties.id >= 1000) && (quake.properties.id <= 4500))) {
                                                 return {
                                                     start: quake.properties.timefinal, //quake.properties.time,
                                                     end: quake.properties.time
                                                 };
                                             }
-                                             else {
+                                         /*    else {
                                                 return {
                                                     start: quake.properties.timefinal, //quake.properties.time,
                                                     end: -1//-15000 //851				   
                                                 };
-                                            }
+                                            }*/
                                         };
                                         
                                         var getShortInterval = function (quake) {
 
-                                            if (quake.properties.id == 10) {
+                                            if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9)))  {
                                                 return {
                                                     start: quake.properties.timefinal,
                                                     end: -1//-15000 //quake.properties.timefinal + (-15000 - quake.properties.timefinal)  //851
@@ -469,7 +468,7 @@
                                                 //return "Human Migrations Timeline";
                                            // },
                                             //steps: 200000,
-                                            duration: 200000, //200000 50000, 315000
+                                            duration: 315000, //200000 50000, 315000
                                         });
 
                                         var migrationTraceRoute = L.timeline(data, {
@@ -493,17 +492,7 @@
                                                         opacity: 1,
                                                     }
                                                 }
-                                              /*  else if ((feature.properties.id == 1000) || (feature.properties.id == 1100) || (feature.properties.id == 1200) || (feature.properties.id == 1300) || (feature.properties.id == 1400)) {
-                                                    return {
-                                                        color: "#556B2F", //"#6699FF",
-                                                        fillColor: '#556B2F',
-                                                        fillOpacity: 1,
-                                                        weight: 2,
-                                                        opacity: 1,
-                                                    }
-                                                } */
-
-                                                else if (feature.properties.id != 10) {
+                                             /*   else if (feature.properties.id != 10) {
                                                     return {
                                                         color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
                                                         fillColor: "#171717",//"#2b2c27",//'#EFFF08',
@@ -511,18 +500,7 @@
                                                         weight: 6,
                                                         opacity: 1,
                                                     }
-                                                }
-                                               /* else 
-                                                {
-                                                    return L.circleMarker([feature.geometry.coordinates[1],feature.geometry.coordinates[0]], {
-                                                    radius: feature.properties.id,
-                                                    color: "#050400", //"#000000",
-                                                    fillColor: "#f5d843",//"#000000",
-                                                    fillOpacity: 0.7,
-                                                    weight: 3,
-                                                    opacity: 0.8,
-                                                }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(feature.properties.place)).openPopup();
-                                                } */
+                                                }*/
                                             },
                                             pointToLayer: function (data, latlng) {
 
@@ -531,7 +509,8 @@
                                                         color: 'red'
                                                     });
                                                 } 
-                                                else if (data.properties.id == 10) {
+                                                else
+                                                 if (data.properties.id == 10) {
                                                     return L.circleMarker(latlng, {
                                                     radius: data.properties.id,
                                                     color: "#050400", //"#000000",
@@ -559,7 +538,30 @@
                                         
                                         var migrationPoints = L.timeline(data, {
                                             getInterval: getShortInterval,
+                                           style: function (feature) {
+                                                if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
+
+                                                    return {
+                                                        color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
+                                                        fillColor: "#171717",//"#2b2c27",//'#EFFF08',
+                                                        fillOpacity: 1,
+                                                        weight: 6,
+                                                        opacity: 1,
+                                                    }
+                                                }
+                                           /*      else if (feature.properties.id == 10) {
+                                                    return L.circleMarker(latlng, {
+                                                    radius: data.properties.id,
+                                                    color: "#050400", //"#000000",
+                                                    fillColor: "#f5d843",//"#000000",
+                                                    fillOpacity: 0.7,
+                                                    weight: 3,
+                                                    opacity: 0.8,
+                                                }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place));
+                                                } */
+                                            }, 
                                             pointToLayer: function (data, latlng) {
+                                                if (data.properties.id == 10) {   
                                                 return L.circleMarker(latlng, {
                                                     radius: data.properties.id,
                                                     color: "#050400", //"#000000",
@@ -568,6 +570,18 @@
                                                     weight: 3,
                                                     opacity: 0.8,
                                                 }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place));//.openPopup(); //data.properties.place
+                                            }
+                                          /*  else 
+                                            if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
+
+                                              return  {
+                                                color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
+                                                fillColor: "#171717",//"#2b2c27",//'#EFFF08',
+                                                fillOpacity: 1,
+                                                weight: 6,
+                                                opacity: 1,
+                                              }
+                                            }*/ 
                                             },
                                         });
 
