@@ -29,7 +29,7 @@ class XslxToPdbGraph(ExcelReader):
         como base de datos de nodos y ejes. 
         """
         # Construyendo el grafo con una instancia de NetworkX
-        nodes_list = []
+        # nodes_list = []
         edges_list = []
         try:
             # Loop over each row in the Excel file
