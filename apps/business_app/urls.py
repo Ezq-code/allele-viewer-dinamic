@@ -8,6 +8,7 @@ from apps.business_app.views import (
     UploadedFilesViewSet,
     InitialFileDataViewSet,
     NewCoordinatesProcessorViewSet,
+    ComputeGraphChangesViewSet
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 from apps.business_app.views.event_markers import (
@@ -85,6 +86,11 @@ router.register(
     "working-copy-of-original-file-for-user",
     WorkingCopyOfOriginalFileViewSet,
     basename="working-copy-of-original-file-for-user",
+)
+router.register(
+    "compute-graph-changes",
+    ComputeGraphChangesViewSet,
+    basename="compute-graph-changes",
 )
 
 urlpatterns = [
