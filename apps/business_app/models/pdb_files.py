@@ -12,6 +12,10 @@ def user_processed_directory_path(instance, filename):
 
 
 class PdbFiles(models.Model):
+    class KIND(models.TextChoices):
+        GRAPH_GENERATED = "G", _("Grahp generated")
+        EXCEL_GENERATED = "D", _("Excel generated")
+
     custom_name = models.CharField(
         verbose_name=_("custom name"),
         max_length=150,
@@ -31,6 +35,12 @@ class PdbFiles(models.Model):
     pdb_content = models.TextField(
         verbose_name=_("Processed File Content"),
         null=True,
+    )
+    kind = models.CharField(
+        verbose_name=_("Kind"),
+        max_length=1,
+        choices=KIND.choices,
+        default=KIND.EXCEL_GENERATED,
     )
 
     class Meta:

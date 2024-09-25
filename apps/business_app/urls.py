@@ -8,7 +8,7 @@ from apps.business_app.views import (
     UploadedFilesViewSet,
     InitialFileDataViewSet,
     NewCoordinatesProcessorViewSet,
-    ComputeGraphChangesViewSet
+    ComputeGraphChangesViewSet,
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 from apps.business_app.views.event_markers import (

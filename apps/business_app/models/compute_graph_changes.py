@@ -89,7 +89,7 @@ class ComputeGraphChanges(models.Model):
                     # Process the file and get the processed content
                     processor_object.proccess_initial_file_data(self.id)
                     processor_object.proccess_pdb_file(self.id, file_name)
-                   
+
             except Exception as e:
                 print(e)
                 self.delete()

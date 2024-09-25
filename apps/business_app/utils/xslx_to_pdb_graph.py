@@ -29,7 +29,7 @@ class XslxToPdbGraph(ExcelReader):
         como base de datos de nodos y ejes. 
         """
         # Construyendo el grafo con una instancia de NetworkX
-        nodes_list = [] 
+        nodes_list = []
         edges_list = []
         try:
             # Loop over each row in the Excel file
@@ -59,15 +59,15 @@ class XslxToPdbGraph(ExcelReader):
                     )
                 for parent in parents:
                     if int(parent) == int(allele_number):
-                        continue                      
-                    #self.G.add_edge(int(parent), allele_number)#Adiciona la conexion
+                        continue
+                    # self.G.add_edge(int(parent), allele_number)#Adiciona la conexion
                     if (int(parent), int(allele_number)) not in edges_list:
                         edges_list.append((int(parent), int(allele_number)))
 
-            #Recorrer el diccionario de nodos
-            self.G.add_edges_from(edges_list)   #Add a edges list   
-            edges_list = []      
-            
+            # Recorrer el diccionario de nodos
+            self.G.add_edges_from(edges_list)  # Add a edges list
+            edges_list = []
+
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
