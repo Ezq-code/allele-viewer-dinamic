@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
             model_name="pdbfiles",
             name="kind",
             field=models.CharField(
-                choices=[("G", "Grahp generated"), ("D", "Excel generated")],
+                choices=[("G", "Graph generated"), ("D", "Excel generated")],
                 default="D",
                 max_length=1,
                 verbose_name="Kind",

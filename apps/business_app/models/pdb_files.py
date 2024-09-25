@@ -13,7 +13,7 @@ def user_processed_directory_path(instance, filename):
 
 class PdbFiles(models.Model):
     class KIND(models.TextChoices):
-        GRAPH_GENERATED = "G", _("Grahp generated")
+        GRAPH_GENERATED = "G", _("Graph generated")
         EXCEL_GENERATED = "D", _("Excel generated")
 
     custom_name = models.CharField(
