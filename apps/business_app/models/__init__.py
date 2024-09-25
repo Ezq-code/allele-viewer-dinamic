@@ -10,7 +10,6 @@ __all__ = [
     "Event",
     "Layer",
     "WorkingCopyOfOriginalFile",
-    "ComputeGraphChanges",
 ]
 
 from .allowed_extensions import AllowedExtensions
