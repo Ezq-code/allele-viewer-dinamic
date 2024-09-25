@@ -100,7 +100,7 @@ class PdbFilesAdmin(admin.ModelAdmin):
         "description",
         "original_file",
         "pdb_content",
-        "kind",	
+        "kind",
     ]
     fields = [
         "custom_name",
