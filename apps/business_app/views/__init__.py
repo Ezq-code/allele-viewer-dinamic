@@ -10,4 +10,4 @@ from .site_configurations import SiteConfigurationViewSet
 from .uploaded_files import UploadedFilesViewSet
 from .initial_file_data import InitialFileDataViewSet
 from .new_coordinate_processor import NewCoordinatesProcessorViewSet
-from .compute_graph_changes import ComputeGraphChangesViewSet
+from .compute_graph_changes import PdbFileViewSet
