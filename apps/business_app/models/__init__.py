@@ -10,7 +10,6 @@ __all__ = [
     "Event",
     "Layer",
     "WorkingCopyOfOriginalFile",
-    "ComputeGraphChanges",
 ]
 
 from .allowed_extensions import AllowedExtensions
@@ -24,4 +23,3 @@ from .marker import Marker
 from .event import Event
 from .layer import Layer
 from .working_copy_of_original_file import WorkingCopyOfOriginalFile
-from .compute_graph_changes import ComputeGraphChanges
