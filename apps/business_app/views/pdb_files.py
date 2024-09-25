@@ -26,8 +26,7 @@ class PdbFileViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def list(self, request, *args, **kwargs):
-        retreived_objects_to_change = self.filter_queryset(self.get_queryset())
-        for pdb_file in retreived_objects_to_change:
+        for pdb_file in self.queryset:
             # recalcula aquí
             processor_class = XslxToPdbGraph
             processor_object = processor_class(pdb_file.original_file, doChange=True)
