@@ -71,7 +71,7 @@ class XslxToPdbGraph(ExcelReader):
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
-    def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base):
+    def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base, existing_pdb_file=None):
         print("Proccessing PDB file...")
         # Obtener el grafo desde el fichero excel almacenado en un Dataframe
         nodes_list = list(self.G.nodes)
@@ -143,12 +143,18 @@ class XslxToPdbGraph(ExcelReader):
             try:
                 for memory_file in pdb_files:
                     memory_file.write("END")
-                    self.create_pdb_and_persist_on_db(
-                        memory_file=memory_file,
-                        pdb_filename_base=pdb_filename_base,
-                        suffix=f"graph_{index}",
-                        uploaded_file_id=uploaded_file_id,
-                    )
+                    file_content = memory_file.getvalue()
+                    memory_file.close()
+                    if not existing_pdb_file:
+                        self.create_pdb_and_persist_on_db(
+                            file_content=file_content,
+                            pdb_filename_base=pdb_filename_base,
+                            suffix=f"graph_{index}",
+                            uploaded_file_id=uploaded_file_id,
+                        )
+                    else:
+                        existing_pdb_file.pdb_content=file_content
+                        existing_pdb_file.save(update_fields=["pdb_content"])
                     index += 1
             except Exception as ep:
                 raise ValueError(f"An error occurred creating PDB object: {ep}.")

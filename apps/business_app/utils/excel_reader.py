@@ -75,9 +75,8 @@ class ExcelReader:
                     break
 
     def create_pdb_and_persist_on_db(
-        self, memory_file, pdb_filename_base, suffix, uploaded_file_id
+        self, file_content, pdb_filename_base, suffix, uploaded_file_id
     ):
-        file_content = memory_file.getvalue()
         custom_name = f"{pdb_filename_base}-{suffix}.pdb"
         PdbFiles.objects.create(
             custom_name=custom_name,
@@ -85,4 +84,3 @@ class ExcelReader:
             original_file_id=uploaded_file_id,
             pdb_content=file_content,
         )
-        memory_file.close()
