@@ -3,6 +3,7 @@ import logging
 
 import pandas as pd
 
+from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.utils.excel_reader import ExcelNomenclators, ExcelReader
 
 # Esta es la bilbioteca necesaria para trabajar con grafos
@@ -151,6 +152,7 @@ class XslxToPdbGraph(ExcelReader):
                             pdb_filename_base=pdb_filename_base,
                             suffix=f"graph_{index}",
                             uploaded_file_id=uploaded_file_id,
+                            kind=PdbFiles.KIND.GRAPH_GENERATED,
                         )
                     else:
                         existing_pdb_file.pdb_content=file_content
