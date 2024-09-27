@@ -19,7 +19,6 @@ class XslxToPdbGraph(ExcelReader):
         self.iterations = 10
         # Se crea una variable para el grafo
         self.G = nx.DiGraph()
-        self.pos = {}
 
     def proccess_initial_file_data(self, uploaded_file_id):
         print("Proccessing initial file data...")
@@ -67,15 +66,12 @@ class XslxToPdbGraph(ExcelReader):
 
             # Recorrer el diccionario de nodos
             self.G.add_edges_from(edges_list)  # Add a edges list
-            edges_list = []
-            self.pos = nx.spring_layout(
-                self.G, dim=self.dim, k=self.k, iterations=self.iterations
-            )
+            edges_list = []            
 
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
-    def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base, doChange=None):
+    def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base):
         print("Proccessing PDB file...")
         # Obtener el grafo desde el fichero excel almacenado en un Dataframe
         nodes_list = list(self.G.nodes)
@@ -83,7 +79,9 @@ class XslxToPdbGraph(ExcelReader):
         # "Pos" contiene las coordenadas necesarias para pintar un grafo en 3D
         # pos: es un diccionario que sigue la estructura {nodo_i: [12 34 567], .....nodo_i-n: [112 -54 67]} con i=0 hasta n
         # Leer las posiciones generadas por NetworkX        
-
+        pos = nx.spring_layout(
+            self.G, dim=self.dim, k=self.k, iterations=self.iterations
+        )
         print("Proccessing PDB file...")
         graph_x_index = 0
         graph_y_index = 1
@@ -98,7 +96,7 @@ class XslxToPdbGraph(ExcelReader):
                 element = next(
                     self.elements_symbol_iterator
                 )  # "AL" #Averiguar que es esto
-                node_coordinates = self.pos[node]
+                node_coordinates = pos[node]
                 # print(f"Nodo i: {int(node)}")
                 # print(f"Coordenadas: {int(node_coordinates[0] * 100)}")
                 for memory_file in pdb_files:
