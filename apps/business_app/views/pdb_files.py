@@ -29,11 +29,11 @@ class PdbFileViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         for pdb_file in self.queryset:
             # recalcula aquí
             processor_class = XslxToPdbGraph
-            processor_object = processor_class(pdb_file.original_file)
+            processor_object = processor_class(pdb_file.original_file, doChange=True)
             file_name, extension = os.path.splitext(pdb_file.original_file.name)
             # Process the file and get the processed content
             processor_object.proccess_initial_file_data(self.id)
-            processor_object.proccess_pdb_file(self.id, file_name, doChange="Change")
+            processor_object.proccess_pdb_file(self.id, file_name)
 
             pass
 

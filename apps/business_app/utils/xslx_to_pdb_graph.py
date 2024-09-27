@@ -12,13 +12,14 @@ logger = logging.getLogger(__name__)
 
 
 class XslxToPdbGraph(ExcelReader):
-    def __init__(self, origin_file) -> None:
+    def __init__(self, origin_file, doChange=False) -> None:
         super().__init__(origin_file)
         self.dim = 3
         self.k = 0.15
         self.iterations = 10
         # Se crea una variable para el grafo
         self.G = nx.DiGraph()
+        self.doChange = doChange
         self.pos = {}
 
     def proccess_initial_file_data(self, uploaded_file_id):
@@ -75,7 +76,7 @@ class XslxToPdbGraph(ExcelReader):
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
-    def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base, doChange=None):
+    def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base):
         print("Proccessing PDB file...")
         # Obtener el grafo desde el fichero excel almacenado en un Dataframe
         nodes_list = list(self.G.nodes)
@@ -92,7 +93,6 @@ class XslxToPdbGraph(ExcelReader):
             pdb_files = [io.StringIO() for _ in range(self.coordinates_sets)]
             # Open the PDB file for writing
             # Iterar sobre la lista de nodos
-            
             for node in nodes_list:
                 # Write the atom record in the PDB file format
                 element = next(
@@ -121,25 +121,23 @@ class XslxToPdbGraph(ExcelReader):
                         memory_file.write("\n")
                     except Exception as ew:
                         raise ValueError(f"An error writing the ATOMs lines: {ew}.")
-            #If no changes are made, means that it is the first time upload
-            if doChange == None:
-                print("Sucedió un cambio..............")
-                # CONECT
-                for edge in edges_list:
-                    try:
-                        for memory_file in pdb_files:
-                            memory_file.write(
-                                ExcelNomenclators.get_atom_connection_record_string(
-                                    origin_index=int(edge[0]),
-                                    destination_index=int(edge[1]),
-                                )
+
+            # CONECT
+            for edge in edges_list:
+                try:
+                    for memory_file in pdb_files:
+                        memory_file.write(
+                            ExcelNomenclators.get_atom_connection_record_string(
+                                origin_index=int(edge[0]),
+                                destination_index=int(edge[1]),
                             )
-                            # print(f"Conexión entre nodos: {int(edge[0])} hacia {int(edge[1])}")
-                            memory_file.write("\n")
-                    except Exception as ec:
-                        raise ValueError(
-                            f"An error occurred during witing CONECT lines: {ec}."
                         )
+                        # print(f"Conexión entre nodos: {int(edge[0])} hacia {int(edge[1])}")
+                        memory_file.write("\n")
+                except Exception as ec:
+                    raise ValueError(
+                        f"An error occurred during witing CONECT lines: {ec}."
+                    )
 
             index = 0
             try:
