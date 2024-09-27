@@ -3,6 +3,7 @@ import logging
 
 import pandas as pd
 
+from apps.business_app.models.site_configurations import SiteConfiguration
 from apps.business_app.utils.excel_reader import ExcelNomenclators, ExcelReader
 
 # Esta es la bilbioteca necesaria para trabajar con grafos
@@ -14,9 +15,10 @@ logger = logging.getLogger(__name__)
 class XslxToPdbGraph(ExcelReader):
     def __init__(self, origin_file) -> None:
         super().__init__(origin_file)
-        self.dim = 3
-        self.k = 0.15
-        self.iterations = 10
+        config = SiteConfiguration.get_solo()
+        self.dim = config.nx_graph_dim
+        self.k = config.nx_graph_k
+        self.iterations = config.nx_graph_training_iterations
         # Se crea una variable para el grafo
         self.G = nx.DiGraph()
         self.pos = {}
