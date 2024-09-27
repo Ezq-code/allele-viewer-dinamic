@@ -120,24 +120,24 @@ class XslxToPdbGraph(ExcelReader):
                     except Exception as ew:
                         raise ValueError(f"An error writing the ATOMs lines: {ew}.")
             #If no changes are made, means that it is the first time upload
-            if doChange == None:
-                print("Sucedió un cambio..............")
-                # CONECT
-                for edge in edges_list:
-                    try:
-                        for memory_file in pdb_files:
-                            memory_file.write(
-                                ExcelNomenclators.get_atom_connection_record_string(
-                                    origin_index=int(edge[0]),
-                                    destination_index=int(edge[1]),
-                                )
+            
+            print("Sucedió un cambio..............")
+            # CONECT
+            for edge in edges_list:
+                try:
+                    for memory_file in pdb_files:
+                        memory_file.write(
+                            ExcelNomenclators.get_atom_connection_record_string(
+                                origin_index=int(edge[0]),
+                                destination_index=int(edge[1]),
                             )
-                            # print(f"Conexión entre nodos: {int(edge[0])} hacia {int(edge[1])}")
-                            memory_file.write("\n")
-                    except Exception as ec:
-                        raise ValueError(
-                            f"An error occurred during witing CONECT lines: {ec}."
                         )
+                        # print(f"Conexión entre nodos: {int(edge[0])} hacia {int(edge[1])}")
+                        memory_file.write("\n")
+                except Exception as ec:
+                    raise ValueError(
+                        f"An error occurred during witing CONECT lines: {ec}."
+                    )
 
             index = 0
             try:
