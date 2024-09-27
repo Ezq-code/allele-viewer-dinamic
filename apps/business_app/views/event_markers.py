@@ -111,7 +111,7 @@ def create_marker(request):
         description = request.POST.get("description")
         event_type_id = request.POST.get("event_type")
         try:
-            # existing_marker = Marker.objects.get(description=description)
+            existing_marker = Marker.objects.get(description=description)
             return JsonResponse(
                 {"message": "Marker with this description already exists"}, status=400
             )
