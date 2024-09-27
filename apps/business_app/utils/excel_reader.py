@@ -7,9 +7,7 @@ import itertools
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.utils.excel_nomenclators import ExcelNomenclators
 
-
 logger = logging.getLogger(__name__)
-
 
 class ExcelReader:
     def __init__(self, origin_file) -> None:
