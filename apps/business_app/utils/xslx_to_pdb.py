@@ -166,7 +166,7 @@ class XslxToPdb(ExcelReader):
             index = 0
             for memory_file in pdb_files:
                 memory_file.write("END")
-                file_content = memory_file.getvalue()    
+                file_content = memory_file.getvalue()
                 memory_file.close()
                 self.create_pdb_and_persist_on_db(
                     file_content=file_content,

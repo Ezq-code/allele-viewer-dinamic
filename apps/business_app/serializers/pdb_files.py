@@ -17,6 +17,7 @@ class PdbFilesSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "pdb_content"]
 
+
 class PdbFilesGraphUpdateSerializer(serializers.Serializer):
     nx_graph_dim = serializers.IntegerField(default=3)
     nx_graph_k = serializers.FloatField(default=0.15)

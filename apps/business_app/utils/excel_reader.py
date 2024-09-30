@@ -9,6 +9,7 @@ from apps.business_app.utils.excel_nomenclators import ExcelNomenclators
 
 logger = logging.getLogger(__name__)
 
+
 class ExcelReader:
     def __init__(self, origin_file) -> None:
         self.origin_file = origin_file
@@ -83,5 +84,5 @@ class ExcelReader:
             description="",
             original_file_id=uploaded_file_id,
             pdb_content=file_content,
-            kind=kind
+            kind=kind,
         )

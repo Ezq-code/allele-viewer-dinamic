@@ -18,9 +18,11 @@ class XslxToPdbGraph(ExcelReader):
     def __init__(self, origin_file) -> None:
         super().__init__(origin_file)
         config = SiteConfiguration.get_solo()
-        self.dim = config.nx_graph_dim #La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
-        self.k = config.nx_graph_k   #El óptimo es 1/sqrt(total de nodos), eso asegura que para el grafo en cuestión sea óptimo
-        self.scale = 500 #Se debe adicionar este parámetro en el payload
+        self.dim = (
+            config.nx_graph_dim
+        )  # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
+        self.k = config.nx_graph_k  # El óptimo es 1/sqrt(total de nodos), eso asegura que para el grafo en cuestión sea óptimo
+        self.scale = 500  # Se debe adicionar este parámetro en el payload
         self.iterations = config.nx_graph_training_iterations
         # Se crea una variable para el grafo
         self.G = nx.DiGraph()
@@ -76,20 +78,18 @@ class XslxToPdbGraph(ExcelReader):
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
-    def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base, existing_pdb_file=None):
+    def proccess_pdb_file(
+        self, uploaded_file_id, pdb_filename_base, existing_pdb_file=None
+    ):
         print("Proccessing PDB file...")
         # Obtener el grafo desde el fichero excel almacenado en un Dataframe
         nodes_list = list(self.G.nodes)
         edges_list = list(self.G.edges)
         # "Pos" contiene las coordenadas necesarias para pintar un grafo en 3D
         # pos: es un diccionario que sigue la estructura {nodo_i: [12 34 567], .....nodo_i-n: [112 -54 67]} con i=0 hasta n
-        # Leer las posiciones generadas por NetworkX  
+        # Leer las posiciones generadas por NetworkX
         pos = nx.spring_layout(
-            self.G, 
-            dim=self.dim,
-            k=self.k,
-            scale=self.scale,
-            iterations=self.iterations
+            self.G, dim=self.dim, k=self.k, scale=self.scale, iterations=self.iterations
         )
         print("Proccessing PDB file...")
         graph_x_index = 0
@@ -127,8 +127,8 @@ class XslxToPdbGraph(ExcelReader):
                         memory_file.write("\n")
                     except Exception as ew:
                         raise ValueError(f"An error writing the ATOMs lines: {ew}.")
-            #If no changes are made, means that it is the first time upload
-            
+            # If no changes are made, means that it is the first time upload
+
             print("Sucedió un cambio..............")
             # CONECT
             for edge in edges_list:
@@ -162,7 +162,7 @@ class XslxToPdbGraph(ExcelReader):
                             kind=PdbFiles.KIND.GRAPH_GENERATED,
                         )
                     else:
-                        existing_pdb_file.pdb_content=file_content
+                        existing_pdb_file.pdb_content = file_content
                         existing_pdb_file.save(update_fields=["pdb_content"])
                     index += 1
             except Exception as ep:

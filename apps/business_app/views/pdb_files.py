@@ -33,13 +33,23 @@ class PdbFileViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             config = SiteConfiguration.get_solo()
             config.nx_graph_dim = serializer.validated_data.get("nx_graph_dim")
             config.nx_graph_k = serializer.validated_data.get("nx_graph_k")
-            config.nx_graph_training_iterations = serializer.validated_data.get("nx_graph_training_iterations")
-            config.save(update_fields=["nx_graph_training_iterations", "nx_graph_k", "nx_graph_dim"])
+            config.nx_graph_training_iterations = serializer.validated_data.get(
+                "nx_graph_training_iterations"
+            )
+            config.save(
+                update_fields=[
+                    "nx_graph_training_iterations",
+                    "nx_graph_k",
+                    "nx_graph_dim",
+                ]
+            )
             # recalcula aquí
             if pdb_file.original_file and pdb_file.original_file.original_file:
                 processor_object = XslxToPdbGraph(pdb_file.original_file.original_file)
                 # Process the file and get the processed content
                 processor_object.proccess_initial_file_data(self.id)
-                processor_object.proccess_pdb_file(pdb_file.original_file.id, pdb_file.custom_name, pdb_file)
-        
+                processor_object.proccess_pdb_file(
+                    pdb_file.original_file.id, pdb_file.custom_name, pdb_file
+                )
+
         return Response(status=status.HTTP_200_OK)
