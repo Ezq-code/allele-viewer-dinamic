@@ -16,7 +16,9 @@ from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
 # Create your views here.
 
 
-class PdbFileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class PdbFileViewSet(
+    mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+):
     """
     API endpoint that allows to compute changes on graph data.
     """
@@ -54,8 +56,10 @@ class PdbFileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.Ge
                     pdb_file.original_file.id, pdb_file.custom_name, pdb_file
                 )
 
-        return Response(f"{self.queryset.count()} PDB were updated", status=status.HTTP_200_OK)
-    
+        return Response(
+            f"{self.queryset.count()} PDB were updated", status=status.HTTP_202_ACCEPTED
+        )
+
     def list(self, request, *args, **kwargs):
         instance = SiteConfiguration.get_solo()
         serializer = self.get_serializer(instance)
