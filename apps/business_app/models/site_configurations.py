@@ -20,7 +20,9 @@ class SiteConfiguration(SingletonModel):
     nx_graph_training_iterations = models.PositiveSmallIntegerField(
         verbose_name=_("Nx Graph Training iterations"), default=10
     )
-    # nx_graph_scale = models.PositiveSmallIntegerField(verbose_name=_("Nx Graph Scale"), default=500)
+    nx_graph_scale = models.PositiveSmallIntegerField(
+        verbose_name=_("Nx Graph Scale"), default=500
+    )
 
     def __str__(self):
         return self.viewer_representation_mode

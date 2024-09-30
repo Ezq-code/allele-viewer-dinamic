@@ -36,11 +36,13 @@ class PdbFileViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             config.nx_graph_training_iterations = serializer.validated_data.get(
                 "nx_graph_training_iterations"
             )
+            config.nx_graph_scale = serializer.validated_data.get("nx_graph_scale")
             config.save(
                 update_fields=[
                     "nx_graph_training_iterations",
                     "nx_graph_k",
                     "nx_graph_dim",
+                    "nx_graph_scale",
                 ]
             )
             # recalcula aquí

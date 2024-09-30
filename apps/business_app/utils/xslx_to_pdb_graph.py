@@ -22,7 +22,9 @@ class XslxToPdbGraph(ExcelReader):
             config.nx_graph_dim
         )  # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
         self.k = config.nx_graph_k  # El óptimo es 1/sqrt(total de nodos), eso asegura que para el grafo en cuestión sea óptimo
-        self.scale = 500  # Se debe adicionar este parámetro en el payload
+        self.scale = (
+            config.nx_graph_scale
+        )  # Se debe adicionar este parámetro en el payload
         self.iterations = config.nx_graph_training_iterations
         # Se crea una variable para el grafo
         self.G = nx.DiGraph()
