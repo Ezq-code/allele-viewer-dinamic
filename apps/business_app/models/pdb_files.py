@@ -50,15 +50,3 @@ class PdbFiles(models.Model):
 
     def __str__(self):
         return f"{self.custom_name}"
-
-    def delete(self, *args, **kwargs):
-        # Delete the physical file before deleting the record
-        self.delete_phisical_file(self.file)
-        # Call the parent's delete method to remove the record from the database
-        super().delete(*args, **kwargs)
-
-    def delete_phisical_file(self, file_field):
-        if file_field:
-            file_path = file_field.path
-            if os.path.exists(file_path):
-                os.remove(file_path)

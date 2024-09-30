@@ -109,10 +109,6 @@ class UploadedFiles(models.Model):
         if self.google_sheet_id:
             processor = UploadToGoogleDriveApi()
             processor.delete_file_from_google_drive(self.google_sheet_id)
-
-        for pdb in self.pdb_files.all():
-            self.delete_phisical_file(pdb.file)
-        # Call the parent's delete method to remove the record from the database
         super().delete(*args, **kwargs)
 
     def delete_phisical_file(self, file_field):
