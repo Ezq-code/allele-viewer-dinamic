@@ -9,6 +9,7 @@ from apps.business_app.serializers.pdb_files import PdbFilesGraphUpdateSerialize
 
 from rest_framework.response import Response
 
+from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
 
 # Create your views here.
 
@@ -29,6 +30,6 @@ class PdbFileViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             processor_object = XslxToPdbGraph(pdb_file.original_file.original_file)
             # Process the file and get the processed content
             processor_object.proccess_initial_file_data(self.id)
-            processor_object.proccess_pdb_file(pdb_file.original_file.id, pdb_file.custom_name, pdb_file)
+            processor_object.proccess_pdb_file(pdb_file.original_file.id, pdb_file.custom_name, pdb_file) #existing_pdb_file
         
         return Response(status=status.HTTP_200_OK)
