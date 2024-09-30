@@ -378,11 +378,11 @@
                                     //For Update TimeLine Description in the right panel
                                     function updateList(timeline) {
 
-                                    if (timeline.time < -70000) 
+                                    if (timeline.time < -130000) 
                                       { map.setView(new L.LatLng(10, 120), 2);} //155 23
                                     else
-                                    if ((timeline.time >= -70000) && (timeline.time <= -61051)) 
-                                      { map.setView(new L.LatLng(-3, 20), 4);}
+                                    if ((timeline.time >= -130000) && (timeline.time <= -61051)) 
+                                      { map.setView(new L.LatLng(-3, 20), 3);}
                                     else
                                     if (timeline.time > -61051) 
                                       { map.setView(new L.LatLng(10, 120), 2);} //155 23
@@ -451,7 +451,7 @@
                                             if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9)))  {
                                                 return {
                                                     start: quake.properties.timefinal,
-                                                    end: -1//-15000 //quake.properties.timefinal + (-15000 - quake.properties.timefinal)  //851
+                                                    end: quake.properties.time//-1//-15000 //quake.properties.timefinal + (-15000 - quake.properties.timefinal)  //851
                                                 };
                                             } 
                                             /* else {
@@ -512,7 +512,7 @@
                                                 else
                                                  if (data.properties.id == 10) {
                                                     return L.circleMarker(latlng, {
-                                                    radius: data.properties.id,
+                                                    radius: data.properties.mag,
                                                     color: "#050400", //"#000000",
                                                     fillColor: "#f5d843",//"#000000",
                                                     fillOpacity: 0.7,
@@ -563,7 +563,7 @@
                                             pointToLayer: function (data, latlng) {
                                                 if (data.properties.id == 10) {   
                                                 return L.circleMarker(latlng, {
-                                                    radius: data.properties.id,
+                                                    radius: data.properties.mag,
                                                     color: "#050400", //"#000000",
                                                     fillColor: "#f5d843",//"#000000",
                                                     fillOpacity: 0.7,
