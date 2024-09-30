@@ -1,3 +1,4 @@
+from email.policy import default
 from rest_framework import serializers
 
 
@@ -14,3 +15,9 @@ class PdbFilesSerializer(serializers.ModelSerializer):
             "pdb_content",
         ]
         read_only_fields = ["id", "pdb_content"]
+
+class PdbFilesGraphUpdateSerializer(serializers.Serializer):
+    dim = serializers.IntegerField(default=3)
+    k = serializers.FloatField(default=3)
+    iterations = serializers.IntegerField(default=3)
+    
