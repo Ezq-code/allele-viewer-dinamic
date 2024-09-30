@@ -42,6 +42,7 @@ class PdbFiles(models.Model):
         choices=KIND.choices,
         default=KIND.EXCEL_GENERATED,
     )
+    #Falta campo file
 
     class Meta:
         verbose_name = _("PDB File")

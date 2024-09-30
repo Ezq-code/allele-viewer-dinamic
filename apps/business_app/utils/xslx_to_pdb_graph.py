@@ -2,6 +2,7 @@ import io
 import logging
 
 import pandas as pd
+import numpy as np
 
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.site_configurations import SiteConfiguration
@@ -82,9 +83,13 @@ class XslxToPdbGraph(ExcelReader):
         edges_list = list(self.G.edges)
         # "Pos" contiene las coordenadas necesarias para pintar un grafo en 3D
         # pos: es un diccionario que sigue la estructura {nodo_i: [12 34 567], .....nodo_i-n: [112 -54 67]} con i=0 hasta n
-        # Leer las posiciones generadas por NetworkX        
+        # Leer las posiciones generadas por NetworkX  
         pos = nx.spring_layout(
-            self.G, dim=self.dim, k=self.k, scale=self.scale, iterations=self.iterations
+            self.G, 
+            dim=self.dim,
+            k=self.k,
+            scale=self.scale,
+            iterations=self.iterations
         )
         print("Proccessing PDB file...")
         graph_x_index = 0
@@ -109,13 +114,13 @@ class XslxToPdbGraph(ExcelReader):
                                 allele_number=int(node),
                                 element=element,
                                 x_coordinate=int(
-                                    node_coordinates[graph_x_index] * 400 + 100
+                                    node_coordinates[graph_x_index]
                                 ),  # Esto correcto, TODO este 100 es por algún motivo en particular? Si es porque son valores entre 0 y 1, no se porque aún
                                 y_coordinate=int(
-                                    node_coordinates[graph_y_index] * 400 + 100
+                                    node_coordinates[graph_y_index]
                                 ),  # Esto correcto, TODO este 100 es por algún motivo en particular?
                                 z_coordinate=int(
-                                    node_coordinates[graph_z_index] * 400 + 100
+                                    node_coordinates[graph_z_index]
                                 ),  # Esto correcto, TODO este 100 es por algún motivo en particular?
                             )
                         )

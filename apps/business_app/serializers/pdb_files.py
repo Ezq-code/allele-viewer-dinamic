@@ -20,4 +20,5 @@ class PdbFilesGraphUpdateSerializer(serializers.Serializer):
     dim = serializers.IntegerField(default=3)
     k = serializers.FloatField(default=3)
     iterations = serializers.IntegerField(default=3)
+    #scale = serializers.IntegerField(default=3)
     
