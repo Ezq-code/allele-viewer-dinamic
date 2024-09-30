@@ -4,6 +4,7 @@ import logging
 import pandas as pd
 
 from apps.business_app.models.pdb_files import PdbFiles
+from apps.business_app.models.site_configurations import SiteConfiguration
 from apps.business_app.utils.excel_reader import ExcelNomenclators, ExcelReader
 
 # Esta es la bilbioteca necesaria para trabajar con grafos
@@ -15,9 +16,10 @@ logger = logging.getLogger(__name__)
 class XslxToPdbGraph(ExcelReader):
     def __init__(self, origin_file) -> None:
         super().__init__(origin_file)
-        self.dim = 3
-        self.k = 0.15
-        self.iterations = 10
+        config = SiteConfiguration.get_solo()
+        self.dim = config.nx_graph_dim
+        self.k = config.nx_graph_k
+        self.iterations = config.nx_graph_training_iterations
         # Se crea una variable para el grafo
         self.G = nx.DiGraph()
 
@@ -67,7 +69,7 @@ class XslxToPdbGraph(ExcelReader):
 
             # Recorrer el diccionario de nodos
             self.G.add_edges_from(edges_list)  # Add a edges list
-            edges_list = []            
+            edges_list = []
 
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
@@ -91,7 +93,6 @@ class XslxToPdbGraph(ExcelReader):
             pdb_files = [io.StringIO() for _ in range(self.coordinates_sets)]
             # Open the PDB file for writing
             # Iterar sobre la lista de nodos
-            
             for node in nodes_list:
                 # Write the atom record in the PDB file format
                 element = next(
