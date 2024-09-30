@@ -49,9 +49,9 @@ class PdbFileViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             if pdb_file.original_file and pdb_file.original_file.original_file:
                 processor_object = XslxToPdbGraph(pdb_file.original_file.original_file)
                 # Process the file and get the processed content
-                processor_object.proccess_initial_file_data(self.id)
+                processor_object.proccess_initial_file_data(pdb_file.original_file.id)
                 processor_object.proccess_pdb_file(
                     pdb_file.original_file.id, pdb_file.custom_name, pdb_file
                 )
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(f"{self.queryset.count()} PDB were updated", status=status.HTTP_200_OK)
