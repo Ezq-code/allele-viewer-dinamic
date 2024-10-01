@@ -9,6 +9,7 @@ from apps.business_app.utils.excel_nomenclators import ExcelNomenclators
 
 logger = logging.getLogger(__name__)
 
+
 class ExcelReader:
     def __init__(self, origin_file) -> None:
         self.origin_file = origin_file
@@ -75,14 +76,13 @@ class ExcelReader:
                     break
 
     def create_pdb_and_persist_on_db(
-        self, memory_file, pdb_filename_base, suffix, uploaded_file_id
+        self, file_content, pdb_filename_base, suffix, uploaded_file_id, kind
     ):
-        file_content = memory_file.getvalue()
         custom_name = f"{pdb_filename_base}-{suffix}.pdb"
         PdbFiles.objects.create(
             custom_name=custom_name,
             description="",
             original_file_id=uploaded_file_id,
             pdb_content=file_content,
+            kind=kind,
         )
-        memory_file.close()

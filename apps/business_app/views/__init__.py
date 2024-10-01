@@ -4,7 +4,7 @@ __all__ = [
     "UploadedFilesViewSet",
     "InitialFileDataViewSet",
     "NewCoordinatesProcessorViewSet",
-    "PdbFileViewSet"
+    "PdbFileViewSet",
 ]
 from .allowed_extensions import AllowedExtensionsViewSet
 from .site_configurations import SiteConfigurationViewSet
