@@ -88,9 +88,9 @@ router.register(
     basename="working-copy-of-original-file-for-user",
 )
 router.register(
-     "compute-graph-changes",
-     PdbFileViewSet,
-     basename="compute-graph-changes",
+    "compute-graph-changes",
+    PdbFileViewSet,
+    basename="compute-graph-changes",
 )
 
 urlpatterns = [

@@ -13,6 +13,16 @@ class SiteConfiguration(SingletonModel):
     example_file = models.FileField(
         verbose_name=_("Example File"), upload_to="conf_files/", null=True, blank=True
     )
+    nx_graph_dim = models.PositiveSmallIntegerField(
+        verbose_name=_("Nx Graph Dimension"), default=3
+    )
+    nx_graph_k = models.FloatField(verbose_name=_("Nx Graph K constant"), default=0.50)
+    nx_graph_training_iterations = models.PositiveSmallIntegerField(
+        verbose_name=_("Nx Graph Training iterations"), default=10
+    )
+    nx_graph_scale = models.PositiveSmallIntegerField(
+        verbose_name=_("Nx Graph Scale"), default=500
+    )
 
     def __str__(self):
         return self.viewer_representation_mode

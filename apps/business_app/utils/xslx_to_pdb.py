@@ -6,6 +6,7 @@ import pandas as pd
 from apps.business_app.models.allele_node import AlleleNode
 from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.initial_xyz_expansion_data import InitialXyzExpansionData
+from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.utils.excel_reader import ExcelNomenclators, ExcelReader
 from django.db import transaction
 
@@ -165,11 +166,14 @@ class XslxToPdb(ExcelReader):
             index = 0
             for memory_file in pdb_files:
                 memory_file.write("END")
+                file_content = memory_file.getvalue()
+                memory_file.close()
                 self.create_pdb_and_persist_on_db(
-                    memory_file=memory_file,
+                    file_content=file_content,
                     pdb_filename_base=pdb_filename_base,
                     suffix=f"excel_{index}",
                     uploaded_file_id=uploaded_file_id,
+                    kind=PdbFiles.KIND.EXCEL_GENERATED,
                 )
                 index += 1
 
