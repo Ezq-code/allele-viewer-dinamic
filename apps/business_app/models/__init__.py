@@ -9,6 +9,7 @@ __all__ = [
     "Marker",
     "Event",
     "Layer",
+    "Feature",
     "WorkingCopyOfOriginalFile",
 ]
 
@@ -22,4 +23,5 @@ from .initial_xyz_expansion_data import InitialXyzExpansionData
 from .marker import Marker
 from .event import Event
 from .layer import Layer
+from .human_migrations import Feature
 from .working_copy_of_original_file import WorkingCopyOfOriginalFile

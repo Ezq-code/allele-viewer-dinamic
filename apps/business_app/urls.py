@@ -11,6 +11,7 @@ from apps.business_app.views import (
     PdbFileViewSet,
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
+from apps.business_app.views.human_migrations import *
 from apps.business_app.views.event_markers import (
     edit_event,
     list_events,
@@ -105,6 +106,12 @@ urlpatterns = [
     path("markers/get/", get_marker_by_description, name="get_marker_by_description"),
     path("markers/edit/<int:marker_id>/", edit_marker, name="edit_marker"),
     path("markers/delete/<int:marker_id>/", delete_marker, name="delete_marker"),
+    path("features/", feature_list, name="list_feature"),
+    path("features/create/", feature_create, name="create_feature"),
+    path("features/<int:pk>/", feature_detail, name="detail_feature"),
+    path("features/edit/<int:id>/", feature_update, name="edit_feature"),
+    path("features/delete/<int:id>/", feature_delete, name="detele_feature"),
+
 ]
 
 urlpatterns += router.urls
