@@ -1,0 +1,344 @@
+{% extends "index.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block head-extra %}
+    <link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+    <style>
+        .icon-cell {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+        }
+
+        .circular-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .circular-icon-preview {
+            width: 70px;
+            height: 70px;
+            border-radius: 20%;
+            object-fit: cover;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Human Migrations</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Features</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- /.card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Human Migrations (Features)</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <button class="btn btn-primary btn-info" data-toggle="modal"
+                                            data-target="#createFeatureModal" tabindex="0"
+                                            aria-controls="example1" type="button"><span>Agregar</span>
+                                    </button>
+                                  <div class="modal fade" id="createFeatureModal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Adicionar Feature</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="createFeatureForm" method="post">
+                                                            <div class="form-group">
+                                                                <label for="feature-id">Feature ID:</label>
+                                                                <input value="{{ mig.feature_id }}" type="text" class="form-control" id="feature-id"
+                                                                       name="feature_id" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="feature-title">Feature Title:</label>
+                                                                <input value="{{ mig.title }}" type="text" class="form-control"
+                                                                       id="feature-title"
+                                                                       name="title" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="feature-mag">Feature Mag:</label>
+                                                                <input value="{{ mig.mag }}" type="text" class="form-control" id="feature-mag"
+                                                                       name="mag" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="feature-place">Feature Place:</label>
+                                                                <input value="{{ mig.place }}" type="text" class="form-control"
+                                                                       id="feature-place"
+                                                                       name="place" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="feature-time">Feature Time:</label>
+                                                                <input value="{{ mig.time }}" type="number" class="form-control"
+                                                                       id="feature-time"
+                                                                       name="time" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="feature-timefinal">Feature Time-final:</label>
+                                                                <input value="{{ mig.timefinal }}" type="number" class="form-control"
+                                                                       id="feature-timefinal"
+                                                                       name="timefinal" required>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">
+                                                            Cerrar
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary" id="createFeatureButton">Crear Feature</button>
+                                                    </div>
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal-dialog -->
+                                        </div>
+                                    <thead>
+                                    <tr>
+                                        <th>Nro.</th>
+                                        <th>Feature ID</th>
+                                        <th>Title</th>
+                                        <th>Mag</th>
+                                        <th>Place</th>
+                                        <th>Time</th>
+                                        <th>Time Final</th>
+                                        <div class="float-right">
+                                            <th class="float-right">Acciones</th>
+                                        </div>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for mig in migrations %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ mig.feature_id }}</td>
+                                            <td>{{ mig.title }}</td>
+                                            <td>{{ mig.mag }}</td>
+                                            <td>{{ mig.place }}</td>
+                                            <td>{{ mig.time }}</td>
+                                            <td>{{ mig.timefinal }}</td>
+                                            <td>
+                                                <div class="float-right">
+                                            <span class="input-group-append">
+
+                                            <a href="#" class="btn bg-olive active btn-edit"
+                                               data-toggle="modal"
+                                               data-target="#modal-edit-feature"
+                                               data-feature-id="{{ mig.id }}"
+                                               data-feature-feature_id="{{ mig.feature_id }}"
+                                               data-feature-title="{{ mig.title }}"
+                                               data-feature-mag="{{ mig.mag }}"
+                                               data-feature-place="{{ mig.place }}"
+                                               data-feature-time="{{ mig.time }}"
+                                               data-feature-timefinal="{{ mig.timefinal }}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+
+                                            <a href="#" class="btn bg-olive" data-toggle="modal"
+                                               data-target="#modal-delete-feature">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                            </span>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- Modal- Edit- Event -->
+                                        <div class="modal fade" id="modal-edit-feature">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Edit Feature</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="editFeatureForm" method="post">
+                                                            <div class="form-group">
+                                                                <label for="feature-feature_id">Feature ID:</label>
+                                                                <input readonly type="text" class="form-control" id="feature-feature_id"
+                                                                       name="feature_id" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="feature-title">Feature Title:</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="feature-title"
+                                                                       name="title" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="feature-mag">Feature Mag:</label>
+                                                                <input type="text" class="form-control" id="feature-mag"
+                                                                       name="mag" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="feature-place">Feature Place:</label>
+                                                                <input readonly type="text" class="form-control"
+                                                                       id="feature-place"
+                                                                       name="place" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="feature-time">Feature Time:</label>
+                                                                <input readonly type="number" class="form-control"
+                                                                       id="feature-time"
+                                                                       name="time" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="feature-timefinal">Feature Time-final:</label>
+                                                                <input readonly type="number" class="form-control"
+                                                                       id="feature-timefinal"
+                                                                       name="timefinal" required>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">
+                                                            Cerrar
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary"
+                                                                id="btn-edit-feature"
+                                                                data-feature-id="{{ mig.id }}">
+                                                            Enviar
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal-dialog -->
+                                        </div>
+
+                                        <!-- End /.modal-Edit-Event -->
+
+                                        <!-- Modal- Delete- Event -->
+                                        <div class="modal fade" id="modal-delete-feature">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content bg-danger">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Eliminar Feature</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>¿Desea eliminar el Feature? </p>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <button type="button" class="btn btn-outline-light"
+                                                                data-dismiss="modal">Cerrar
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-light"
+                                                                onclick="deleteFeature({{ mig.id }})">Eliminar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal-dialog -->
+                                        </div>
+                                        <!-- End /.modal-Delete-Event -->
+                                    {% endfor %}
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+
+{% endblock %}
+{% block script %} <!-- DataTables & Plugins -->
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false,
+            });
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
+    <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/jszip/jszip.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/pdfmake/pdfmake.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/pdfmake/vfs_fonts.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
+    <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
+    {#<script src="{% static 'assets/dist/js/createuser.js' %}"></script>#}
+    <script src="{% static 'assets/dist/js/human-migrations.js' %}"></script>
+    <script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
+
+    <!-- Page specific script -->
+
+
+{% endblock %}

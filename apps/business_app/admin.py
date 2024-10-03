@@ -11,6 +11,7 @@ from apps.business_app.models import (
     Marker,
     Event,
     Layer,
+    Feature,
     WorkingCopyOfOriginalFile,
 )
 from apps.business_app.models.initial_file_data import InitialFileData
@@ -24,6 +25,8 @@ admin.site.register(SiteConfiguration, SingletonModelAdmin)
 admin.site.register(Event)
 admin.site.register(Marker)
 admin.site.register(Layer)
+admin.site.register(Feature)
+
 
 
 @admin.register(AlleleNode)
