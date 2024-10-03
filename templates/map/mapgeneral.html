@@ -382,14 +382,14 @@
                                         //For Update TimeLine Description in the right panel
                                         function updateList(timeline) {
 
-                                            if (timeline.time < -70000) {
-                                                map.setView(new L.LatLng(10, 120), 2);
-                                            } //155 23
-                                            else if ((timeline.time >= -70000) && (timeline.time <= -61051)) {
-                                                map.setView(new L.LatLng(-3, 20), 4);
-                                            } else if (timeline.time > -61051) {
-                                                map.setView(new L.LatLng(10, 120), 2);
-                                            } //155 23
+                                    if (timeline.time < -130000) 
+                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
+                                    else
+                                    if ((timeline.time >= -130000) && (timeline.time <= -61051)) 
+                                      { map.setView(new L.LatLng(-3, 20), 3);}
+                                    else
+                                    if (timeline.time > -61051) 
+                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
 
                                             if (timeline.time <= -64864 && labeled == true) {
                                                 markerMigrationPointLayer.clearLayers();
@@ -450,19 +450,19 @@
 
                                             var getShortInterval = function (quake) {
 
-                                                if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9))) {
-                                                    return {
-                                                        start: quake.properties.timefinal,
-                                                        end: -1//-15000 //quake.properties.timefinal + (-15000 - quake.properties.timefinal)  //851
-                                                    };
-                                                }
-                                                /* else {
-                                                    return {
-                                                        start: quake.properties.timefinal,
-                                                        end: quake.properties.timefinal + 74
-                                                    };
-                                                } */
-                                            };
+                                            if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9)))  {
+                                                return {
+                                                    start: quake.properties.timefinal,
+                                                    end: quake.properties.time//-1//-15000 //quake.properties.timefinal + (-15000 - quake.properties.timefinal)  //851
+                                                };
+                                            } 
+                                            /* else {
+                                                return {
+                                                    start: quake.properties.timefinal,
+                                                    end: quake.properties.timefinal + 74
+                                                };
+                                            } */
+                                        };
 
                                             var timelineControl = L.timelineSliderControl({
                                                 // formatOutput: "Human Migrations Timeline", //function (date) {
@@ -506,37 +506,36 @@
                                                 },
                                                 pointToLayer: function (data, latlng) {
 
-                                                    if ((data.properties.id == 100) || (data.properties.id == 160) || (data.properties.id == 220) || (data.properties.id == 280) || (data.properties.id == 340) || (data.properties.id == 400) || (data.properties.id == 480) || (data.properties.id == 560) || (data.properties.id == 640) || (data.properties.id == 700) || (data.properties.id == 750) || (data.properties.id == 1000) || (data.properties.id == 1100) || (data.properties.id == 1200) || (data.properties.id == 1300) || (data.properties.id == 1400)) {
-                                                        return L.polyline(latlngs, {
-                                                            color: 'red'
-                                                        });
-                                                    } else if (data.properties.id == 10) {
-                                                        return L.circleMarker(latlng, {
-                                                            radius: data.properties.id,
-                                                            color: "#050400", //"#000000",
-                                                            fillColor: "#f5d843",//"#000000",
-                                                            fillOpacity: 0.7,
-                                                            weight: 3,
-                                                            opacity: 0.8,
-                                                        }).bindPopup(L.popup({
-                                                            closeOnClick: false,
-                                                            autoClose: false
-                                                        }).setContent(data.properties.place)); //.openPopup()
-                                                    }
-                                                    /* else 
-                                                     {
-                                                         var hue_min = 120;
-                                                         var hue_max = 0;
-                                                         var hue =
-                                                             (data.properties.id / 10) * (hue_max - hue_min) + hue_min;
-                                                          return L.polyline(latlng, {
-                                                        radius: data.properties.id,
-                                                              color: "#EFFF08",
-                                                              fillColor: "#EFFF08",
-                                                          });.bindPopup(data.properties.title);
-                                                     } */
-                                                },
-                                            });
+                                                if ((data.properties.id == 100) || (data.properties.id == 160) || (data.properties.id == 220) || (data.properties.id == 280) || (data.properties.id == 340) || (data.properties.id == 400) || (data.properties.id == 480) || (data.properties.id == 560) || (data.properties.id == 640) || (data.properties.id == 700) || (data.properties.id == 750) || (data.properties.id == 1000) || (data.properties.id == 1100) || (data.properties.id == 1200) || (data.properties.id == 1300) || (data.properties.id == 1400)) {
+                                                    return L.polyline(latlngs, {
+                                                        color: 'red'
+                                                    });
+                                                } 
+                                                else
+                                                 if (data.properties.id == 10) {
+                                                    return L.circleMarker(latlng, {
+                                                    radius: data.properties.mag,
+                                                    color: "#050400", //"#000000",
+                                                    fillColor: "#f5d843",//"#000000",
+                                                    fillOpacity: 0.7,
+                                                    weight: 3,
+                                                    opacity: 0.8,
+                                                }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place)); //.openPopup()
+                                                } 
+                                               /* else 
+                                                {
+                                                    var hue_min = 120;
+                                                    var hue_max = 0;
+                                                    var hue =
+                                                        (data.properties.id / 10) * (hue_max - hue_min) + hue_min;
+                                                     return L.polyline(latlng, {
+                                                   radius: data.properties.id,
+                                                         color: "#EFFF08",
+                                                         fillColor: "#EFFF08",
+                                                     });.bindPopup(data.properties.title);
+                                                } */
+                                            }, 
+                                        });
 
 
                                             var migrationPoints = L.timeline(data, {
@@ -544,52 +543,49 @@
                                                 style: function (feature) {
                                                     if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
 
-                                                        return {
-                                                            color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
-                                                            fillColor: "#171717",//"#2b2c27",//'#EFFF08',
-                                                            fillOpacity: 1,
-                                                            weight: 6,
-                                                            opacity: 1,
-                                                        }
+                                                    return {
+                                                        color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
+                                                        fillColor: "#171717",//"#2b2c27",//'#EFFF08',
+                                                        fillOpacity: 1,
+                                                        weight: 6,
+                                                        opacity: 1,
                                                     }
-                                                    /*      else if (feature.properties.id == 10) {
-                                                             return L.circleMarker(latlng, {
-                                                             radius: data.properties.id,
-                                                             color: "#050400", //"#000000",
-                                                             fillColor: "#f5d843",//"#000000",
-                                                             fillOpacity: 0.7,
-                                                             weight: 3,
-                                                             opacity: 0.8,
-                                                         }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place));
-                                                         } */
-                                                },
-                                                pointToLayer: function (data, latlng) {
-                                                    if (data.properties.id == 10) {
-                                                        return L.circleMarker(latlng, {
-                                                            radius: data.properties.id,
-                                                            color: "#050400", //"#000000",
-                                                            fillColor: "#f5d843",//"#000000",
-                                                            fillOpacity: 0.7,
-                                                            weight: 3,
-                                                            opacity: 0.8,
-                                                        }).bindPopup(L.popup({
-                                                            closeOnClick: false,
-                                                            autoClose: false
-                                                        }).setContent(data.properties.place));//.openPopup(); //data.properties.place
-                                                    }
-                                                    /*  else 
-                                                      if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
-          
-                                                        return  {
-                                                          color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
-                                                          fillColor: "#171717",//"#2b2c27",//'#EFFF08',
-                                                          fillOpacity: 1,
-                                                          weight: 6,
-                                                          opacity: 1,
-                                                        }
-                                                      }*/
-                                                },
-                                            });
+                                                }
+                                           /*      else if (feature.properties.id == 10) {
+                                                    return L.circleMarker(latlng, {
+                                                    radius: data.properties.id,
+                                                    color: "#050400", //"#000000",
+                                                    fillColor: "#f5d843",//"#000000",
+                                                    fillOpacity: 0.7,
+                                                    weight: 3,
+                                                    opacity: 0.8,
+                                                }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place));
+                                                } */
+                                            }, 
+                                            pointToLayer: function (data, latlng) {
+                                                if (data.properties.id == 10) {   
+                                                return L.circleMarker(latlng, {
+                                                    radius: data.properties.mag,
+                                                    color: "#050400", //"#000000",
+                                                    fillColor: "#f5d843",//"#000000",
+                                                    fillOpacity: 0.7,
+                                                    weight: 3,
+                                                    opacity: 0.8,
+                                                }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place));//.openPopup(); //data.properties.place
+                                            }
+                                          /*  else 
+                                            if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
+
+                                              return  {
+                                                color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
+                                                fillColor: "#171717",//"#2b2c27",//'#EFFF08',
+                                                fillOpacity: 1,
+                                                weight: 6,
+                                                opacity: 1,
+                                              }
+                                            }*/ 
+                                            },
+                                        });
 
                                             var polygonTimeline;
                                             var polygons;
