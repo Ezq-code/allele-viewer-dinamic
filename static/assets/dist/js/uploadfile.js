@@ -79,9 +79,7 @@ $(document).ready(function () {
 
                         return `<div class="btn-group">
                         <button type="button" title="Edit" class="btn bg-info" data-toggle="modal" data-target="#modal-crear-elemento" data-id="${row.id}" data-type="edit" data-name="${row.custom_name}" id="${row.id}"  >
-                          <i class="fas fa-edit"></i></button>                       
-                        <button type="button" title="IA-Calculate" class="btn bg-danger"  data-type="edit"   onclick="ia_algorithms_recalculate('${row.id}', '${row.custom_name}')">
-                         <i class="fas fa-brain"></i></button>                      
+                          <i class="fas fa-edit"></i></button>                    
                         <button type="button" title="Delete" class="btn bg-olive" data-toggle="modal" data-target="#modal-eliminar-elemento" data-name="${row.custom_name}" data-id="${row.id}">
                           <i class="fas fa-trash"></i>
                         </button>
@@ -349,3 +347,83 @@ function ia_algorithms_recalculate(id,name) {
 }
 
 
+
+
+function showGraphChangesForm() {
+    axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
+    axios.get('/business-gestion/compute-graph-changes/')
+        .then((response) => {
+            const data = response.data;
+
+            Swal.fire({
+                width: '30%',
+                title: 'Modify Graph Parameters',
+                html: `
+                <hr>  
+                <div class="form-group">
+                    <label for="nx_graph_training_iterations">Training Iterations</label>    
+                    <input id="nx_graph_training_iterations" class="form-control form-control-border" placeholder="Training Iterations" type="number" value="${data.nx_graph_training_iterations}">
+                 </div>
+                 <div class="form-group">
+                    <label for="nx_graph_k">K</label> 
+                    <input id="nx_graph_k" class="form-control form-control-border" placeholder="K" type="number" step="0.1" value="${data.nx_graph_k}">
+                 </div>
+                 <div class="form-group">
+                    <label for="nx_graph_dim">Dimension</label> 
+                    <input id="nx_graph_dim" class="form-control form-control-border" placeholder="Dimension" type="number" value="${data.nx_graph_dim}">
+                </div>
+                <div class="form-group">
+                    <label for="nx_graph_scale">Scale</label> 
+                    <input id="nx_graph_scale" class="form-control form-control-border" placeholder="Scale" type="number" value="${data.nx_graph_scale}">
+                </div>
+                </div>
+                
+                
+                `,
+                focusConfirm: false,
+                showCancelButton: true,
+                
+                preConfirm: () => {
+                    return {
+                        nx_graph_training_iterations: parseInt(document.getElementById('nx_graph_training_iterations').value),
+                        nx_graph_k: parseFloat(document.getElementById('nx_graph_k').value),
+                        nx_graph_dim: parseInt(document.getElementById('nx_graph_dim').value),
+                        nx_graph_scale: parseInt(document.getElementById('nx_graph_scale').value),
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post('/business-gestion/compute-graph-changes/', result.value)
+                        .then((response) => {
+                            if (response.status === 202) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Parameters Modified",
+                                    text: "The graph parameters have been modified successfully.",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                });
+                            }
+                        })
+                        .catch((error) => {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error Modifying Parameters",
+                                text: error.response.data.detail,
+                                showConfirmButton: false,
+                                timer: 3000,
+                            });
+                        });
+                }
+            });
+        })
+        .catch((error) => {
+            Swal.fire({
+                icon: "error",
+                title: "Error Fetching Data",
+                text: error.response.data.detail,
+                showConfirmButton: false,
+                timer: 3000,
+            });
+        });
+}

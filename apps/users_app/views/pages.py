@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from apps.business_app.models import Event
+from apps.business_app.models import Event, Feature
 
 # Create your views here.
 
@@ -31,6 +31,11 @@ def mapgeneral(request):
 def events(request):
     events = Event.objects.all()
     return render(request, "map/event/events.html", {"events": events})
+
+def human_migrations(request):
+    migrations = Feature.objects.order_by("-id").all()
+    return render(request, "map/migrations/migrations.html", {"migrations": migrations})
+
 
 
 def register(request):
