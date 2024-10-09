@@ -18,9 +18,7 @@ class XslxToPdbGraph(ExcelReader):
     def __init__(self, origin_file) -> None:
         super().__init__(origin_file)
         config = SiteConfiguration.get_solo()
-        self.dim = (
-            config.nx_graph_dim
-        )  # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
+        self.dim = 3 #(config.nx_graph_dim)  # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
         self.k = config.nx_graph_k  # El óptimo es 1/sqrt(total de nodos), eso asegura que para el grafo en cuestión sea óptimo
         self.scale = (
             config.nx_graph_scale
