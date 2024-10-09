@@ -9,6 +9,7 @@ from apps.business_app.views import (
     InitialFileDataViewSet,
     NewCoordinatesProcessorViewSet,
     PdbFileViewSet,
+    AlleleParentsViewSet,
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 from apps.business_app.views.human_migrations import *
@@ -93,6 +94,13 @@ router.register(
     PdbFileViewSet,
     basename="compute-graph-changes",
 )
+router.register(
+    "extract-allele-parents-tree",
+    AlleleParentsViewSet,
+    basename="extract-allele-parents-tree",
+)
+
+
 
 urlpatterns = [
     path("layers/", list_layers, name="list_layers"),
