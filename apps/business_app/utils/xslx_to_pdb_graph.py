@@ -171,3 +171,18 @@ class XslxToPdbGraph(ExcelReader):
             # return pdb_file_0
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
+
+    def proccess_allele_parents(self, allele_id):
+        """
+        Esta función recibe como parámetro el 
+        id del allele (allele_id) y devuelve una lista de nodos
+        que integran el árbol del mismo. 
+        """
+        parents = [1, 2, 3, 4, 6, 7]
+        try:
+            
+            return parents
+
+        except Exception as e:
+            raise ValueError(f"An error occurred during file parsing: {e}.")
+

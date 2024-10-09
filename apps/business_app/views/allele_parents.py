@@ -24,14 +24,20 @@ class AlleleParentsViewSet(
     """
 
     queryset = PdbFiles.objects.all()
-    serializer_class = AlleleParentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @extend_schema(
-        request=AlleleInputSerializer,
-    )
-    def list(self, request, event_id, *args, **kwargs):
+    #@extend_schema(
+    #    request=AlleleInputSerializer,
+    #    methods=["GET"],
+    #    description="Set of parameters to PDB and Allele",
+    #    responses={200: AlleleParentSerializer},
+    #)
+    def list(self, request, *args, **kwargs):
         print("Número de PDB en el store",len(self.queryset))
+        for pdb_file in self.queryset:
+            processor_object = XslxToPdbGraph(pdb_file.original_file.original_file)
+            processor_object.proccess_initial_file_data(pdb_file.original_file.id)
+            print(processor_object.proccess_allele_parents(2))    
         
         #Lista de alleles familiares
         list_alleles = [1, 2, 3, 4]
