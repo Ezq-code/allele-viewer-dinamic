@@ -174,7 +174,7 @@ class XslxToPdbGraph(ExcelReader):
 
     #Encontrar la raíz de un grafo
     #Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
-    def find_root_node():
+    def find_root_node(self):
         """La raíz del grafo dirigido y conexo es el nodo
             que solamente emite, o sea que su orden de out_degree es positivo
             pero su orden de in_degree es igual a 0
@@ -187,7 +187,7 @@ class XslxToPdbGraph(ExcelReader):
                 root = k
         return root
     
-    def extract_T(G, lista, nodo, root):
+    def extract_T(self, G, lista, nodo, root):
         padres = list(G.predecessors(nodo))
         if nodo == root: #Si el nodo es la raíz sale de la función
             return lista
@@ -198,7 +198,7 @@ class XslxToPdbGraph(ExcelReader):
                 nodo_info = nodo
                 padre_info = padre
                 lista.append((padre_info, nodo_info))
-                return extract_T(G, lista, padre, root)
+                return extract_T(self.G, lista, padre, root)
 
             
     def proccess_allele_parents(self, allele_id):
