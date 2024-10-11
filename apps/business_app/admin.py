@@ -41,6 +41,7 @@ class AlleleNodeAdmin(admin.ModelAdmin):
         "symbol",
         "rs",
         "uploaded_file",
+        "timeline_appearence",
     ]
     fields = [
         "number",
@@ -49,6 +50,7 @@ class AlleleNodeAdmin(admin.ModelAdmin):
         "symbol",
         "rs",
         "uploaded_file",
+        "timeline_appearence",
     ]
 
 
