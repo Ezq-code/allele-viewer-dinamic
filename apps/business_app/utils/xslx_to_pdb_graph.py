@@ -195,9 +195,7 @@ class XslxToPdbGraph(ExcelReader):
             return lista
         else: #Lo contrario, itera sobre los padres y se llama a si misma
             for padre in padres:
-                nodo_info = nodo
-                padre_info = padre
-                lista.append(padre_info) # si se quiere el enlace: ((padre_info, nodo_info))
+                lista.append(padre)
                 return extract_parents_tree(lista, padre, root)
 
             
