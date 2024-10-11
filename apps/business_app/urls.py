@@ -100,8 +100,6 @@ router.register(
     basename="extract-allele-parents-tree",
 )
 
-
-
 urlpatterns = [
     path("layers/", list_layers, name="list_layers"),
     path("events/", list_events, name="list_events"),
