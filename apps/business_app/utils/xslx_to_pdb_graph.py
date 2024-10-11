@@ -172,15 +172,49 @@ class XslxToPdbGraph(ExcelReader):
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
+    #Encontrar la raíz de un grafo
+    #Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
+    def find_root_node():
+        """La raíz del grafo dirigido y conexo es el nodo
+            que solamente emite, o sea que su orden de out_degree es positivo
+            pero su orden de in_degree es igual a 0
+        """
+        nodes_in_degree  = [(k, v) for k, v in G.in_degree()]
+        #print(nodes_in_degree)
+        root = 0
+        for k, v in nodes_in_degree:
+            if v == 0:
+                root = k
+        return root
+    
+    def extract_T(G, lista, nodo, root):
+        padres = list(G.predecessors(nodo))
+        if nodo == root: #Si el nodo es la raíz sale de la función
+            return lista
+        if len(padres) == 0: #Si el nodo es la raíz sale de la función
+            return lista
+        else: #Lo contrario, itera sobre los padres y se llama a si misma
+            for padre in padres:
+                nodo_info = nodo
+                padre_info = padre
+                lista.append((padre_info, nodo_info))
+                return extract_T(G, lista, padre, root)
+
+            
     def proccess_allele_parents(self, allele_id):
         """
         Esta función recibe como parámetro el 
         id del allele (allele_id) y devuelve una lista de nodos
         que integran el árbol del mismo. 
         """
-        parents = [1, 2, 3, 4, 6, 7]
+        #parents = [1, 2, 3, 4, 6, 7]
         try:
             
+            parents = self.G.nodes()
+            #root = find_root_node()
+            #target_node = 12  #Numero: 12, Allele:"*36XN1"
+            #path_importance_list =[]
+            #extract_T(G, path_importance_list, target_node, root)
             return parents
 
         except Exception as e:
