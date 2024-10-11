@@ -187,18 +187,18 @@ class XslxToPdbGraph(ExcelReader):
                 root = k
         return root
     
-    def extract_T(self, G, lista, nodo, root):
+    def extract_parents_tree(self, G, lista, nodo, root):
         padres = list(G.predecessors(nodo))
         if nodo == root: #Si el nodo es la raíz sale de la función
             return lista
-        if len(padres) == 0: #Si el nodo es la raíz sale de la función
+        if len(padres) == 0: #Si lista de padres es 0 sale de la función
             return lista
         else: #Lo contrario, itera sobre los padres y se llama a si misma
             for padre in padres:
                 nodo_info = nodo
                 padre_info = padre
-                lista.append((padre_info, nodo_info))
-                return extract_T(self.G, lista, padre, root)
+                lista.append(padre_info) # si se quiere el enlace: ((padre_info, nodo_info))
+                return extract_parents_tree(G, lista, padre, root)
 
             
     def proccess_allele_parents(self, allele_id):
@@ -207,15 +207,13 @@ class XslxToPdbGraph(ExcelReader):
         id del allele (allele_id) y devuelve una lista de nodos
         que integran el árbol del mismo. 
         """
-        #parents = [1, 2, 3, 4, 6, 7]
+        #parents_tree = [1, 2, 3, 4, 6, 7]
         try:
             
-            parents = self.G.nodes()
+            parents_tree = self.G.nodes()
             #root = find_root_node()
-            #target_node = 12  #Numero: 12, Allele:"*36XN1"
-            #path_importance_list =[]
-            #extract_T(G, path_importance_list, target_node, root)
-            return parents
+            #extract_T(G, parents, allele_id, root)
+            return parents_tree
 
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")

@@ -39,7 +39,7 @@ class AlleleParentsViewSet(
         print("Número de PDB en el store",len(self.queryset))
         print(request.data)
         pdb_file_name = ""
-        allele_id = 258
+        allele_id = 5
         list_alleles = []
         for pdb_file in self.queryset:
             pdb_file_name = pdb_file.original_file.original_file
@@ -47,7 +47,7 @@ class AlleleParentsViewSet(
             processor_object.proccess_initial_file_data(pdb_file.original_file.id)
             #Ejecución del algoritmo que extrae los alleles parents
             list_alleles.append(processor_object.proccess_allele_parents(allele_id))   
-        
+            print(list_alleles)
         
 
-        return JsonResponse(list_alleles, safe=False)
+        return JsonResponse([1,2,3,4], safe=False)
