@@ -172,14 +172,14 @@ class XslxToPdbGraph(ExcelReader):
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
-    #Encontrar la raíz de un grafo
-    #Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
     def find_root_node(self):
         """La raíz del grafo dirigido y conexo es el nodo
             que solamente emite, o sea que su orden de out_degree es positivo
-            pero su orden de in_degree es igual a 0
+            pero su orden de in_degree es igual a 0.
+            Encontrar la raíz de un grafo
+            Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
         """
-        nodes_in_degree  = [(k, v) for k, v in G.in_degree()]
+        nodes_in_degree  = [(k, v) for k, v in self.G.in_degree()]
         #print(nodes_in_degree)
         root = 0
         for k, v in nodes_in_degree:
@@ -187,8 +187,8 @@ class XslxToPdbGraph(ExcelReader):
                 root = k
         return root
     
-    def extract_parents_tree(self, G, lista, nodo, root):
-        padres = list(G.predecessors(nodo))
+    def extract_parents_tree(self, lista, nodo, root):
+        padres = list(self.G.predecessors(nodo))
         if nodo == root: #Si el nodo es la raíz sale de la función
             return lista
         if len(padres) == 0: #Si lista de padres es 0 sale de la función
@@ -198,7 +198,7 @@ class XslxToPdbGraph(ExcelReader):
                 nodo_info = nodo
                 padre_info = padre
                 lista.append(padre_info) # si se quiere el enlace: ((padre_info, nodo_info))
-                return extract_parents_tree(G, lista, padre, root)
+                return extract_parents_tree(lista, padre, root)
 
             
     def proccess_allele_parents(self, allele_id):
@@ -212,7 +212,7 @@ class XslxToPdbGraph(ExcelReader):
             
             parents_tree = self.G.nodes()
             #root = find_root_node()
-            #extract_T(G, parents, allele_id, root)
+            #parents_tree = extract_parents_tree(parents, allele_id, root)
             return parents_tree
 
         except Exception as e:
