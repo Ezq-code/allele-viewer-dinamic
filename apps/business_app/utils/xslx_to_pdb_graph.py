@@ -14,23 +14,22 @@ import networkx as nx
 logger = logging.getLogger(__name__)
 
 
-def find_root_node(self):
+def find_root_node(G):
     """La raíz del grafo dirigido y conexo es el nodo
         que solamente emite, o sea que su orden de out_degree es positivo
         pero su orden de in_degree es igual a 0.
         Encontrar la raíz de un grafo
         Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
     """
-    nodes_in_degree  = [(k, v) for k, v in self.G.in_degree()]
-    #print(nodes_in_degree)
+    nodes_in_degree  = [(k, v) for k, v in G.in_degree()]
     root = 0
     for k, v in nodes_in_degree:
         if v == 0:
             root = k
     return root
     
-def extract_parents_tree(self, lista, nodo, root):
-    padres = list(self.G.predecessors(nodo))
+def extract_parents_tree(G, lista, nodo, root):
+    padres = list(G.predecessors(nodo))
     if nodo == root: #Si el nodo es la raíz sale de la función
         return lista
     if len(padres) == 0: #Si lista de padres es 0 sale de la función
@@ -38,7 +37,7 @@ def extract_parents_tree(self, lista, nodo, root):
     else: #Lo contrario, itera sobre los padres y se llama a si misma
         for padre in padres:
             lista.append(padre)
-            return extract_parents_tree(lista, padre, root)
+            return extract_parents_tree(G, lista, padre, root)
        
 
 class XslxToPdbGraph(ExcelReader):
@@ -198,7 +197,6 @@ class XslxToPdbGraph(ExcelReader):
             # return pdb_file_0
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
-
     
     def proccess_allele_parents(self, allele_id):
         """
@@ -206,13 +204,11 @@ class XslxToPdbGraph(ExcelReader):
         id del allele (allele_id) y devuelve una lista de nodos
         que integran el árbol del mismo. 
         """
-        #parents_tree = [1, 2, 3, 4, 6, 7]
         try:
-            
             #parents_tree = self.G.nodes()
             parents_tree = []
-            root = find_root_node()
-            parents_tree = extract_parents_tree(parents_tree, allele_id, root)
+            root = find_root_node(self.G)
+            parents_tree = extract_parents_tree(self.G, parents_tree, allele_id, root)
             return parents_tree
 
         except Exception as e:
