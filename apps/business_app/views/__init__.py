@@ -5,6 +5,7 @@ __all__ = [
     "InitialFileDataViewSet",
     "NewCoordinatesProcessorViewSet",
     "PdbFileViewSet",
+    "AlleleParentsViewSet",
 ]
 from .allowed_extensions import AllowedExtensionsViewSet
 from .site_configurations import SiteConfigurationViewSet

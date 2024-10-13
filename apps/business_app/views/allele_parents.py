@@ -11,43 +11,30 @@ from rest_framework.response import Response
 from apps.business_app.models import PdbFiles
 
 from apps.business_app.serializers.allele_parents import AlleleInputSerializer
-from apps.business_app.serializers.allele_parents import AlleleParentSerializer
 
 from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
 
 # Create your views here.
-
-#@extend_schema(
-#    request=AlleleInputSerializer,
-#    methods=["GET"],
-#    description="Set of parameters to PDB and Allele",
-#    responses={200: AlleleParentSerializer},
-#)
-class AlleleParentsViewSet(
-     mixins.ListModelMixin, viewsets.GenericViewSet, GenericAPIView
-):
+class AlleleParentsViewSet(viewsets.ViewSet, GenericAPIView):
     """
     API endpoint that allows to compute extract allele family parents tree.
+    Recieve as imput parameters an ID PDB and Allele number (eg. 285)
     """
-
-    queryset = PdbFiles.objects.all()
-    serializer_class = AlleleParentSerializer
+    #queryset = PdbFiles.objects.all()
+    serializer_class = AlleleInputSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-       
-    def list(self, request):        
-        print("Número de PDB en el store",len(self.queryset))
-        print(request.data)
-        pdb_file_name = ""
-        allele_id = 5
-        list_alleles = []
-        for pdb_file in self.queryset:
-            pdb_file_name = pdb_file.original_file.original_file
-            processor_object = XslxToPdbGraph(pdb_file_name)
-            processor_object.proccess_initial_file_data(pdb_file.original_file.id)
-            #Ejecución del algoritmo que extrae los alleles parents
-            list_alleles.append(processor_object.proccess_allele_parents(allele_id))   
-            print(list_alleles)
+    def create(self, request):        
+        #Load parameters
+        id_pdb = request.data["id_pdb"]
+        allele_id = request.data["id_allele"]
+        #Filter the PDB File
+        pdb_file = PdbFiles.objects.get(id=id_pdb)
+        pdb_file_name = pdb_file.original_file.original_file
+        #Create the Graph
+        processor_object = XslxToPdbGraph(pdb_file_name)
+        processor_object.proccess_initial_file_data(pdb_file.original_file.id)
+        #Ejecución del algoritmo que extrae los alleles parents (1574,131,5)
+        list_alleles = processor_object.proccess_allele_parents(allele_id)  
         
-
-        return JsonResponse([1,2,3,4], safe=False)
+        return JsonResponse(list_alleles, safe=False)

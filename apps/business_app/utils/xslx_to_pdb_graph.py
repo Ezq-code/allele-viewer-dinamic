@@ -38,8 +38,8 @@ def extract_parents_tree(G, lista, nodo, root):
         for padre in padres:
             lista.append(padre)
             return extract_parents_tree(G, lista, padre, root)
-       
-
+ 
+ 
 class XslxToPdbGraph(ExcelReader):
     def __init__(self, origin_file) -> None:
         super().__init__(origin_file)
@@ -62,7 +62,6 @@ class XslxToPdbGraph(ExcelReader):
         como base de datos de nodos y ejes. 
         """
         # Construyendo el grafo con una instancia de NetworkX
-        # nodes_list = []
         edges_list = []
         try:
             # Loop over each row in the Excel file
@@ -83,6 +82,8 @@ class XslxToPdbGraph(ExcelReader):
                     symbol=row[ExcelNomenclators.output_symbol_column_name],
                     parent=row[ExcelNomenclators.output_number_column_name],
                     regions=row[ExcelNomenclators.output_region_column_name],
+                    #SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
+                    #date=row[ExcelNomenclators.output_date_column_name],
                 )
                 parents_info = row[ExcelNomenclators.output_parent_column_name]
                 parents = []
@@ -205,7 +206,6 @@ class XslxToPdbGraph(ExcelReader):
         que integran el árbol del mismo. 
         """
         try:
-            #parents_tree = self.G.nodes()
             parents_tree = []
             root = find_root_node(self.G)
             parents_tree = extract_parents_tree(self.G, parents_tree, allele_id, root)
@@ -214,3 +214,6 @@ class XslxToPdbGraph(ExcelReader):
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
+    def proccess_alleles_time_line(self, date):
+
+        pass
