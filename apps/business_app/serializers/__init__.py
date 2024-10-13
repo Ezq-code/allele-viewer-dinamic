@@ -6,6 +6,7 @@ __all__ = [
     "SnpCoordinateProcessorInputSerializer",
     "XyzCoordinateProcessorInputSerializer",
     "AlleleInputSerializer",
+    "AlleleInputDateSerializer",
 ]
 from .allowed_extensions import AllowedExtensionsSerializer
 from .site_configurations import SiteConfigurationSerializer
@@ -14,3 +15,4 @@ from .initial_file_data import InitialFileDataSerializer
 from .new_snp_coordinate_processor import SnpCoordinateProcessorInputSerializer
 from .new_xyz_coordinate_processor import XyzCoordinateProcessorInputSerializer
 from .allele_parents import AlleleInputSerializer
+from .alleles_time_line import AlleleInputDateSerializer

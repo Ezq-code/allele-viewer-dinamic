@@ -6,6 +6,7 @@ __all__ = [
     "NewCoordinatesProcessorViewSet",
     "PdbFileViewSet",
     "AlleleParentsViewSet",
+    "AlleleTimeLineViewSet",
 ]
 from .allowed_extensions import AllowedExtensionsViewSet
 from .site_configurations import SiteConfigurationViewSet
@@ -14,3 +15,4 @@ from .initial_file_data import InitialFileDataViewSet
 from .new_coordinate_processor import NewCoordinatesProcessorViewSet
 from .pdb_files import PdbFileViewSet
 from .allele_parents import AlleleParentsViewSet
+from .alleles_time_line import AlleleTimeLineViewSet

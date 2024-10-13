@@ -215,5 +215,5 @@ class XslxToPdbGraph(ExcelReader):
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
     def proccess_alleles_time_line(self, date):
-
+            
         pass
