@@ -10,6 +10,7 @@ from apps.business_app.views import (
     NewCoordinatesProcessorViewSet,
     PdbFileViewSet,
     AlleleParentsViewSet,
+    AlleleTimeLineViewSet,
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 from apps.business_app.views.human_migrations import *
@@ -99,6 +100,12 @@ router.register(
     AlleleParentsViewSet,
     basename="extract-allele-parents-tree",
 )
+router.register(
+    "extract-alleles-time-line",
+    AlleleTimeLineViewSet,
+    basename="extract-alleles-time-line",
+)
+
 
 urlpatterns = [
     path("layers/", list_layers, name="list_layers"),

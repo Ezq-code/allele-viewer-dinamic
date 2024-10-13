@@ -14,6 +14,8 @@ from apps.business_app.serializers.alleles_time_line import AlleleInputDateSeria
 
 from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
 
+from datetime import datetime
+
 # Create your views here.
 class AlleleTimeLineViewSet(viewsets.ViewSet, GenericAPIView):
     """
@@ -25,14 +27,15 @@ class AlleleTimeLineViewSet(viewsets.ViewSet, GenericAPIView):
     def create(self, request):        
         #Load parameters
         id_pdb = request.data["id_pdb"]
-        date = request.data["date"]
+        input_date = request.data["date"] 
         #Filter the PDB File
         pdb_file = PdbFiles.objects.get(id=id_pdb)
         pdb_file_name = pdb_file.original_file.original_file
         #Create the Graph
         processor_object = XslxToPdbGraph(pdb_file_name)
         processor_object.proccess_initial_file_data(pdb_file.original_file.id)
-        #Ejecución del algoritmo que extrae los alleles parents (1574,131,5)
-        list_alleles_time_line = processor_object.proccess_alleles_time_line(date)  
+        #Ejecución del algoritmo que extrae los alleles según fecha
+        my_date = datetime.strptime(input_date, '%Y-%m-%d')
+        list_alleles_time_line = processor_object.proccess_alleles_time_line(my_date)  
         
         return JsonResponse(list_alleles_time_line, safe=False)

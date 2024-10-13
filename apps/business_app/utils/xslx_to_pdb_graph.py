@@ -13,6 +13,9 @@ import networkx as nx
 
 logger = logging.getLogger(__name__)
 
+import random
+from datetime import datetime, timedelta
+
 
 def find_root_node(G):
     """La raíz del grafo dirigido y conexo es el nodo
@@ -39,6 +42,20 @@ def extract_parents_tree(G, lista, nodo, root):
             lista.append(padre)
             return extract_parents_tree(G, lista, padre, root)
  
+"""
+Las dos funciones siguientes son solo para probar la línea de tiempo
+se deben borrar debido a que ya existirá para ese momento un campo fecha en la 
+base de datos
+"""
+def generar_fecha_aleatoria():
+    # Definir el rango de fechas
+    fecha_inicio = datetime(1800, 1, 1)
+    fecha_fin = datetime(2025, 12, 31)
+    delta = fecha_fin - fecha_inicio
+    dias_aleatorios = random.randint(0, delta.days)
+    return fecha_inicio + timedelta(days=dias_aleatorios)
+
+
  
 class XslxToPdbGraph(ExcelReader):
     def __init__(self, origin_file) -> None:
@@ -84,6 +101,7 @@ class XslxToPdbGraph(ExcelReader):
                     regions=row[ExcelNomenclators.output_region_column_name],
                     #SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
                     #date=row[ExcelNomenclators.output_date_column_name],
+                    date=generar_fecha_aleatoria(), #Esta línea de código se debe borrar es solo de prueba
                 )
                 parents_info = row[ExcelNomenclators.output_parent_column_name]
                 parents = []
@@ -215,5 +233,6 @@ class XslxToPdbGraph(ExcelReader):
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
     def proccess_alleles_time_line(self, date):
-            
-        pass
+        # Extraer nodos que tienen una fecha mayor que la fecha de referencia
+        filtered_nodes = [node for node, att in self.G.nodes(data=True) if att['date'] > date]
+        return filtered_nodes
