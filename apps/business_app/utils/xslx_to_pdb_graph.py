@@ -4,6 +4,7 @@ import logging
 import pandas as pd
 import numpy as np
 
+from rest_framework import status
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.site_configurations import SiteConfiguration
 from apps.business_app.utils.excel_reader import ExcelNomenclators, ExcelReader
@@ -101,7 +102,7 @@ class XslxToPdbGraph(ExcelReader):
                     regions=row[ExcelNomenclators.output_region_column_name],
                     #SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
                     #date=row[ExcelNomenclators.output_date_column_name],
-                    date=generar_fecha_aleatoria(), #Esta línea de código se debe borrar es solo de prueba
+                    date=generar_fecha_aleatoria().date(), #Esta línea de código se debe borrar es solo de prueba
                 )
                 parents_info = row[ExcelNomenclators.output_parent_column_name]
                 parents = []
@@ -230,7 +231,7 @@ class XslxToPdbGraph(ExcelReader):
             return parents_tree
 
         except Exception as e:
-            raise ValueError(f"An error occurred during file parsing: {e}.")
+            raise ValueError(f"An error occurred serching for allele parents: {e}.")
 
     def proccess_alleles_time_line(self, date):
         # Extraer nodos que tienen una fecha mayor que la fecha de referencia
