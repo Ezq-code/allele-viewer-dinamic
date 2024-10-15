@@ -445,6 +445,10 @@ function showInfo(atom) {
             '<button type="button" class="btn btn-block btn-secondary" onclick="loadFamily(' +
             elemento.number +
             ')">Family</button>' +
+            '<button type="button" class="btn btn-block btn-secondary" onclick="childFull(' +
+            elemento.number +
+            ')">FamilyFull</button>'
+            +
             '<button type="button" class="btn btn-block btn-secondary" onclick="marcar(' +
             atom.x +
             "," +
@@ -559,6 +563,9 @@ function loadFamilyClean() {
 function loadFamily(id) {
   childFamily(id);
 }
+function loadFamilyFull(id) {
+  childFamily(id);
+}
 
 function family(id) {
   const highlightColor = "#ffaa02";
@@ -655,51 +662,59 @@ function child() {
       });
     });
 }
+function childFull(id) {
+  // console.log("zoomLevel", zoomLevel);
 
-// function childFamily(id) {
-//   datos.forEach((element) => {
-//     const stickRadius =
-//       element.children_qty === 0
-//         ? 0.2
-//         : 0.5 + element.children_qty * stickRadiusFactor;
-//     const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
+  console.log("localStorage.getItem :", localStorage.getItem("uploadFileId"));
+  console.log("localStorage_full :", localStorage);
+  var data = {
+    pdb: localStorage.getItem("uploadFileId"),
+    allele_node: id
+  };
+  axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
+  axios
+  .post("/business-gestion/extract-allele-parents-tree/", data) 
+    .then(function (response) {
+console.log('✌️response --->', response);
+    //   const elemento = response.data;
+    //   let atomData = elemento.results;
+    //   datos = atomData;
+    //   // console.log("datos");
+    //   // console.log(datos);
 
-//     if (
-//       children.some((item) => item.number === element.number) ||
-//       element.number === id
-//     ) {
-//       viewer.setStyle(
-//         { serial: element.number },
-//         {
-//           sphere: { color: "#FCCA02", radius: sphereRadius },
-//           stick: {
-//             color: "#FCCA02",
-//             radius: stickRadius,
-//             showNonBonded: false,
-//           },
-//         }
-//       );
-//     } else {
-//       viewer.setStyle(
-//         { serial: element.number },
-//         {
-//           sphere: {
-//             color: "#fcfcfc",
-//             radius: sphereRadius,
-//             hidden: sphere_hidden,
-//           },
-//           stick: {
-//             color: "#fcfcfc",
-//             radius: stickRadius,
-//             showNonBonded: false,
-//             hidden: stick_hidden,
-//           },
-//         }
-//       );
-//     }
-//   });
-//   viewer.render();
-// }
+    //   atomData.forEach((element) => {
+    //     const stickRadius =
+    //       element.children_qty === 0
+    //         ? 0.2
+    //         : 0.5 + element.children_qty * stickRadiusFactor;
+    //     const sphereRadius = stickRadius * sphereRadiusFactor;
+
+    //     viewer.setStyle(
+    //       { serial: element.number },
+    //       {
+    //         sphere: { radius: sphereRadius },
+    //         stick: {
+    //           color: "spectrum",
+    //           radius: stickRadius,
+    //           showNonBonded: false,
+    //         },
+    //       }
+    //     );
+    //     // console.log("stickRadius :", stickRadius);
+    //     // console.log("sphereRadius :", sphereRadius);
+    //   });
+
+    //   viewer.render();
+    //   load.hidden = true;
+     })
+    .catch(function (error) {
+      Toast.fire({
+        icon: "error",
+        title: `${error.response.data.detail}`,
+      });
+    });
+}
+
 
 function childFamily(id) {
   datos.forEach((element) => {
@@ -745,6 +760,11 @@ function childFamily(id) {
   });
   viewer.render();
 }
+
+
+
+
+
 
 function childZoom() {
   datos.forEach((element) => {
