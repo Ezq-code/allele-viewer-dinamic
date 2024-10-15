@@ -656,6 +656,7 @@ function child() {
     });
 }
 
+
 // function childFamily(id) {
 //   datos.forEach((element) => {
 //     const stickRadius =
@@ -703,41 +704,17 @@ function child() {
 
 function childFamily(id) {
   datos.forEach((element) => {
-    const stickRadius =
-      element.children_qty === 0
-        ? 0.2
-        : 0.5 + element.children_qty * stickRadiusFactor;
-    const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
-
-    if (
-      children.some((item) => item.number === element.number) ||
-      element.number === id
-    ) {
-      // viewer.setStyle(
-      //   { serial: element.number },
-      //   {
-      //     sphere: { color: "#FCCA02", radius: sphereRadius },
-      //     stick: {
-      //       color: "#FCCA02",
-      //       radius: stickRadius,
-      //       showNonBonded: false,
-      //     },
-      //   }
-      // );
-    } else {
+    const isVisible = children.some((item) => item.number === element.number) || element.number === id;
+   
+    if ( !isVisible ) {
       viewer.setStyle(
         { serial: element.number },
         {
           sphere: {
-            color: "#fcfcfc",
-            radius: sphereRadius,
-            hidden: true, // Ocultar esfera
+          hidden: true, // Ocultar esfera
           },
           stick: {
-            color: "#fcfcfc",
-            radius: stickRadius,
-            showNonBonded: false,
-            hidden: true, // Ocultar stick
+           hidden: true, // Ocultar stick
           },
         }
       );
