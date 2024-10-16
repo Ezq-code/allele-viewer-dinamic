@@ -444,10 +444,10 @@ function showInfo(atom) {
             elemento.rs +
             '<button type="button" class="btn btn-block btn-secondary" onclick="loadFamily(' +
             elemento.number +
-            ')">Family</button>' +
+            ')">Descendant</button>' +
             '<button type="button" class="btn btn-block btn-secondary" onclick="childFull(' +
             elemento.number +
-            ')">FamilyFull</button>'
+            ')">Progenitores</button>'
             +
             '<button type="button" class="btn btn-block btn-secondary" onclick="marcar(' +
             atom.x +
@@ -663,10 +663,7 @@ function child() {
     });
 }
 function childFull(id) {
-  // console.log("zoomLevel", zoomLevel);
-
-  console.log("localStorage.getItem :", localStorage.getItem("uploadFileId"));
-  console.log("localStorage_full :", localStorage);
+  
   var data = {
     pdb: localStorage.getItem("uploadFileId"),
     allele_node: id
@@ -675,42 +672,32 @@ function childFull(id) {
   axios
   .post("/business-gestion/extract-allele-parents-tree/", data) 
     .then(function (response) {
-console.log('✌️response --->', response);
-    //   const elemento = response.data;
-    //   let atomData = elemento.results;
-    //   datos = atomData;
-    //   // console.log("datos");
-    //   // console.log(datos);
 
-    //   atomData.forEach((element) => {
-    //     const stickRadius =
-    //       element.children_qty === 0
-    //         ? 0.2
-    //         : 0.5 + element.children_qty * stickRadiusFactor;
-    //     const sphereRadius = stickRadius * sphereRadiusFactor;
+let atomData = response.data;
 
-    //     viewer.setStyle(
-    //       { serial: element.number },
-    //       {
-    //         sphere: { radius: sphereRadius },
-    //         stick: {
-    //           color: "spectrum",
-    //           radius: stickRadius,
-    //           showNonBonded: false,
-    //         },
-    //       }
-    //     );
-    //     // console.log("stickRadius :", stickRadius);
-    //     // console.log("sphereRadius :", sphereRadius);
-    //   });
+datos.forEach((element) => {
+  const isVisible = atomData.some((item) => item === element.number) || element.number === id;
+  if ( !isVisible ) {
+    viewer.setStyle(
+      { serial: element.number },
+      {
+        sphere: {
+        hidden: true, // Ocultar esfera
+        },
+        stick: {
+         hidden: true, // Ocultar stick
+        },
+      }
+    );
+  }
+});
+viewer.render();
 
-    //   viewer.render();
-    //   load.hidden = true;
      })
     .catch(function (error) {
       Toast.fire({
         icon: "error",
-        title: `${error.response.data.detail}`,
+        title: `${error.response}`,
       });
     });
 }
