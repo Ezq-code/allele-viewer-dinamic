@@ -368,10 +368,7 @@ function showGraphChangesForm() {
                     <label for="nx_graph_k">K</label> 
                     <input id="nx_graph_k" class="form-control form-control-border" placeholder="K" type="number" step="0.1" value="${data.nx_graph_k}">
                  </div>
-                 <div class="form-group">
-                    <label for="nx_graph_dim">Dimension</label> 
-                    <input id="nx_graph_dim" class="form-control form-control-border" placeholder="Dimension" type="number" value="${data.nx_graph_dim}">
-                </div>
+                
                 <div class="form-group">
                     <label for="nx_graph_scale">Scale</label> 
                     <input id="nx_graph_scale" class="form-control form-control-border" placeholder="Scale" type="number" value="${data.nx_graph_scale}">
@@ -387,7 +384,6 @@ function showGraphChangesForm() {
                     return {
                         nx_graph_training_iterations: parseInt(document.getElementById('nx_graph_training_iterations').value),
                         nx_graph_k: parseFloat(document.getElementById('nx_graph_k').value),
-                        nx_graph_dim: parseInt(document.getElementById('nx_graph_dim').value),
                         nx_graph_scale: parseInt(document.getElementById('nx_graph_scale').value),
                     };
                 }
