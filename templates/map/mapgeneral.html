@@ -62,6 +62,7 @@
     <script src="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/catiline.js' %}"></script>
     <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/leaflet.timeline.js' %}"></script>
     <script src="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/leaflet.shpfile.js' %}"></script>
+
     <style>
         .modal {
             display: none;
@@ -82,6 +83,11 @@
             border-radius: 10px;
         }
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+    <style>
         .buttonmarker {
             background-color: #333; /* Color de fondo */
             color: white; /* Color del texto */
@@ -188,57 +194,100 @@
 
 {% block content %}
     <!--Modals Create, Edit and modal for Inicial Create-->
-    <div id="modalTypeEventMarker" class="modal" style="height: 60px;">
-        <div class="modal-content" id="draggablefirtmodal">
-            <div>
-                <label for="tipoeventolbfirtmodal">Event Type:</label>
-                <select id="tipoeventofirtmodal">
-                </select>
+    <!-- Modal para la creación del evento -->
+    <div class="modal fade" id="modalTypeEventMarker" tabindex="-1" role="dialog"
+         aria-labelledby="modalTypeEventMarkerLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTypeEventMarkerLabel">Select Event Type</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="tipoeventofirtmodal">Event Type:</label>
+                        <select class="form-group" id="tipoeventofirtmodal">
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="modalMarker" class="modal">
-        <div class="modal-content" id="draggable">
-            <div>
-                <label for="tipoeventolb">Event Type:</label>
-                <select id="tipoevento">
-                </select>
-            </div>
-            <div>
-                <label for="beginlb">Begin:</label>
-                <input type="text" id="fechaini" name="fechaini" size="5">
-                <label for="fechainiyearslb">Years</label>
-                <select name="selectDateTypeBegin" id="selectDateTypeBegin" style="width: 129px;">
-                    <option value="Before Present (YBP)">Before Present (YBP)</option>
-                    <option value="Before Christ (BC)">Before Christ (BC)</option>
-                    <option selected value="After Christ (AC)">After Christ (AC)</option>
-                </select>
-            </div>
-            <div>
-                &nbsp;&nbsp;&nbsp; <label for="endlb">End:</label>
-                <input type="text" id="fechafin" name="fechafin" size="5">
-                <label for="fechainiyearslb">Years</label>
-                <select name="selectDateTypeEnd" id="selectDateTypeEnd" style="width: 129px;">
-                    <option value="Before Present (YBP)">Before Present (YBP)</option>
-                    <option value="Before Christ (BC)">Before Christ (BC)</option>
-                    <option selected value="After Christ (AC)">After Christ (AC)</option>
-                </select>
-            </div>
-            <div>
-                <label for="descripcionlb">Description:</label>
-                <textarea id="descripcion" name="memo" rows="2" cols="21"></textarea>
-            </div>
-            <div>
-                <label for="latlnglb">Latitude-Longitude:</label>
-                <input type="text" id="latitudid" name="latitud" size="7" disabled>
-                <input type="text" id="longitudid" name="longitud" size="8" disabled>
-            </div>
-            <div class="container">
-                <button id="BtnSaveMarker" type="button" class="buttonmarker" title="Save">Save</button>
+    <!-- Modal para la edición del marcador -->
+    <div class="modal fade" id="modalMarker" tabindex="-1" role="dialog" aria-labelledby="modalMarkerLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMarkerLabel">Mark Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="tipoevento">Event Type:</label>
+                        <select class="form-control" id="tipoevento"></select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group d-flex align-items-center">
+                                <label for="fechaini" class="mr-2">Begin:</label>
+                                <input type="text" class="form-control mr-2" id="fechaini" name="fechaini" size="5">
+                                <select class="form-control" name="selectDateTypeBegin" id="selectDateTypeBegin">
+                                    <option value="Before Present (YBP)">Before Present (YBP)</option>
+                                    <option value="Before Christ (BC)">Before Christ (BC)</option>
+                                    <option selected value="After Christ (AC)">After Christ (AC)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group d-flex align-items-r">
+                                <label for="fechafin" class="mr-2">End:</label>
+                                <input class="form-control mr-2" type="text" id="fechafin" name="fechafin" size="5">
+                                <select class="form-control" name="selectDateTypeEnd" id="selectDateTypeEnd">
+                                    <option value="Before Present (YBP)">Before Present (YBP)</option>
+                                    <option value="Before Christ (BC)">Before Christ (BC)</option>
+                                    <option selected value="After Christ (AC)">After Christ (AC)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Description:</label>
+                        <textarea class="form-control" id="descripcion" name="memo"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="latitudid">Latitude:</label>
+                                <input class="form-control" type="text" id="latitudid" name="latitud" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="longitudid">Longitude:</label>
+                                <input class="form-control" type="text" id="longitudid" name="longitud" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnSaveMarker" type="button" class="btn btn-primary">Save</button>
+                    <button id="BtnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -312,6 +361,7 @@
                                                 promise = this.worker.data(cw.makeUrl(file));
                                             }
 
+
                                             promise.then(function (data) {
                                                 self.addData(data);
                                                 self.fire('data:loaded');
@@ -378,14 +428,15 @@
                                     //For Update TimeLine Description in the right panel
                                     function updateList(timeline) {
 
-                                    if (timeline.time < -130000) 
-                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
-                                    else
-                                    if ((timeline.time >= -130000) && (timeline.time <= -61051)) 
-                                      { map.setView(new L.LatLng(-3, 20), 3);}
-                                    else
-                                    if (timeline.time > -61051) 
-                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
+
+                                            if (timeline.time < -130000) {
+                                                map.setView(new L.LatLng(10, 120), 2);
+                                            } //155 23
+                                            else if ((timeline.time >= -130000) && (timeline.time <= -61051)) {
+                                                map.setView(new L.LatLng(-3, 20), 3);
+                                            } else if (timeline.time > -61051) {
+                                                map.setView(new L.LatLng(10, 120), 2);
+                                            } //155 23
 
                                       if (timeline.time <= -64864 && labeled == true)
                                          {
@@ -448,19 +499,19 @@
                                         
                                         var getShortInterval = function (quake) {
 
-                                            if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9)))  {
-                                                return {
-                                                    start: quake.properties.timefinal,
-                                                    end: quake.properties.time//-1//-15000 //quake.properties.timefinal + (-15000 - quake.properties.timefinal)  //851
-                                                };
-                                            } 
-                                            /* else {
-                                                return {
-                                                    start: quake.properties.timefinal,
-                                                    end: quake.properties.timefinal + 74
-                                                };
-                                            } */
-                                        };
+                                                if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9))) {
+                                                    return {
+                                                        start: quake.properties.timefinal,
+                                                        end: quake.properties.time//-1//-15000 //quake.properties.timefinal + (-15000 - quake.properties.timefinal)  //851
+                                                    };
+                                                }
+                                                /* else {
+                                                    return {
+                                                        start: quake.properties.timefinal,
+                                                        end: quake.properties.timefinal + 74
+                                                    };
+                                                } */
+                                            };
 
                                         var timelineControl = L.timelineSliderControl({
                                            // formatOutput: "Human Migrations Timeline", //function (date) {
@@ -504,6 +555,7 @@
                                             },
                                             pointToLayer: function (data, latlng) {
 
+
                                                 if ((data.properties.id == 100) || (data.properties.id == 160) || (data.properties.id == 220) || (data.properties.id == 280) || (data.properties.id == 340) || (data.properties.id == 400) || (data.properties.id == 480) || (data.properties.id == 560) || (data.properties.id == 640) || (data.properties.id == 700) || (data.properties.id == 750) || (data.properties.id == 1000) || (data.properties.id == 1100) || (data.properties.id == 1200) || (data.properties.id == 1300) || (data.properties.id == 1400)) {
                                                     return L.polyline(latlngs, {
                                                         color: 'red'
@@ -540,13 +592,16 @@
                                            style: function (feature) {
                                                 if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
 
-                                                    return {
-                                                        color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
-                                                        fillColor: "#171717",//"#2b2c27",//'#EFFF08',
-                                                        fillOpacity: 1,
-                                                        weight: 6,
-                                                        opacity: 1,
+
+                                                        return {
+                                                            color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
+                                                            fillColor: "#171717",//"#2b2c27",//'#EFFF08',
+                                                            fillOpacity: 1,
+                                                            weight: 6,
+                                                            opacity: 1,
+                                                        }
                                                     }
+
                                                 }
                                            /*      else if (feature.properties.id == 10) {
                                                     return L.circleMarker(latlng, {
@@ -589,6 +644,7 @@
                                         var aFeaturesAll = [];
                                         var aFeatureAll = [];
                                         var aFeature;
+
                                         $.ajax({
                                             type: 'GET',
                                             url: '/business-gestion/markers/',
@@ -669,6 +725,7 @@
                                             }
                                         });
 
+
 										AlleleGeographicZonesLayer = new L.featureGroup().addTo(map);
 
                                         timelineControl.addTo(map);
@@ -695,6 +752,7 @@
 
                                         var layerControl = L.control.layers(baseLayers, overlays).addTo(map); //const
                                               
+
                                         $.ajax({
                                             type: 'GET',
                                             url: '/business-gestion/layers/',
@@ -710,6 +768,7 @@
                                             success: function (response) {
                                                 var data;
                                                 data = response;
+
                                                 data.forEach(function (aLayer) {
 													//if ((aLayer.name == "osmcountriesLayers") && (aLayer.is_visible == false) ) {layerControl.removeLayer(osmcountriesLayers)}
 													//if ((aLayer.name == "satelitalLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(satelitalLayer)}
@@ -719,6 +778,7 @@
 													if ((aLayer.name == "migrationPoints") && (aLayer.is_visible == false) ) {layerControl.removeLayer(migrationPoints)}
 													if ((aLayer.name == "markerLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(markerLayer)}																																																																
                                                 }); 
+
                                             }
                                         });
 
@@ -733,6 +793,7 @@
                                         polygonTimeline.on("change", function (e) {
                                             updateList(e.target);
                                         });
+
 
                                         updateList(migrationTraceRoute);
                                         //updateList(migrationPoints);
@@ -846,9 +907,11 @@
                                         }
                                     });
 
+
                                     L.EditToolbar.Delete.include({
                                         removeAllLayers: false
                                     });
+
 
                                     var drawControl = new L.Control.Draw({
                                         edit: {
@@ -924,6 +987,7 @@
                                     });
 
                                     map.on(L.Draw.Event.DRAWSTART, function (event) {
+
 
                                         markCreated = true;
                                         modalOpenByEdit = false;
@@ -1030,7 +1094,9 @@
                                         }
                                     });
 
+
                                     map.on(L.Draw.Event.CREATED, function (event) {
+
 
                                         if ((markCreated == true) && (selectEventTypeFirtModal.value != -1)) {
                                             selectEventType.value = selectEventTypeFirtModal.value;
@@ -1044,10 +1110,12 @@
                                             modal.style.height = "277px";
                                             buttonSaveMarker.style.display = "block";
 
+
                                             var layer = event.layer;
                                             layer.bindPopup(" ");
 
                                             layer.options.icon.options.iconUrl = iconUrlCurrentMarker;
+
 
                                             var lat = getstrLatFromLayer(layer);
                                             var lng = getstrLngFromLayer(layer);
@@ -1063,6 +1131,7 @@
                                                     iconSize: [25, 41],
                                                     iconAnchor: [12.5, 37],
                                                     iconUrl: iconUrlCurrentMarker
+
                                                 }
                                             });
                                             drawControl.setDrawingOptions({
@@ -1123,6 +1192,7 @@
                                                     },
                                                     error: function (xhr, status, error) {
                                                         console.log("Error: " + error);
+
                                                     }
                                                 });
                                                 markSave = false;
@@ -1147,6 +1217,7 @@
                                             var desc = document.getElementById("descripcion").value;
                                             var tipoEvent = document.getElementById("tipoevento").value;
 
+
                                             if ((tipoEvent != -1) && (fi != "") && (ff != "") && (desc != "") && (idEditMarker != 0)) {
                                                 $.ajax({
                                                     url: '/business-gestion/markers/edit/' + idEditMarker + '/',
@@ -1168,12 +1239,14 @@
                                                         editSave = true;
                                                         map.removeLayer(markerLayer);
                                                         Swal.fire({
+
                                                                 title: 'Updating TimeLine...',
                                                                 showConfirmButton: false,
                                                                 willOpen: () => {
                                                                     Swal.showLoading();
                                                                 }
                                                             });
+
                                                         setTimeout(function () {
                                                         location.reload();
                                                         }, 500);
@@ -1194,6 +1267,7 @@
                                                 showConfirmButton: false,
                                                 timer: 1500
                                             });
+
                                             }
                                         }
                                     });
@@ -1204,6 +1278,7 @@
                                             for (let i = 0; i < markerList.length; i++) {
                                                 var descriptionMark = markerList[i];
                                                 var idMark = 0;
+
 
                                                 $.ajax({
                                                     url: '/business-gestion/markers/get/',
@@ -1252,6 +1327,7 @@
                                     });
 
                                     map.on('draw:toolbarclosed', function (e) {
+
 
                                         if ((editSave == false) && (modalOpenByEdit == true)) {
                                             modal.style.display = "none";
@@ -1324,6 +1400,7 @@
                                                 }
                                                 return "Distance: " + _round(distance, 2) + " m";
                                             }
+
                                         }
                                         return null;
                                     };
@@ -1333,13 +1410,13 @@
                                 </script>
                                 <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/migration-timeline.geojsonp' %}"></script>
                             </div>
+
                         </div>
                         <!-- /.card-header -->
                         <div class="modal-body">
                         </div>
                         <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
                 </div>
                 <!-- /.col -->
             </div>
@@ -1361,4 +1438,3 @@
 	  </aside>
 
 {% endblock %}
-
