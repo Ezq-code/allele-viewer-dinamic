@@ -444,7 +444,11 @@ function showInfo(atom) {
             elemento.rs +
             '<button type="button" class="btn btn-block btn-secondary" onclick="loadFamily(' +
             elemento.number +
-            ')">Family</button>' +
+            ')">Descendant</button>' +
+            '<button type="button" class="btn btn-block btn-secondary" onclick="childFull(' +
+            elemento.number +
+            ')">Progenitores</button>'
+            +
             '<button type="button" class="btn btn-block btn-secondary" onclick="marcar(' +
             atom.x +
             "," +
@@ -559,6 +563,9 @@ function loadFamilyClean() {
 function loadFamily(id) {
   childFamily(id);
 }
+function loadFamilyFull(id) {
+  childFamily(id);
+}
 
 function family(id) {
   const highlightColor = "#ffaa02";
@@ -655,51 +662,46 @@ function child() {
       });
     });
 }
+function childFull(id) {
+  
+  var data = {
+    pdb: localStorage.getItem("uploadFileId"),
+    allele_node: id
+  };
+  axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
+  axios
+  .post("/business-gestion/extract-allele-parents-tree/", data) 
+    .then(function (response) {
 
-// function childFamily(id) {
-//   datos.forEach((element) => {
-//     const stickRadius =
-//       element.children_qty === 0
-//         ? 0.2
-//         : 0.5 + element.children_qty * stickRadiusFactor;
-//     const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
+let atomData = response.data;
 
-//     if (
-//       children.some((item) => item.number === element.number) ||
-//       element.number === id
-//     ) {
-//       viewer.setStyle(
-//         { serial: element.number },
-//         {
-//           sphere: { color: "#FCCA02", radius: sphereRadius },
-//           stick: {
-//             color: "#FCCA02",
-//             radius: stickRadius,
-//             showNonBonded: false,
-//           },
-//         }
-//       );
-//     } else {
-//       viewer.setStyle(
-//         { serial: element.number },
-//         {
-//           sphere: {
-//             color: "#fcfcfc",
-//             radius: sphereRadius,
-//             hidden: sphere_hidden,
-//           },
-//           stick: {
-//             color: "#fcfcfc",
-//             radius: stickRadius,
-//             showNonBonded: false,
-//             hidden: stick_hidden,
-//           },
-//         }
-//       );
-//     }
-//   });
-//   viewer.render();
-// }
+datos.forEach((element) => {
+  const isVisible = atomData.some((item) => item === element.number) || element.number === id;
+  if ( !isVisible ) {
+    viewer.setStyle(
+      { serial: element.number },
+      {
+        sphere: {
+        hidden: true, // Ocultar esfera
+        },
+        stick: {
+         hidden: true, // Ocultar stick
+        },
+      }
+    );
+  }
+});
+viewer.render();
+
+     })
+    .catch(function (error) {
+      Toast.fire({
+        icon: "error",
+        title: `${error.response}`,
+      });
+    });
+}
+
 
 function childFamily(id) {
   datos.forEach((element) => {
@@ -745,6 +747,11 @@ function childFamily(id) {
   });
   viewer.render();
 }
+
+
+
+
+
 
 function childZoom() {
   datos.forEach((element) => {
