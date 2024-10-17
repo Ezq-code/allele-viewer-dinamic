@@ -361,7 +361,6 @@
                                                 promise = this.worker.data(cw.makeUrl(file));
                                             }
 
-
                                             promise.then(function (data) {
                                                 self.addData(data);
                                                 self.fire('data:loaded');
@@ -429,14 +428,15 @@
                                     function updateList(timeline) {
 
 
-                                            if (timeline.time < -130000) {
-                                                map.setView(new L.LatLng(10, 120), 2);
-                                            } //155 23
-                                            else if ((timeline.time >= -130000) && (timeline.time <= -61051)) {
-                                                map.setView(new L.LatLng(-3, 20), 3);
-                                            } else if (timeline.time > -61051) {
-                                                map.setView(new L.LatLng(10, 120), 2);
-                                            } //155 23
+                                    if (timeline.time < -130000) 
+                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
+                                    else
+                                    if ((timeline.time >= -130000) && (timeline.time <= -61051)) 
+                                      { map.setView(new L.LatLng(-3, 20), 3);}
+                                    else
+                                    if (timeline.time > -61051) 
+                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
+
 
                                       if (timeline.time <= -64864 && labeled == true)
                                          {
@@ -481,6 +481,23 @@
 
                                     // eqfeed_callback is called once the earthquake geojsonp file below loads
                                     function eqfeed_callback(data) {
+
+                                        var getInterval = function (quake) {
+                                            if ((quake.properties.id == 100) || (quake.properties.id == 160) || (quake.properties.id == 220) || (quake.properties.id == 280) || (quake.properties.id == 340) || (quake.properties.id == 400) || (quake.properties.id == 480) || (quake.properties.id == 560) || (quake.properties.id == 640) || (quake.properties.id == 700) || (quake.properties.id == 750) || ((quake.properties.id >= 1000) && (quake.properties.id <= 4500))) {
+                                                return {
+                                                    start: quake.properties.timefinal, //quake.properties.time,
+                                                    end: quake.properties.time
+                                                };
+                                            }
+                                         /*    else {
+                                                return {
+                                                    start: quake.properties.timefinal, //quake.properties.time,
+                                                    end: -1//-15000 //851				   
+                                                };
+                                            }*/
+                                        };
+                                        
+                                        var getShortInterval = function (quake) {
 
                                         var getInterval = function (quake) {
                                             if ((quake.properties.id == 100) || (quake.properties.id == 160) || (quake.properties.id == 220) || (quake.properties.id == 280) || (quake.properties.id == 340) || (quake.properties.id == 400) || (quake.properties.id == 480) || (quake.properties.id == 560) || (quake.properties.id == 640) || (quake.properties.id == 700) || (quake.properties.id == 750) || ((quake.properties.id >= 1000) && (quake.properties.id <= 4500))) {
@@ -555,7 +572,6 @@
                                             },
                                             pointToLayer: function (data, latlng) {
 
-
                                                 if ((data.properties.id == 100) || (data.properties.id == 160) || (data.properties.id == 220) || (data.properties.id == 280) || (data.properties.id == 340) || (data.properties.id == 400) || (data.properties.id == 480) || (data.properties.id == 560) || (data.properties.id == 640) || (data.properties.id == 700) || (data.properties.id == 750) || (data.properties.id == 1000) || (data.properties.id == 1100) || (data.properties.id == 1200) || (data.properties.id == 1300) || (data.properties.id == 1400)) {
                                                     return L.polyline(latlngs, {
                                                         color: 'red'
@@ -593,13 +609,19 @@
                                                 if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
 
 
-                                                        return {
-                                                            color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
-                                                            fillColor: "#171717",//"#2b2c27",//'#EFFF08',
-                                                            fillOpacity: 1,
-                                                            weight: 6,
-                                                            opacity: 1,
-                                                        }
+                                        
+                                        var migrationPoints = L.timeline(data, {
+                                            getInterval: getShortInterval,
+                                           style: function (feature) {
+                                                if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
+
+                                                    return {
+                                                        color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
+                                                        fillColor: "#171717",//"#2b2c27",//'#EFFF08',
+                                                        fillOpacity: 1,
+                                                        weight: 6,
+                                                        opacity: 1,
+
                                                     }
 
                                                 }
@@ -639,6 +661,12 @@
                                             },
                                         });
                                         //var polygonTimeline;
+                                        var polygons;
+                                        var aFeatures = [];
+                                        var aFeaturesAll = [];
+                                        var aFeatureAll = [];
+                                        var aFeature;
+                                        var polygonTimeline;
                                         var polygons;
                                         var aFeatures = [];
                                         var aFeaturesAll = [];
@@ -711,17 +739,23 @@
 
                                                         return L.marker(latlng, {
                                                             icon: //markerIconLoad
+
                                                                 L.icon({
                                                                     iconUrl: features.properties.iconUrlEvent,
                                                                     iconSize: [25, 41],
                                                                     shadowSize: [41, 41],
                                                                     shadowAnchor: [13, 20]
                                                                 })
-                                                        }).bindPopup(features.properties.description);                                         
+
+                                                        }).bindPopup(features.properties.description);
+                                                        
+
                                                     }
                                                 });
                                                 timelineControl.addTimelines(polygonTimeline);
                                                 polygonTimeline.addTo(map);
+
+
                                             }
                                         });
 
@@ -735,6 +769,7 @@
                                         //markerLayer.remove();
 
                                        // const overlays = {};
+
 
                                        const baseLayers = {
                                             'Countries': osmcountriesLayers,
@@ -752,7 +787,6 @@
 
                                         var layerControl = L.control.layers(baseLayers, overlays).addTo(map); //const
                                               
-
                                         $.ajax({
                                             type: 'GET',
                                             url: '/business-gestion/layers/',
@@ -782,6 +816,7 @@
                                             }
                                         });
 
+
                                         //map.addLayer(LandLGMShapefile);
                                         migrationTraceRoute.on("change", function (e) {
                                             updateList(e.target);
@@ -790,13 +825,10 @@
                                             updateList(e.target);
                                         });
 
-                                        polygonTimeline.on("change", function (e) {
-                                            updateList(e.target);
-                                        });
-
-
                                         updateList(migrationTraceRoute);
                                         //updateList(migrationPoints);
+
+
                                     }
 
                                     var campoTextoDescripcion = document.getElementById("descripcion");
@@ -912,7 +944,6 @@
                                         removeAllLayers: false
                                     });
 
-
                                     var drawControl = new L.Control.Draw({
                                         edit: {
                                             featureGroup: markerLayer,
@@ -941,6 +972,7 @@
                                     var buttonSaveMarker = document.getElementById("BtnSaveMarker");
                                     var span = document.getElementsByClassName("close")[0];
 
+
                                     iconUrlCurrentMarker = "{% static 'assets/dist/Leaflet/marker_black.png' %}";
                                     
                                     var markCreated = false;
@@ -956,6 +988,8 @@
                                     var menuEditOpen = false;
                                     var menuDeleteOpen = false;
                                     var markerList = [];
+
+
 
                                     document.getElementById("tipoeventofirtmodal").addEventListener("change", function () {
 
@@ -988,7 +1022,6 @@
 
                                     map.on(L.Draw.Event.DRAWSTART, function (event) {
 
-
                                         markCreated = true;
                                         modalOpenByEdit = false;
                                         if (markCreated == true) {
@@ -1004,6 +1037,7 @@
                                             modalEvent.style.display = "block";
                                         }
                                     });
+
 
                                     map.on('draw:drawstop', function (e) {
                                         if (markCreated == true) {
@@ -1042,7 +1076,9 @@
                                         var lng = getstrLngFromLayer(layer);
                                         document.getElementById("latitudid").value = lat;
                                         document.getElementById("longitudid").value = lng;
-                                    });                            
+
+                                    });
+
 
                                     map.on('popupopen', function (e) {
                                         if (editStart == true) {
@@ -1097,7 +1133,6 @@
 
                                     map.on(L.Draw.Event.CREATED, function (event) {
 
-
                                         if ((markCreated == true) && (selectEventTypeFirtModal.value != -1)) {
                                             selectEventType.value = selectEventTypeFirtModal.value;
                                             modalEvent.style.display = "none";
@@ -1109,7 +1144,6 @@
                                             modal.style.top = "350px";
                                             modal.style.height = "277px";
                                             buttonSaveMarker.style.display = "block";
-
 
                                             var layer = event.layer;
                                             layer.bindPopup(" ");
@@ -1139,6 +1173,7 @@
                                                     icon: new MyCustomMarkerCustom()
                                                 }
                                             });
+
 
                                             var campoTextoLat = document.getElementById("latitudid");
                                             var campoTextoLong = document.getElementById("longitudid");
@@ -1179,16 +1214,6 @@
                                                     },
                                                     success: function (response) {
                                                         layerMarkerCreate._popup._content = desc;
-                                                        Swal.fire({
-                                                                title: 'Updating TimeLine...',
-                                                                showConfirmButton: false,
-                                                                willOpen: () => {
-                                                                    Swal.showLoading();
-                                                                }
-                                                            });
-                                                        setTimeout(function () {
-                                                        location.reload();
-                                                        }, 500);
                                                     },
                                                     error: function (xhr, status, error) {
                                                         console.log("Error: " + error);
@@ -1238,18 +1263,7 @@
                                                         idEditMarker = 0;
                                                         editSave = true;
                                                         map.removeLayer(markerLayer);
-                                                        Swal.fire({
 
-                                                                title: 'Updating TimeLine...',
-                                                                showConfirmButton: false,
-                                                                willOpen: () => {
-                                                                    Swal.showLoading();
-                                                                }
-                                                            });
-
-                                                        setTimeout(function () {
-                                                        location.reload();
-                                                        }, 500);
                                                     },
                                                     error: function (xhr, status, error) {
                                                         editSave = false;
@@ -1267,7 +1281,6 @@
                                                 showConfirmButton: false,
                                                 timer: 1500
                                             });
-
                                             }
                                         }
                                     });
@@ -1278,7 +1291,6 @@
                                             for (let i = 0; i < markerList.length; i++) {
                                                 var descriptionMark = markerList[i];
                                                 var idMark = 0;
-
 
                                                 $.ajax({
                                                     url: '/business-gestion/markers/get/',
@@ -1299,16 +1311,6 @@
                                                                 data: {},
                                                                 success: function (response) {
                                                                     deleteSave = true;
-                                                                    Swal.fire({
-                                                                      title: 'Updating TimeLine...',
-                                                                      showConfirmButton: false,
-                                                                      willOpen: () => {
-                                                                      Swal.showLoading();
-                                                                     }
-                                                                    });
-                                                                    setTimeout(function () {
-                                                                     location.reload();
-                                                                     }, 500);
                                                                 },
                                                                 error: function (xhr, status, error) {
                                                                     deleteSave = false;
@@ -1322,11 +1324,87 @@
                                             
                                             deleteStart = false;
                                             deleteSelect = false;
+                                            //markerLayer.remove();
                                             map.removeLayer(markerLayer);
                                         }
                                     });
 
                                     map.on('draw:toolbarclosed', function (e) {
+
+                                        if ((editSave == false) && (modalOpenByEdit == true)) {
+                                            modal.style.display = "none";
+                                        }
+                                        if (editSave == true) {
+                                            editSave = false;
+                                        }
+                                        if (deleteSave == true) {
+                                            deleteSave = false;
+                                        }
+                                        if (menuEditOpen == true) {
+                                            menuEditOpen = false;
+                                            map.removeLayer(markerLayer);
+                                        }
+                                        if (menuDeleteOpen == true) {
+                                            menuDeleteOpen = false;
+                                            map.removeLayer(markerLayer);
+                                        }
+                                        modalOpenByEdit = false;
+                                    });
+
+                                    // Truncate value based on number of decimals
+                                    var _round = function (num, len) {
+                                        return Math.round(num * (Math.pow(10, len))) / (Math.pow(10, len));
+                                    };
+                                    // Helper method to format LatLng object (x.xxxxxx, y.yyyyyy)
+                                    var strLatLng = function (latlng) {
+                                        return "(" + _round(latlng.lat, 6) + ", " + _round(latlng.lng, 6) + ")";
+                                    };
+                                    var strLat = function (latlng) {
+                                        return _round(latlng.lat, 6);
+                                    };
+                                    var strLng = function (latlng) {
+                                        return _round(latlng.lng, 6);
+                                    };
+                                    var getstrLatFromLayer = function (layer) {
+                                        if (layer instanceof L.Marker || layer instanceof L.CircleMarker) {
+                                            return strLat(layer.getLatLng());
+                                        }
+                                    };
+                                    var getstrLngFromLayer = function (layer) {
+                                        if (layer instanceof L.Marker || layer instanceof L.CircleMarker) {
+                                            return strLng(layer.getLatLng());
+                                        }
+                                    };
+                                    var getPopupContent = function (layer) {
+                                        // Marker - add lat/long
+                                        if (layer instanceof L.Marker || layer instanceof L.CircleMarker) {
+                                            return strLatLng(layer.getLatLng());
+                                            // Circle - lat/long, radius
+                                        } else if (layer instanceof L.Circle) {
+                                            var center = layer.getLatLng(),
+                                                radius = layer.getRadius();
+                                            return "Center: " + strLatLng(center) + "<br />"
+                                                + "Radius: " + _round(radius, 2) + " m";
+                                            // Rectangle/Polygon - area
+                                        } else if (layer instanceof L.Polygon) {
+                                            var latlngs = layer._defaultShape ? layer._defaultShape() : layer.getLatLngs(),
+                                                area = L.GeometryUtil.geodesicArea(latlngs);
+                                            return "Area: " + L.GeometryUtil.readableArea(area, true);
+                                            // Polyline - distance
+                                        } else if (layer instanceof L.Polyline) {
+                                            var latlngs = layer._defaultShape ? layer._defaultShape() : layer.getLatLngs(),
+                                                distance = 0;
+                                            if (latlngs.length < 2) {
+                                                return "Distance: N/A";
+                                            } else {
+                                                for (var i = 0; i < latlngs.length - 1; i++) {
+                                                    distance += latlngs[i].distanceTo(latlngs[i + 1]);
+                                                }
+                                                return "Distance: " + _round(distance, 2) + " m";
+                                            }
+                                        }
+                                        return null;
+                                    };
 
 
                                         if ((editSave == false) && (modalOpenByEdit == true)) {
@@ -1401,10 +1479,13 @@
                                                 return "Distance: " + _round(distance, 2) + " m";
                                             }
 
-                                        }
-                                        return null;
-                                    };
-                                      
+
+                                    function myFunction() {
+                                     var element = document.getElementById("info");
+                                     element.classList.toggle("showSideBar");
+                                    }
+                                        
+
                                     markerLayer.remove();
 
                                 </script>
@@ -1415,6 +1496,7 @@
                         <!-- /.card-header -->
                         <div class="modal-body">
                         </div>
+
                         <!-- /.card-body -->
                     </div>
                 </div>
@@ -1436,5 +1518,6 @@
 		<ul id="displayed-list" style="font-size:11px;"></ul>
 		</div>
 	  </aside>
-
 {% endblock %}
+
+
