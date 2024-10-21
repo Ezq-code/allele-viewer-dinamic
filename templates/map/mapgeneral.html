@@ -62,26 +62,9 @@
     <script src="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/catiline.js' %}"></script>
     <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/leaflet.timeline.js' %}"></script>
     <script src="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/leaflet.shpfile.js' %}"></script>
+
+
     <style>
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 150px;
-            top: 258px;
-            width: 345px;
-            height: 277px;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            padding: 13px;
-            border: 1px solid #888;
-            border-radius: 10px;
-        }
-
         .buttonmarker {
             background-color: #333; /* Color de fondo */
             color: white; /* Color del texto */
@@ -188,57 +171,100 @@
 
 {% block content %}
     <!--Modals Create, Edit and modal for Inicial Create-->
-    <div id="modalTypeEventMarker" class="modal" style="height: 60px;">
-        <div class="modal-content" id="draggablefirtmodal">
-            <div>
-                <label for="tipoeventolbfirtmodal">Event Type:</label>
-                <select id="tipoeventofirtmodal">
-                </select>
+    <!-- Modal para la creación del evento -->
+    <div class="modal fade" id="modalTypeEventMarker" tabindex="-1" role="dialog"
+         aria-labelledby="modalTypeEventMarkerLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTypeEventMarkerLabel">Select Event Type</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="tipoeventofirtmodal">Event Type:</label>
+                        <select class="form-group" id="tipoeventofirtmodal">
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="modalMarker" class="modal">
-        <div class="modal-content" id="draggable">
-            <div>
-                <label for="tipoeventolb">Event Type:</label>
-                <select id="tipoevento">
-                </select>
-            </div>
-            <div>
-                <label for="beginlb">Begin:</label>
-                <input type="text" id="fechaini" name="fechaini" size="5">
-                <label for="fechainiyearslb">Years</label>
-                <select name="selectDateTypeBegin" id="selectDateTypeBegin" style="width: 129px;">
-                    <option value="Before Present (YBP)">Before Present (YBP)</option>
-                    <option value="Before Christ (BC)">Before Christ (BC)</option>
-                    <option selected value="After Christ (AC)">After Christ (AC)</option>
-                </select>
-            </div>
-            <div>
-                &nbsp;&nbsp;&nbsp; <label for="endlb">End:</label>
-                <input type="text" id="fechafin" name="fechafin" size="5">
-                <label for="fechainiyearslb">Years</label>
-                <select name="selectDateTypeEnd" id="selectDateTypeEnd" style="width: 129px;">
-                    <option value="Before Present (YBP)">Before Present (YBP)</option>
-                    <option value="Before Christ (BC)">Before Christ (BC)</option>
-                    <option selected value="After Christ (AC)">After Christ (AC)</option>
-                </select>
-            </div>
-            <div>
-                <label for="descripcionlb">Description:</label>
-                <textarea id="descripcion" name="memo" rows="2" cols="21"></textarea>
-            </div>
-            <div>
-                <label for="latlnglb">Latitude-Longitude:</label>
-                <input type="text" id="latitudid" name="latitud" size="7" disabled>
-                <input type="text" id="longitudid" name="longitud" size="8" disabled>
-            </div>
-            <div class="container">
-                <button id="BtnSaveMarker" type="button" class="buttonmarker" title="Save">Save</button>
+    <!-- Modal para la edición del marcador -->
+    <div class="modal fade" id="modalMarker" tabindex="-1" role="dialog" aria-labelledby="modalMarkerLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMarkerLabel">Mark Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="tipoevento">Event Type:</label>
+                        <select class="form-control" id="tipoevento"></select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group d-flex align-items-center">
+                                <label for="fechaini" class="mr-2">Begin:</label>
+                                <input type="text" class="form-control mr-2" id="fechaini" name="fechaini" size="5">
+                                <select class="form-control" name="selectDateTypeBegin" id="selectDateTypeBegin">
+                                    <option value="Before Present (YBP)">Before Present (YBP)</option>
+                                    <option value="Before Christ (BC)">Before Christ (BC)</option>
+                                    <option selected value="After Christ (AC)">After Christ (AC)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group d-flex align-items-r">
+                                <label for="fechafin" class="mr-2">End:</label>
+                                <input class="form-control mr-2" type="text" id="fechafin" name="fechafin" size="5">
+                                <select class="form-control" name="selectDateTypeEnd" id="selectDateTypeEnd">
+                                    <option value="Before Present (YBP)">Before Present (YBP)</option>
+                                    <option value="Before Christ (BC)">Before Christ (BC)</option>
+                                    <option selected value="After Christ (AC)">After Christ (AC)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Description:</label>
+                        <textarea class="form-control" id="descripcion" name="memo"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="latitudid">Latitude:</label>
+                                <input class="form-control" type="text" id="latitudid" name="latitud" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="longitudid">Longitude:</label>
+                                <input class="form-control" type="text" id="longitudid" name="longitud" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnSaveMarker" type="button" class="btn btn-primary">Save</button>
+                    <button id="BtnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -374,7 +400,7 @@
                                             ],
                                         });
 
-                                        //Layer for Marker	  
+                                        //Layer for Marker
                                         markerLayer = new L.featureGroup().addTo(map);
                                         var markerMigrationPointLayer = new L.featureGroup().addTo(map);
                                         var labeled = false;
@@ -382,14 +408,14 @@
                                         //For Update TimeLine Description in the right panel
                                         function updateList(timeline) {
 
-                                    if (timeline.time < -130000) 
-                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
-                                    else
-                                    if ((timeline.time >= -130000) && (timeline.time <= -61051)) 
-                                      { map.setView(new L.LatLng(-3, 20), 3);}
-                                    else
-                                    if (timeline.time > -61051) 
-                                      { map.setView(new L.LatLng(10, 120), 2);} //155 23
+                                            if (timeline.time < -130000) {
+                                                map.setView(new L.LatLng(10, 120), 2);
+                                            } //155 23
+                                            else if ((timeline.time >= -130000) && (timeline.time <= -61051)) {
+                                                map.setView(new L.LatLng(-3, 20), 3);
+                                            } else if (timeline.time > -61051) {
+                                                map.setView(new L.LatLng(10, 120), 2);
+                                            } //155 23
 
                                             if (timeline.time <= -64864 && labeled == true) {
                                                 markerMigrationPointLayer.clearLayers();
@@ -443,26 +469,26 @@
                                                 /*    else {
                                                        return {
                                                            start: quake.properties.timefinal, //quake.properties.time,
-                                                           end: -1//-15000 //851				   
+                                                           end: -1//-15000 //851
                                                        };
                                                    }*/
                                             };
 
                                             var getShortInterval = function (quake) {
 
-                                            if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9)))  {
-                                                return {
-                                                    start: quake.properties.timefinal,
-                                                    end: quake.properties.time//-1//-15000 //quake.properties.timefinal + (-15000 - quake.properties.timefinal)  //851
-                                                };
-                                            } 
-                                            /* else {
-                                                return {
-                                                    start: quake.properties.timefinal,
-                                                    end: quake.properties.timefinal + 74
-                                                };
-                                            } */
-                                        };
+                                                if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9))) {
+                                                    return {
+                                                        start: quake.properties.timefinal,
+                                                        end: quake.properties.time//-1//-15000 //quake.properties.timefinal + (-15000 - quake.properties.timefinal)  //851
+                                                    };
+                                                }
+                                                /* else {
+                                                    return {
+                                                        start: quake.properties.timefinal,
+                                                        end: quake.properties.timefinal + 74
+                                                    };
+                                                } */
+                                            };
 
                                             var timelineControl = L.timelineSliderControl({
                                                 // formatOutput: "Human Migrations Timeline", //function (date) {
@@ -506,36 +532,37 @@
                                                 },
                                                 pointToLayer: function (data, latlng) {
 
-                                                if ((data.properties.id == 100) || (data.properties.id == 160) || (data.properties.id == 220) || (data.properties.id == 280) || (data.properties.id == 340) || (data.properties.id == 400) || (data.properties.id == 480) || (data.properties.id == 560) || (data.properties.id == 640) || (data.properties.id == 700) || (data.properties.id == 750) || (data.properties.id == 1000) || (data.properties.id == 1100) || (data.properties.id == 1200) || (data.properties.id == 1300) || (data.properties.id == 1400)) {
-                                                    return L.polyline(latlngs, {
-                                                        color: 'red'
-                                                    });
-                                                } 
-                                                else
-                                                 if (data.properties.id == 10) {
-                                                    return L.circleMarker(latlng, {
-                                                    radius: data.properties.mag,
-                                                    color: "#050400", //"#000000",
-                                                    fillColor: "#f5d843",//"#000000",
-                                                    fillOpacity: 0.7,
-                                                    weight: 3,
-                                                    opacity: 0.8,
-                                                }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place)); //.openPopup()
-                                                } 
-                                               /* else 
-                                                {
-                                                    var hue_min = 120;
-                                                    var hue_max = 0;
-                                                    var hue =
-                                                        (data.properties.id / 10) * (hue_max - hue_min) + hue_min;
-                                                     return L.polyline(latlng, {
-                                                   radius: data.properties.id,
-                                                         color: "#EFFF08",
-                                                         fillColor: "#EFFF08",
-                                                     });.bindPopup(data.properties.title);
-                                                } */
-                                            }, 
-                                        });
+                                                    if ((data.properties.id == 100) || (data.properties.id == 160) || (data.properties.id == 220) || (data.properties.id == 280) || (data.properties.id == 340) || (data.properties.id == 400) || (data.properties.id == 480) || (data.properties.id == 560) || (data.properties.id == 640) || (data.properties.id == 700) || (data.properties.id == 750) || (data.properties.id == 1000) || (data.properties.id == 1100) || (data.properties.id == 1200) || (data.properties.id == 1300) || (data.properties.id == 1400)) {
+                                                        return L.polyline(latlngs, {
+                                                            color: 'red'
+                                                        });
+                                                    } else if (data.properties.id == 10) {
+                                                        return L.circleMarker(latlng, {
+                                                            radius: data.properties.mag,
+                                                            color: "#050400", //"#000000",
+                                                            fillColor: "#f5d843",//"#000000",
+                                                            fillOpacity: 0.7,
+                                                            weight: 3,
+                                                            opacity: 0.8,
+                                                        }).bindPopup(L.popup({
+                                                            closeOnClick: false,
+                                                            autoClose: false
+                                                        }).setContent(data.properties.place)); //.openPopup()
+                                                    }
+                                                    /* else
+                                                     {
+                                                         var hue_min = 120;
+                                                         var hue_max = 0;
+                                                         var hue =
+                                                             (data.properties.id / 10) * (hue_max - hue_min) + hue_min;
+                                                          return L.polyline(latlng, {
+                                                        radius: data.properties.id,
+                                                              color: "#EFFF08",
+                                                              fillColor: "#EFFF08",
+                                                          });.bindPopup(data.properties.title);
+                                                     } */
+                                                },
+                                            });
 
 
                                             var migrationPoints = L.timeline(data, {
@@ -543,50 +570,53 @@
                                                 style: function (feature) {
                                                     if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
 
-                                                    return {
-                                                        color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
-                                                        fillColor: "#171717",//"#2b2c27",//'#EFFF08',
-                                                        fillOpacity: 1,
-                                                        weight: 6,
-                                                        opacity: 1,
+                                                        return {
+                                                            color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
+                                                            fillColor: "#171717",//"#2b2c27",//'#EFFF08',
+                                                            fillOpacity: 1,
+                                                            weight: 6,
+                                                            opacity: 1,
+                                                        }
                                                     }
-                                                }
-                                           /*      else if (feature.properties.id == 10) {
-                                                    return L.circleMarker(latlng, {
-                                                    radius: data.properties.id,
-                                                    color: "#050400", //"#000000",
-                                                    fillColor: "#f5d843",//"#000000",
-                                                    fillOpacity: 0.7,
-                                                    weight: 3,
-                                                    opacity: 0.8,
-                                                }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place));
-                                                } */
-                                            }, 
-                                            pointToLayer: function (data, latlng) {
-                                                if (data.properties.id == 10) {   
-                                                return L.circleMarker(latlng, {
-                                                    radius: data.properties.mag,
-                                                    color: "#050400", //"#000000",
-                                                    fillColor: "#f5d843",//"#000000",
-                                                    fillOpacity: 0.7,
-                                                    weight: 3,
-                                                    opacity: 0.8,
-                                                }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place));//.openPopup(); //data.properties.place
-                                            }
-                                          /*  else 
-                                            if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
+                                                    /*      else if (feature.properties.id == 10) {
+                                                             return L.circleMarker(latlng, {
+                                                             radius: data.properties.id,
+                                                             color: "#050400", //"#000000",
+                                                             fillColor: "#f5d843",//"#000000",
+                                                             fillOpacity: 0.7,
+                                                             weight: 3,
+                                                             opacity: 0.8,
+                                                         }).bindPopup(L.popup({closeOnClick: false, autoClose:false}).setContent(data.properties.place));
+                                                         } */
+                                                },
+                                                pointToLayer: function (data, latlng) {
+                                                    if (data.properties.id == 10) {
+                                                        return L.circleMarker(latlng, {
+                                                            radius: data.properties.mag,
+                                                            color: "#050400", //"#000000",
+                                                            fillColor: "#f5d843",//"#000000",
+                                                            fillOpacity: 0.7,
+                                                            weight: 3,
+                                                            opacity: 0.8,
+                                                        }).bindPopup(L.popup({
+                                                            closeOnClick: false,
+                                                            autoClose: false
+                                                        }).setContent(data.properties.place));//.openPopup(); //data.properties.place
+                                                    }
+                                                    /*  else
+                                                      if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
 
-                                              return  {
-                                                color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
-                                                fillColor: "#171717",//"#2b2c27",//'#EFFF08',
-                                                fillOpacity: 1,
-                                                weight: 6,
-                                                opacity: 1,
-                                              }
-                                            }*/ 
-                                            },
-                                        });
-
+                                                        return  {
+                                                          color: "#171717", //"#2b2c27",//"#EFFF08", //"#6699FF",
+                                                          fillColor: "#171717",//"#2b2c27",//'#EFFF08',
+                                                          fillOpacity: 1,
+                                                          weight: 6,
+                                                          opacity: 1,
+                                                        }
+                                                      }*/
+                                                },
+                                            });
+ 
                                             var polygonTimeline;
                                             var polygons;
                                             var aFeatures = [];
@@ -648,7 +678,7 @@
 
                                                     var getpoligonInterval = function (polygons) {
                                                         return {
-                                                            start: polygons.properties.start,//-71000, 
+                                                            start: polygons.properties.start,//-71000,
                                                             end: polygons.properties.end,//-15000
                                                         }
                                                     };
@@ -700,7 +730,7 @@
                                                 'Allele Geographic Zones': AlleleGeographicZonesLayer
                                             };
 
-                                            const layerControl = L.control.layers(baseLayers, overlays).addTo(map);
+                                            var layerControl = L.control.layers(baseLayers, overlays).addTo(map); //const
 
                                             $.ajax({
                                                 type: 'GET',
@@ -720,10 +750,8 @@
                                                     data.forEach(function (aLayer) {
                                                         //if ((aLayer.name == "osmcountriesLayers") && (aLayer.is_visible == false) ) {layerControl.removeLayer(osmcountriesLayers)}
                                                         //if ((aLayer.name == "satelitalLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(satelitalLayer)}
-                                                        //if ((aLayer.name == "oceanLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(oceanLayer)}	
-                                                        if ((aLayer.name == "LandLGMShapefile") && (aLayer.is_visible == false)) {
-                                                            layerControl.removeLayer(LandLGMShapefile)
-                                                        }
+                                                        //if ((aLayer.name == "oceanLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(oceanLayer)}
+                                                        //if ((aLayer.name == "LandLGMShapefile") && (aLayer.is_visible == false) ) {layerControl.removeLayer(LandLGMShapefile)}
                                                         if ((aLayer.name == "migrationTraceRoute") && (aLayer.is_visible == false)) {
                                                             layerControl.removeLayer(migrationTraceRoute)
                                                         }
@@ -751,6 +779,7 @@
 
                                         }
 
+
                                         var campoTextoDescripcion = document.getElementById("descripcion");
                                         var textDescripcion = document.getElementById("descripcion");
                                         var datefechaini = document.getElementById("fechaini");
@@ -767,7 +796,7 @@
                                         selectEventTypeFirtModal.add(option);
                                         var idEditMarker = 0;
 
-                                        //Get marker to map	
+                                        //Get marker to map
                                         $.ajax({
                                             type: 'GET',
                                             url: '/business-gestion/markers/',
@@ -821,7 +850,7 @@
                                                 });
                                             }
                                         });
-                                        //Get event types and add to combobox	
+                                        //Get event types and add to combobox
                                         $.ajax({
                                             type: 'GET',
                                             url: '/business-gestion/events/',
@@ -847,6 +876,7 @@
                                                     selectEventType.add(option);
                                                     selectEventTypeFirtModal.add(option1);
                                                 });
+
                                             }
                                         });
 
@@ -886,9 +916,9 @@
 
                                         var modal = document.getElementById("modalMarker");
                                         var modalEvent = document.getElementById("modalTypeEventMarker");
-
                                         var buttonCreateMarker = document.getElementById("btnCreateMarker");
                                         var buttonSaveMarker = document.getElementById("BtnSaveMarker");
+                                        var buttonClose = document.getElementById("BtnClose");
                                         var span = document.getElementsByClassName("close")[0];
 
                                         iconUrlCurrentMarker = "{% static 'assets/dist/Leaflet/marker_black.png' %}";
@@ -903,7 +933,10 @@
                                         var modalOpenByEdit = false;
                                         var deleteSave = false;
                                         var layerMarkerEdit;
+                                        var menuEditOpen = false;
+                                        var menuDeleteOpen = false;
                                         var markerList = [];
+
 
                                         document.getElementById("tipoeventofirtmodal").addEventListener("change", function () {
 
@@ -939,6 +972,8 @@
                                             markCreated = true;
                                             modalOpenByEdit = false;
                                             if (markCreated == true) {
+                                                //markerLayer = new L.featureGroup().addTo(map);
+                                                markerLayer.addTo(map);
                                                 selectEventTypeFirtModal.value = -1
                                                 var campoTextoLat = document.getElementById("latitudid");
                                                 var campoTextoLong = document.getElementById("longitudid");
@@ -946,7 +981,7 @@
                                                 campoTextoLat.value = '';
                                                 campoTextoLong.value = '';
                                                 campoTextoDescripcion.value = '';
-                                                modalEvent.style.display = "block";
+                                                $(modalEvent).modal('show');
                                             }
                                         });
 
@@ -957,6 +992,9 @@
                                         });
 
                                         map.on('draw:editstart', function (e) {
+                                            //markerLayer = new L.featureGroup().addTo(map);
+                                            markerLayer.addTo(map);
+                                            menuEditOpen = true;
                                             editStart = true;
                                             modalOpenByEdit = false;
                                             var campoTextoLat = document.getElementById("latitudid");
@@ -973,6 +1011,9 @@
 
                                         map.on('draw:deletestart', function (e) {
                                             deleteStart = true;
+                                            //markerLayer = new L.featureGroup().addTo(map);
+                                            markerLayer.addTo(map);
+                                            menuDeleteOpen = true;
                                         });
 
                                         map.on('draw:editmove', function (e) {
@@ -1014,10 +1055,9 @@
                                                             document.getElementById("latitudid").value = data.latitude;
                                                             document.getElementById("longitudid").value = data.longitude;
                                                             document.getElementById("tipoevento").value = data.event_type_id;
-                                                            modal.style.display = "block";
-                                                            modal.style.height = "251px";
-                                                            modal.style.top = "305px";
+                                                            $(modal).modal('show');
                                                             buttonSaveMarker.style.display = "none";
+                                                            buttonClose.textContent = "OK";
                                                             modalOpenByEdit = true;
                                                             editSelect = true;
                                                             document.getElementById("descripcion").disabled = false;
@@ -1042,9 +1082,9 @@
                                                 document.getElementById("descripcion").disabled = false;
                                                 document.getElementById("fechaini").disabled = false;
                                                 document.getElementById("fechafin").disabled = false;
-                                                modal.style.display = "block";
-                                                modal.style.top = "258px";
-                                                modal.style.height = "277px";
+                                                $(modal).modal('show');
+                                                //modal.style.top = "350px";
+                                                //modal.style.height = "277px";
                                                 buttonSaveMarker.style.display = "block";
 
                                                 var layer = event.layer;
@@ -1113,6 +1153,16 @@
                                                         },
                                                         success: function (response) {
                                                             layerMarkerCreate._popup._content = desc;
+                                                            Swal.fire({
+                                                                title: 'Updating TimeLine...',
+                                                                showConfirmButton: false,
+                                                                willOpen: () => {
+                                                                    Swal.showLoading();
+                                                                }
+                                                            });
+                                                            setTimeout(function () {
+                                                                location.reload();
+                                                            }, 500);
                                                         },
                                                         error: function (xhr, status, error) {
                                                             console.log("Error: " + error);
@@ -1121,6 +1171,13 @@
                                                     markSave = false;
                                                     markCreated = false;
                                                     modal.style.display = "none";
+                                                    //var lc = document.getElementsByClassName('leaflet-control-layers');
+                                                    //lc[4].style.visibility = 'hidden';
+                                                    //markerLayer.remove();
+                                                    //markerLayer.style.visibility = 'hidden'
+                                                    //markerLayer.remove();
+                                                    //L.control.removeLayer(markerLayer);
+                                                    map.removeLayer(markerLayer);
                                                 } else {
                                                     Swal.fire({
                                                         icon: "error",
@@ -1131,7 +1188,6 @@
                                                 }
                                             }
                                         };
-
                                         map.on(L.Draw.Event.EDITED, function (event) {
                                             if (editSelect == true) {
                                                 var fi = document.getElementById("fechaini").value;
@@ -1158,10 +1214,21 @@
                                                             layerMarkerEdit.popup._content = desc;
                                                             idEditMarker = 0;
                                                             editSave = true;
+                                                            map.removeLayer(markerLayer);
+                                                            Swal.fire({
+                                                                title: 'Updating TimeLine...',
+                                                                showConfirmButton: false,
+                                                                willOpen: () => {
+                                                                    Swal.showLoading();
+                                                                }
+                                                            });
+                                                            setTimeout(function () {
+                                                                location.reload();
+                                                            }, 500);
                                                         },
                                                         error: function (xhr, status, error) {
                                                             editSave = false;
-                                                            modal.style.display = "block";
+                                                            $(modal).modal('show');
                                                             idEditMarker = 0;
                                                             console.log("Error: " + error);
                                                         }
@@ -1205,6 +1272,16 @@
                                                                     data: {},
                                                                     success: function (response) {
                                                                         deleteSave = true;
+                                                                        Swal.fire({
+                                                                         title: 'Updating TimeLine...',
+                                                                         showConfirmButton: false,
+                                                                         willOpen: () => {
+                                                                         Swal.showLoading();
+                                                                         }
+                                                                        });
+                                                                        setTimeout(function () {
+                                                                         location.reload();
+                                                                        }, 500);
                                                                     },
                                                                     error: function (xhr, status, error) {
                                                                         deleteSave = false;
@@ -1218,6 +1295,8 @@
 
                                                 deleteStart = false;
                                                 deleteSelect = false;
+                                                //markerLayer.remove();
+                                                map.removeLayer(markerLayer);
                                             }
                                         });
 
@@ -1232,7 +1311,14 @@
                                             if (deleteSave == true) {
                                                 deleteSave = false;
                                             }
-
+                                            if (menuEditOpen == true) {
+                                                menuEditOpen = false;
+                                                map.removeLayer(markerLayer);
+                                            }
+                                            if (menuDeleteOpen == true) {
+                                                menuDeleteOpen = false;
+                                                map.removeLayer(markerLayer);
+                                            }
                                             modalOpenByEdit = false;
                                         });
 
@@ -1291,27 +1377,18 @@
                                             return null;
                                         };
 
-
-                                        function myFunction() {
-                                            var element = document.getElementById("info");
-                                            element.classList.toggle("showSideBar");
-                                        }
-
-
-                                        //const popup = L.popup({ closeOnClick: false, autoClose:false}).setContent("It's Movable.\n(Draggable)");
-                                        //L.circleMarker([37.75,140.47]).addTo(map).bindPopup(popup).openPopup();
+                                        markerLayer.remove();
 
                                     </script>
                                     <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/migration-timeline.geojsonp' %}"></script>
                                 </div>
                             </div>
                             <!-- /.card-header -->
-                            <div class="modal-body">
-                            </div>
                             <!-- /.card-body -->
+
+                            <!-- /.card -->
                         </div>
                     </div>
-                    <!-- /.card -->
                 </div>
                 <!-- /.col -->
             </div>
@@ -1334,4 +1411,3 @@
     </aside>
 
 {% endblock %}
-
