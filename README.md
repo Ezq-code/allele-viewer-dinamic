@@ -1,5 +1,5 @@
 
-# STEPS FOR CLONING 
+# STEPS FOR CLONING For Test
 ```
 cd existing_folder
 git remote add origin https://gitlab.com/ealmeida.cu/allele-viewer.git
