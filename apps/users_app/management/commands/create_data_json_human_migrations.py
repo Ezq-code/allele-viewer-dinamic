@@ -6,11 +6,18 @@ from apps.business_app.models import Feature
 
 
 class Command(BaseCommand):
-    help = 'Load earthquake data from JSON file into the database'
+    help = "Load earthquake data from JSON file into the database"
 
     def handle(self, *args, **kwargs):
         static_root = Path(settings.STATIC_ROOT)
-        file_path = static_root / 'assets' / 'dist' / 'Leaflet' / 'Leaflet.timeline' / 'migration-timeline.json'
+        file_path = (
+            static_root
+            / "assets"
+            / "dist"
+            / "Leaflet"
+            / "Leaflet.timeline"
+            / "migration-timeline.json"
+        )
         print(f"Intentando abrir el archivo en: {file_path}")
 
         if file_path.exists():
@@ -19,7 +26,7 @@ class Command(BaseCommand):
             print("El archivo no se encontró.", file_path)
             return
 
-        with open(file_path, 'r', encoding='utf-8') as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             json_data = file.read()
 
         # Limpiar el JSONp para convertirlo en JSON
@@ -32,7 +39,7 @@ class Command(BaseCommand):
         Feature.objects.all().delete()
         print("Tabla Feature limpiada.")
 
-            # Verificar si hay características para procesar
+        # Verificar si hay características para procesar
         if not data:
             print("No hay características para cargar.")
             return
@@ -43,18 +50,18 @@ class Command(BaseCommand):
 
         # Iterar sobre las características y guardarlas en la base de datos
         for feature in data:
-            properties = feature['properties']
-            geometry = feature['geometry']
+            properties = feature["properties"]
+            geometry = feature["geometry"]
             Feature.objects.create(
-                feature_type=feature['type'],
-                feature_id=properties['id'],
-                mag=properties.get('mag'),
-                place=properties.get('place'),
-                time=properties['time'],
-                title=properties.get('title'),
-                timefinal=properties['timefinal'],
-                geometry_type=geometry['type'],
-                coordinates=geometry['coordinates']
+                feature_type=feature["type"],
+                feature_id=properties["id"],
+                mag=properties.get("mag"),
+                place=properties.get("place"),
+                time=properties["time"],
+                title=properties.get("title"),
+                timefinal=properties["timefinal"],
+                geometry_type=geometry["type"],
+                coordinates=geometry["coordinates"],
             )
 
-        self.stdout.write(self.style.SUCCESS('Data loaded successfully!'))
+        self.stdout.write(self.style.SUCCESS("Data loaded successfully!"))

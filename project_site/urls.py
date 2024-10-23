@@ -59,7 +59,6 @@ urlpatterns = [
     path("mapgeneral/", pages.mapgeneral, name="mapgeneral"),
     path("events/", pages.events, name="events"),
     path("human-migrations/", pages.human_migrations, name="human-migrations"),
-
 ]
 
 # This is for serving media on development stages

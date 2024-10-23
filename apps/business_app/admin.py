@@ -28,7 +28,6 @@ admin.site.register(Layer)
 admin.site.register(Feature)
 
 
-
 @admin.register(AlleleNode)
 class AlleleNodeAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"

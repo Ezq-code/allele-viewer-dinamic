@@ -32,13 +32,14 @@ class AlleleParentsViewSet(viewsets.ViewSet, GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         # Load parameters
-        pdb = serializer.validated_data.get("pdb")
+        # pdb = serializer.validated_data.get("pdb")
+        uploaded_file = serializer.validated_data.get("uploaded_file")
         allele_node = serializer.validated_data.get("allele_node")
         # Filter the PDB File
-        pdb_file = UploadedFiles.objects.get(id=pdb)
+        # pdb_file = UploadedFiles.objects.get(id=pdb)
         # Create the Graph
-        processor_object = XslxToPdbGraph(pdb_file.original_file)
-        processor_object.proccess_initial_file_data(pdb)
+        processor_object = XslxToPdbGraph(uploaded_file.original_file)
+        processor_object.proccess_initial_file_data(uploaded_file.id)
         # Ejecución del algoritmo que extrae los alleles parents (1574,131,5)
         list_alleles = processor_object.proccess_allele_parents(allele_node)
 

@@ -32,10 +32,10 @@ def events(request):
     events = Event.objects.all()
     return render(request, "map/event/events.html", {"events": events})
 
+
 def human_migrations(request):
     migrations = Feature.objects.order_by("-id").all()
     return render(request, "map/migrations/migrations.html", {"migrations": migrations})
-
 
 
 def register(request):

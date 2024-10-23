@@ -18,10 +18,10 @@ def feature_list(request):
             "timefinal": feature.timefinal,
             "geometry_type": feature.geometry_type,
             "coordinates": feature.coordinates,
-        } for feature in features
+        }
+        for feature in features
     ]
     return JsonResponse({"features": features_data})
-
 
 
 @csrf_exempt  # Permite requests POST sin CSRF token
@@ -43,7 +43,6 @@ def feature_create(request):
     return JsonResponse({"success": False})
 
 
-
 # Obtener una Feature por ID
 @csrf_exempt
 def feature_detail(request, id):
@@ -61,16 +60,17 @@ def feature_detail(request, id):
     }
     return JsonResponse(feature_data)
 
+
 @csrf_exempt
 def feature_update(request, id):
-    if request.method == 'POST':
+    if request.method == "POST":
         # Obtener los datos enviados
-        feature_id = request.POST.get('feature_id')
-        feature_title = request.POST.get('title')
-        feature_mag = request.POST.get('mag')
-        feature_place = request.POST.get('place')
-        feature_time = request.POST.get('time')
-        feature_time_final = request.POST.get('timefinal')
+        feature_id = request.POST.get("feature_id")
+        feature_title = request.POST.get("title")
+        feature_mag = request.POST.get("mag")
+        feature_place = request.POST.get("place")
+        feature_time = request.POST.get("time")
+        feature_time_final = request.POST.get("timefinal")
 
         try:
             feature = Feature.objects.get(id=id)
@@ -81,11 +81,12 @@ def feature_update(request, id):
             feature.time = feature_time
             feature.timefinal = feature_time_final
             feature.save()
-            return JsonResponse({'success': True})
+            return JsonResponse({"success": True})
         except Feature.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Feature no encontrado.'})
+            return JsonResponse({"success": False, "error": "Feature no encontrado."})
 
-    return JsonResponse({'success': False, 'error': 'Método no soportado.'})
+    return JsonResponse({"success": False, "error": "Método no soportado."})
+
 
 @csrf_exempt
 def feature_delete(request, id):
