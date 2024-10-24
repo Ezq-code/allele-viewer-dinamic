@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from rest_framework import permissions, viewsets, status
 from rest_framework.generics import GenericAPIView
 
@@ -41,6 +40,8 @@ class AlleleParentsViewSet(viewsets.ViewSet, GenericAPIView):
         processor_object = XslxToPdbGraph(uploaded_file.original_file)
         processor_object.proccess_initial_file_data(uploaded_file.id)
         # Ejecución del algoritmo que extrae los alleles parents (1574,131,5)
-        list_alleles = processor_object.proccess_allele_parents(allele_node)
+        parents_tree, children_tree = processor_object.proccess_allele_parents(
+            allele_node
+        )
 
-        return JsonResponse(list_alleles, safe=False)
+        return Response({"parents_tree": parents_tree, "children_tree": children_tree})
