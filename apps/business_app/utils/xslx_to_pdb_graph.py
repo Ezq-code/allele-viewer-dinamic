@@ -42,24 +42,27 @@ def _extract_adjacent_tree(G, my_list, node, predecessors_true_successor_false=T
             return _extract_adjacent_tree(
                 G, my_list, element, predecessors_true_successor_false
             )
-def proccess_allele_parents(allele_id, cached_graph):
-        """
-        Esta función recibe como parámetro el
-        id del allele (allele_id) y devuelve una lista de nodos
-        que integran el árbol del mismo.
-        """
-        try:
-            # root = find_root_node(self.G)
-            parents_tree = _extract_adjacent_tree(
-                cached_graph, [], allele_id, predecessors_true_successor_false=True
-            )
-            children_tree = _extract_adjacent_tree(
-                cached_graph, [], allele_id, predecessors_true_successor_false=False
-            )
-            return parents_tree, children_tree
 
-        except Exception as e:
-            raise ValueError(f"An error occurred during file parsing: {e}.")
+
+def proccess_allele_adjacents(allele_id, cached_graph):
+    """
+    Esta función recibe como parámetro el
+    id del allele (allele_id) y devuelve una lista de nodos
+    que integran el árbol del mismo.
+    """
+    try:
+        # root = find_root_node(self.G)
+        parents_tree = _extract_adjacent_tree(
+            cached_graph, [], allele_id, predecessors_true_successor_false=True
+        )
+        children_tree = _extract_adjacent_tree(
+            cached_graph, [], allele_id, predecessors_true_successor_false=False
+        )
+        return parents_tree, children_tree
+
+    except Exception as e:
+        raise ValueError(f"An error occurred during file parsing: {e}.")
+
 
 class XslxToPdbGraph(ExcelReader):
     def __init__(self, origin_file) -> None:
@@ -121,9 +124,7 @@ class XslxToPdbGraph(ExcelReader):
 
             # Recorrer el diccionario de nodos
             self.G.add_edges_from(edges_list)  # Add a edges list
-            cache.set(self.origin_file, self.G, timeout=60 * 15)  # Cachea por 15 minutos
-
-            edges_list = []
+            cache.set(self.origin_file, self.G, timeout=None)
 
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
