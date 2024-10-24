@@ -11,9 +11,11 @@ from apps.business_app.models import PdbFiles
 
 from apps.business_app.serializers.allele_parents import AlleleParentsSerializer
 
-from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
+from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph, proccess_allele_parents
 
 from apps.business_app.models.uploaded_files import UploadedFiles
+from django.core.cache import cache
+
 
 
 # Create your views here.
@@ -37,11 +39,15 @@ class AlleleParentsViewSet(viewsets.ViewSet, GenericAPIView):
         # Filter the PDB File
         # pdb_file = UploadedFiles.objects.get(id=pdb)
         # Create the Graph
-        processor_object = XslxToPdbGraph(uploaded_file.original_file)
-        processor_object.proccess_initial_file_data(uploaded_file.id)
+        cached_graph_key = uploaded_file.original_file
+        cached_graph = cache.get(cached_graph_key)
+        if not cached_graph:
+            processor_object = XslxToPdbGraph(cached_graph_key)
+            processor_object.proccess_initial_file_data()
         # Ejecución del algoritmo que extrae los alleles parents (1574,131,5)
-        parents_tree, children_tree = processor_object.proccess_allele_parents(
-            allele_node
+
+        parents_tree, children_tree = proccess_allele_parents(
+            allele_node, cache.get(cached_graph_key)
         )
 
         return Response({"parents_tree": parents_tree, "children_tree": children_tree})

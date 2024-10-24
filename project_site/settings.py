@@ -283,3 +283,9 @@ LOGGING = {
 
 SPREADSHEET_ID = env("SPREADSHEET_ID")
 CREDENTIAL_FILE_NAME = env("CREDENTIAL_FILE_NAME", default="credentials.json")
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
