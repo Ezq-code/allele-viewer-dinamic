@@ -2,7 +2,6 @@ import io
 import logging
 
 import pandas as pd
-import numpy as np
 
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.site_configurations import SiteConfiguration
@@ -14,43 +13,22 @@ import networkx as nx
 logger = logging.getLogger(__name__)
 
 
-def find_root_node(G):
-    """La raíz del grafo dirigido y conexo es el nodo
-    que solamente emite, o sea que su orden de out_degree es positivo
-    pero su orden de in_degree es igual a 0.
-    Encontrar la raíz de un grafo
-    Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
-    """
-    nodes_in_degree = [(k, v) for k, v in G.in_degree()]
-    for k, v in nodes_in_degree:
-        if v == 0:
-            return k
+# def find_root_node(G):
+#     """La raíz del grafo dirigido y conexo es el nodo
+#     que solamente emite, o sea que su orden de out_degree es positivo
+#     pero su orden de in_degree es igual a 0.
+#     Encontrar la raíz de un grafo
+#     Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
+#     """
+#     nodes_in_degree = [(k, v) for k, v in G.in_degree()]
+#     for k, v in nodes_in_degree:
+#         if v == 0:
+#             return k
 
 
-# TODO revisar
-def _extract_parents_tree(G, my_list, node):
-    parents = list(G.predecessors(node))
-    if not len(parents):  # Si el nodo es la raíz sale de la función
-        return my_list
-    else:  # Lo contrario, itera sobre los padres y se llama a si misma
-        for parent in parents:
-            my_list.append(parent)
-            return _extract_parents_tree(G, my_list, parent)
-
-
-def _extract_children_tree(G, my_list, node):
-    children = list(G.successors(node))
-    if not len(children):  # Si el nodo es la raíz sale de la función
-        return my_list
-    else:  # Lo contrario, itera sobre los padres y se llama a si misma
-        for child in children:
-            my_list.append(child)
-            return _extract_children_tree(G, my_list, child)
-
-
-def _extract_adjacent_tree(G, my_list, node, up_true_down_false=True):
+def _extract_adjacent_tree(G, my_list, node, predecessors_true_successor_false=True):
     adjacents = None
-    if up_true_down_false:
+    if predecessors_true_successor_false:
         adjacents = list(G.predecessors(node))
     else:
         adjacents = list(G.successors(node))
@@ -59,7 +37,9 @@ def _extract_adjacent_tree(G, my_list, node, up_true_down_false=True):
     else:  # Lo contrario, itera sobre los padres y se llama a si misma
         for element in adjacents:
             my_list.append(element)
-            return _extract_adjacent_tree(G, my_list, element, up_true_down_false)
+            return _extract_adjacent_tree(
+                G, my_list, element, predecessors_true_successor_false
+            )
 
 
 class XslxToPdbGraph(ExcelReader):
@@ -228,13 +208,12 @@ class XslxToPdbGraph(ExcelReader):
         que integran el árbol del mismo.
         """
         try:
-            
             # root = find_root_node(self.G)
             parents_tree = _extract_adjacent_tree(
-                self.G, [], allele_id, up_true_down_false=True
+                self.G, [], allele_id, predecessors_true_successor_false=True
             )
             children_tree = _extract_adjacent_tree(
-                self.G, [], allele_id, up_true_down_false=False
+                self.G, [], allele_id, predecessors_true_successor_false=False
             )
             return parents_tree, children_tree
 
