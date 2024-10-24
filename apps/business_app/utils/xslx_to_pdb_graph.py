@@ -30,14 +30,14 @@ def find_root_node(G):
 
 
 # TODO revisar
-def _extract_parents_tree(G, list, node, root):
+def _extract_parents_tree(G, my_list, node, root):
     parents = list(G.predecessors(node))
     if node == root or not len(parents):  # Si el nodo es la raíz sale de la función
-        return list
+        return my_list
     else:  # Lo contrario, itera sobre los padres y se llama a si misma
         for parent in parents:
-            list.append(parent)
-            return _extract_parents_tree(G, list, parent, root)
+            my_list.append(parent)
+            return _extract_parents_tree(G, my_list, parent, root)
 
 
 class XslxToPdbGraph(ExcelReader):

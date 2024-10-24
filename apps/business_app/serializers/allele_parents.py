@@ -8,7 +8,7 @@ from apps.business_app.models.uploaded_files import UploadedFiles
 class AlleleParentsSerializer(serializers.Serializer):
     uploaded_file = serializers.PrimaryKeyRelatedField(
         queryset=UploadedFiles.objects.all(), required=True
-    )    
+    )
     # pdb = serializers.IntegerField(required=True
     # )
     allele_node = serializers.IntegerField(required=True)
