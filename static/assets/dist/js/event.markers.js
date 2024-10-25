@@ -37,7 +37,7 @@ function submitEventForm() {
                 console.log(data);
                 Swal.fire({
                     icon: "success",
-                    title: "Evento creado con éxito",
+                    title: "Event created successfully",
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -54,7 +54,7 @@ function submitEventForm() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Hubo un problema al guardar el evento. Por favor, inténtalo de nuevo.',
+                    text: 'There was a problem saving the event. Please try again.',
                     timer: 1500
                 });
                 resetEventForm();
@@ -66,7 +66,7 @@ function submitEventForm() {
         resetEventForm();
     } else {
         // Mostrar un mensaje de error personalizado
-        var errorMessage = 'Por favor completa todos los campos obligatorios.';
+        var errorMessage = 'Please complete all required fields.';
         var invalidFields = form.querySelectorAll(':invalid');
         if (invalidFields.length > 0) {
             errorMessage += '\nCampos faltantes:';
@@ -100,7 +100,7 @@ function editEvent(event_id, event_name, event_icon) {
             $('#modal-edit-event').modal('hide'); // Ocultar la ventana modal después de la edición
             Swal.fire({
                 icon: "success",
-                title: "Evento editado con éxito",
+                title: "Successfully edited event",
                 showConfirmButton: false,
                 timer: 1500
             });
@@ -151,7 +151,7 @@ function deleteEvent(event_id) {
             $('#modal-delete-event').modal('hide'); // Ocultar la ventana modal después de la elminacion
             Swal.fire({
                     icon: "success",
-                    title: "Evento eliminado con éxito",
+                    title: "Event successfully removed",
                     showConfirmButton: false,
                     timer: 1500
                 });

@@ -1,0 +1,101 @@
+
+        .buttonmarker {
+            background-color: #333; /* Color de fondo */
+            color: white; /* Color del texto */
+            padding: 1px 20px; /* Espaciado interno */
+            border: none; /* Sin borde */
+            border-radius: 5px; /* Bordes redondeados */
+            text-align: center; /* Alineación del texto */
+            text-decoration: none; /* Sin subrayado */
+            display: inline-block; /* Mostrar como bloque en línea */
+            font-size: 16px; /* Tamaño de fuente */
+            cursor: pointer; /* Cambiar cursor al pasar por encima */
+        }
+
+        .container {
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .buttonmarker:hover {
+            background-color: #111; /* Cambiar color de fondo al pasar por encima */
+        }
+
+        .leaflet-bottom.leaflet-left {
+            width: 100%;
+        }
+
+        .leaflet-control-layers .leaflet-control-layers-expanded .leaflet-timeline-control .leaflet-control {
+            background: #F33;
+        }
+
+        .leaflet-control-container .leaflet-timeline-controls {
+            box-sizing: border-box;
+            width: 100%;
+            margin: 0;
+            margin-bottom: 15px;
+        }
+
+        .leaflet-control-layers-expanded {
+            padding: 6px 10px 6px 6px;
+            color: #FFF;
+            background: #080708;
+        }
+
+        #map {
+            height: 580px;
+            border-radius: 5px;
+        }
+
+        /* container */
+        .right-sidebar {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        /* columns */
+        .right-sidebar > * {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        /* tablet breakpoint */
+        @media (min-width: 768px) {
+            .right-sidebar > *:nth-child(1) {
+                width: calc(100% / 60 * 55);
+            }
+
+            .right-sidebar > *:nth-child(2) {
+                width: calc(100% / 4);
+            }
+        }
+
+        #info {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+        }
+
+        #info h5 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+
+        #displayed-list {
+            list-style-type: none;
+            padding-left: 10px;
+            font-size: 14px;
+            background-color: #444;
+            color: white;
+        }
+
+        #displayed-list li::before {
+            content: "\2713";
+            padding-right: 5px;
+
+        }
