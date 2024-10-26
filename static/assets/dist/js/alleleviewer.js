@@ -1,4 +1,4 @@
-var zoomLevel = 1;
+var zoomLevel = 4;
 var stick_hidden = false;
 var sphere_hidden = false;
 var axes_hidden = false;
@@ -25,6 +25,7 @@ const csrfToken = document.cookie
   .find((c) => c.trim().startsWith("csrftoken="))
   ?.split("=")[1];
 
+// Inicio del menú de configuracion
 // Bloque para mostrar las esferas
 var checkboxsphere = document.getElementById("sphere_hidden");
 checkboxsphere.addEventListener("change", function () {
@@ -68,6 +69,8 @@ checkboxPlane.addEventListener("change", function () {
   }
 });
 
+// fin del menú de configuracion
+
 // Inicializar las funciones
 $(function () {
   checkInternalStatus();
@@ -103,14 +106,16 @@ function poblarListasPdb(versionAllele) {
 }
 
 function poblarListasCopy(uploadFileId) {
-  console.log('✌️localStorage.getItem("id") --->', localStorage.getItem("id"));
-  if (localStorage.getItem("id") !== null) {
+ 
+  if (
+    localStorage.getItem("id") &&
+    localStorage.getItem("id") !== null &&
+    localStorage.getItem("id") !== ""
+  ) {
+   
     var userId = localStorage.getItem("id");
     var url =
-      "/business-gestion/working-copy-of-original-file-for-user/?system_user=" +
-      userId +
-      "&uploaded_file=" +
-      uploadFileId;
+      "/business-gestion/working-copy-of-original-file-for-user/?system_user=" +userId +"&uploaded_file=" +uploadFileId;
     var $selectCopy = document.getElementById("selectCopy");
     var $inputGroup = document.getElementById("inputGroupCopy");
     $selectCopy.innerHTML = "";
@@ -154,22 +159,7 @@ viewer = $3Dmol.createViewer(element, {
   controls: "trackball orbit fps scroll dnd",
 });
 
-function getRandomColor() {
-  // Genera valores aleatorios para los componentes rojo, verde y azul
-  var r = Math.floor(Math.random() * 256);
-  var g = Math.floor(Math.random() * 256);
-  var b = Math.floor(Math.random() * 256);
 
-  // Convierte los valores a formato hexadecimal
-  var rHex = r.toString(16).padStart(2, "0");
-  var gHex = g.toString(16).padStart(2, "0");
-  var bHex = b.toString(16).padStart(2, "0");
-
-  // Construye el valor hexadecimal del color
-  var colorHex = "#" + rHex + gHex + bHex;
-
-  return colorHex;
-}
 
 var data1;
 function displaySNPData() {
@@ -291,26 +281,26 @@ function sendRSControlValues() {
     });
 }
 
-function selectPdbContainer() {
-  zoom.value = 0;
-  var $selectfile = document.getElementById("selectfile");
-  var idFile = $selectfile.value;
-  axios
-    .get("/business-gestion/uploaded-files/" + idFile + "/")
-    .then(function (response) {
-      const elemento = response.data;
-      let versionAllele = elemento.pdb_files;
-      console.log("✌️versionAllele --->", versionAllele);
-      poblarListasPdb(versionAllele);
-      poblarListasCopy(elemento.id);
-    })
-    .catch(function (error) {
-      Toast.fire({
-        icon: "error",
-        title: `${error.response.data.detail}`,
-      });
-    });
-}
+// function selectPdbContainer() {
+//   zoom.value = 0;
+//   var $selectfile = document.getElementById("selectfile");
+//   var idFile = $selectfile.value;
+//   axios
+//     .get("/business-gestion/uploaded-files/" + idFile + "/")
+//     .then(function (response) {
+//       const elemento = response.data;
+//       let versionAllele = elemento.pdb_files;
+//       console.log("✌️versionAllele --->", versionAllele);
+//       poblarListasPdb(versionAllele);
+//       poblarListasCopy(elemento.id);
+//     })
+//     .catch(function (error) {
+//       Toast.fire({
+//         icon: "error",
+//         title: `${error.response.data.detail}`,
+//       });
+//     });
+// }
 
 function selectUrl() {
   zoom.value = 0;
@@ -344,37 +334,37 @@ function selectUrl() {
     });
 }
 
-function selectUrlPersonal() {
-  zoom.value = 0;
-  var $selectCopy = document.getElementById("selectCopy");
-  var idFile = $selectCopy.value;
+// function selectUrlPersonal() {
+//   zoom.value = 0;
+//   var $selectCopy = document.getElementById("selectCopy");
+//   var idFile = $selectCopy.value;
 
-  console.log(" idFile:", idFile);
-  axios
-    .get(
-      "/business-gestion/working-copy-of-original-file-for-user/" + idFile + "/"
-    )
-    .then(function (response) {
-      const elemento = response.data;
-      console.log("✌️response.data --->", response.data);
-      // let pos = findPosition(elemento.pdb_files, $selectPdb.value);
-      let versionAllele = elemento.pdb_file_copy;
+//   console.log(" idFile:", idFile);
+//   axios
+//     .get(
+//       "/business-gestion/working-copy-of-original-file-for-user/" + idFile + "/"
+//     )
+//     .then(function (response) {
+//       const elemento = response.data;
+//       console.log("✌️response.data --->", response.data);
+//       // let pos = findPosition(elemento.pdb_files, $selectPdb.value);
+//       let versionAllele = elemento.pdb_file_copy;
 
-      // localStorage.setItem("uploadFileId", idFile);
-      graficar(versionAllele);
+//       // localStorage.setItem("uploadFileId", idFile);
+//       graficar(versionAllele);
 
-      // To enable the button
-      loadOriginalXYZ();
-      snpModalShowBotton.disabled = false;
-      ExpandModalShowBotton.disabled = false;
-    })
-    .catch(function (error) {
-      Toast.fire({
-        icon: "error",
-        title: `${error.response.data.detail}`,
-      });
-    });
-}
+//       // To enable the button
+//       loadOriginalXYZ();
+//       snpModalShowBotton.disabled = false;
+//       ExpandModalShowBotton.disabled = false;
+//     })
+//     .catch(function (error) {
+//       Toast.fire({
+//         icon: "error",
+//         title: `${error.response.data.detail}`,
+//       });
+//     });
+// }
 
 function findPosition(data, id) {
   for (var i = 0; i < data.length; i++) {
@@ -400,6 +390,8 @@ function showInfo(atom) {
     )
     .then(function (response) {
       const elemento = response.data;
+      console.log("✌️elemento --->", elemento);
+
       children = elemento.children;
       // console.log(children);
 
@@ -447,8 +439,7 @@ function showInfo(atom) {
             ')">Descendant</button>' +
             '<button type="button" class="btn btn-block btn-secondary" onclick="childFull(' +
             elemento.number +
-            ')">Progenitores</button>'
-            +
+            ')">Progenitores</button>' +
             '<button type="button" class="btn btn-block btn-secondary" onclick="marcar(' +
             atom.x +
             "," +
@@ -466,7 +457,9 @@ function showInfo(atom) {
             " | Z " +
             atom.z +
             " #: " +
-            elemento.number,
+            elemento.number +
+            "<br> Appeared: " +
+            elemento.timeline_appearence,
           position: "bottomRight",
         });
       }
@@ -614,7 +607,7 @@ function getAtomBySerial(serial) {
 }
 
 function child() {
-  // console.log("zoomLevel", zoomLevel);
+  console.log("✌️child --->", "child");
 
   console.log("localStorage.getItem :", localStorage.getItem("uploadFileId"));
   axios
@@ -663,37 +656,36 @@ function child() {
     });
 }
 function childFull(id) {
-  
   var data = {
     pdb: localStorage.getItem("uploadFileId"),
-    allele_node: id
+    allele_node: id,
   };
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
   axios
-  .post("/business-gestion/extract-allele-parents-tree/", data) 
+    .post("/business-gestion/extract-allele-parents-tree/", data)
     .then(function (response) {
+      let atomData = response.data;
 
-let atomData = response.data;
-
-datos.forEach((element) => {
-  const isVisible = atomData.some((item) => item === element.number) || element.number === id;
-  if ( !isVisible ) {
-    viewer.setStyle(
-      { serial: element.number },
-      {
-        sphere: {
-        hidden: true, // Ocultar esfera
-        },
-        stick: {
-         hidden: true, // Ocultar stick
-        },
-      }
-    );
-  }
-});
-viewer.render();
-
-     })
+      datos.forEach((element) => {
+        const isVisible =
+          atomData.some((item) => item === element.number) ||
+          element.number === id;
+        if (!isVisible) {
+          viewer.setStyle(
+            { serial: element.number },
+            {
+              sphere: {
+                hidden: true, // Ocultar esfera
+              },
+              stick: {
+                hidden: true, // Ocultar stick
+              },
+            }
+          );
+        }
+      });
+      viewer.render();
+    })
     .catch(function (error) {
       Toast.fire({
         icon: "error",
@@ -702,20 +694,21 @@ viewer.render();
     });
 }
 
-
 function childFamily(id) {
   datos.forEach((element) => {
-    const isVisible = children.some((item) => item.number === element.number) || element.number === id;
-   
-    if ( !isVisible ) {
+    const isVisible =
+      children.some((item) => item.number === element.number) ||
+      element.number === id;
+
+    if (!isVisible) {
       viewer.setStyle(
         { serial: element.number },
         {
           sphere: {
-          hidden: true, // Ocultar esfera
+            hidden: true, // Ocultar esfera
           },
           stick: {
-           hidden: true, // Ocultar stick
+            hidden: true, // Ocultar stick
           },
         }
       );
@@ -723,11 +716,6 @@ function childFamily(id) {
   });
   viewer.render();
 }
-
-
-
-
-
 
 function childZoom() {
   datos.forEach((element) => {
@@ -843,3 +831,61 @@ function sendExpantionValues() {
       });
     });
 }
+
+function animation() {
+  load.hidden = false;
+  console.log('✌️datos --->', datos);
+  let datosOrdenados=ordenarPorTimeline(datos)
+console.log('✌️datosOrdenados --->', datosOrdenados);
+  datos.forEach((element) => {
+   
+    viewer.setStyle(
+      { serial: element.number },
+      {
+        sphere: {
+          hidden: true, // Ocultar esfera
+        },
+        stick: {
+          hidden: true, // Ocultar stick
+        },
+      }
+    );
+  });
+
+  // console.log("zoomLevel :", zoomLevel);
+  viewer.render();
+  load.hidden = true;
+
+  let ordenada=ordenarPorTimeline(datos);
+  mostrarElementos(ordenada,0.1);
+  
+}
+function ordenarPorTimeline(lista) {
+  // Ordenar la lista por la propiedad timeline_appearence
+  const listaOrdenada = lista.sort((a, b) => a.timeline_appearence - b.timeline_appearence);
+  
+  // Retornar la lista ordenada
+  return listaOrdenada;
+}
+
+function mostrarElementos(lista, tiempo) {
+  lista.forEach((element, index) => {
+      setTimeout(() => {
+        const stickRadius =
+      element.children_qty === 0
+        ? 0.2
+        : 0.5 + element.children_qty * stickRadiusFactor;
+    const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
+    viewer.setStyle(
+      { serial: element.number },
+      {
+        sphere: { radius: sphereRadius,  hidden: false },
+        stick: { color: "spectrum", radius: stickRadius, showNonBonded: false,  hidden: false, },
+      }
+    );
+          viewer.render();  
+      }, tiempo * 1000 * index); // Convertir a milisegundos
+  });
+}
+
+// Cambia el estado cada 2 segundos
