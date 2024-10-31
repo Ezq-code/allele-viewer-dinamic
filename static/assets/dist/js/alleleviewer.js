@@ -281,26 +281,26 @@ function sendRSControlValues() {
     });
 }
 
-// function selectPdbContainer() {
-//   zoom.value = 0;
-//   var $selectfile = document.getElementById("selectfile");
-//   var idFile = $selectfile.value;
-//   axios
-//     .get("/business-gestion/uploaded-files/" + idFile + "/")
-//     .then(function (response) {
-//       const elemento = response.data;
-//       let versionAllele = elemento.pdb_files;
-//       console.log("✌️versionAllele --->", versionAllele);
-//       poblarListasPdb(versionAllele);
-//       poblarListasCopy(elemento.id);
-//     })
-//     .catch(function (error) {
-//       Toast.fire({
-//         icon: "error",
-//         title: `${error.response.data.detail}`,
-//       });
-//     });
-// }
+ function selectPdbContainer() {
+   zoom.value = 0;
+   var $selectfile = document.getElementById("selectfile");
+   var idFile = $selectfile.value;
+   axios
+     .get("/business-gestion/uploaded-files/" + idFile + "/")
+     .then(function (response) {
+       const elemento = response.data;
+       let versionAllele = elemento.pdb_files;
+       console.log("✌️versionAllele --->", versionAllele);
+       poblarListasPdb(versionAllele);
+       poblarListasCopy(elemento.id);
+     })
+     .catch(function (error) {
+       Toast.fire({
+         icon: "error",
+         title: `${error.response.data.detail}`,
+       });
+     });
+ }
 
 function selectUrl() {
   zoom.value = 0;
@@ -329,7 +329,7 @@ function selectUrl() {
     .catch(function (error) {
       Toast.fire({
         icon: "error",
-        title: `${error.response.data.detail}`,
+        title: `${error.response}`,
       });
     });
 }
