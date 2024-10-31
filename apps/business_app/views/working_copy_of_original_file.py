@@ -37,4 +37,4 @@ class WorkingCopyOfOriginalFileViewSet(
     ]
     filterset_fields = ["uploaded_file", "system_user"]
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
