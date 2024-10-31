@@ -1,101 +1,153 @@
+.buttonmarker {
+    background-color: #333; /* Color de fondo */
+    color: white; /* Color del texto */
+    padding: 1px 20px; /* Espaciado interno */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    text-align: center; /* Alineaci锟絥 del texto */
+    text-decoration: none; /* Sin subrayado */
+    display: inline-block; /* Mostrar como bloque en l锟絥ea */
+    font-size: 16px; /* Tama锟給 de fuente */
+    cursor: pointer; /* Cambiar cursor al pasar por encima */
+}
 
-        .buttonmarker {
-            background-color: #333; /* Color de fondo */
-            color: white; /* Color del texto */
-            padding: 1px 20px; /* Espaciado interno */
-            border: none; /* Sin borde */
-            border-radius: 5px; /* Bordes redondeados */
-            text-align: center; /* Alineaci髇 del texto */
-            text-decoration: none; /* Sin subrayado */
-            display: inline-block; /* Mostrar como bloque en l韓ea */
-            font-size: 16px; /* Tama駉 de fuente */
-            cursor: pointer; /* Cambiar cursor al pasar por encima */
-        }
+.container {
+    text-align: right;
+    margin-top: 5px;
+}
 
-        .container {
-            text-align: right;
-            margin-top: 5px;
-        }
+.buttonmarker:hover {
+    background-color: #111; /* Cambiar color de fondo al pasar por encima */
+}
 
-        .buttonmarker:hover {
-            background-color: #111; /* Cambiar color de fondo al pasar por encima */
-        }
+.leaflet-bottom.leaflet-left {
+    width: 100%;
+}
 
-        .leaflet-bottom.leaflet-left {
-            width: 100%;
-        }
+.leaflet-control-layers .leaflet-control-layers-expanded .leaflet-timeline-control .leaflet-control {
+    background: #F33;
+}
 
-        .leaflet-control-layers .leaflet-control-layers-expanded .leaflet-timeline-control .leaflet-control {
-            background: #F33;
-        }
+.leaflet-control-container .leaflet-timeline-controls {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    margin-bottom: 15px;
+}
 
-        .leaflet-control-container .leaflet-timeline-controls {
-            box-sizing: border-box;
-            width: 100%;
-            margin: 0;
-            margin-bottom: 15px;
-        }
+.leaflet-control-layers-expanded {
+    padding: 6px 10px 6px 6px;
+    color: #FFF;
+    background: #080708;
+}
 
-        .leaflet-control-layers-expanded {
-            padding: 6px 10px 6px 6px;
-            color: #FFF;
-            background: #080708;
-        }
+#map {
+    height: 580px;
+    border-radius: 5px;
+}
 
-        #map {
-            height: 580px;
-            border-radius: 5px;
-        }
+/* container */
+.right-sidebar {
+    display: flex;
+    flex-wrap: wrap;
+}
 
-        /* container */
-        .right-sidebar {
-            display: flex;
-            flex-wrap: wrap;
-        }
+/* columns */
+.right-sidebar > * {
+    width: 100%;
+    padding: 1rem;
+}
 
-        /* columns */
-        .right-sidebar > * {
-            width: 100%;
-            padding: 1rem;
-        }
+/* tablet breakpoint */
+@media (min-width: 768px) {
+    .right-sidebar > *:nth-child(1) {
+        width: calc(100% / 60 * 55);
+    }
 
-        /* tablet breakpoint */
-        @media (min-width: 768px) {
-            .right-sidebar > *:nth-child(1) {
-                width: calc(100% / 60 * 55);
-            }
+    .right-sidebar > *:nth-child(2) {
+        width: calc(100% / 4);
+    }
+}
 
-            .right-sidebar > *:nth-child(2) {
-                width: calc(100% / 4);
-            }
-        }
+#info {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+}
 
-        #info {
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: Arial, sans-serif;
-        }
+#info h5 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
 
-        #info h5 {
-            font-size: 18px;
-            margin-bottom: 10px;
-            background-color: #333;
-            color: white;
-            padding: 10px;
-        }
+#displayed-list {
+    list-style-type: none;
+    padding-left: 10px;
+    font-size: 14px;
+    background-color: #444;
+    color: white;
+}
 
-        #displayed-list {
-            list-style-type: none;
-            padding-left: 10px;
-            font-size: 14px;
-            background-color: #444;
-            color: white;
-        }
+#displayed-list li::before {
+    content: "\2713";
+    padding-right: 5px;
 
-        #displayed-list li::before {
-            content: "\2713";
-            padding-right: 5px;
+}
 
-        }
+.modal-content {
+    background-color: #f9f9f9; /* Fondo suave */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+.modal-header {
+    background-color: #007bff; /* Color de fondo del header */
+    color: white; /* Color del texto */
+    border-top-left-radius: 8px; /* Bordes redondeados */
+    border-top-right-radius: 8px; /* Bordes redondeados */
+}
+
+.modal-title {
+    font-size: 24px; /* Tama帽o de la fuente del t铆tulo */
+    font-weight: bold; /* Negrita */
+}
+
+.modal-footer .btn {
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 20px; /* Espaciado del bot贸n */
+    transition: background-color 0.3s; /* Transici贸n suave */
+}
+
+.modal-footer .btn-primary {
+    background-color: #0056b3; /* Color del bot贸n guardar */
+    color: white; /* Color del texto */
+}
+
+.modal-footer .btn-secondary {
+    background-color: #6c757d; /* Color del bot贸n cerrar */
+    color: white; /* Color del texto */
+}
+
+.modal-footer .btn-primary:hover {
+    background-color: #004085; /* Color en hover del bot贸n guardar */
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #5a6268; /* Color en hover del bot贸n cerrar */
+}
+
+.form-group label {
+    font-weight: bold; /* Negrita para etiquetas */
+    margin-bottom: 0.5rem; /* Separaci贸n del texto */
+}
+
+.form-control {
+    border-radius: 5px; /* Bordes redondeados para inputs */
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Sombra interna*/
+}

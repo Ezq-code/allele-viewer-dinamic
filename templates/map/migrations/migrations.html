@@ -234,11 +234,11 @@
                                                                 data-dismiss="modal">
                                                             Cancel
                                                         </button>
-{#                                                        <button type="button" class="btn btn-primary"#}
-{#                                                                id="btn-edit-feature"#}
-{#                                                                data-feature-id="{{ mig.id }}">#}
-{#                                                            Save#}
-{#                                                        </button>#}
+                                                        <button type="button" class="btn btn-primary"
+                                                                id="btn-edit-feature"
+                                                                data-feature-id="{{ mig.id }}">
+                                                            Save
+                                                        </button>
 
                                                     </div>
                                                 </div>
@@ -250,32 +250,32 @@
                                         <!-- End /.modal-Edit-Event -->
 
                                         <!-- Modal- Delete- Event -->
-                                        <div class="modal fade" id="modal-delete-feature">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content bg-danger">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Delete Feature</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>¿Do you want to delete the Feature? </p>
-                                                    </div>
-                                                    <div class="modal-footer justify-content-between">
-                                                        <button type="button" class="btn btn-outline-light"
-                                                                data-dismiss="modal">Cancel
-                                                        </button>
-                                                        <button type="button" class="btn btn-outline-light"
-                                                                onclick="deleteFeature({{ mig.id }})">Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <!-- /.modal-content -->
-                                            </div>
-                                            <!-- /.modal-dialog -->
-                                        </div>
+{#                                        <div class="modal fade" id="modal-delete-feature">#}
+{#                                            <div class="modal-dialog">#}
+{#                                                <div class="modal-content bg-danger">#}
+{#                                                    <div class="modal-header">#}
+{#                                                        <h4 class="modal-title">Delete Feature</h4>#}
+{#                                                        <button type="button" class="close" data-dismiss="modal"#}
+{#                                                                aria-label="Close">#}
+{#                                                            <span aria-hidden="true">&times;</span>#}
+{#                                                        </button>#}
+{#                                                    </div>#}
+{#                                                    <div class="modal-body">#}
+{#                                                        <p>¿Do you want to delete the Feature? </p>#}
+{#                                                    </div>#}
+{#                                                    <div class="modal-footer justify-content-between">#}
+{#                                                        <button type="button" class="btn btn-outline-light"#}
+{#                                                                data-dismiss="modal">Cancel#}
+{#                                                        </button>#}
+{#                                                        <button type="button" class="btn btn-outline-light"#}
+{#                                                                onclick="deleteFeature({{ mig.id }})">Delete#}
+{#                                                        </button>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                                <!-- /.modal-content -->#}
+{#                                            </div>#}
+{#                                            <!-- /.modal-dialog -->#}
+{#                                        </div>#}
                                         <!-- End /.modal-Delete-Event -->
                                     {% endfor %}
 

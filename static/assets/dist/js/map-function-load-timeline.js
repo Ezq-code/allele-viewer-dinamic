@@ -110,19 +110,21 @@
                                                     }
                                                 },
                                                 pointToLayer: function (data, latlng) {
+                                                   
                                                     if (data.properties.id == 10) {
                                                         return L.circleMarker(latlng, {
-                                                            radius: data.properties.mag,
-                                                            color: "#050400",
-                                                            fillColor: "#f5d843",
-                                                            fillOpacity: 0.7,
-                                                            weight: 3,
-                                                            opacity: 0.8,
-                                                        }).bindPopup(L.popup({
-                                                            closeOnClick: false,
-                                                            autoClose: false
-                                                        }).setContent(data.properties.place));
+                                                            radius: 0,//data.properties.mag,
+                                                            color: "#000000",//"#050400",
+                                                            fillColor: "#000000",//"#f5d843",
+                                                            fillOpacity: 0,//0.7,
+                                                            weight: 0,//3,
+                                                            opacity: 0,//0.8,
+                                                        });//.bindPopup(L.popup({
+                                                            //closeOnClick: false,
+                                                            //autoClose: false
+                                                        //}).setContent(data.properties.place));
                                                     }
+                                                    
                                                 },
                                             });
  
@@ -214,6 +216,89 @@
                                                 }
                                             });
 
+                                            var polygonDestinationTimeline;
+                                            var polygons;
+                                            var aFeaturesDestination = [];
+                                            var aFeaturesAllDestination = [];
+                                            var aFeatureAllDestination = [];
+                                            var aFeatureDestination;
+                                            $.ajax({
+                                                type: 'GET',
+                                                url: '/business-gestion/features/list',
+                                                error: function () {
+                                                    Swal.fire({
+                                                        icon: "error",
+                                                        title: "No se pudieron cargar los datos.",
+                                                        showConfirmButton: false,
+                                                        timer: 1500
+                                                    });
+                                                },
+                                                dataType: 'json',
+                                                success: function (response) {
+                                                    var data;
+                                                    data = response;
+                                                    data.forEach(function (destination) {
+                                                        var id = destination.id;
+                                                        var idLoad = destination.feature_id;
+                                                        var magLoad = destination.mag;
+                                                        var placeLoad = destination.place;
+                                                        var descriptionLoad = destination.title;
+                                                        var latitudeLoad = destination.latitude;
+                                                        var longitudeLoad = destination.longitude;
+                                                        var starttime = destination.timefinal;
+                                                        var endtime = destination.time;
+                                                        aFeatureDestination = {
+                                                            type: "Feature",
+                                                            properties: {
+                                                                id: idLoad,
+                                                                mag: magLoad,
+                                                                place: placeLoad,   
+                                                                title: descriptionLoad,
+                                                                timefinal: starttime,
+                                                                time: endtime,
+                                                            },
+                                                            geometry: {
+                                                                type: "Point",
+                                                                coordinates:
+                                                                    [longitudeLoad, latitudeLoad],
+                                                            },
+                                                        };
+                                                        aFeaturesDestination.push(aFeatureDestination);
+                                                        polygons = {
+                                                            type: "FeatureCollection",
+                                                            features: aFeaturesDestination,
+                                                        };
+                                                    });
+
+                                                    var getpoligonIntervalDestintation = function (polygons) {
+                                                        return {
+                                                            start: polygons.properties.timefinal,//-71000,
+                                                            end: polygons.properties.time,//-15000
+                                                        }
+                                                    };
+
+                                                    var polygonDestinationTimeline = L.timeline(polygons, {
+                                                        getInterval: getpoligonIntervalDestintation,
+                                                        pointToLayer: function (features, latlng) {
+                                                            return L.circleMarker(latlng, {
+                                                            radius: 10, //features.properties.mag,
+                                                            color: "#050400", //"#000000",
+                                                            fillColor: "#f5d843",//"#000000",
+                                                            fillOpacity: 0.7,
+                                                            weight: 3,
+                                                            opacity: 0.8,
+                                                            }).bindPopup(L.popup({
+                                                             closeOnClick: false,
+                                                             autoClose: false
+                                                            }).setContent(features.properties.title));
+                                                        }
+                                                    });
+
+                                                    timelineControl.addTimelines(polygonDestinationTimeline);
+                                                    polygonDestinationTimeline.addTo(map);
+                                                }
+                                            });
+
                                             AlleleGeographicZonesLayer = new L.featureGroup().addTo(map);
 
                                             timelineControl.addTo(map);
@@ -277,6 +362,8 @@
                                             migrationPoints.on("change", function (e) {
                                                 updateList(e.target);
                                             });
-
+                                            polygonDestinationTimeline.on("change", function (e) {
+                                                updateList(e.target);
+                                            });
                                             updateList(migrationTraceRoute);
                                         }

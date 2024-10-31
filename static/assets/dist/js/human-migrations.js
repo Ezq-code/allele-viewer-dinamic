@@ -104,10 +104,11 @@ function editFeature(id, feature_id, title, mag, place,time, timefinal) {
         }
     });
 }
+
+
 $(document).ready(function() {
-  // Botón de editar en la lista de Features
-  $('.btn-edit').click(function() {
-    // Obtener los datos del evento seleccionado
+  // Delegar el evento de clic al contenedor principal que no cambia
+  $(document).on('click', '.btn-edit', function() {
     var id = $(this).data('feature-id');
     var feature_id = $(this).data('feature-feature_id');
     var title = $(this).data('feature-title');
@@ -115,6 +116,7 @@ $(document).ready(function() {
     var place = $(this).data('feature-place');
     var time = $(this).data('feature-time');
     var timefinal = $(this).data('feature-timefinal');
+
     // Mostrar el nombre del evento
     $('#modal-edit-feature #feature-feature_id').val(feature_id);
     $('#modal-edit-feature #feature-title').val(title);
@@ -128,7 +130,7 @@ $(document).ready(function() {
   });
 
   // Enviar formulario al hacer click en el botón Enviar
-  $('#btn-edit-feature').click(function() {
+  $(document).on('click', '#btn-edit-feature', function() {
     var id = $(this).data('feature-id');
     var feature_id = $('#modal-edit-feature #feature-feature_id').val();
     var title = $('#modal-edit-feature #feature-title').val();
@@ -136,8 +138,8 @@ $(document).ready(function() {
     var place = $('#modal-edit-feature #feature-place').val();
     var time = $('#modal-edit-feature #feature-time').val();
     var timefinal = $('#modal-edit-feature #feature-timefinal').val();
+
     // Realizar la solicitud AJAX para editar el feature
     editFeature(id, feature_id, title, mag, place, time, timefinal);
   });
 });
-
