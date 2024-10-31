@@ -935,7 +935,7 @@ function avanzar(lista) {
 
 
 
-
+// esta es la funcion
 
 function animationWindows() {
   $(document).Toasts('create', {
