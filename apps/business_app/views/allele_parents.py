@@ -26,7 +26,7 @@ class AlleleParentsViewSet(viewsets.ViewSet, GenericAPIView):
 
     # queryset = PdbFiles.objects.all()
     serializer_class = AlleleParentsSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)

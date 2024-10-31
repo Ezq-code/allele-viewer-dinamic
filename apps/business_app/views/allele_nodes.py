@@ -35,12 +35,13 @@ class AlleleNodeViewSet(
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    filterset_fields = [
-        "element",
-        "custom_element_name",
-        "symbol",
-        "rs",
-        "number",
-    ]
+    filterset_fields = {
+        "element": ["exact"],
+        "custom_element_name": ["exact"],
+        "symbol": ["exact"],
+        "rs": ["exact"],
+        "number": ["exact"],
+        "timeline_appearence": ["exact", "gte", "lte"],
+    }
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = "unique_number"

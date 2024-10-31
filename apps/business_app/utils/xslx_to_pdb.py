@@ -97,7 +97,8 @@ class XslxToPdb(ExcelReader):
             for _, row in self.output_df.iterrows():
                 symbol = row[ExcelNomenclators.output_symbol_column_name]
                 allele = row[ExcelNomenclators.output_allele_column_name]
-                region = row[ExcelNomenclators.output_region_column_name]
+                region = row.get(ExcelNomenclators.output_region_column_name)
+                timeline_appearence = row.get(ExcelNomenclators.timeline_appearence)
                 if pd.isna(allele) or pd.isna(
                     row[ExcelNomenclators.output_number_column_name]
                 ):
@@ -141,6 +142,7 @@ class XslxToPdb(ExcelReader):
                     rs=rs,
                     uploaded_file_id=uploaded_file_id,
                     region=region,
+                    timeline_appearence=timeline_appearence,
                     unique_number=f"{uploaded_file_id}-{allele_number}",
                 )
 

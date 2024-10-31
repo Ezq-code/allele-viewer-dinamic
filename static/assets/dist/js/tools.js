@@ -1,29 +1,28 @@
 // Función para graficar
-function graficar(url) {
-  load.hidden = false;
-  let pdbUri = url;
+// function graficar(url) {
+//   load.hidden = false;
+//   let pdbUri = url;
 
-  fetch(pdbUri)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(
-          "Failed to load PDB " + pdbUri + ": " + response.statusText
-        );
-      }
-      return response.text();
-    })
-    .then((data) => {
-      graficar_string(data);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
+//   fetch(pdbUri)
+//     .then((response) => {
+//       if (!response.ok) {
+//         throw new Error(
+//           "Failed to load PDB " + pdbUri + ": " + response.statusText
+//         );
+//       }
+//       return response.text();
+//     })
+//     .then((data) => {
+//       graficar_string(data);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// }
 function graficar_string(pdb_content) {
   load.hidden = false;
-
   viewer.removeAllModels();
-  viewer.render();
+  // viewer.render();
   models[cont] = viewer.addModel(pdb_content, "pdb", { assignBonds: false });
   cont++;
   viewer.setClickable({}, true, function (atom, viewer, event, container) {
@@ -31,13 +30,13 @@ function graficar_string(pdb_content) {
   });
   //viewer.setZoomLimits(100,200);
   // Crear los objetos de línea para los ejes de coordenadas
-  viewer.setCameraParameters({ fov: 8 });
+  viewer.setCameraParameters({ fov: 2 });
   // Ajustar automáticamente la separación entre los ojos
   child();
-  viewer.render();
-  viewer.zoomTo();
-  viewer.spin(new $3Dmol.Vector3(1, 0, 0), 0.02); // Girar alrededor del eje X a una velocidad de 0.01 radianes por cuadro
-  viewer.spin(false);
+  // viewer.render();
+  // viewer.zoomTo();
+   viewer.spin(new $3Dmol.Vector3(1, 0, 0), 0.02); // Girar alrededor del eje X a una velocidad de 0.01 radianes por cuadro
+   viewer.spin(false);
 }
 
 // Función para iniciar la animación del atomo
@@ -220,6 +219,21 @@ function marcar(xcord, ycord, zcord) {
     },
   });
   viewer.render();
+}
+
+
+function getRandomColor() {
+  // Genera valores aleatorios para los componentes rojo, verde y azul
+  var r = Math.floor(Math.random() * 256);
+  var g = Math.floor(Math.random() * 256);
+  var b = Math.floor(Math.random() * 256);
+  // Convierte los valores a formato hexadecimal
+  var rHex = r.toString(16).padStart(2, "0");
+  var gHex = g.toString(16).padStart(2, "0");
+  var bHex = b.toString(16).padStart(2, "0");
+  // Construye el valor hexadecimal del color
+  var colorHex = "#" + rHex + gHex + bHex;
+  return colorHex;
 }
 function checkInternalStatus() {
   // Verificar si 'internal_status' existe en localStorage

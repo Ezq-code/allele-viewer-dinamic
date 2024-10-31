@@ -32,7 +32,6 @@ class PdbFileViewSet(
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         config = SiteConfiguration.get_solo()
-        #config.nx_graph_dim = serializer.validated_data.get("nx_graph_dim")
         config.nx_graph_k = serializer.validated_data.get("nx_graph_k")
         config.nx_graph_training_iterations = serializer.validated_data.get(
             "nx_graph_training_iterations"
@@ -42,7 +41,6 @@ class PdbFileViewSet(
             update_fields=[
                 "nx_graph_training_iterations",
                 "nx_graph_k",
-                #"nx_graph_dim",
                 "nx_graph_scale",
             ]
         )

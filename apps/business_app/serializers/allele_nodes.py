@@ -36,6 +36,7 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "children_qty",
             "children",
             "region",
+            "timeline_appearence",
         ]
         read_only_fields = [
             "id",
