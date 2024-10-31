@@ -376,7 +376,7 @@ function findPosition(data, id) {
 }
 
 function showInfo(atom) {
-  $(".toast").toast("hide");
+  $(".showalleleinfo").toast("hide");
   atomNumber = atom.serial;
   load.hidden = false;
   let toastClass = seleccionarEstiloAleatorio();
@@ -476,11 +476,11 @@ function showInfo(atom) {
 
 function seleccionarEstiloAleatorio() {
   const estilos = [
-    "bg-info",
-    "bg-success",
-    "bg-warning",
-    "bg-danger",
-    "bg-maroon",
+    "bg-info showalleleinfo",
+    "bg-success showalleleinfo",
+    "bg-warning showalleleinfo",
+    "bg-danger showalleleinfo",
+    "bg-maroon showalleleinfo",
   ];
   const indiceAleatorio = Math.floor(Math.random() * estilos.length);
   return estilos[indiceAleatorio];
@@ -614,14 +614,13 @@ function child() {
     .get(
       `/business-gestion/uploaded-files/${localStorage.getItem(
         "uploadFileId"
-      )}/allele-node-by-uploaded-file/`
+      )}/allele-node-by-uploaded-file/?ordering=timeline_appearence`
     )
     .then(function (response) {
       const elemento = response.data;
       let atomData = elemento.results;
       datos = atomData;
-      // console.log("datos");
-      // console.log(datos);
+      
 
       atomData.forEach((element) => {
         const stickRadius =
@@ -644,7 +643,8 @@ function child() {
         // console.log("stickRadius :", stickRadius);
         // console.log("sphereRadius :", sphereRadius);
       });
-
+      viewer.zoomTo();
+      viewer.zoom(2,1000);
       viewer.render();
       load.hidden = true;
     })
@@ -833,10 +833,8 @@ function sendExpantionValues() {
 }
 
 function animation() {
+  $(".controlpanel").toast("hide");
   load.hidden = false;
-  console.log('✌️datos --->', datos);
-  let datosOrdenados=ordenarPorTimeline(datos)
-console.log('✌️datosOrdenados --->', datosOrdenados);
   datos.forEach((element) => {
    
     viewer.setStyle(
@@ -855,37 +853,137 @@ console.log('✌️datosOrdenados --->', datosOrdenados);
   // console.log("zoomLevel :", zoomLevel);
   viewer.render();
   load.hidden = true;
+  $(".controlpanel").toast("hide");
+   pausa = false; // Variable de control para pausar
+   indiceActual = 0;
+  // let ordenada=ordenarPorTimeline(datos);
+  animationWindows();
+  mostrarElementos(datos,0.1);
+  
+}
+// function ordenarPorTimeline(lista) {
+//   // Ordenar la lista por la propiedad timeline_appearence
+//   const listaOrdenada = lista.sort((a, b) => a.timeline_appearence - b.timeline_appearence);
+  
+//   // Retornar la lista ordenada
+//   return listaOrdenada;
+// }
 
-  let ordenada=ordenarPorTimeline(datos);
-  mostrarElementos(ordenada,0.1);
-  
-}
-function ordenarPorTimeline(lista) {
-  // Ordenar la lista por la propiedad timeline_appearence
-  const listaOrdenada = lista.sort((a, b) => a.timeline_appearence - b.timeline_appearence);
-  
-  // Retornar la lista ordenada
-  return listaOrdenada;
-}
+
+let pausa = false; // Variable de control para pausar
+let indiceActual = 0; // Índice del elemento actual
+let timeoutId; // Para almacenar el timeout
 
 function mostrarElementos(lista, tiempo) {
-  lista.forEach((element, index) => {
-      setTimeout(() => {
-        const stickRadius =
-      element.children_qty === 0
-        ? 0.2
-        : 0.5 + element.children_qty * stickRadiusFactor;
+    if (indiceActual >= lista.length){$(".controlpanel").toast("hide");return;}  // Si ya se mostraron todos los elementos
+
+    const element = lista[indiceActual];
+    const stickRadius =
+        element.children_qty === 0
+            ? 0.2
+            : 0.5 + element.children_qty * stickRadiusFactor;
     const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
+
+    viewer.setStyle(
+        { serial: element.number },
+        {
+            sphere: { radius: sphereRadius, hidden: false },
+            stick: { color: "spectrum", radius: stickRadius, showNonBonded: false, hidden: false },
+        }
+    );
+
+    viewer.render();
+    document.getElementById('yearshow').textContent = element.timeline_appearence;
+    indiceActual++;
+
+    // Solo continuar si no está en pausa
+    if (!pausa) {
+        timeoutId = setTimeout(() => mostrarElementos(lista, tiempo), tiempo * 1000);
+    }
+}
+
+
+function retroceder(lista) {
+  if (indiceActual > 0) {
+      indiceActual--;
+       // Mostrar el elemento anterior inmediatamente
+      const element = datos[indiceActual];
     viewer.setStyle(
       { serial: element.number },
       {
-        sphere: { radius: sphereRadius,  hidden: false },
-        stick: { color: "spectrum", radius: stickRadius, showNonBonded: false,  hidden: false, },
+        sphere: {
+          hidden: true, // Ocultar esfera
+        },
+        stick: {
+          hidden: true, // Ocultar stick
+        },
       }
     );
-          viewer.render();  
-      }, tiempo * 1000 * index); // Convertir a milisegundos
-  });
+
+    viewer.render();
+    document.getElementById('yearshow').textContent = element.timeline_appearence;
+    // mostrarElementos(lista, 0);
+  }
 }
 
-// Cambia el estado cada 2 segundos
+function avanzar(lista) {
+  if (indiceActual < lista.length) {
+      mostrarElementos(lista, 0); // Mostrar el siguiente elemento inmediatamente
+  }
+}
+
+
+
+
+
+
+function animationWindows() {
+  $(document).Toasts('create', {
+    class: 'bg-lightblue controlpanel',
+    title: 'Animation Control',
+    // subtitle: 'Control panel',
+    position: 'bottomLeft',
+    icon: 'nav-icon fas fa-vr-cardboard',
+    body:  ` <div class=" d-flex justify-content-center"><h3 id='yearshow'>years</h3></div>
+    <div class="btn-group d-flex justify-content-center">
+                    <button
+                      type="button"
+                      class="btn btn-warning"
+                      title="backward"
+                      onclick="retroceder(datos)"
+                    >
+                      <i class="nav-icon fas fa-backward"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-success"
+                      title="Play"
+                      onclick="playStopAnimation(this)"
+                    >
+                      <i class="nav-icon fas fa-pause"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-warning"
+                      id='animation'
+                      title="forward"
+                      onclick="avanzar(datos)"
+                    >
+                      <i class="nav-icon fas fa-forward"></i>
+                    </button>
+                  </div>`
+  })
+    // Aquí podrías reiniciar la llamada a mostrarElementos si es necesario
+}
+
+
+function playStopAnimation(button) {
+  pausa = !pausa; // Cambiar el estado de pausa
+  if (!pausa) {
+      mostrarElementos(datos, 0.1); // Reiniciar la visualización si se reanuda
+  } else {
+      clearTimeout(timeoutId); // Limpiar el timeout si se pausa
+  }
+  togglePauseButton(button);
+}
+

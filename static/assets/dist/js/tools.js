@@ -21,9 +21,8 @@
 // }
 function graficar_string(pdb_content) {
   load.hidden = false;
-
   viewer.removeAllModels();
-  viewer.render();
+  // viewer.render();
   models[cont] = viewer.addModel(pdb_content, "pdb", { assignBonds: false });
   cont++;
   viewer.setClickable({}, true, function (atom, viewer, event, container) {
@@ -34,10 +33,10 @@ function graficar_string(pdb_content) {
   viewer.setCameraParameters({ fov: 2 });
   // Ajustar automáticamente la separación entre los ojos
   child();
-  viewer.render();
-  viewer.zoomTo();
-  viewer.spin(new $3Dmol.Vector3(1, 0, 0), 0.02); // Girar alrededor del eje X a una velocidad de 0.01 radianes por cuadro
-  viewer.spin(false);
+  // viewer.render();
+  // viewer.zoomTo();
+   viewer.spin(new $3Dmol.Vector3(1, 0, 0), 0.02); // Girar alrededor del eje X a una velocidad de 0.01 radianes por cuadro
+   viewer.spin(false);
 }
 
 // Función para iniciar la animación del atomo
