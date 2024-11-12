@@ -1,4 +1,5 @@
-                                        //For Update TimeLine Description in the right panel
+                    // función para actualizar el panel derecho a medida que corre la línea del tiempo.
+                    // también se modifica el zoom y posición del mapa según los diferentes años de la línea del tiempo.
 					function updateList(timeline) {
 
                                             if (timeline.time < -130000) {
@@ -23,10 +24,12 @@
                                             });
                                         }
 
-
-                                        // eqfeed_callback is called once the migration geojsonp file below loads
+                    // eqfeed_callback es llamado una vez que el archivo geojsonp(contiene la vectorización del hielo, la tierra que emerge
+                    // y las trayectorias de la migraciones) se carga. También se cargan los marcadores y los destinos de las migraciones
+                    // a partir de llamadas ajax.
 					function eqfeed_callback(data) {
 
+                                            // intervalos de tiempo para los vectores del hielo, la tierra que emerge y las trayectorias de las migraciones
                                             var getInterval = function (quake) {
                                                 if ((quake.properties.id == 100) || (quake.properties.id == 160) || (quake.properties.id == 220) || (quake.properties.id == 280) || (quake.properties.id == 340) || (quake.properties.id == 400) || (quake.properties.id == 480) || (quake.properties.id == 560) || (quake.properties.id == 640) || (quake.properties.id == 700) || (quake.properties.id == 750) || ((quake.properties.id >= 1000) && (quake.properties.id <= 4500))) {
                                                     return {
@@ -36,6 +39,7 @@
                                                 }
                                             };
 
+                                            // intervalos de tiempo para los destinos de las migraciones
                                             var getShortInterval = function (quake) {
 
                                                 if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9))) {
@@ -46,10 +50,12 @@
                                                 }
                                             };
 
+                                            // duración de la línea del tiempo en general
                                             var timelineControl = L.timelineSliderControl({
                                                 duration: 315000,
                                             });
 
+                                            // línea del tiempo y simbología para los vectores del hielo, la tierra que emerge y las trayectorias de las migraciones
                                             var migrationTraceRoute = L.timeline(data, {
                                                 getInterval: getInterval,
                                                 style: function (feature) {
@@ -94,12 +100,11 @@
                                                 },
                                             });
 
-
+                                            // línea del tiempo y simbología para los destinos de las migraciones
                                             var migrationPoints = L.timeline(data, {
                                                 getInterval: getShortInterval,
                                                 style: function (feature) {
                                                     if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
-
                                                         return {
                                                             color: "#171717",
                                                             fillColor: "#171717",
@@ -124,10 +129,10 @@
                                                             //autoClose: false
                                                         //}).setContent(data.properties.place));
                                                     }
-                                                    
                                                 },
                                             });
  
+                                            // llamada ajax para cargar los marcadores, su simbología, su línea del tiempo y adición al mapa  
                                             var polygonTimeline;
                                             var polygons;
                                             var aFeatures = [];
@@ -216,6 +221,7 @@
                                                 }
                                             });
 
+                                            // llamada ajax para cargar los destinos de las migraciones, su simbología, su línea del tiempo y adición al mapa
                                             var polygonDestinationTimeline;
                                             var polygons;
                                             var aFeaturesDestination = [];
@@ -298,14 +304,17 @@
                                                     polygonDestinationTimeline.addTo(map);
                                                 }
                                             });
-
+                                            
+                                            // capa para los alleles
                                             AlleleGeographicZonesLayer = new L.featureGroup().addTo(map);
 
+                                            // adicion de los timelines al timelineControl, y adición al mapa
                                             timelineControl.addTo(map);
                                             timelineControl.addTimelines(migrationTraceRoute, migrationPoints);
                                             migrationTraceRoute.addTo(map);
                                             migrationPoints.addTo(map);
 
+                                            // creación de las capas bases y adición al control de capas del mapa
                                             const baseLayers = {
                                                 'Countries': osmcountriesLayers,
                                                 'Satelital': satelitalLayer,
@@ -322,6 +331,7 @@
 
                                             var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
 
+                                            // llamada ajax para cargar la visualidad de las capas del mapa
                                             $.ajax({
                                                 type: 'GET',
                                                 url: '/business-gestion/layers/',
@@ -355,6 +365,7 @@
                                                 }
                                             });
 
+                                            // llamada a la función que actualiza el panel de derecho en evento "change" de los timelines y también se llama al final
                                             //map.addLayer(LandLGMShapefile);
                                             migrationTraceRoute.on("change", function (e) {
                                                 updateList(e.target);

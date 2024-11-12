@@ -1,5 +1,7 @@
+// funciones para gestionar los eventos de la adición de los marcadores
 var buttonSaveMarker = document.getElementById("BtnSaveMarker");
 
+// evento que se dispara cuando se da clic en el menú de dibujar el marcador y muestra el modal para seleccionar el tipo de evento
 map.on(L.Draw.Event.DRAWSTART, function (event) {
 
     markCreated = true;
@@ -18,12 +20,16 @@ map.on(L.Draw.Event.DRAWSTART, function (event) {
     }
 });
 
+// evento que se dispara cuando se termina de pintar el marcador para si la bandera
+// de "markCreated" está en verdadero ocultar el modal del tipo de evento
 map.on('draw:drawstop', function (e) {
     if (markCreated == true) {
         modalEvent.style.display = "none";
     }
 });
 
+// evento que se dispara cuando se pinta el marcador en el mapa, aquí se obtiene latitud y longitud 
+// y se establece el ícono del marcador y se muestra el modal para introducir todos los datos de marcador
 map.on(L.Draw.Event.CREATED, function (event) {
 
     if ((markCreated == true) && (selectEventTypeFirtModal.value != -1)) {
@@ -83,6 +89,7 @@ map.on(L.Draw.Event.CREATED, function (event) {
     }
 });
 
+// evento que se dispara cuando se da clic en e boton "Save" del modal al que se le introducen los datos de marcador
 buttonSaveMarker.onclick = function () {
 
     var fi = document.getElementById("fechaini").value;
@@ -114,6 +121,7 @@ buttonSaveMarker.onclick = function () {
                 } 
             });
 
+            // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
             Swal.fire({
                 title: 'Updating TimeLine...',
                 showConfirmButton: false,
@@ -121,6 +129,7 @@ buttonSaveMarker.onclick = function () {
                     Swal.showLoading();
                 }
             });
+            // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
             setTimeout(function () {
                 location.reload();
             }, 500);
@@ -133,7 +142,7 @@ buttonSaveMarker.onclick = function () {
     }
 };
 
-// VALIDACION DEL MODAL PARA CREAR MARCADOR
+// validación del modal para crear marcador
 $(document).ready(function () {
     // Agregar regla personalizada para validar enteros (incluyendo negativos)
     $.validator.addMethod("integer", function (value, element) {

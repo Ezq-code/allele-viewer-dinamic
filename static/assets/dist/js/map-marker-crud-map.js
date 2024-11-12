@@ -1,3 +1,4 @@
+// funciones para gestionar los marcadores en el mapa
 var campoTextoDescripcion = document.getElementById("descripcion");
 var textDescripcion = document.getElementById("descripcion");
 var campoTextoreference = document.getElementById("reference");
@@ -16,7 +17,7 @@ selectEventType.add(option1);
 selectEventTypeFirtModal.add(option);
 var idEditMarker = 0;
 
-//Get marker to map
+// llamada ajax para cargar los marcadores y adicionarlos en la capa de los marcadores
 $.ajax({
     type: 'GET',
     url: '/business-gestion/markers/',
@@ -71,7 +72,7 @@ $.ajax({
     }
 });
 
-//Get event types and add to combobox
+// llamada ajax para obtener los tipos de eventos para adicionarlos al select del modal
 $.ajax({
     type: 'GET',
     url: '/business-gestion/events/',
@@ -97,7 +98,6 @@ $.ajax({
             selectEventType.add(option);
             selectEventTypeFirtModal.add(option1);
         });
-
     }
 });
 
@@ -115,20 +115,33 @@ L.EditToolbar.Delete.include({
     removeAllLayers: false
 });
 
-var drawControl = new L.Control.Draw({
-    draw: {
-        polyline: false,
-        circle: false,
-        polygon: false,
-        rectangle: false,
-        circlemarker: false,
-        marker: {
+$(document).ready(function() {
+  // Función para actualizar el control de dibujo
+  function updateDrawControl() {
+    if (authenticated) {
+      // Inicializa el control de dibujo si el usuario está autenticado
+      var drawControl = new L.Control.Draw({
+        draw: {
+          polyline: false,
+          circle: false,
+          polygon: false,
+          rectangle: false,
+          circlemarker: false,
+          marker: {
             icon: new MyCustomMarker()
+          }
         }
+      });
+      // Agrega el control de dibujo al mapa
+      map.addControl(drawControl);
+    } else {
+      // No se crea el control de dibujo si el usuario no está autenticado
     }
+  }
+  // Llamada de la función para actualizar el control de dibujo
+  updateDrawControl();
 });
 
-map.addControl(drawControl);
 
 var modal = document.getElementById("modalMarker");
 var modalEvent = document.getElementById("modalTypeEventMarker");
@@ -144,6 +157,7 @@ var markCreated = false;
 var markSave = false;
 var markerList = [];
 
+// evento que se dispara al seleccionar el tipo de evento para hacer llamada ajax para obtener el ícono del tipo de evento
 document.getElementById("tipoeventofirtmodal").addEventListener("change", function () {
 
     var ideventtype = document.getElementById("tipoeventofirtmodal").value;
@@ -173,7 +187,7 @@ document.getElementById("tipoeventofirtmodal").addEventListener("change", functi
     }
 });
 
-// VALIDACION DEL SELECT EVENT TYPE
+// validación del select evet type
 $(document).ready(function () {
     // Agregar regla personalizada para validar que el valor no sea -1
     $.validator.addMethod("notEqual", function (value, element, param) {
