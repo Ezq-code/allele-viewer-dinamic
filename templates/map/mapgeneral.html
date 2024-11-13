@@ -67,8 +67,7 @@
 {% endblock %}
 
 {% block content %}
-    <!--Modals Create, Edit and modal for Inicial Create-->
-    <!-- Modal para la creación del evento -->
+    <!-- Modal para seleccionar el tipo de evento -->
     <div class="modal fade" id="modalTypeEventMarker" tabindex="-1" role="dialog"
          aria-labelledby="modalTypeEventMarkerLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -96,7 +95,7 @@
         </div>
     </div>
 
-    <!-- Modal para la edición del marcador -->
+    <!-- Modal para la creación del marcador -->
     <div class="modal fade" id="modalMarker" tabindex="-1" role="dialog" aria-labelledby="modalMarkerLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -153,7 +152,7 @@
                         <div class="form-group">
                             <label for="reference">Reference:</label>
                             <textarea class="form-control" rows="1" id="reference" name="reference"></textarea>
-                        </div>                        
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -199,90 +198,107 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="right-sidebar" style="padding: 10px 100px;">
-                                        <div id="map"></div>
-                                    </div>
-                                    <script>
-                                        var importUrlPath = "{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/shp.js' %}";
-                                    </script>
-
-                                    <script src="{% static 'assets/dist/js/map-load-shape.js' %}"></script>
-
-                                    <script>
-                                        //Base Layers
-                                        var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";  //"http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
-                                        var osmAttrib = "CYP2D6 Alleles-Expansions";
-                                        var osmcountriesLayers = L.tileLayer(countriesLayers, {
-                                            minZoom: 2,
-                                            attribution: osmAttrib,
-                                        });
-
-                                        var satelitalLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                                            minZoom: 2,
-                                            attribution: 'Allele-Viewer'
-                                        });
-
-                                        var oceanLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
-                                            minZoom: 2,
-                                            attribution: 'Allele-Viewer'
-                                        });
-
-                                        var LandLGMShapefile = new L.Shapefile("{% static 'assets/dist/Leaflet/Last-Glacial-Maximum/landmassLGMPolygon2.zip' %}", {
-                                            style: function (feature) {
-                                                return {
-                                                    color: '#2D2',
-                                                    fillColor: '#2D2',
-                                                    fillOpacity: 0.5,
-                                                    weight: 2,
-                                                    opacity: 1,
-                                                };
-                                            }
-                                        });
-
-                                        //Map
-                                        var map = L.map("map", {
-                                            layers: [satelitalLayer],
-                                            center: new L.LatLng(-3, 20),
-                                            zoom: 4,
-                                            maxBounds: [
-                                                [90, -50],
-                                                [-90, 335],
-                                            ],
-                                        });
-
-                                        //Layer for Marker
-                                        markerLayer = new L.featureGroup().addTo(map);
-                                        var markerMigrationPointLayer = new L.featureGroup().addTo(map);
-                                        var labeled = false;
-
-                                        var iconUrlpath = "{% static 'assets/dist/Leaflet/marker_black.png' %}";
-
-                                    </script>
-
-                                    <script src="{% static 'assets/dist/js/map-function-load-timeline.js' %}"></script>
-                                    <script src="{% static 'assets/dist/js/map-marker-crud-map.js' %}"></script>
-                                    <script src="{% static 'assets/dist/js/map-marker-event-map.js' %}"></script>
-                                    <script src="{% static 'assets/dist/js/map-label-improve.js' %}"></script>
-                                    <script>
-                                        markerLayer.remove();
-                                    </script>
-                                    <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/migration-timeline.geojsonp' %}"></script>
-                                </div>
-                            </div>
                             <!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="right-sidebar" style="padding: 10px 100px;">
+                                    <div id="map"></div>
+                                </div>
+                                <script>
+                                    var importUrlPath = "{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/shp.js' %}";
+                                </script>
+
+                                <!-- codigo javascript para cargar archivos de tipo shape -->
+                                <script src="{% static 'assets/dist/js/map-load-shape.js' %}"></script>
+
+                                <script>
+                                    // Capa Base con mapa político
+                                    var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";  //"http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
+                                    var osmAttrib = "CYP2D6 Alleles-Expansions";
+                                    var osmcountriesLayers = L.tileLayer(countriesLayers, {
+                                        minZoom: 2,
+                                        attribution: osmAttrib,
+                                    });
+
+                                    // Capa Base con mapa satelital
+                                    var satelitalLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                                        minZoom: 2,
+                                        attribution: 'Allele-Viewer'
+                                    });
+
+                                    // Capa Base con mapa de los océanos
+                                    var oceanLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
+                                        minZoom: 2,
+                                        attribution: 'Allele-Viewer'
+                                    });
+
+                                    // Capa Base con mapa del último glacial máximo
+                                    var LandLGMShapefile = new L.Shapefile("{% static 'assets/dist/Leaflet/Last-Glacial-Maximum/landmassLGMPolygon2.zip' %}", {
+                                        style: function (feature) {
+                                            return {
+                                                color: '#2D2',
+                                                fillColor: '#2D2',
+                                                fillOpacity: 0.5,
+                                                weight: 2,
+                                                opacity: 1,
+                                            };
+                                        }
+                                    });
+
+                                    // Creación de la variable del Mapa
+                                    var map = L.map("map", {
+                                        layers: [satelitalLayer],
+                                        center: new L.LatLng(-3, 20),
+                                        zoom: 4,
+                                        maxBounds: [
+                                            [90, -50],
+                                            [-90, 335],
+                                        ],
+                                    });
+
+                                    // Capa de las marcas
+                                    markerLayer = new L.featureGroup().addTo(map);
+                                    var markerMigrationPointLayer = new L.featureGroup().addTo(map);
+                                    var labeled = false;
+
+                                    var iconUrlpath = "{% static 'assets/dist/Leaflet/marker_black.png' %}";
+
+                                </script>
+                                <!-- Script que almacena en la variable authenticated el estado del usuario, si esta autenticado o no -->
+                                <script>
+                                    var authenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
+                                </script>
+                                <!-- código javascript para cargar la linea del tiempo -->
+                                <script src="{% static 'assets/dist/js/map-function-load-timeline.js' %}"></script>
+                                <!-- código javascript para gestionar la creacion de los marcadores y sus modales -->
+                                <script src="{% static 'assets/dist/js/map-marker-crud-map.js' %}"></script>
+                                <!-- código javascript para manejar los eventos en la creacion de los marcadores -->
+                                <script src="{% static 'assets/dist/js/map-marker-event-map.js' %}"></script>
+                                <!-- código javascript para mejorar la visualizacion de las etiquetas -->
+                                <script src="{% static 'assets/dist/js/map-label-improve.js' %}"></script>
+
+                                <!-- Capa de marcadores por defecto apagada -->
+                                <script>
+                                    markerLayer.remove();
+                                </script>
+
+                                <!-- Este es el archivo que tiene la llamada a la función eqfeed_callback -->
+                                <!-- y tiene como parámetro varios de los vectores que conforman la línea del tiempo -->
+                                <!-- los cuáles son: el hielo, la tierra que emerge y las trayectorias de las migraciones-->
+                                <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/migration-timeline.geojsonp' %}"></script>
+                            </div>
                             <!-- /.card-body -->
-                            <!-- /.card -->
                         </div>
+                        <!-- /.card -->
                     </div>
+                    <!-- /.col -->
                 </div>
-                <!-- /.col -->
+                <!-- /.row -->
             </div>
-            <!-- /.row -->
+            <!-- /.container-fluid-->
         </section>
     </div>
 
+    <!-- Sidebar con el panel derecho que muestra el listado de las migraciones cronológicamente -->
     <aside id="info" class="control-sidebar control-sidebar-dark">
         <!-- Control sidebar content goes here -->
         <div class="p-3 d-flex flex-column">

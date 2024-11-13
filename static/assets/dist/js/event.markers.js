@@ -11,7 +11,7 @@ function listEvents() {
         }
     });
 }
-
+// Funcion para restablecer el formulario a su estado inicial
 function resetEventForm() {
     document.getElementById('add-event-form').reset();
 }
@@ -84,7 +84,7 @@ function submitEventForm() {
 }
 
 
-// Editar evento
+// Funcion para editar un evento
 function editEvent(event_id, event_name, event_icon) {
     var formData = new FormData();
     formData.append('event_name', event_name);
@@ -113,6 +113,11 @@ function editEvent(event_id, event_name, event_icon) {
         }
     });
 }
+
+
+// Cuando un usuario hace clic en el botón de edición,
+// se extraen los datos correspondientes y se muestran en un modal
+// para que el usuario pueda modificarlos
 $(document).ready(function() {
   // Botón de editar en la lista de eventos
   $('.btn-edit').click(function() {
@@ -141,7 +146,7 @@ $(document).ready(function() {
 });
 
 
-// Eliminar evento
+// Funcion para eliminar un evento
 function deleteEvent(event_id) {
     $.ajax({
         url: `../business-gestion/events/delete/${event_id}/`,

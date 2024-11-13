@@ -1,3 +1,4 @@
+// Funcion para crear features en la vista migrations.html
 $(document).ready(function() {
     // Crear Feature
     $('#createFeatureButton').click(function() {
@@ -36,13 +37,12 @@ $(document).ready(function() {
 
 });
 
-
-
-
+// Funcion para restablecer el formulario a su estado inicial
 function resetFeatureForm() {
     document.getElementById('createFeatureForm').reset();
 }
 
+// FUncion para eliminar un feature
 function deleteFeature(id) {
     $.ajax({
         url: `../business-gestion/features/delete/${id}/`,
@@ -69,9 +69,7 @@ function deleteFeature(id) {
 }
 
 
-
-
-// Editar evento
+//Funcion para editar un feature
 function editFeature(id, feature_id, title, mag, place,time, timefinal) {
     var formData = new FormData();
     formData.append('feature_id', feature_id);
@@ -80,6 +78,7 @@ function editFeature(id, feature_id, title, mag, place,time, timefinal) {
     formData.append('place', place);
     formData.append('time', time);
     formData.append('timefinal', timefinal);
+
     $.ajax({
         url: '../business-gestion/features/edit/' + id + '/',
         type: 'POST',
@@ -105,7 +104,9 @@ function editFeature(id, feature_id, title, mag, place,time, timefinal) {
     });
 }
 
-
+//Cuando un usuario hace clic en el botón de edición,
+// se extraen los datos correspondientes y se muestran en un modal
+// para que el usuario pueda modificarlos
 $(document).ready(function() {
   // Delegar el evento de clic al contenedor principal que no cambia
   $(document).on('click', '.btn-edit', function() {
@@ -117,7 +118,7 @@ $(document).ready(function() {
     var time = $(this).data('feature-time');
     var timefinal = $(this).data('feature-timefinal');
 
-    // Mostrar el nombre del evento
+    // Mostrar el nombre del feature
     $('#modal-edit-feature #feature-feature_id').val(feature_id);
     $('#modal-edit-feature #feature-title').val(title);
     $('#modal-edit-feature #feature-mag').val(mag);

@@ -1,3 +1,4 @@
+// Funcion para eliminar el marcador
 function deleteMark(marker_id) {
     $.ajax({
         url: `../business-gestion/markers/delete/${marker_id}/`, type: 'POST', success: function (data) {
@@ -16,7 +17,8 @@ function deleteMark(marker_id) {
     });
     $('#modal-delete-mark').modal('hide');
 }
-
+//Al abrir el modal, captura el ID del elemento a eliminar y, al confirmar
+// llama a una función para llevar a cabo la eliminación.
 $(document).ready(function () {
     let markerId;
 
@@ -33,7 +35,7 @@ $(document).ready(function () {
 });
 
 
-// Editar evento
+// Funcion para editar el marcador
 function editMark(id, event_type, start_date, start_format, end_date, end_format, description, reference, latitude, longitude) {
     var formData = new FormData();
     formData.append('event_type', event_type);
@@ -68,6 +70,9 @@ function editMark(id, event_type, start_date, start_format, end_date, end_format
     });
 }
 
+//Cuando un usuario hace clic en el botón de edición,
+// se extraen los datos correspondientes y se muestran en un modal
+// para que el usuario pueda modificarlos
 $(document).ready(function () {
     // Botón de editar en la lista de Marks
     $('.btn-edit').click(function () {

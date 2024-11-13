@@ -1,4 +1,4 @@
-                                        //Scripts for read a shapefile
+                                        // estas funciones se usan para leer de archivos shapes
                                         L.Shapefile = L.GeoJSON.extend({
                                             options: {
                                                 importUrl: importUrlPath
@@ -59,4 +59,3 @@
                                         L.shapefile = function (a, b, c) {
                                             return new L.Shapefile(a, b, c);
                                         }; 
-                                        ////End read Shape

@@ -1,8 +1,8 @@
-                                    // Truncate value based on number of decimals                                      
+                                    
+                                    // estas funciones se usan para mejorar la forma de mostrar las etiquetas de los objetos                                      
                                         var _round = function (num, len) {
                                             return Math.round(num * (Math.pow(10, len))) / (Math.pow(10, len));
                                         };
-                                        // Helper method to format LatLng object (x.xxxxxx, y.yyyyyy)
                                         var strLatLng = function (latlng) {
                                             return "(" + _round(latlng.lat, 6) + ", " + _round(latlng.lng, 6) + ")";
                                         };
