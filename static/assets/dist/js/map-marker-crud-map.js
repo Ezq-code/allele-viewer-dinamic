@@ -115,33 +115,23 @@ L.EditToolbar.Delete.include({
     removeAllLayers: false
 });
 
-$(document).ready(function() {
-  // Función para actualizar el control de dibujo
-  function updateDrawControl() {
-    if (authenticated) {
-      // Inicializa el control de dibujo si el usuario está autenticado
-      var drawControl = new L.Control.Draw({
-        draw: {
-          polyline: false,
-          circle: false,
-          polygon: false,
-          rectangle: false,
-          circlemarker: false,
-          marker: {
+// menu de configuración para agregar marcador y adicionar al mapa 
+var drawControl = new L.Control.Draw({
+    draw: {
+        polyline: false,
+        circle: false,
+        polygon: false,
+        rectangle: false,
+        circlemarker: false,
+        marker: {
             icon: new MyCustomMarker()
-          }
         }
-      });
-      // Agrega el control de dibujo al mapa
-      map.addControl(drawControl);
-    } else {
-      // No se crea el control de dibujo si el usuario no está autenticado
     }
-  }
-  // Llamada de la función para actualizar el control de dibujo
-  updateDrawControl();
 });
 
+if (authenticated){
+ map.addControl(drawControl);
+}
 
 var modal = document.getElementById("modalMarker");
 var modalEvent = document.getElementById("modalTypeEventMarker");
