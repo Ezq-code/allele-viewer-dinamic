@@ -106,11 +106,11 @@ function poblarListasPdb(versionAllele) {
 }
 
 function poblarListasCopy(uploadFileId) {
+console.log('✌️uploadFileId --->', uploadFileId);
  
+console.log('✌️localStorage.getItem("id") --->', localStorage.getItem("id"));
   if (
-    localStorage.getItem("id") &&
-    localStorage.getItem("id") !== null &&
-    localStorage.getItem("id") !== ""
+    localStorage.getItem("id") && localStorage.getItem("id") !== "null" && localStorage.getItem("id") !== ""
   ) {
    
     var userId = localStorage.getItem("id");
@@ -307,6 +307,7 @@ function selectUrl() {
   var $selectfile = document.getElementById("selectfile");
   var $selectPdb = document.getElementById("selectPdb");
   var idFile = $selectfile.value;
+ document.getElementById("animation").disabled=false;
 
   console.log(" idFile:", idFile);
   axios
