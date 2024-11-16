@@ -20,10 +20,4 @@ jobs:
 
       - name: Deploy to Contabo
         run: |
-          ssh -o StrictHostKeyChecking=no -t root@62.146.227.53 " cd /root/projects/allele-viewer-dinamic/ && git pull && exit"
-          
-      - name: Deploy to Contabo2
-        run: |
-          ssh -t root@62.146.227.53 "cd  /root/projects/allele-viewer-dinamic/; source venv/bin/activate; python manage.py migrate; python manage.py collectstatic --noinput; sudo systemctl restart gunicorn_supermario_shop.service; exec \$SHELL --login"
-
-
+          ssh -o StrictHostKeyChecking=no -t root@62.146.227.53 
