@@ -90,15 +90,16 @@ $(document).ready(function () {
         var longitude = $(this).data('mark-longitude');
 
         // Mostrar los datos en el modal
-        $('#modal-edit-mark #mark-start_date').val(start_date);
-        $('#modal-edit-mark #mark-start_format').val(start_format);
-        $('#modal-edit-mark #mark-end_date').val(end_date);
-        $('#modal-edit-mark #mark-end_format').val(end_format);
-        $('#modal-edit-mark #mark-description').val(description);
-        $('#modal-edit-mark #mark-reference').val(reference);
-        $('#modal-edit-mark #mark-latitude').val(latitude);
-        $('#modal-edit-mark #mark-longitude').val(longitude);
-        $('#btn-edit-mark').data('mark-id', id); // Guardamos el ID aquí
+        var modalId = '#modal-edit-mark-' + id;
+        $(modalId).find('#mark-start_date').val(start_date);
+        $(modalId).find('#mark-start_format').val(start_format);
+        $(modalId).find('#mark-end_date').val(end_date);
+        $(modalId).find('#mark-end_format').val(end_format);
+        $(modalId).find('#mark-description').val(description);
+        $(modalId).find('#mark-reference').val(reference);
+        $(modalId).find('#mark-latitude').val(latitude);
+        $(modalId).find('#mark-longitude').val(longitude);
+        $(modalId).find('#btn-edit-mark').data('mark-id', id); // Guardamos el ID aquí
 
         // Mostrar la ventana modal
         $('#modal-edit-mark').modal('show');
@@ -107,15 +108,16 @@ $(document).ready(function () {
     // Enviar formulario al hacer click en el botón Enviar
     $(document).on('click', '#btn-edit-mark', function () {
         var id = $(this).data('mark-id');
-        var event_type = $('#modal-edit-mark select').val(); // Asumimos que el select está habilitado
-        var start_date = $('#modal-edit-mark #mark-start_date').val();
-        var start_format = $('#modal-edit-mark #mark-start_format').val();
-        var end_date = $('#modal-edit-mark #mark-end_date').val();
-        var end_format = $('#modal-edit-mark #mark-end_format').val();
-        var description = $('#modal-edit-mark #mark-description').val();
-        var reference = $('#modal-edit-mark #mark-reference').val();
-        var latitude = $('#modal-edit-mark #mark-latitude').val();
-        var longitude = $('#modal-edit-mark #mark-longitude').val();
+        var modalId = '#modal-edit-mark-' + id;
+        var event_type = $(modalId).find('#mark-event_type').val(); // Obtener el valor del select
+        var start_date = $(modalId).find('#mark-start_date').val();
+        var start_format = $(modalId).find('#mark-start_format').val();
+        var end_date = $(modalId).find('#mark-end_date').val();
+        var end_format = $(modalId).find('#mark-end_format').val();
+        var description = $(modalId).find('#mark-description').val();
+        var reference = $(modalId).find('#mark-reference').val();
+        var latitude = $(modalId).find('#mark-latitude').val();
+        var longitude = $(modalId).find('#mark-longitude').val();
 
         // Realizar la solicitud AJAX para editar la marca
         editMark(id, event_type, start_date, start_format, end_date, end_format, description, reference, latitude, longitude);
