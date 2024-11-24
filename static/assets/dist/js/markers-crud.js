@@ -17,6 +17,7 @@ function deleteMark(marker_id) {
     });
     $('#modal-delete-mark').modal('hide');
 }
+
 //Al abrir el modal, captura el ID del elemento a eliminar y, al confirmar
 // llama a una función para llevar a cabo la eliminación.
 $(document).ready(function () {
@@ -75,7 +76,7 @@ function editMark(id, event_type, start_date, start_format, end_date, end_format
 // para que el usuario pueda modificarlos
 $(document).ready(function () {
     // Botón de editar en la lista de Marks
-    $('.btn-edit').click(function () {
+    $(document).on('click', '.btn-edit', function () {
         // Obtener los datos de la marca seleccionada
         var id = $(this).data('mark-id');
         var event_type = $(this).data('mark-event_type');
@@ -104,7 +105,7 @@ $(document).ready(function () {
     });
 
     // Enviar formulario al hacer click en el botón Enviar
-    $('#btn-edit-mark').click(function () {
+    $(document).on('click', '#btn-edit-mark', function () {
         var id = $(this).data('mark-id');
         var event_type = $('#modal-edit-mark select').val(); // Asumimos que el select está habilitado
         var start_date = $('#modal-edit-mark #mark-start_date').val();
