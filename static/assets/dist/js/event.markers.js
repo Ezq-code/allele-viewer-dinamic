@@ -11,6 +11,7 @@ function listEvents() {
         }
     });
 }
+
 // Funcion para restablecer el formulario a su estado inicial
 function resetEventForm() {
     document.getElementById('add-event-form').reset();
@@ -85,10 +86,15 @@ function submitEventForm() {
 
 
 // Funcion para editar un evento
-function editEvent(event_id, event_name, event_icon) {
+function editEvent(id, event_name, event_icon_url, event_icon_file) {
+    var event_id = id;
     var formData = new FormData();
     formData.append('event_name', event_name);
-    formData.append('event_icon', $('#modal-edit-event #event-icon')[0].files[0]);
+    if (event_icon_file) {
+        formData.append('event_icon', event_icon_file);
+    }
+    // Si no se seleccionó un nuevo icono, se envía la URL del icono actual
+    formData.append('event_icon_url', event_icon_url);
     $.ajax({
         url: '../business-gestion/events/edit/' + event_id + '/',
         type: 'POST',
@@ -97,7 +103,7 @@ function editEvent(event_id, event_name, event_icon) {
         processData: false,
         success: function (data) {
             console.log(data);
-            $('#modal-edit-event').modal('hide'); // Ocultar la ventana modal después de la edición
+            $('#modal-edit-event').modal('hide');
             Swal.fire({
                 icon: "success",
                 title: "Successfully edited event",
@@ -114,35 +120,38 @@ function editEvent(event_id, event_name, event_icon) {
     });
 }
 
-
 // Cuando un usuario hace clic en el botón de edición,
 // se extraen los datos correspondientes y se muestran en un modal
 // para que el usuario pueda modificarlos
-$(document).ready(function() {
-  // Botón de editar en la lista de eventos
-  $('.btn-edit').click(function() {
-    // Obtener los datos del evento seleccionado
-    var event_id = $(this).data('event-id');
-    var event_name = $(this).data('event-name');
-    var event_icon = $(this).data('event-icon');
-    // Mostrar el nombre del evento
-    $('#modal-edit-event #event-name').val(event_name);
-    // Mostrar la imagen previamente cargada del icono del evento
-    $('#modal-edit-event #event-icon-preview').attr('src', '/media/'+ event_icon);
-    // Almacenar la URL del icono en un campo oculto para enviarlo al editar el evento
-    $('#modal-edit-event #event-icon-url').val(event_icon);
-    // Mostrar la ventana modal
-    $('#modal-edit-event').modal('show');
-  });
+$(document).ready(function () {
+    // Botón de editar en la lista de eventos
+    $(document).on('click', '.btn-edit', function () {
+        // Obtener los datos del evento seleccionado
+        var event_id = $(this).data('event-id');
+        var event_name = $(this).data('event-name');
+        var event_icon = $(this).data('event-icon');
+        // Guarda event_id como dato del modal
+        var modalId = '#modal-edit-event-' + event_id; // Asegúrate de que el ID sea correcto
+        $(modalId + ' #event-name').val(''); // Limpiar el campo del nombre del evento
+        $(modalId + ' #event-icon-preview').attr('src', ''); // Limpiar la vista previa del icono
+        $(modalId + ' #event-icon-url').val(''); // Limpiar el campo de la URL del icono
+        $(modalId + ' #event-icon').val(''); // Limpiar el input file
 
-  // Enviar formulario al hacer click en el botón Enviar
-  $('#btn-edit-event').click(function() {
-    var event_id = $(this).data('event-id');
-    var event_name = $('#modal-edit-event #event-name').val();
-    var event_icon = $('#modal-edit-event #event-icon')[0].files[0];  // Obtener el archivo de imagen
-    // Realizar la solicitud AJAX para editar el evento
-    editEvent(event_id, event_name, event_icon);
-  });
+        $(modalId + ' #event-name').val(event_name);
+        $(modalId + ' #event-icon-preview').attr('src', event_icon);
+        $(modalId + ' #event-icon-url').val(event_icon);
+
+        $(modalId).modal('show');
+    });
+    // Enviar formulario al hacer click en el botón Enviar
+    $(document).on('click', '#btn-edit-event', function () {
+        var id = $(this).data('event-id');
+        var modalId = '#modal-edit-event-' + id;
+        var event_name = $(modalId).find('#event-name').val();
+        var event_icon_file = $(modalId).find('#event-icon')[0].files[0];
+        var event_icon_url = $(modalId).find('#event-icon-url').val();
+        editEvent(id, event_name, event_icon_url, event_icon_file);
+    });
 });
 
 
@@ -155,14 +164,14 @@ function deleteEvent(event_id) {
             console.log(data);
             $('#modal-delete-event').modal('hide'); // Ocultar la ventana modal después de la elminacion
             Swal.fire({
-                    icon: "success",
-                    title: "Event successfully removed",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-             setTimeout(function () {
-                    location.reload();
-                }, 500);
+                icon: "success",
+                title: "Event successfully removed",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            setTimeout(function () {
+                location.reload();
+            }, 500);
 
         },
         error: function (xhr, status, error) {
@@ -171,3 +180,21 @@ function deleteEvent(event_id) {
     });
     $('#modal-delete-event').modal('hide');
 }
+
+
+//Al abrir el modal, captura el ID del elemento a eliminar y, al confirmar
+// llama a una función para llevar a cabo la eliminación.
+$(document).ready(function () {
+    let eventId;
+
+    // Captura el ID del marcador cuando se abre el modal
+    $('#modal-delete-event').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget); // Botón que activó el modal
+        eventId = button.data('id'); // Extrae la información del atributo data-id
+    });
+
+    // Llama a la función deleteMark al hacer clic en el botón de eliminar
+    $('#confirm-delete-event').on('click', function () {
+        deleteEvent(eventId);
+    });
+});
