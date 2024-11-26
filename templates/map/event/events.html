@@ -22,6 +22,7 @@
             border-radius: 50%;
             object-fit: cover;
         }
+
         .circular-icon-preview {
             width: 70px;
             height: 70px;
@@ -130,19 +131,20 @@
                                             <span class="input-group-append">
 
                                             <a href="#" class="btn bg-olive active btn-edit" data-toggle="modal"
-                                               data-target="#modal-edit-event" data-event-id="{{ event.id }}"
+                                               data-target="#modal-edit-event-{{ event.id }}" data-event-id="{{ event.id }}"
                                                data-event-name="{{ event.event_name }}"
-                                               data-event-icon="{{ event.event_icon }}"> <i class="fa fa-edit"></i> </a>
+                                               data-event-icon="{{ event.event_icon.url }}"> <i class="fa fa-edit"></i> </a>
 
                                             <a href="#" class="btn bg-olive" data-toggle="modal"
-                                               data-target="#modal-delete-event">
+                                               data-target="#modal-delete-event" data-id="{{ event.id }}">
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                             </span>
                                             </td>
                                         </tr>
+                                        
                                         <!-- Modal- Edit- Event -->
-                                        <div class="modal fade" id="modal-edit-event">
+                                        <div class="modal fade" id="modal-edit-event-{{ event.id }}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -163,7 +165,8 @@
                                                                    name="event_icon_url">
                                                             <div class="form-group">
                                                                 <label for="event-icon">Event Icon:</label>
-                                                                <img id="event-icon-preview" class="form-control circular-icon-preview"
+                                                                <img id="event-icon-preview"
+                                                                     class="form-control circular-icon-preview"
                                                                      alt="Icono del evento" src="">
                                                                 <input type="file" class="form-control" id="event-icon"
                                                                        name="event_icon">
@@ -180,7 +183,6 @@
                                                                 data-event-id="{{ event.id }}">
                                                             Save
                                                         </button>
-                                                       
                                                     </div>
                                                 </div>
                                                 <!-- /.modal-content -->
@@ -189,7 +191,10 @@
                                         </div>
                                         <!-- End /.modal-Edit-Event -->
 
-                                        <!-- Modal- Delete- Event -->
+                                     
+
+                                    {% endfor %}
+                                   <!-- Modal- Delete- Event -->
                                         <div class="modal fade" id="modal-delete-event">
                                             <div class="modal-dialog">
                                                 <div class="modal-content bg-danger">
@@ -207,7 +212,9 @@
                                                         <button type="button" class="btn btn-outline-light"
                                                                 data-dismiss="modal">Cancel
                                                         </button>
-                                                        <button type="button" class="btn btn-outline-light" onclick="deleteEvent({{ event.id }})">Delete</button>
+                                                        <button type="button" class="btn btn-outline-light"
+                                                            id="confirm-delete-event">Delete
+                                                    </button>
                                                     </div>
                                                 </div>
                                                 <!-- /.modal-content -->
@@ -215,7 +222,7 @@
                                             <!-- /.modal-dialog -->
                                         </div>
                                         <!-- End /.modal-Delete-Event -->
-                                    {% endfor %}
+                                
 
 
                                 </table>

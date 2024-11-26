@@ -49,16 +49,23 @@ def create_event(request):
 @csrf_exempt
 def edit_event(request, event_id):
     try:
-        event = Event.objects.get(id=event_id)
+        event = Event.objects.get(pk=event_id)
     except Event.DoesNotExist:
         return JsonResponse({"message": "Event not found"}, status=404)
 
     if request.method == "POST":
-        event.event_name = request.POST.get("event_name")
-        event.event_icon = request.FILES.get("event_icon")
-        event.save()
-        return JsonResponse({"message": "Event updated successfully"})
-    return JsonResponse({"message": "Method not allowed"}, status=405)
+        try:
+            event_name = request.POST['event_name']
+            event.event_name = event_name
+            # Comprobar si se ha subido una nueva imagen
+            if 'event_icon' in request.FILES:
+                event.event_icon = request.FILES['event_icon']
+            event.save()
+            return JsonResponse({"message": "Event updated successfully"})
+        except KeyError as e:
+            return JsonResponse({"error": f"Missing field: {e}"}, status=400)  # Error 400 Bad Request
+    else:
+        return JsonResponse({"message": "Method not allowed"}, status=405)
 
 
 # Eliminar evento

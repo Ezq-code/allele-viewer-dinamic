@@ -101,7 +101,7 @@
 
                                             <a href="#" class="btn bg-olive active btn-edit"
                                                data-toggle="modal"
-                                               data-target="#modal-edit-mark"
+                                               data-target="#modal-edit-mark-{{ mark.id }}"
                                                data-mark-id="{{ mark.id }}"
                                                data-mark-event_type="{{ mark.event_type.id }}"
                                                data-mark-start_date="{{ mark.start_date }}"
@@ -124,7 +124,7 @@
                                             </td>
                                         </tr>
                                         <!-- Modal- Edit- Mark -->
-                                        <div class="modal fade" id="modal-edit-mark">
+                                        <div class="modal fade" id="modal-edit-mark-{{ mark.id }}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -135,10 +135,10 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form id="editmarkForm" method="post">
+                                                        <form id="editmarkForm-{{ mark.id }}" method="post">
                                                             <div class="form-group">
                                                                 <label for="eventtype">Event Type:</label>
-                                                                <select disabled class="form-control">
+                                                                <select id="mark-event_type" disabled class="form-control">
                                                                     <option value="{{ mark.event_type.id }}">{{ mark.event_type.event_name }}</option>
                                                                 </select>
                                                             </div>
@@ -243,7 +243,6 @@
                                                                 data-mark-id="{{ mark.id }}">
                                                             Save
                                                         </button>
-
                                                     </div>
                                                 </div>
                                                 <!-- /.modal-content -->
@@ -282,7 +281,6 @@
                                     </div>
                                      <!-- End /.modal-Delete-Mark -->
                                     </tbody>
-
                                 </table>
                             </div>
                             <!-- /.card-body -->
