@@ -92,6 +92,7 @@ def list_markers(request):
             "start_format": marker.get_start_format_display(),
             "end_format": marker.get_end_format_display(),
             "description": marker.description,
+            "reference": marker.reference,
             "event_type": event_data,
         }
         data.append(marker_data)
@@ -109,6 +110,7 @@ def create_marker(request):
         start_format = request.POST.get("start_format")
         end_format = request.POST.get("end_format")
         description = request.POST.get("description")
+        reference = request.POST.get("reference")
         event_type_id = request.POST.get("event_type")
         try:
             existing_marker = Marker.objects.get(description=description)
@@ -124,6 +126,7 @@ def create_marker(request):
                 start_format=start_format,
                 end_format=end_format,
                 description=description,
+                reference=reference,
                 event_type_id=event_type_id,
             )
             marker.save()
@@ -145,6 +148,7 @@ def edit_marker(request, marker_id):
         marker.start_format = request.POST.get("start_format")
         marker.end_format = request.POST.get("end_format")
         marker.description = request.POST.get("description")
+        marker.reference = request.POST.get("reference")
         marker.event_type_id = request.POST.get("event_type")
         marker.save()
         return JsonResponse({"message": "Marker updated successfully"})
@@ -175,6 +179,7 @@ def get_marker_by_description(request):
                 "end_date": marker.end_date,
                 "start_format": marker.start_format,
                 "end_format": marker.end_format,
+                "reference": marker.reference,
                 "event_type_id": marker.event_type_id,
             }
             return JsonResponse(data)

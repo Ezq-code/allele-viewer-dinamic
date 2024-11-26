@@ -1,3 +1,7 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -93,3 +97,34 @@ def feature_delete(request, id):
     feature = get_object_or_404(Feature, id=id)
     feature.delete()
     return JsonResponse({"success": True})
+
+class FeatureListView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        # Filtrar las características donde geometry_type sea "Point"
+        features = Feature.objects.filter(geometry_type='Point')
+
+        # Crear una lista para almacenar los resultados
+        results = []
+        for feature in features:
+            # Extraer longitud y latitud de las coordenadas
+            if feature.coordinates:
+                longitude = feature.coordinates[0]
+                latitude = feature.coordinates[1]
+            else:
+                longitude = None
+                latitude = None
+            # Agregar la información deseada a los resultados
+            results.append({
+                'id': feature.id,
+                'feature_id': feature.feature_id,
+                'mag': feature.mag,
+                'place': feature.place,
+                'time': feature.time,
+                'title': feature.title,
+                'timefinal': feature.timefinal,
+                'longitude': longitude,
+                'latitude': latitude,
+            })
+
+        return Response(results, status=status.HTTP_200_OK)

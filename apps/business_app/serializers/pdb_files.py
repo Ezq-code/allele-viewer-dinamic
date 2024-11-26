@@ -19,7 +19,6 @@ class PdbFilesSerializer(serializers.ModelSerializer):
 
 
 class PdbFilesGraphUpdateSerializer(serializers.Serializer):
-    # nx_graph_dim = serializers.IntegerField(default=3)
     nx_graph_k = serializers.FloatField(default=0.5)
     nx_graph_training_iterations = serializers.IntegerField(default=10)
     nx_graph_scale = serializers.IntegerField(default=500)

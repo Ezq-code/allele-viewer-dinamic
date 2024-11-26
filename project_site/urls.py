@@ -29,7 +29,6 @@ from apps.users_app.views import pages
 
 # ...
 
-
 urlpatterns = [
     # YOUR PATTERNS
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
@@ -59,6 +58,8 @@ urlpatterns = [
     path("mapgeneral/", pages.mapgeneral, name="mapgeneral"),
     path("events/", pages.events, name="events"),
     path("human-migrations/", pages.human_migrations, name="human-migrations"),
+    path("markers/list", pages.markers_list, name="markers-list"),
+
 ]
 
 # This is for serving media on development stages

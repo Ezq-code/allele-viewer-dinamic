@@ -27,6 +27,7 @@ class Marker(models.Model):
         choices=TYPE_FORMATS.choices,
     )
     description = models.TextField(verbose_name=_("Description"))
+    reference = models.TextField(verbose_name=_("Reference"), null=True, blank=True)
     event_type = models.ForeignKey(
         to="Event", verbose_name=_("Event Type"), on_delete=models.CASCADE
     )

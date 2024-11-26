@@ -113,6 +113,7 @@ urlpatterns = [
     path("markers/edit/<int:marker_id>/", edit_marker, name="edit_marker"),
     path("markers/delete/<int:marker_id>/", delete_marker, name="delete_marker"),
     path("features/", feature_list, name="list_feature"),
+    path("features/list", FeatureListView.as_view(), name="feature-list"),
     path("features/create/", feature_create, name="create_feature"),
     path("features/<int:pk>/", feature_detail, name="detail_feature"),
     path("features/edit/<int:id>/", feature_update, name="edit_feature"),

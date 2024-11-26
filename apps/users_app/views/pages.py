@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from apps.business_app.models import Event, Feature
+from apps.business_app.models import Event, Feature, Marker
 
 # Create your views here.
 
@@ -34,8 +34,13 @@ def events(request):
 
 
 def human_migrations(request):
-    migrations = Feature.objects.order_by("-id").all()
+    migrations = Feature.objects.filter(geometry_type="Point").order_by("-id").all()
     return render(request, "map/migrations/migrations.html", {"migrations": migrations})
+
+
+def markers_list(request):
+    markers = Marker.objects.order_by("-id").all()
+    return render(request, "map/markers/markers.html", {"markers": markers})
 
 
 def register(request):
