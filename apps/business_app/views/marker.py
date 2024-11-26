@@ -1,23 +1,21 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.generics import GenericAPIView
-
-from apps.business_app.serializers.event import EventSerializer
+from apps.business_app.serializers.marker import MarkerSerializer
 from apps.common.views import CommonOrderingFilter
-from apps.business_app.models import Event
+from apps.business_app.models import Marker
 from apps.business_app.serializers import AllowedExtensionsSerializer
 from apps.common.pagination import AllResultsSetPagination
 
 # Create your views here.
 
 
-class EventViewSet(viewsets.ModelViewSet, GenericAPIView):
-
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
+class MarkerViewSet(viewsets.ModelViewSet, GenericAPIView):
+    queryset = Marker.objects.all()
+    serializer_class = MarkerSerializer
     pagination_class = AllResultsSetPagination
     search_fields = [
-        "event_name",
+        "description",
     ]
     ordering_fields = "__all__"
     filter_backends = [
@@ -25,5 +23,4 @@ class EventViewSet(viewsets.ModelViewSet, GenericAPIView):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-
     permission_classes = [permissions.AllowAny]
