@@ -82,6 +82,8 @@ class XslxToPdbGraph(ExcelReader):
                     symbol=row[ExcelNomenclators.output_symbol_column_name],
                     parent=row[ExcelNomenclators.output_number_column_name],
                     regions=row[ExcelNomenclators.output_region_column_name],
+                    timeline_appearence = row.get(ExcelNomenclators.timeline_appearence)
+
                     #SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
                     #date=row[ExcelNomenclators.output_date_column_name],
                 )
