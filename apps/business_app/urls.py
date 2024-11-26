@@ -10,6 +10,7 @@ from apps.business_app.views import (
     NewCoordinatesProcessorViewSet,
     PdbFileViewSet,
     AlleleParentsViewSet,
+    EventViewSet
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 from apps.business_app.views.human_migrations import *
@@ -98,6 +99,11 @@ router.register(
     "extract-allele-parents-tree",
     AlleleParentsViewSet,
     basename="extract-allele-parents-tree",
+)
+router.register(
+    "my-events",
+    EventViewSet,
+    basename="my-events",
 )
 
 urlpatterns = [

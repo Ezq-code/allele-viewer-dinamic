@@ -3,6 +3,7 @@ from rest_framework import filters, permissions, viewsets
 from rest_framework.generics import GenericAPIView
 
 from apps.business_app.serializers.event import EventSerializer
+from apps.common.pagination import AllResultsSetPagination
 from apps.common.views import CommonOrderingFilter
 from apps.business_app.models import Event
 from apps.business_app.serializers import AllowedExtensionsSerializer
@@ -23,5 +24,6 @@ class EventViewSet(viewsets.ModelViewSet, GenericAPIView):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
+    pagination_class = AllResultsSetPagination
 
     permission_classes = [permissions.AllowAny]
