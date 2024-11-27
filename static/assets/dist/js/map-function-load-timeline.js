@@ -1,5 +1,8 @@
                     // función para actualizar el panel derecho a medida que corre la línea del tiempo.
                     // también se modifica el zoom y posición del mapa según los diferentes años de la línea del tiempo.
+                    const date = new Date();
+                    var year = date.getFullYear();
+                    
 					function updateList(timeline) {
 
                                             if (timeline.time < -130000) {
@@ -9,6 +12,13 @@
                                                 map.setView(new L.LatLng(-3, 20), 3);
                                             } else if (timeline.time > -61051) {
                                                 map.setView(new L.LatLng(10, 120), 2);
+                                            }
+
+                                            if (timeline.time == year) {
+                                                markerLayer.addTo(map);
+                                            }
+                                            else {
+                                                markerLayer.remove();
                                             }
 
                                             var displayed = timeline.getLayers();
@@ -45,7 +55,7 @@
                                                 if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9))) {
                                                     return {
                                                         start: quake.properties.timefinal,
-                                                        end: quake.properties.time
+                                                        end: year//quake.properties.time
                                                     };
                                                 }
                                             };
@@ -278,8 +288,8 @@
 
                                                     var getpoligonIntervalDestintation = function (polygons) {
                                                         return {
-                                                            start: polygons.properties.timefinal,//-71000,
-                                                            end: polygons.properties.time,//-15000
+                                                            start: polygons.properties.timefinal,
+                                                            end: year,//polygons.properties.time,
                                                         }
                                                     };
 
