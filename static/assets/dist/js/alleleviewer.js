@@ -378,6 +378,7 @@ function findPosition(data, id) {
 
 function showInfo(atom) {
   $(".showalleleinfo").toast("hide");
+ 
   atomNumber = atom.serial;
   load.hidden = false;
   let toastClass = seleccionarEstiloAleatorio();
@@ -392,8 +393,9 @@ function showInfo(atom) {
     .then(function (response) {
       const elemento = response.data;
       console.log("✌️elemento --->", elemento);
-
+      const imageHtml = ' <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style=" border-radius: 14px; width: -webkit-fill-available"/>';
       children = elemento.children;
+
       // console.log(children);
 
       if (elemento.children_qty == 0) {
@@ -403,6 +405,7 @@ function showInfo(atom) {
           // title: elemento.serial,
           subtitle: elemento.children_qty,
           body:
+          imageHtml+
             elemento.rs +
             '<button type="button" class="btn btn-block btn-secondary" onclick="marcar(' +
             atom.x +
@@ -434,23 +437,25 @@ function showInfo(atom) {
             elemento.children_qty +
             "</span>",
           body:
+          imageHtml+
             elemento.rs +
-            '<button type="button" class="btn btn-block btn-secondary" onclick="loadFamily(' +
+            '<button type="button" class="btn btn-block bg-lime" onclick="loadFamily(' +
             elemento.number +
             ')">Descendant</button>' +
-            '<button type="button" class="btn btn-block btn-secondary" onclick="childFull(' +
+            '<button type="button" class="btn btn-block bg-teal" onclick="childFull(' +
             elemento.number +
             ')">Progenitores</button>' +
-            '<button type="button" class="btn btn-block btn-secondary" onclick="marcar(' +
+            '<button type="button" class="btn btn-block bg-olive" onclick="marcar(' +
             atom.x +
             "," +
             atom.y +
             "," +
             atom.z +
-            ')">bookmark</button>' +
-            '<button type="button" class="btn btn-block btn-primary" onclick="allelereg(' +
-            elemento.number +
-            ')">Region</button>' +
+            ')">Bookmark</button>' +
+            '<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion(\'' + elemento.region + '\')">Region ' +
+elemento.region +
+'</button>'
+ +
             "<hr> Data Control(temp):<br> X: " +
             atom.x +
             " | Y " +

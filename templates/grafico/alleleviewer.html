@@ -200,7 +200,7 @@
         
 
           <div class="card col-12 row">
-            <div class="overlay" id="load" hidden>
+            <div class="overlay" id="load" hidden >
               <!-- <i class="fas fa-2x fa-sync fa-spin"></i> -->
 
               <div class="card card-widget widget-user">
@@ -210,6 +210,7 @@
                   <h5 class="widget-user-desc">This may take a moment</h5>
                 </div>
                 <div class="widget-user-image">
+                
                   <img
                     class="img-circle elevation-2"
                     src="{% static 'assets/dist/img/adn36.gif' %}"
@@ -218,10 +219,11 @@
                 </div>
                 <div class="card-footer bg-warning">
                   <div class="row">
-                    The creation of 3D graphics is extremely computationally
+                   <small class="text-muted"> The creation of 3D graphics is extremely computationally
                     expensive,<br />
                     this action may take some time, apologies for the
-                    inconvenience
+                    inconvenience</small>
+                    
                   </div>
                   <!-- /.row -->
                 </div>
@@ -582,9 +584,9 @@
         <button type="button" class="btn btn-default" data-dismiss="modal">
           Close
         </button>
-        <button type="button" id="ExpandAplicateButton" class="btn btn-primary">
+        {% comment %} <button type="button" id="ExpandAplicateButton" class="btn btn-primary">
           Expand
-        </button>
+        </button> {% endcomment %}
       </div>
     </div>
     <!-- /.modal-content -->
@@ -627,13 +629,7 @@
 <script src="{% static 'assets/dist/js/alleleviewer.js' %}"></script>
 <script src="{% static 'assets/dist/js/tools.js' %}"></script>
 <script>
-const africanCountries = [
-    "dz", "ao", "bj", "bw", "bf", "bi", "cm", "cv", "cf", "td",
-    "km", "cd", "dj", "eg", "gq", "er", "sz", "et", "ga", "gm",
-    "gh", "gn", "gw", "ke", "ls", "lr", "mg", "mw", "ml", "mr",
-    "mu", "ma", "mz", "na", "ne", "ng", "rw", "st", "sn", "sc",
-    "sl", "so", "za", "ss", "sd", "tz", "tg", "tn", "ug", "zm", "zw"
-];
+
 
 
 
@@ -653,7 +649,7 @@ const africanCountries = [
     showTooltip: true, 
     multiSelectRegion: false,  
     // Otras configuraciones del mapa
-    selectedRegions: africanCountries, // Selecciona todos los países africanos
+    //selectedRegions: africanCountries, // Selecciona todos los países africanos
 
     // Establecer colores
     series: {
@@ -677,82 +673,87 @@ const africanCountries = [
 
 
     });
+
+  
+
   
 
 
 jQuery('#world-map').on('drag', function(event)
 {
-    console.log('The map is being dragged');
-    //Do something
+    
 });
 
-function allelereg(id) {
- const pais=getRandomCountryCode();
-    jQuery('#world-map').vectorMap( 
-  'set', 'colors', {[pais]: '#0000ff'}
-   );
+const countriesByRegion = {
+    Africa: [
+        "ao", "dz", "bj", "bw", "bf", "bi", "cm", "cv", "cf", "cg", 
+        "dj", "eg", "gq", "er", "ma", "et", "ga", "gh", "gm", 
+        "gn", "gw", "ke", "ls", "lr", "mg", "ml", "mr", "mu", 
+        "mw", "na", "ne", "ng", "rw", "sc", "sd", "sl", "sn", 
+        "so", "sz", "td", "tg", "tz", "ug", "za", "zm", "zw",
+        "ly", "ci", "cd", "mz", "tn", "re", "km"
+    ],
+    Europe: [
+        "at", "be", "bg", "hr", "cy", "cz", "dk", "ee", "fi", 
+        "fr", "de", "gr", "hu", "ie", "it", "lv", "lt", "lu", 
+        "mt", "nl", "pl", "pt", "ro", "sk", "si", "es", "se", 
+        "gb", "is", "no", "ch"
+    ],
+    "East-Asia": [
+        "cn", "jp", "kr", "mn", "tw", "hk"
+    ],
+    "South-Asia": [
+        "af", "bd", "bt", "in", "mv", "np", "pk", "lk"
+    ],
+    America: [
+        "ag", "ai", "ar", "bs", "bb", "bz", "bo", "br", "ca", 
+        "cl", "co", "cr", "cu", "do", "ec", "sv", "gt", "gy", 
+        "hn", "jm", "mx", "ni", "pa", "py", "pe", "sr", "tt", 
+        "us", "uy", "ve", "gf", "ht"
+    ],
+    "Middle-East": [
+        "ae", "bh", "iq", "ir", "il", "jo", "kw", "lb", "om", 
+        "qa", "sa", "sy", "tr", "ye"
+    ],
+    "Central-Asia": [
+        "kz", "kg", "tj", "tm", "uz"
+    ],
+    Australian: [
+        "au", "nz"
+    ]
+};
 
-// Configurar el mapa vectorial
+let countryColors = {};
+let countryColorsWhite = {};
+function getCountriesByRegion(region) {
+  countryColors = {};
+// Reiniciar el mapa antes de aplicar nuevos colores
+    resetMap();
+     countryColorsWhite = {};
+    const countries = countriesByRegion[region];
+    if (countries) {
+        
+        countries.forEach(pais => {
+            countryColors[pais] = '#0000ff'; // Color azul para cada país
+            countryColorsWhite[pais] = '#ffffff'; // Color azul para cada país
+        });
 
-
-
-
-
-
-   $('#modal-map').modal('show');
-}
-
-
-
-
-// Códigos de países africanos en minúsculas
-
-
-
-
-
-
-const countries = [
-    "ae", "af", "ag", "al", "am", "ao", "ar", "at", "au", "az",
-    "ba", "bb", "bd", "be", "bf", "bg", "bi", "bj", "bn", "bo",
-    "br", "bs", "bt", "bw", "by", "bz", "ca", "cd", "cf", "cg",
-    "ch", "ci", "cl", "cm", "cn", "co", "cr", "cu", "cv", "cy",
-    "cz", "de", "dj", "dk", "dm", "do", "dz", "ec", "ee", "eg",
-    "er", "es", "et", "fi", "fj", "fk", "fr", "ga", "gb", "gd",
-    "ge", "gf", "gh", "gl", "gm", "gn", "gq", "gr", "gt", "gw",
-    "gy", "hn", "hr", "ht", "hu", "id", "ie", "il", "in", "iq",
-    "ir", "is", "it", "jm", "jo", "jp", "ke", "kg", "kh", "km",
-    "kn", "kp", "kr", "kw", "kz", "la", "lb", "lc", "lk", "lr",
-    "ls", "lt", "lv", "ly", "ma", "md", "mg", "mk", "ml", "mm",
-    "mn", "mr", "mt", "mu", "mv", "mw", "mx", "my", "mz", "na",
-    "nc", "ne", "ng", "ni", "nl", "no", "np", "nz", "om", "pa",
-    "pe", "pf", "pg", "ph", "pk", "pl", "pt", "py", "qa", "re",
-    "ro", "rs", "ru", "rw", "sa", "sb", "sc", "sd", "se", "si",
-    "sk", "sl", "sn", "so", "sr", "st", "sv", "sy", "sz", "td",
-    "tg", "th", "tj", "tl", "tm", "tn", "tr", "tt", "tw", "tz",
-    "ua", "ug", "us", "uy", "uz", "ve", "vn", "vu", "ye", "za",
-    "zm", "zw"
-];
-
-
-let usedIndices = new Set();
-
-function getRandomCountryCode() {
-    if (usedIndices.size === countries.length) {
-        return "No quedan más siglas disponibles.";
+        // Pintar los países en el mapa
+        jQuery('#world-map').vectorMap('set', 'colors', countryColors);
+        
+        // Mostrar el modal
+        $('#modal-map').modal('show');
+        
+    } else {
+        //console.log("Región no encontrada.");
     }
-
-    let index;
-    do {
-        index = Math.floor(Math.random() * countries.length);
-    } while (usedIndices.has(index));
-
-    usedIndices.add(index);
-    return countries[index];
 }
 
 
+function resetMap() {
+jQuery('#world-map').vectorMap('set', 'colors', countryColorsWhite);
 
+}
 
 </script>
 <!-- Page specific script -->
