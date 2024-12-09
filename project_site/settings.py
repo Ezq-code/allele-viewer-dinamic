@@ -31,7 +31,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static_output/")
 
 # Initialise environment variables
 env = environ.Env()
-environ.Env.read_env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -151,7 +151,7 @@ RUNNING_FROM = env("RUNNING_FROM", default=RUNNING_FROM_LOCAL)
 if RUNNING_FROM == RUNNING_FROM_LOCAL:
     conexion = {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": os.path.join(BASE_DIR, 'db.sqlite3')
     }
 else:
     conexion = {
@@ -160,10 +160,7 @@ else:
         "USER": env("DB_REMOTE_USER"),
         "PASSWORD": env("DB_REMOTE_PASSWORD"),
         "HOST": env("DB_REMOTE_HOST"),
-        "PORT": env("DB_REMOTE_PORT", cast=int),
-        "OPTIONS": {
-            "sql_mode": "STRICT_TRANS_TABLES",
-        },
+        "PORT": env.int("DB_REMOTE_PORT"),
     }
 
 DATABASES = {
@@ -258,7 +255,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
-EMAIL_PORT = env("EMAIL_PORT", cast=int, default=587)
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
 EMAIL_USE_TLS = True
 
 
