@@ -53,8 +53,8 @@ class Migration(migrations.Migration):
                     "longitude",
                     models.CharField(max_length=255, verbose_name="Longitude"),
                 ),
-                ("start_date", models.DateField(verbose_name="Start Date")),
-                ("end_date", models.DateField(verbose_name="End Date")),
+                ("start_date", models.IntegerField(verbose_name="Start Date")),
+                ("end_date", models.IntegerField(verbose_name="End Date")),
                 ("description", models.TextField(verbose_name="Description")),
                 (
                     "event_type",
