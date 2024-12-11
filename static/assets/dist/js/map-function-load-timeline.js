@@ -1,390 +1,388 @@
-                    // función para actualizar el panel derecho a medida que corre la línea del tiempo.
-                    // también se modifica el zoom y posición del mapa según los diferentes años de la línea del tiempo.
-                    const date = new Date();
-                    var year = date.getFullYear();
-                    
-					function updateList(timeline) {
+// función para actualizar el panel derecho a medida que corre la línea del tiempo.
+// también se modifica el zoom y posición del mapa según los diferentes años de la línea del tiempo.
+const date = new Date();
+var year = date.getFullYear();
 
-                                            if (timeline.time < -130000) {
-                                                map.setView(new L.LatLng(10, 120), 2);
-                                            }
-                                            else if ((timeline.time >= -130000) && (timeline.time <= -61051)) {
-                                                map.setView(new L.LatLng(-3, 20), 3);
-                                            } else if (timeline.time > -61051) {
-                                                map.setView(new L.LatLng(10, 120), 2);
-                                            }
+function updateList(timeline) {
 
-                                            if (timeline.time == year) {
-                                                markerLayer.addTo(map);
-                                            }
-                                            else {
-                                                markerLayer.remove();
-                                            }
+    if (timeline.time < -130000) {
+        map.setView(new L.LatLng(10, 120), 2);
+    } else if ((timeline.time >= -130000) && (timeline.time <= -61051)) {
+        map.setView(new L.LatLng(-3, 20), 3);
+    } else if (timeline.time > -61051) {
+        map.setView(new L.LatLng(10, 120), 2);
+    }
 
-                                            var displayed = timeline.getLayers();
-                                            var list = document.getElementById("displayed-list");
-                                            list.innerHTML = "";
-                                            displayed.forEach(function (quake) {
+    if (timeline.time == year) {
+        markerLayer.addTo(map);
+    } else {
+        markerLayer.remove();
+    }
 
-                                                var li = document.createElement("li");
-                                                if (quake.feature.properties.title != null) {
-                                                    li.innerHTML = quake.feature.properties.title;
-                                                    list.appendChild(li);
-                                                }
-                                            });
-                                        }
+    var displayed = timeline.getLayers();
+    var list = document.getElementById("displayed-list");
+    list.innerHTML = "";
+    displayed.forEach(function (quake) {
 
-                    // eqfeed_callback es llamado una vez que el archivo geojsonp(contiene la vectorización del hielo, la tierra que emerge
-                    // y las trayectorias de la migraciones) se carga. También se cargan los marcadores y los destinos de las migraciones
-                    // a partir de llamadas ajax.
-					function eqfeed_callback(data) {
+        var li = document.createElement("li");
+        if (quake.feature.properties.title != null) {
+            li.innerHTML = quake.feature.properties.title;
+            list.appendChild(li);
+        }
+    });
+}
 
-                                            // intervalos de tiempo para los vectores del hielo, la tierra que emerge y las trayectorias de las migraciones
-                                            var getInterval = function (quake) {
-                                                if ((quake.properties.id == 100) || (quake.properties.id == 160) || (quake.properties.id == 220) || (quake.properties.id == 280) || (quake.properties.id == 340) || (quake.properties.id == 400) || (quake.properties.id == 480) || (quake.properties.id == 560) || (quake.properties.id == 640) || (quake.properties.id == 700) || (quake.properties.id == 750) || ((quake.properties.id >= 1000) && (quake.properties.id <= 4500))) {
-                                                    return {
-                                                        start: quake.properties.timefinal,
-                                                        end: quake.properties.time
-                                                    };
-                                                }
-                                            };
+// eqfeed_callback es llamado una vez que el archivo geojsonp(contiene la vectorización del hielo, la tierra que emerge
+// y las trayectorias de la migraciones) se carga. También se cargan los marcadores y los destinos de las migraciones
+// a partir de llamadas ajax.
+function eqfeed_callback(data) {
 
-                                            // intervalos de tiempo para los destinos de las migraciones
-                                            var getShortInterval = function (quake) {
+    // intervalos de tiempo para los vectores del hielo, la tierra que emerge y las trayectorias de las migraciones
+    var getInterval = function (quake) {
+        if ((quake.properties.id == 100) || (quake.properties.id == 160) || (quake.properties.id == 220) || (quake.properties.id == 280) || (quake.properties.id == 340) || (quake.properties.id == 400) || (quake.properties.id == 480) || (quake.properties.id == 560) || (quake.properties.id == 640) || (quake.properties.id == 700) || (quake.properties.id == 750) || ((quake.properties.id >= 1000) && (quake.properties.id <= 4500))) {
+            return {
+                start: quake.properties.timefinal,
+                end: quake.properties.time
+            };
+        }
+    };
 
-                                                if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9))) {
-                                                    return {
-                                                        start: quake.properties.timefinal,
-                                                        end: year//quake.properties.time
-                                                    };
-                                                }
-                                            };
+    // intervalos de tiempo para los destinos de las migraciones
+    var getShortInterval = function (quake) {
 
-                                            // duración de la línea del tiempo en general
-                                            var timelineControl = L.timelineSliderControl({
-                                                duration: 315000,
-                                            });
+        if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9))) {
+            return {
+                start: quake.properties.timefinal,
+                end: year//quake.properties.time
+            };
+        }
+    };
 
-                                            // línea del tiempo y simbología para los vectores del hielo, la tierra que emerge y las trayectorias de las migraciones
-                                            var migrationTraceRoute = L.timeline(data, {
-                                                getInterval: getInterval,
-                                                style: function (feature) {
-                                                    if ((feature.properties.id == 100) || (feature.properties.id == 160) || (feature.properties.id == 220) || (feature.properties.id == 280) || (feature.properties.id == 340) || (feature.properties.id == 400) || (feature.properties.id == 480) || (feature.properties.id == 560) || (feature.properties.id == 640) || (feature.properties.id == 700) || (feature.properties.id == 750)) {
-                                                        return {
-                                                            color: '#FFFFFF',
-                                                            fillColor: '#FFFFFF',
-                                                            fillOpacity: 0.9,
-                                                            weight: 2,
-                                                            opacity: 1,
-                                                        }
-                                                    }
-                                                    if ((feature.properties.id >= 1000) && (feature.properties.id <= 4500)) { 
-                                                        return {
-                                                            color: feature.properties.mag,
-                                                            fillColor: feature.properties.mag,
-                                                            fillOpacity: 1,
-                                                            weight: 2,
-                                                            opacity: 1,
-                                                        }
-                                                    }
-                                                },
-                                                pointToLayer: function (data, latlng) {
+    // duración de la línea del tiempo en general
+    var timelineControl = L.timelineSliderControl({
+        duration: 315000,
+    });
 
-                                                    if ((data.properties.id == 100) || (data.properties.id == 160) || (data.properties.id == 220) || (data.properties.id == 280) || (data.properties.id == 340) || (data.properties.id == 400) || (data.properties.id == 480) || (data.properties.id == 560) || (data.properties.id == 640) || (data.properties.id == 700) || (data.properties.id == 750) || (data.properties.id == 1000) || (data.properties.id == 1100) || (data.properties.id == 1200) || (data.properties.id == 1300) || (data.properties.id == 1400)) {
-                                                        return L.polyline(latlngs, {
-                                                            color: 'red'
-                                                        });
-                                                    } else if (data.properties.id == 10) {
-                                                        return L.circleMarker(latlng, {
-                                                            radius: data.properties.mag,
-                                                            color: "#050400",
-                                                            fillColor: "#f5d843",
-                                                            fillOpacity: 0.7,
-                                                            weight: 3,
-                                                            opacity: 0.8,
-                                                        }).bindPopup(L.popup({
-                                                            closeOnClick: false,
-                                                            autoClose: false
-                                                        }).setContent(data.properties.place));
-                                                    }
-                                                },
-                                            });
+    // línea del tiempo y simbología para los vectores del hielo, la tierra que emerge y las trayectorias de las migraciones
+    var migrationTraceRoute = L.timeline(data, {
+        getInterval: getInterval,
+        style: function (feature) {
+            if ((feature.properties.id == 100) || (feature.properties.id == 160) || (feature.properties.id == 220) || (feature.properties.id == 280) || (feature.properties.id == 340) || (feature.properties.id == 400) || (feature.properties.id == 480) || (feature.properties.id == 560) || (feature.properties.id == 640) || (feature.properties.id == 700) || (feature.properties.id == 750)) {
+                return {
+                    color: '#FFFFFF',
+                    fillColor: '#FFFFFF',
+                    fillOpacity: 0.9,
+                    weight: 2,
+                    opacity: 1,
+                }
+            }
+            if ((feature.properties.id >= 1000) && (feature.properties.id <= 4500)) {
+                return {
+                    color: feature.properties.mag,
+                    fillColor: feature.properties.mag,
+                    fillOpacity: 1,
+                    weight: 2,
+                    opacity: 1,
+                }
+            }
+        },
+        pointToLayer: function (data, latlng) {
 
-                                            // línea del tiempo y simbología para los destinos de las migraciones
-                                            var migrationPoints = L.timeline(data, {
-                                                getInterval: getShortInterval,
-                                                style: function (feature) {
-                                                    if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
-                                                        return {
-                                                            color: "#171717",
-                                                            fillColor: "#171717",
-                                                            fillOpacity: 1,
-                                                            weight: 6,
-                                                            opacity: 1,
-                                                        }
-                                                    }
-                                                },
-                                                pointToLayer: function (data, latlng) {
-                                                   
-                                                    if (data.properties.id == 10) {
-                                                        return L.circleMarker(latlng, {
-                                                            radius: 0,//data.properties.mag,
-                                                            color: "#000000",//"#050400",
-                                                            fillColor: "#000000",//"#f5d843",
-                                                            fillOpacity: 0,//0.7,
-                                                            weight: 0,//3,
-                                                            opacity: 0,//0.8,
-                                                        });//.bindPopup(L.popup({
-                                                            //closeOnClick: false,
-                                                            //autoClose: false
-                                                        //}).setContent(data.properties.place));
-                                                    }
-                                                },
-                                            });
- 
-                                            // llamada ajax para cargar los marcadores, su simbología, su línea del tiempo y adición al mapa  
-                                            var polygonTimeline;
-                                            var polygons;
-                                            var aFeatures = [];
-                                            var aFeaturesAll = [];
-                                            var aFeatureAll = [];
-                                            var aFeature;
-                                            $.ajax({
-                                                type: 'GET',
-                                                url: '/business-gestion/markers/',
-                                                error: function () {
-                                                    Swal.fire({
-                                                        icon: "error",
-                                                        title: "No se pudieron cargar los datos.",
-                                                        showConfirmButton: false,
-                                                        timer: 1500
-                                                    });
-                                                },
-                                                dataType: 'json',
-                                                success: function (response) {
-                                                    var data;
-                                                    data = response;
-                                                    data.forEach(function (marker) {
-                                                        var descriptionLoad = marker.description;
-                                                        var latitudeLoad = marker.latitude;
-                                                        var longitudeLoad = marker.longitude;
-                                                        var typeEventLoad = marker.event_type.event_id;
-                                                        var iconUrlCurrentMarkerLoad = marker.event_type.event_icon_url;
-                                                        var starttime = marker.start_date;
-                                                        var endtime = marker.end_date;
-                                                        var astart_format = marker.start_format;
-                                                        var aend_format = marker.end_format;
-                                                        if ((astart_format == "Beforepresent") || (astart_format == "Beforechrist")) {
-                                                            starttime = -1 * starttime;
-                                                        }
-                                                        if ((aend_format == "Beforepresent") || (aend_format == "Beforechrist")) {
-                                                            endtime = -1 * endtime;
-                                                        }
-                                                        aFeature = {
-                                                            type: "Feature",
-                                                            properties: {
-                                                                description: descriptionLoad,
-                                                                event_type_id: typeEventLoad,
-                                                                iconUrlEvent: iconUrlCurrentMarkerLoad,
-                                                                start: starttime,
-                                                                end: endtime,
-                                                            },
-                                                            geometry: {
-                                                                type: "Point",
-                                                                coordinates:
-                                                                    [longitudeLoad, latitudeLoad],
-                                                            },
-                                                        };
-                                                        aFeatures.push(aFeature);
-                                                        polygons = {
-                                                            type: "FeatureCollection",
-                                                            features: aFeatures,
-                                                        };
-                                                    });
+            if ((data.properties.id == 100) || (data.properties.id == 160) || (data.properties.id == 220) || (data.properties.id == 280) || (data.properties.id == 340) || (data.properties.id == 400) || (data.properties.id == 480) || (data.properties.id == 560) || (data.properties.id == 640) || (data.properties.id == 700) || (data.properties.id == 750) || (data.properties.id == 1000) || (data.properties.id == 1100) || (data.properties.id == 1200) || (data.properties.id == 1300) || (data.properties.id == 1400)) {
+                return L.polyline(latlngs, {
+                    color: 'red'
+                });
+            } else if (data.properties.id == 10) {
+                return L.circleMarker(latlng, {
+                    radius: data.properties.mag,
+                    color: "#050400",
+                    fillColor: "#f5d843",
+                    fillOpacity: 0.7,
+                    weight: 3,
+                    opacity: 0.8,
+                }).bindPopup(L.popup({
+                    closeOnClick: false,
+                    autoClose: false
+                }).setContent(data.properties.place));
+            }
+        },
+    });
 
-                                                    var getpoligonInterval = function (polygons) {
-                                                        return {
-                                                            start: polygons.properties.start,
-                                                            end: polygons.properties.end,
-                                                        }
-                                                    };
-                                                    var polygonTimeline = L.timeline(polygons, {
-                                                        getInterval: getpoligonInterval,
-                                                        pointToLayer: function (features, latlng) {
+    // línea del tiempo y simbología para los destinos de las migraciones
+    var migrationPoints = L.timeline(data, {
+        getInterval: getShortInterval,
+        style: function (feature) {
+            if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
+                return {
+                    color: "#171717",
+                    fillColor: "#171717",
+                    fillOpacity: 1,
+                    weight: 6,
+                    opacity: 1,
+                }
+            }
+        },
+        pointToLayer: function (data, latlng) {
 
-                                                            return L.marker(latlng, {
-                                                                icon:
+            if (data.properties.id == 10) {
+                return L.circleMarker(latlng, {
+                    radius: 0,//data.properties.mag,
+                    color: "#000000",//"#050400",
+                    fillColor: "#000000",//"#f5d843",
+                    fillOpacity: 0,//0.7,
+                    weight: 0,//3,
+                    opacity: 0,//0.8,
+                });//.bindPopup(L.popup({
+                //closeOnClick: false,
+                //autoClose: false
+                //}).setContent(data.properties.place));
+            }
+        },
+    });
 
-                                                                    L.icon({
-                                                                        iconUrl: features.properties.iconUrlEvent,
-                                                                        iconSize: [25, 41],
-                                                                        shadowSize: [41, 41],
-                                                                        shadowAnchor: [13, 20]
-                                                                    })
-                                                            }).bindPopup(features.properties.description);
+    // llamada ajax para cargar los marcadores, su simbología, su línea del tiempo y adición al mapa
+    var polygonTimeline;
+    var polygons;
+    var aFeatures = [];
+    var aFeaturesAll = [];
+    var aFeatureAll = [];
+    var aFeature;
+    $.ajax({
+        type: 'GET',
+        url: '/business-gestion/my-markers/',
+        error: function () {
+            Swal.fire({
+                icon: "error",
+                title: "No se pudieron cargar los datos.",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        },
+        dataType: 'json',
+        success: function (response) {
+            var data;
+            data = response.results;
+            data.forEach(function (marker) {
+                var descriptionLoad = marker.description;
+                var latitudeLoad = marker.latitude;
+                var longitudeLoad = marker.longitude;
+                var typeEventLoad = marker.event_type.id;
+                var iconUrlCurrentMarkerLoad = marker.event_type.event_icon;
+                var starttime = marker.start_date;
+                var endtime = marker.end_date;
+                var astart_format = marker.start_format;
+                var aend_format = marker.end_format;
+                if ((astart_format == "Beforepresent") || (astart_format == "Beforechrist")) {
+                    starttime = -1 * starttime;
+                }
+                if ((aend_format == "Beforepresent") || (aend_format == "Beforechrist")) {
+                    endtime = -1 * endtime;
+                }
+                aFeature = {
+                    type: "Feature",
+                    properties: {
+                        description: descriptionLoad,
+                        event_type_id: typeEventLoad,
+                        iconUrlEvent: iconUrlCurrentMarkerLoad,
+                        start: starttime,
+                        end: endtime,
+                    },
+                    geometry: {
+                        type: "Point",
+                        coordinates:
+                            [longitudeLoad, latitudeLoad],
+                    },
+                };
+                aFeatures.push(aFeature);
+                polygons = {
+                    type: "FeatureCollection",
+                    features: aFeatures,
+                };
+            });
 
-                                                        }
-                                                    });
-                                                    timelineControl.addTimelines(polygonTimeline);
-                                                    polygonTimeline.addTo(map);
+            var getpoligonInterval = function (polygons) {
+                return {
+                    start: polygons.properties.start,
+                    end: polygons.properties.end,
+                }
+            };
+            var polygonTimeline = L.timeline(polygons, {
+                getInterval: getpoligonInterval,
+                pointToLayer: function (features, latlng) {
 
-                                                }
-                                            });
+                    return L.marker(latlng, {
+                        icon:
 
-                                            // llamada ajax para cargar los destinos de las migraciones, su simbología, su línea del tiempo y adición al mapa
-                                            var polygonDestinationTimeline;
-                                            var polygons;
-                                            var aFeaturesDestination = [];
-                                            var aFeaturesAllDestination = [];
-                                            var aFeatureAllDestination = [];
-                                            var aFeatureDestination;
-                                            $.ajax({
-                                                type: 'GET',
-                                                url: '/business-gestion/features/list',
-                                                error: function () {
-                                                    Swal.fire({
-                                                        icon: "error",
-                                                        title: "No se pudieron cargar los datos.",
-                                                        showConfirmButton: false,
-                                                        timer: 1500
-                                                    });
-                                                },
-                                                dataType: 'json',
-                                                success: function (response) {
-                                                    var data;
-                                                    data = response;
-                                                    data.forEach(function (destination) {
-                                                        var id = destination.id;
-                                                        var idLoad = destination.feature_id;
-                                                        var magLoad = destination.mag;
-                                                        var placeLoad = destination.place;
-                                                        var descriptionLoad = destination.title;
-                                                        var latitudeLoad = destination.latitude;
-                                                        var longitudeLoad = destination.longitude;
-                                                        var starttime = destination.timefinal;
-                                                        var endtime = destination.time;
-                                                        aFeatureDestination = {
-                                                            type: "Feature",
-                                                            properties: {
-                                                                id: idLoad,
-                                                                mag: magLoad,
-                                                                place: placeLoad,   
-                                                                title: descriptionLoad,
-                                                                timefinal: starttime,
-                                                                time: endtime,
-                                                            },
-                                                            geometry: {
-                                                                type: "Point",
-                                                                coordinates:
-                                                                    [longitudeLoad, latitudeLoad],
-                                                            },
-                                                        };
-                                                        aFeaturesDestination.push(aFeatureDestination);
-                                                        polygons = {
-                                                            type: "FeatureCollection",
-                                                            features: aFeaturesDestination,
-                                                        };
-                                                    });
+                            L.icon({
+                                iconUrl: features.properties.iconUrlEvent,
+                                iconSize: [25, 41],
+                                shadowSize: [41, 41],
+                                shadowAnchor: [13, 20]
+                            })
+                    }).bindPopup(features.properties.description);
 
-                                                    var getpoligonIntervalDestintation = function (polygons) {
-                                                        return {
-                                                            start: polygons.properties.timefinal,
-                                                            end: year,//polygons.properties.time,
-                                                        }
-                                                    };
+                }
+            });
+            timelineControl.addTimelines(polygonTimeline);
+            polygonTimeline.addTo(map);
 
-                                                    var polygonDestinationTimeline = L.timeline(polygons, {
-                                                        getInterval: getpoligonIntervalDestintation,
-                                                        pointToLayer: function (features, latlng) {
-                                                            return L.circleMarker(latlng, {
-                                                            radius: 10, //features.properties.mag,
-                                                            color: "#050400", //"#000000",
-                                                            fillColor: "#f5d843",//"#000000",
-                                                            fillOpacity: 0.7,
-                                                            weight: 3,
-                                                            opacity: 0.8,
-                                                            }).bindPopup(L.popup({
-                                                             closeOnClick: false,
-                                                             autoClose: false
-                                                            }).setContent(features.properties.title));
-                                                        }
-                                                    });
+        }
+    });
 
-                                                    timelineControl.addTimelines(polygonDestinationTimeline);
-                                                    polygonDestinationTimeline.addTo(map);
-                                                }
-                                            });
-                                            
-                                            // capa para los alleles
-                                            AlleleGeographicZonesLayer = new L.featureGroup().addTo(map);
+    // llamada ajax para cargar los destinos de las migraciones, su simbología, su línea del tiempo y adición al mapa
+    var polygonDestinationTimeline;
+    var polygons;
+    var aFeaturesDestination = [];
+    var aFeaturesAllDestination = [];
+    var aFeatureAllDestination = [];
+    var aFeatureDestination;
+    $.ajax({
+        type: 'GET',
+        url: '/business-gestion/my-features/',
+        error: function () {
+            Swal.fire({
+                icon: "error",
+                title: "No se pudieron cargar los datos.",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        },
+        dataType: 'json',
+        success: function (response) {
+            var data;
+            data = response.results;
+            data.forEach(function (destination) {
+                var id = destination.id;
+                var idLoad = destination.feature_id;
+                var magLoad = destination.mag;
+                var placeLoad = destination.place;
+                var descriptionLoad = destination.title;
+                var latitudeLoad = destination.latitude;
+                var longitudeLoad = destination.longitude;
+                var starttime = destination.timefinal;
+                var endtime = destination.time;
+                aFeatureDestination = {
+                    type: "Feature",
+                    properties: {
+                        id: idLoad,
+                        mag: magLoad,
+                        place: placeLoad,
+                        title: descriptionLoad,
+                        timefinal: starttime,
+                        time: endtime,
+                    },
+                    geometry: {
+                        type: "Point",
+                        coordinates:
+                            [longitudeLoad, latitudeLoad],
+                    },
+                };
+                aFeaturesDestination.push(aFeatureDestination);
+                polygons = {
+                    type: "FeatureCollection",
+                    features: aFeaturesDestination,
+                };
+            });
 
-                                            // adicion de los timelines al timelineControl, y adición al mapa
-                                            timelineControl.addTo(map);
-                                            timelineControl.addTimelines(migrationTraceRoute, migrationPoints);
-                                            migrationTraceRoute.addTo(map);
-                                            migrationPoints.addTo(map);
+            var getpoligonIntervalDestintation = function (polygons) {
+                return {
+                    start: polygons.properties.timefinal,
+                    end: year,//polygons.properties.time,
+                }
+            };
 
-                                            // creación de las capas bases y adición al control de capas del mapa
-                                            const baseLayers = {
-                                                'Countries': osmcountriesLayers,
-                                                'Satelital': satelitalLayer,
-                                                'Ocean': oceanLayer
-                                            };
+            var polygonDestinationTimeline = L.timeline(polygons, {
+                getInterval: getpoligonIntervalDestintation,
+                pointToLayer: function (features, latlng) {
+                    return L.circleMarker(latlng, {
+                        radius: 10, //features.properties.mag,
+                        color: "#050400", //"#000000",
+                        fillColor: "#f5d843",//"#000000",
+                        fillOpacity: 0.7,
+                        weight: 3,
+                        opacity: 0.8,
+                    }).bindPopup(L.popup({
+                        closeOnClick: false,
+                        autoClose: false
+                    }).setContent(features.properties.title));
+                }
+            });
 
-                                            const overlays = {
-                                                'Land Last Glacial Maximum': LandLGMShapefile,
-                                                'Migration Trace Route': migrationTraceRoute,
-                                                'Migration Points': migrationPoints,
-                                                'Marker Layer': markerLayer,
-                                                'Allele Geographic Zones': AlleleGeographicZonesLayer
-                                            };
+            timelineControl.addTimelines(polygonDestinationTimeline);
+            polygonDestinationTimeline.addTo(map);
+        }
+    });
 
-                                            var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
+    // capa para los alleles
+    AlleleGeographicZonesLayer = new L.featureGroup().addTo(map);
 
-                                            // llamada ajax para cargar la visualidad de las capas del mapa
-                                            $.ajax({
-                                                type: 'GET',
-                                                url: '/business-gestion/layers/',
-                                                error: function () {
-                                                    Swal.fire({
-                                                        icon: "error",
-                                                        title: "No se pudieron cargar los datos a ver si.",
-                                                        showConfirmButton: false,
-                                                        timer: 1500
-                                                    });
-                                                },
-                                                dataType: 'json',
-                                                success: function (response) {
-                                                    var data;
-                                                    data = response;
-                                                    data.forEach(function (aLayer) {
-                                                        //if ((aLayer.name == "osmcountriesLayers") && (aLayer.is_visible == false) ) {layerControl.removeLayer(osmcountriesLayers)}
-                                                        //if ((aLayer.name == "satelitalLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(satelitalLayer)}
-                                                        //if ((aLayer.name == "oceanLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(oceanLayer)}
-                                                        //if ((aLayer.name == "LandLGMShapefile") && (aLayer.is_visible == false) ) {layerControl.removeLayer(LandLGMShapefile)}
-                                                        if ((aLayer.name == "migrationTraceRoute") && (aLayer.is_visible == false)) {
-                                                            layerControl.removeLayer(migrationTraceRoute)
-                                                        }
-                                                        if ((aLayer.name == "migrationPoints") && (aLayer.is_visible == false)) {
-                                                            layerControl.removeLayer(migrationPoints)
-                                                        }
-                                                        if ((aLayer.name == "markerLayer") && (aLayer.is_visible == false)) {
-                                                            layerControl.removeLayer(markerLayer)
-                                                        }
-                                                    });
-                                                }
-                                            });
+    // adicion de los timelines al timelineControl, y adición al mapa
+    timelineControl.addTo(map);
+    timelineControl.addTimelines(migrationTraceRoute, migrationPoints);
+    migrationTraceRoute.addTo(map);
+    migrationPoints.addTo(map);
 
-                                            // llamada a la función que actualiza el panel de derecho en evento "change" de los timelines y también se llama al final
-                                            //map.addLayer(LandLGMShapefile);
-                                            migrationTraceRoute.on("change", function (e) {
-                                                updateList(e.target);
-                                            });
-                                            migrationPoints.on("change", function (e) {
-                                                updateList(e.target);
-                                            });
-                                            polygonDestinationTimeline.on("change", function (e) {
-                                                updateList(e.target);
-                                            });
-                                            updateList(migrationTraceRoute);
-                                        }
+    // creación de las capas bases y adición al control de capas del mapa
+    const baseLayers = {
+        'Countries': osmcountriesLayers,
+        'Satelital': satelitalLayer,
+        'Ocean': oceanLayer
+    };
+
+    const overlays = {
+        'Land Last Glacial Maximum': LandLGMShapefile,
+        'Migration Trace Route': migrationTraceRoute,
+        'Migration Points': migrationPoints,
+        'Marker Layer': markerLayer,
+        'Allele Geographic Zones': AlleleGeographicZonesLayer
+    };
+
+    var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
+
+    // llamada ajax para cargar la visualidad de las capas del mapa
+    $.ajax({
+        type: 'GET',
+        url: '/business-gestion/my-layers/',
+        error: function () {
+            Swal.fire({
+                icon: "error",
+                title: "No se pudieron cargar los datos a ver si.",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        },
+        dataType: 'json',
+        success: function (response) {
+            var data;
+            data = response.results;
+            data.forEach(function (aLayer) {
+                //if ((aLayer.name == "osmcountriesLayers") && (aLayer.is_visible == false) ) {layerControl.removeLayer(osmcountriesLayers)}
+                //if ((aLayer.name == "satelitalLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(satelitalLayer)}
+                //if ((aLayer.name == "oceanLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(oceanLayer)}
+                //if ((aLayer.name == "LandLGMShapefile") && (aLayer.is_visible == false) ) {layerControl.removeLayer(LandLGMShapefile)}
+                if ((aLayer.name == "migrationTraceRoute") && (aLayer.is_visible == false)) {
+                    layerControl.removeLayer(migrationTraceRoute)
+                }
+                if ((aLayer.name == "migrationPoints") && (aLayer.is_visible == false)) {
+                    layerControl.removeLayer(migrationPoints)
+                }
+                if ((aLayer.name == "markerLayer") && (aLayer.is_visible == false)) {
+                    layerControl.removeLayer(markerLayer)
+                }
+            });
+        }
+    });
+
+    // llamada a la función que actualiza el panel de derecho en evento "change" de los timelines y también se llama al final
+    //map.addLayer(LandLGMShapefile);
+    migrationTraceRoute.on("change", function (e) {
+        updateList(e.target);
+    });
+    migrationPoints.on("change", function (e) {
+        updateList(e.target);
+    });
+    polygonDestinationTimeline.on("change", function (e) {
+        updateList(e.target);
+    });
+    updateList(migrationTraceRoute);
+}

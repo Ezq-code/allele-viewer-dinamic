@@ -91,34 +91,41 @@ map.on(L.Draw.Event.CREATED, function (event) {
 
 // evento que se dispara cuando se da clic en e boton "Save" del modal al que se le introducen los datos de marcador
 buttonSaveMarker.onclick = function () {
-
     var fi = document.getElementById("fechaini").value;
     var ff = document.getElementById("fechafin").value;
     var desc = document.getElementById("descripcion").value;
-    var ref = document.getElementById("reference").value;    
+    var ref = document.getElementById("reference").value;
     var tipoEvent = document.getElementById("tipoevento").value;
     if (markSave == true) {
         if ((tipoEvent != -1) && (fi != "") && (ff != "") && (desc != "")) {
+            const csrftoken = $("[name=csrfmiddlewaretoken]").val(); // Obtiene el token CSRF
+            var formData = new FormData();
+            formData.append('latitude', document.getElementById("latitudid").value);
+            formData.append('longitude', document.getElementById("longitudid").value);
+            formData.append('start_date', fi);
+            formData.append('end_date', ff);
+            formData.append('start_format', document.getElementById("selectDateTypeBegin").value);
+            formData.append('end_format', document.getElementById("selectDateTypeEnd").value);
+            formData.append('description', desc);
+            formData.append('reference', ref);
+            formData.append('event_type', tipoEvent);
+
+
             $.ajax({
-                url: '/business-gestion/markers/create/',
+                url: '/business-gestion/my-markers/',
                 method: 'POST',
-                data: {
-                    latitude: document.getElementById("latitudid").value,
-                    longitude: document.getElementById("longitudid").value,
-                    start_date: fi,
-                    end_date: ff,
-                    start_format: document.getElementById("selectDateTypeBegin").value,
-                    end_format: document.getElementById("selectDateTypeEnd").value,
-                    description: desc,
-                    reference: ref,
-                    event_type: tipoEvent
+                data: formData,
+                contentType: false, // Muy importante para FormData
+                processData: false, // Muy importante para FormData
+                headers: {
+                    'X-CSRFToken': csrftoken
                 },
                 success: function (response) {
                     layerMarkerCreate._popup._content = desc;
                 },
                 error: function (xhr, status, error) {
                     console.log("Error: " + error);
-                } 
+                }
             });
 
             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
@@ -133,12 +140,12 @@ buttonSaveMarker.onclick = function () {
             setTimeout(function () {
                 location.reload();
             }, 500);
-            
+
             markSave = false;
             markCreated = false;
             modal.style.display = "none";
             map.removeLayer(markerLayer);
-        } 
+        }
     }
 };
 

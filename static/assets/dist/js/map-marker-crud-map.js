@@ -20,7 +20,7 @@ var idEditMarker = 0;
 // llamada ajax para cargar los marcadores y adicionarlos en la capa de los marcadores
 $.ajax({
     type: 'GET',
-    url: '/business-gestion/markers/',
+    url: '/business-gestion/my-markers/',
     error: function () {
         Swal.fire({
             icon: "error",
@@ -32,17 +32,17 @@ $.ajax({
     dataType: 'json',
     success: function (response) {
         var data;
-        data = response;
+        data = response.results;
         data.forEach(function (marker) {
             var descriptionLoad = marker.description;
             var latitudeLoad = marker.latitude;
             var longitudeLoad = marker.longitude;
-            var typeEventLoad = marker.event_type.event_id;
+            var typeEventLoad = marker.event_type;
             var iconUrlCurrentMarkerLoad = "";
             if (typeEventLoad != -1) {
                 $.ajax({
                     type: 'GET',
-                    url: '/business-gestion/events/get/' + typeEventLoad + '/',
+                    url: '/business-gestion/my-events/' + typeEventLoad + '/',
                     error: function () {
                         Swal.fire({
                             icon: "error",
@@ -75,7 +75,7 @@ $.ajax({
 // llamada ajax para obtener los tipos de eventos para adicionarlos al select del modal
 $.ajax({
     type: 'GET',
-    url: '/business-gestion/events/',
+    url: '/business-gestion/my-events/',
     error: function () {
         Swal.fire({
             icon: "error",
@@ -87,7 +87,7 @@ $.ajax({
     dataType: 'json',
     success: function (response) {
         var data;
-        data = response;
+        data = response.results;
         data.forEach(function (eventTypeBD) {
             var option = document.createElement("option");
             var option1 = document.createElement("option");
@@ -155,7 +155,7 @@ document.getElementById("tipoeventofirtmodal").addEventListener("change", functi
     if (ideventtype != -1) {
         $.ajax({
             type: 'GET',
-            url: '/business-gestion/events/get/' + ideventtype + '/',
+            url: '/business-gestion/my-events/' + ideventtype + '/',
             error: function () {
                 Swal.fire({
                     icon: "error",
