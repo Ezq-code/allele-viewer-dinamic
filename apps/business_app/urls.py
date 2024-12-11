@@ -30,6 +30,7 @@ from apps.business_app.views.layers import list_layers
 from apps.business_app.views.initial_xyz_expansion_data import (
     InitialXyzExpansionDataViewSet,
 )
+from apps.business_app.views.region import RegionViewSet
 from apps.business_app.views.working_copy_of_original_file import (
     WorkingCopyOfOriginalFileViewSet,
 )
@@ -98,6 +99,11 @@ router.register(
     "extract-allele-parents-tree",
     AlleleParentsViewSet,
     basename="extract-allele-parents-tree",
+)
+router.register(
+    "regions",
+    RegionViewSet,
+    basename="regions",
 )
 
 urlpatterns = [
