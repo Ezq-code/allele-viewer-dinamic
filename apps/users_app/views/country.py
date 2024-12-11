@@ -47,4 +47,4 @@ class CountryViewSet(
     )
     def get_codes(self, request):
         codes = self.filter_queryset(self.get_queryset()).values_list("code", flat=True)
-        return Response(codes)
+        return Response([code.lower() for code in codes])
