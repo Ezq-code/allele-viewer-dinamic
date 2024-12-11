@@ -716,6 +716,8 @@ const regions = Object.keys(countriesByRegion);
 async function fillAllRegions() {
     const promises = regions.map(region => fillCountriesByRegion(region));
     await Promise.all(promises);
+    localStorage.setItem('countriesByRegion', JSON.stringify(countriesByRegion));
+
 }
 
 
@@ -723,10 +725,16 @@ async function fillAllRegions() {
 let countryColors = {};
 let countryColorsWhite = {};
 async function getCountriesByRegion(region) {
+  const storedData = localStorage.getItem('countriesByRegion');
+
   // Llamar a la función para llenar todas las regiones
-  await fillAllRegions();
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")  
-  console.log(countriesByRegion)
+  if (storedData) {
+        // Si hay datos, cargar desde localStorage
+        Object.assign(countriesByRegion, JSON.parse(storedData));
+    } else {
+        // Si no hay datos, llenar desde la API
+        await fillAllRegions();
+    }
 
   countryColors = {};
 // Reiniciar el mapa antes de aplicar nuevos colores
