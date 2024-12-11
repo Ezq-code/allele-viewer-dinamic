@@ -14,8 +14,7 @@ from apps.business_app.serializers import UploadedFilesSerializer
 
 
 class RegionViewSet(viewsets.ModelViewSet, GenericAPIView):
-    """
-    """
+    """ """
 
     queryset = Region.objects.all()
     serializer_class = RegionSerializer
@@ -26,4 +25,3 @@ class RegionViewSet(viewsets.ModelViewSet, GenericAPIView):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-

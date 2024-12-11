@@ -24,10 +24,7 @@ class CountryViewSet(
 
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
-    search_fields = [
-        "name",
-        "region_country__region__name"
-    ]
+    search_fields = ["name", "region_country__region__name"]
     filterset_fields = [
         "enabled",
     ]

@@ -6,7 +6,9 @@ from apps.users_app.models.country import Country
 
 class RegionCountry(models.Model):
     region = models.ForeignKey(to="Region", on_delete=models.CASCADE)
-    country = models.ForeignKey(to=Country, on_delete=models.CASCADE, related_name="region_country")
+    country = models.ForeignKey(
+        to=Country, on_delete=models.CASCADE, related_name="region_country"
+    )
 
     class Meta:
         verbose_name = _("Country by region")
