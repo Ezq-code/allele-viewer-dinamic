@@ -37,7 +37,7 @@ $.ajax({
             var descriptionLoad = marker.description;
             var latitudeLoad = marker.latitude;
             var longitudeLoad = marker.longitude;
-            var typeEventLoad = marker.event_type;
+            var typeEventLoad = marker.event_type.event_id;
             var iconUrlCurrentMarkerLoad = "";
             if (typeEventLoad != -1) {
                 $.ajax({
