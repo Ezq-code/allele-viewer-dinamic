@@ -1,4 +1,3 @@
-
 # Create your models here.
 from django.db import models
 import uuid
@@ -75,4 +74,3 @@ class SystemUser(
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-

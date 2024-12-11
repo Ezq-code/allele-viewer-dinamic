@@ -22,7 +22,9 @@ class AlleleNode(models.Model):
         on_delete=models.CASCADE,
         related_name="allele_nodes",
     )
-    timeline_appearence = models.IntegerField(verbose_name="Appearance on the timeline", null=True)
+    timeline_appearence = models.IntegerField(
+        verbose_name="Appearance on the timeline", null=True
+    )
 
     class Meta:
         verbose_name = _("Allele Node")

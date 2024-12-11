@@ -55,15 +55,17 @@ def edit_event(request, event_id):
 
     if request.method == "POST":
         try:
-            event_name = request.POST['event_name']
+            event_name = request.POST["event_name"]
             event.event_name = event_name
             # Comprobar si se ha subido una nueva imagen
-            if 'event_icon' in request.FILES:
-                event.event_icon = request.FILES['event_icon']
+            if "event_icon" in request.FILES:
+                event.event_icon = request.FILES["event_icon"]
             event.save()
             return JsonResponse({"message": "Event updated successfully"})
         except KeyError as e:
-            return JsonResponse({"error": f"Missing field: {e}"}, status=400)  # Error 400 Bad Request
+            return JsonResponse(
+                {"error": f"Missing field: {e}"}, status=400
+            )  # Error 400 Bad Request
     else:
         return JsonResponse({"message": "Method not allowed"}, status=405)
 

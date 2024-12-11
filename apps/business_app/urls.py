@@ -118,7 +118,6 @@ urlpatterns = [
     path("features/<int:pk>/", feature_detail, name="detail_feature"),
     path("features/edit/<int:id>/", feature_update, name="edit_feature"),
     path("features/delete/<int:id>/", feature_delete, name="detele_feature"),
-
 ]
 
 urlpatterns += router.urls

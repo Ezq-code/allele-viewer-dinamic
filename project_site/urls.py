@@ -59,7 +59,6 @@ urlpatterns = [
     path("events/", pages.events, name="events"),
     path("human-migrations/", pages.human_migrations, name="human-migrations"),
     path("markers/list", pages.markers_list, name="markers-list"),
-
 ]
 
 # This is for serving media on development stages

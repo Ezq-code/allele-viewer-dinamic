@@ -44,7 +44,7 @@ class PdbFileViewSet(
                 "nx_graph_scale",
             ]
         )
-        
+
         for pdb_file in self.queryset:
             # recalcula aquí
             if pdb_file.original_file and pdb_file.original_file.original_file:

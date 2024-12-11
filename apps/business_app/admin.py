@@ -16,6 +16,8 @@ from apps.business_app.models import (
 )
 from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.pdb_files import PdbFiles
+from apps.business_app.models.region import Region
+from apps.business_app.models.region_county import RegionCountry
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,6 @@ admin.site.register(Event)
 admin.site.register(Marker)
 admin.site.register(Layer)
 admin.site.register(Feature)
-
 
 
 @admin.register(AlleleNode)
@@ -126,6 +127,32 @@ class WorkingCopyOfOriginalFileAdmin(admin.ModelAdmin):
     fields = [
         "id",
         "uploaded_file",
+    ]
+
+
+@admin.register(Region)
+class RegionAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+    ]
+    fields = [
+        "name",
+    ]
+
+
+@admin.register(RegionCountry)
+class RegionCountryAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "region",
+        "country",
+    ]
+    fields = [
+        "region",
+        "country",
     ]
 
 

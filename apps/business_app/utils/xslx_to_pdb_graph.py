@@ -16,35 +16,38 @@ logger = logging.getLogger(__name__)
 
 def find_root_node(G):
     """La raíz del grafo dirigido y conexo es el nodo
-        que solamente emite, o sea que su orden de out_degree es positivo
-        pero su orden de in_degree es igual a 0.
-        Encontrar la raíz de un grafo
-        Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
+    que solamente emite, o sea que su orden de out_degree es positivo
+    pero su orden de in_degree es igual a 0.
+    Encontrar la raíz de un grafo
+    Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
     """
-    nodes_in_degree  = [(k, v) for k, v in G.in_degree()]
+    nodes_in_degree = [(k, v) for k, v in G.in_degree()]
     root = 0
     for k, v in nodes_in_degree:
         if v == 0:
             root = k
     return root
-    
+
+
 def extract_parents_tree(G, lista, nodo, root):
     padres = list(G.predecessors(nodo))
-    if nodo == root: #Si el nodo es la raíz sale de la función
+    if nodo == root:  # Si el nodo es la raíz sale de la función
         return lista
-    if len(padres) == 0: #Si lista de padres es 0 sale de la función
+    if len(padres) == 0:  # Si lista de padres es 0 sale de la función
         return lista
-    else: #Lo contrario, itera sobre los padres y se llama a si misma
+    else:  # Lo contrario, itera sobre los padres y se llama a si misma
         for padre in padres:
             lista.append(padre)
             return extract_parents_tree(G, lista, padre, root)
- 
- 
+
+
 class XslxToPdbGraph(ExcelReader):
     def __init__(self, origin_file) -> None:
         super().__init__(origin_file)
         config = SiteConfiguration.get_solo()
-        self.dim = 3 # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
+        self.dim = (
+            3  # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
+        )
         self.k = config.nx_graph_k  # El óptimo es 1/sqrt(total de nodos), eso asegura que para el grafo en cuestión sea óptimo
         self.scale = (
             config.nx_graph_scale
@@ -82,8 +85,8 @@ class XslxToPdbGraph(ExcelReader):
                     symbol=row[ExcelNomenclators.output_symbol_column_name],
                     parent=row[ExcelNomenclators.output_number_column_name],
                     regions=row[ExcelNomenclators.output_region_column_name],
-                    #SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
-                    #date=row[ExcelNomenclators.output_date_column_name],
+                    # SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
+                    # date=row[ExcelNomenclators.output_date_column_name],
                 )
                 parents_info = row[ExcelNomenclators.output_parent_column_name]
                 parents = []
@@ -198,12 +201,12 @@ class XslxToPdbGraph(ExcelReader):
             # return pdb_file_0
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
-    
+
     def proccess_allele_parents(self, allele_id):
         """
-        Esta función recibe como parámetro el 
+        Esta función recibe como parámetro el
         id del allele (allele_id) y devuelve una lista de nodos
-        que integran el árbol del mismo. 
+        que integran el árbol del mismo.
         """
         try:
             parents_tree = []
@@ -215,5 +218,4 @@ class XslxToPdbGraph(ExcelReader):
             raise ValueError(f"An error occurred during file parsing: {e}.")
 
     def proccess_alleles_time_line(self, date):
-
         pass
