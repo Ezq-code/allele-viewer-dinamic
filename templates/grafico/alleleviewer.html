@@ -683,21 +683,29 @@ jQuery('#world-map').on('drag', function(event)
 {
     
 });
+const url_for_regions = '../business-gestion/regions/'
 
-let countriesByRegion = {
-    "Africa": [],
-    "Europe": [],
-    "East-Asia": [],
-    "South-Asia": [],
-    "America": [],
-    "Middle-East": [],
-    "Central-Asia": [],
-    "Australian": []
-};
+let countriesByRegion = {};
+async function fetchRegions() {
+    try {
+        const response = await axios.get(url_for_regions);
+        const regions = response.data.results;
+
+        // Inicializar el objeto countriesByRegion
+        regions.forEach(region => {
+            countriesByRegion[region.name] = []; // Asigna un array vacío a cada región
+        });
+        
+    } catch (error) {
+        console.error("Error fetching regions:", error);
+    }
+}
+
 const url = '../user-gestion/countries/get-codes/'
 // Función para llenar el diccionario
 async function fillCountriesByRegion(region) {
     try {
+        await fetchRegions()
         const response = await axios.get(url, {
                     params: {
                         search: region,
