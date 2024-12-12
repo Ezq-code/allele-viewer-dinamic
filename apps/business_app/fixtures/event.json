@@ -1,0 +1,106 @@
+[
+  {
+    "model": "business_app.event",
+    "pk": 1,
+    "fields": {
+      "event_name": "volcano",
+      "event_icon": "images/volcan.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 2,
+    "fields": {
+      "event_name": "Epidemics-Pandemics",
+      "event_icon": "images/epid31.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 3,
+    "fields": {
+      "event_name": "Wars before 1900",
+      "event_icon": "images/war8.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 4,
+    "fields": {
+      "event_name": "Wars after 1900",
+      "event_icon": "images/war10.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 5,
+    "fields": {
+      "event_name": "Glaciations",
+      "event_icon": "images/gla6.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 6,
+    "fields": {
+      "event_name": "Bolides",
+      "event_icon": "images/bolide2.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 7,
+    "fields": {
+      "event_name": " Economic Crisis",
+      "event_icon": "images/crisis-eco1.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 8,
+    "fields": {
+      "event_name": " Droughts",
+      "event_icon": "images/seq10.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 9,
+    "fields": {
+      "event_name": " Famines",
+      "event_icon": "images/hambruna.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 10,
+    "fields": {
+      "event_name": "Wet Weather",
+      "event_icon": "images/wet-wether.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 11,
+    "fields": {
+      "event_name": "Earthquakes",
+      "event_icon": "images/earthquakes.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 12,
+    "fields": {
+      "event_name": "Nuclear Bomb",
+      "event_icon": "images/explosion.png"
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 13,
+    "fields": {
+      "event_name": "War ship",
+      "event_icon": "images/buque-de-guerra.png"
+    }
+  }
+]
