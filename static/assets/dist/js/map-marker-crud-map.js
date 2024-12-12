@@ -32,7 +32,7 @@ $.ajax({
     dataType: 'json',
     success: function (response) {
         var data;
-        data = response.results;
+        data = response;
         data.forEach(function (marker) {
             var descriptionLoad = marker.description;
             var latitudeLoad = marker.latitude;

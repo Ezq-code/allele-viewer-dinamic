@@ -164,13 +164,14 @@
                                                 dataType: 'json',
                                                 success: function (response) {
                                                     var data;
-                                                    data = response.results;
+                                                    data = response;
+                                                    var iconUrlCurrentMarkerLoad = "";
                                                     data.forEach(function (marker) {
                                                         var descriptionLoad = marker.description;
                                                         var latitudeLoad = marker.latitude;
                                                         var longitudeLoad = marker.longitude;
                                                         var typeEventLoad = marker.event_type.event_id;
-                                                        var iconUrlCurrentMarkerLoad = marker.event_type.event_icon_url;
+                                                        iconUrlCurrentMarkerLoad = marker.event_type.event_icon_url;
                                                         var starttime = marker.start_date;
                                                         var endtime = marker.end_date;
                                                         var astart_format = marker.start_format;
