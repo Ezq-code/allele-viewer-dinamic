@@ -1,22 +1,23 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.generics import GenericAPIView
-from apps.business_app.models.feature import POINT
-from apps.business_app.serializers.feature import FeatureSerializer
+
+from apps.business_app.serializers.layer import LayerSerializer
 from apps.common.views import CommonOrderingFilter
-from apps.business_app.models import Feature
+from apps.business_app.models import Layer
+from apps.business_app.serializers import AllowedExtensionsSerializer
 from apps.common.pagination import AllResultsSetPagination
-from django.db.models import Q
 
 # Create your views here.
 
 
-class FeatureViewSet(viewsets.ModelViewSet, GenericAPIView):
-    queryset = Feature.objects.all()
-    serializer_class = FeatureSerializer
+class LayerViewSet(viewsets.ModelViewSet, GenericAPIView):
+
+    queryset = Layer.objects.all()
+    serializer_class = LayerSerializer
     pagination_class = AllResultsSetPagination
     search_fields = [
-        "__all__",
+        "name",
     ]
     ordering_fields = "__all__"
     filter_backends = [
@@ -26,7 +27,3 @@ class FeatureViewSet(viewsets.ModelViewSet, GenericAPIView):
     ]
 
     permission_classes = [permissions.AllowAny]
-
-    def get_queryset(self):
-        filter_by_point = Q(geometry_type=POINT) if self.action == "list" else Q()
-        return self.queryset.filter(filter_by_point)

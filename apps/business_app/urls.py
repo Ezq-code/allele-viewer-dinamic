@@ -11,6 +11,9 @@ from apps.business_app.views import (
     PdbFileViewSet,
     AlleleParentsViewSet,
     FeatureViewSet,
+    EventViewSet,
+    MarkerViewSet,
+    LayerViewSet,
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 
@@ -105,6 +108,22 @@ router.register(
     "features",
     FeatureViewSet,
     basename="features",
+)
+
+router.register(
+    "my-events",
+    EventViewSet,
+    basename="my-events",
+)
+router.register(
+    "my-markers",
+    MarkerViewSet,
+    basename="my-markers",
+)
+router.register(
+    "my-layers",
+    LayerViewSet,
+    basename="my-layers",
 )
 
 urlpatterns = [
