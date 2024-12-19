@@ -12,7 +12,14 @@ from apps.business_app.views import (
     AlleleParentsViewSet,
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
-from apps.business_app.views.human_migrations import *
+from apps.business_app.views.human_migrations import (
+    FeatureListView,
+    feature_create,
+    feature_delete,
+    feature_detail,
+    feature_list,
+    feature_update,
+)
 from apps.business_app.views.event_markers import (
     edit_event,
     list_events,
@@ -118,7 +125,6 @@ urlpatterns = [
     path("features/<int:pk>/", feature_detail, name="detail_feature"),
     path("features/edit/<int:id>/", feature_update, name="edit_feature"),
     path("features/delete/<int:id>/", feature_delete, name="detele_feature"),
-
 ]
 
 urlpatterns += router.urls

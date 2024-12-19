@@ -1,14 +1,7 @@
 from django.http import JsonResponse
-from rest_framework import permissions, viewsets, status
+from rest_framework import permissions, viewsets
 from rest_framework.generics import GenericAPIView
 
-from drf_spectacular.utils import extend_schema
-
-from rest_framework import mixins
-
-from rest_framework.response import Response
-
-from apps.business_app.models import PdbFiles
 
 from apps.business_app.serializers.allele_parents import AlleleParentsSerializer
 

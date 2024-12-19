@@ -1,5 +1,4 @@
 from rest_framework import permissions, viewsets, status
-from rest_framework.generics import GenericAPIView
 
 
 from apps.business_app.models import PdbFiles
@@ -44,7 +43,7 @@ class PdbFileViewSet(
                 "nx_graph_scale",
             ]
         )
-        
+
         for pdb_file in self.queryset:
             # recalcula aquí
             if pdb_file.original_file and pdb_file.original_file.original_file:
