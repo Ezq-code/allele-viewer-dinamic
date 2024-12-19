@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from termcolor import colored
 import json
-from apps.business_app.models.feature import Feature
+from apps.business_app.models import Feature
 
 
 class Command(BaseCommand):
