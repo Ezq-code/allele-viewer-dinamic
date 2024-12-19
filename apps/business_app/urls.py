@@ -11,7 +11,6 @@ from apps.business_app.views import (
     PdbFileViewSet,
     AlleleParentsViewSet,
     FeatureViewSet,
-
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 

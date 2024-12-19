@@ -7,7 +7,6 @@ __all__ = [
     "PdbFileViewSet",
     "AlleleParentsViewSet",
     "FeatureViewSet",
-
 ]
 from .allowed_extensions import AllowedExtensionsViewSet
 from .site_configurations import SiteConfigurationViewSet
@@ -17,4 +16,3 @@ from .new_coordinate_processor import NewCoordinatesProcessorViewSet
 from .pdb_files import PdbFileViewSet
 from .allele_parents import AlleleParentsViewSet
 from .feature import FeatureViewSet
-
