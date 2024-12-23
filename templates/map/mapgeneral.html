@@ -107,7 +107,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="modal-form">
+                    <form id="modal-form"> {% csrf_token %}
                         <div class="form-group">
                             <label for="tipoevento">Event Type:</label>
                             <select class="form-control" id="tipoevento"></select>

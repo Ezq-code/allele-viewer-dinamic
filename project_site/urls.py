@@ -56,7 +56,7 @@ urlpatterns = [
     path("register/", pages.register, name="register"),
     path("index/", pages.index, name="index"),
     path("mapgeneral/", pages.mapgeneral, name="mapgeneral"),
-    path("events/", pages.events, name="events"),
+    path("events/list", pages.events, name="events"),
     path("features/list", pages.human_migrations, name="features"),
     path("markers/list", pages.markers_list, name="markers-list"),
 ]

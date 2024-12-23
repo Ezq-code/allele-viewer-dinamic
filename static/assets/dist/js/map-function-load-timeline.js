@@ -262,13 +262,13 @@
                                                 dataType: 'json',
                                                 success: function (response) {
                                                     var data;
-                                                    data = response;
+                                                    data = response.results;
                                                     data.forEach(function (marker) {
                                                         var descriptionLoad = marker.description;
                                                         var latitudeLoad = marker.latitude;
                                                         var longitudeLoad = marker.longitude;
-                                                        var typeEventLoad = marker.event_type.event_id;
-                                                        var iconUrlCurrentMarkerLoad = marker.event_type.event_icon_url;
+                                                        var typeEventLoad = marker.event_type_data.event_id;
+                                                        var iconUrlCurrentMarkerLoad = marker.event_type_data.event_icon_url;
                                                         var starttime = marker.start_date;
                                                         var endtime = marker.end_date;
                                                         var astart_format = marker.start_format;
@@ -458,7 +458,7 @@
                                                 dataType: 'json',
                                                 success: function (response) {
                                                     var data;
-                                                    data = response;
+                                                    data = response.results;
                                                     data.forEach(function (aLayer) {
                                                         //if ((aLayer.name == "osmcountriesLayers") && (aLayer.is_visible == false) ) {layerControl.removeLayer(osmcountriesLayers)}
                                                         //if ((aLayer.name == "satelitalLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(satelitalLayer)}

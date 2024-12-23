@@ -81,7 +81,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form id="add-event-form" method="post">
+                                                        <form id="add-event-form" method="post">{% csrf_token %}
                                                             <div class="form-group">
                                                                 <label for="event-name">Event Name:</label>
                                                                 <input type="text" class="form-control" id="event-name"
@@ -155,7 +155,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form id="edit-event-form" method="post">
+                                                        <form id="edit-event-form">
                                                             <div class="form-group">
                                                                 <label for="event-name">Event Name:</label>
                                                                 <input type="text" class="form-control" id="event-name"
