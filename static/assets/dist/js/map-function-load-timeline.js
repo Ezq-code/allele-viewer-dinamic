@@ -273,10 +273,10 @@
                                                         var endtime = marker.end_date;
                                                         var astart_format = marker.start_format;
                                                         var aend_format = marker.end_format;
-                                                        if ((astart_format == "Beforepresent") || (astart_format == "Beforechrist")) {
+                                                        if ((astart_format == "Before Present (YBP)") || (astart_format == "Before Christ (BC)")) {
                                                             starttime = -1 * starttime;
                                                         }
-                                                        if ((aend_format == "Beforepresent") || (aend_format == "Beforechrist")) {
+                                                        if ((aend_format == "Before Present (YBP)") || (aend_format == "Before Christ (BC)")) {
                                                             endtime = -1 * endtime;
                                                         }
                                                         aFeature = {
