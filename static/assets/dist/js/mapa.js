@@ -38,14 +38,14 @@ jQuery("#world-map").vectorMap({
 jQuery("#world-map").on("drag", function (event) {});
 
 let countriesByRegion = {
-  Africa: [],
-  Europe: [],
+  "Africa": [],
+  "Europe": [],
   "East-Asia": [],
   "South-Asia": [],
-  America: [],
+  "America": [],
   "Middle-East": [],
   "Central-Asia": [],
-  Australian: [],
+  "Australian": [],
 };
 
 const url = "../user-gestion/countries/get-codes/";
