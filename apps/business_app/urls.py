@@ -37,30 +37,30 @@ router.register(
     SiteConfigurationViewSet,
     basename="event-configurations",
 )
-(
-    router.register(
-        "uploaded-files",
-        UploadedFilesViewSet,
-        basename="uploaded-files-nodes",
-    ).register(
-        "allele-node-by-uploaded-file",
-        AlleleNodeViewSet,
-        basename="allele-node-by-uploaded-file",
-        parents_query_lookups=["uploaded_file"],
-    )
+
+router.register(
+    "uploaded-files",
+    UploadedFilesViewSet,
+    basename="uploaded-files-nodes",
+).register(
+    "allele-node-by-uploaded-file",
+    AlleleNodeViewSet,
+    basename="allele-node-by-uploaded-file",
+    parents_query_lookups=["uploaded_file"],
 )
-(
-    router.register(
-        "uploaded-files",
-        UploadedFilesViewSet,
-        basename="uploaded-files-data",
-    ).register(
-        "initial-file-data",
-        InitialFileDataViewSet,
-        basename="initial-file-data",
-        parents_query_lookups=["uploaded_file"],
-    )
+
+
+router.register(
+    "uploaded-files",
+    UploadedFilesViewSet,
+    basename="uploaded-files-data",
+).register(
+    "initial-file-data",
+    InitialFileDataViewSet,
+    basename="initial-file-data",
+    parents_query_lookups=["uploaded_file"],
 )
+
 router.register(
     "allele-nodes",
     AlleleNodeViewSet,

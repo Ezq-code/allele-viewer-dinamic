@@ -11,6 +11,7 @@ def index(request):
 def usuarios(request):
     return render(request, "user/usuarios.html")
 
+
 def population(request):
     return render(request, "population/population.html")
 
