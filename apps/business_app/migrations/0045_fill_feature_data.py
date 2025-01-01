@@ -6,8 +6,10 @@ from termcolor import colored
 
 def load_data_from_timelinejson(apps, schema_editor):
     """Carga datos desde el archivo JSON."""
-    Feature = apps.get_model('business_app', 'Feature')
-    with open('apps/business_app/fixtures/migration-timeline.json', 'r', encoding='utf-8') as file:
+    Feature = apps.get_model("business_app", "Feature")
+    with open(
+        "apps/business_app/fixtures/migration-timeline.json", "r", encoding="utf-8"
+    ) as file:
         data = json.load(file)
         # Verificar si hay features para procesar
         if not data:
@@ -24,18 +26,18 @@ def load_data_from_timelinejson(apps, schema_editor):
         counter = 0
         for feature in data:
             counter += 1
-            properties = feature['properties']
-            geometry = feature['geometry']
+            properties = feature["properties"]
+            geometry = feature["geometry"]
             Feature.objects.create(
-                feature_type=feature['type'],
-                feature_id=properties['id'],
-                mag=properties.get('mag'),
-                place=properties.get('place'),
-                time=properties['time'],
-                title=properties.get('title'),
-                timefinal=properties['timefinal'],
-                geometry_type=geometry['type'],
-                coordinates=geometry['coordinates']
+                feature_type=feature["type"],
+                feature_id=properties["id"],
+                mag=properties.get("mag"),
+                place=properties.get("place"),
+                time=properties["time"],
+                title=properties.get("title"),
+                timefinal=properties["timefinal"],
+                geometry_type=geometry["type"],
+                coordinates=geometry["coordinates"],
             )
         print()
         print(
@@ -49,7 +51,7 @@ def load_data_from_timelinejson(apps, schema_editor):
 
 def delete_feature_data(apps, schema_editor):
     """Elimina todos los datos de features."""
-    Feature = apps.get_model('business_app', 'Feature')
+    Feature = apps.get_model("business_app", "Feature")
     Feature.objects.all().delete()
     print()
     print(

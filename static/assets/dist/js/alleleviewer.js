@@ -77,6 +77,7 @@ $(function () {
   coordenadas();
   crearMatriz();
   poblarListasAllele();
+  fillAllRegions();
 });
 
 // Función para poblar la lista desplegable del documento
@@ -939,15 +940,25 @@ function avanzar(lista) {
 }
 
 
+// Variable global para la velocidad
+let currentSpeedIndex = 0;
+console.log('✌️currentSpeedIndex --->', currentSpeedIndex);
+const speeds = [
+  { label: 'x1', value: 0.5 },
+  { label: 'x2', value: 0.25 },
+  { label: 'x3', value: 0.1 },
+  { label: 'x4', value: 0.05 },
+  { label: 'x5', value: 0.025 }
+];
+
 function animationWindows() {
   $(document).Toasts('create', {
     class: 'bg-lightblue controlpanel',
     title: 'Animation Control',
-    // subtitle: 'Control panel',
     position: 'bottomLeft',
     icon: 'nav-icon fas fa-vr-cardboard',
-    body:  ` <div class=" d-flex justify-content-center"><h3 id='yearshow'>years</h3></div>
-    <div class="btn-group d-flex justify-content-center">
+    body: ` <div class=" d-flex justify-content-center"><h3 id='yearshow'>years</h3></div>
+    <div class="btn-group d-flex justify-content-center mb-2">
                     <button
                       type="button"
                       class="btn btn-warning"
@@ -964,6 +975,15 @@ function animationWindows() {
                     >
                       <i class="nav-icon fas fa-pause"></i>
                     </button>
+                     <button
+                      type="button"
+                      class="btn btn-info"
+                      id='speedButton'
+                      title="Change Speed"
+                      onclick="changeSpeed()"
+                    >
+                      x1
+                    </button>
                     <button
                       type="button"
                       class="btn btn-warning"
@@ -972,17 +992,33 @@ function animationWindows() {
                       onclick="avanzar(datos)"
                     >
                       <i class="nav-icon fas fa-forward"></i>
-                    </button>
+                    </button>                   
                   </div>`
   })
-    // Aquí podrías reiniciar la llamada a mostrarElementos si es necesario
 }
 
+function changeSpeed() {
+  // Incrementar el índice de velocidad
+  currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
+  
+  // Obtener la nueva velocidad
+  const newSpeed = speeds[currentSpeedIndex];
+  
+  // Actualizar el texto del botón
+  const speedButton = document.getElementById('speedButton');
+  speedButton.innerHTML = `${newSpeed.label}`;
+  console.log('✌️newSpeed.value --->', newSpeed.value);
+  // Si hay una animación en curso, actualizarla con la nueva velocidad
+  // if (/* tu condición para verificar si la animación está en curso */) {
+    mostrarElementos(datos, newSpeed.value);
+
+  //}
+}
 
 function playStopAnimation(button) {
   pausa = !pausa; // Cambiar el estado de pausa
   if (!pausa) {
-      mostrarElementos(datos, 0.1); // Reiniciar la visualización si se reanuda
+      mostrarElementos(datos, speeds[currentSpeedIndex]); // Reiniciar la visualización si se reanuda
   } else {
       clearTimeout(timeoutId); // Limpiar el timeout si se pausa
   }

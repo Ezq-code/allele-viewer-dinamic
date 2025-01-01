@@ -32,17 +32,17 @@ $.ajax({
     dataType: 'json',
     success: function (response) {
         var data;
-        data = response;
+        data = response.results;
         data.forEach(function (marker) {
             var descriptionLoad = marker.description;
             var latitudeLoad = marker.latitude;
             var longitudeLoad = marker.longitude;
-            var typeEventLoad = marker.event_type.event_id;
+            var typeEventLoad = marker.event_type;
             var iconUrlCurrentMarkerLoad = "";
             if (typeEventLoad != -1) {
                 $.ajax({
                     type: 'GET',
-                    url: '/business-gestion/events/get/' + typeEventLoad + '/',
+                    url: '/business-gestion/events/' + typeEventLoad + '/',
                     error: function () {
                         Swal.fire({
                             icon: "error",
@@ -87,7 +87,7 @@ $.ajax({
     dataType: 'json',
     success: function (response) {
         var data;
-        data = response;
+        data = response.results;
         data.forEach(function (eventTypeBD) {
             var option = document.createElement("option");
             var option1 = document.createElement("option");
@@ -155,7 +155,7 @@ document.getElementById("tipoeventofirtmodal").addEventListener("change", functi
     if (ideventtype != -1) {
         $.ajax({
             type: 'GET',
-            url: '/business-gestion/events/get/' + ideventtype + '/',
+            url: '/business-gestion/events/' + ideventtype + '/',
             error: function () {
                 Swal.fire({
                     icon: "error",
@@ -177,7 +177,7 @@ document.getElementById("tipoeventofirtmodal").addEventListener("change", functi
     }
 });
 
-// validación del select evet type
+// validación del select event type
 $(document).ready(function () {
     // Agregar regla personalizada para validar que el valor no sea -1
     $.validator.addMethod("notEqual", function (value, element, param) {

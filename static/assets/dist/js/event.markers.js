@@ -1,17 +1,3 @@
-// Listar eventos
-function listEvents() {
-    $.ajax({
-        url: '/events/',
-        type: 'GET',
-        success: function (data) {
-            console.log(data);
-        },
-        error: function (xhr, status, error) {
-            console.error(error);
-        }
-    });
-}
-
 // Funcion para restablecer el formulario a su estado inicial
 function resetEventForm() {
     document.getElementById('add-event-form').reset();
@@ -25,15 +11,19 @@ $('#modal-add-event').on('hidden.bs.modal', function (e) {
 // Agregar una función para enviar el formulario
 function submitEventForm() {
     var form = document.getElementById('add-event-form');
+    const csrftoken = $("[name=csrfmiddlewaretoken]").val(); // Obtiene el token CSRF
     if (form.checkValidity()) {
         var formData = new FormData(form);
 
         $.ajax({
-            url: '../business-gestion/events/create/',
+            url: '/business-gestion/events/',
             type: 'POST',
             data: formData,
             contentType: false,
             processData: false,
+            headers: {
+            'X-CSRFToken': csrftoken
+            },
             success: function (data) {
                 console.log(data);
                 Swal.fire({
@@ -87,6 +77,7 @@ function submitEventForm() {
 
 // Funcion para editar un evento
 function editEvent(id, event_name, event_icon_url, event_icon_file) {
+    const csrftoken = $("[name=csrfmiddlewaretoken]").val(); // Obtiene el token CSRF
     var event_id = id;
     var formData = new FormData();
     formData.append('event_name', event_name);
@@ -96,11 +87,14 @@ function editEvent(id, event_name, event_icon_url, event_icon_file) {
     // Si no se seleccionó un nuevo icono, se envía la URL del icono actual
     formData.append('event_icon_url', event_icon_url);
     $.ajax({
-        url: '../business-gestion/events/edit/' + event_id + '/',
-        type: 'POST',
+        url: '/business-gestion/events/' + event_id + '/',
+        type: 'PATCH',
         data: formData,
         contentType: false,
         processData: false,
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         success: function (data) {
             console.log(data);
             $('#modal-edit-event').modal('hide');
@@ -157,9 +151,13 @@ $(document).ready(function () {
 
 // Funcion para eliminar un evento
 function deleteEvent(event_id) {
+    const csrftoken = $("[name=csrfmiddlewaretoken]").val(); // Obtiene el token CSRF
     $.ajax({
-        url: `../business-gestion/events/delete/${event_id}/`,
-        type: 'POST',
+        url: '/business-gestion/events/' + event_id + '/',
+        type: 'DELETE',
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         success: function (data) {
             console.log(data);
             $('#modal-delete-event').modal('hide'); // Ocultar la ventana modal después de la elminacion

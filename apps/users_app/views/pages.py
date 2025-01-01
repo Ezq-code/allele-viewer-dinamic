@@ -12,6 +12,10 @@ def usuarios(request):
     return render(request, "user/usuarios.html")
 
 
+def population(request):
+    return render(request, "population/population.html")
+
+
 def first_login(request):
     return render(request, "login/login.html")
 
@@ -29,7 +33,7 @@ def mapgeneral(request):
 
 
 def events(request):
-    events = Event.objects.all()
+    events = Event.objects.order_by("-id").all()
     return render(request, "map/event/events.html", {"events": events})
 
 
