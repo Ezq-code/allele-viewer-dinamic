@@ -233,7 +233,7 @@
             <div class="card-header">
               <h3 class="card-title">Allele Viewer</h3>
               <div class="card-tools">
-                <button
+                {% comment %} <button
                   type="button"
                   class="btn btn-tool"
                   data-toggle="modal"
@@ -242,7 +242,7 @@
                   data-target="#modal-map"
                 >
                   <i class="fas fa-map text-warning"></i>
-                </button>
+                </button> {% endcomment %}
                 <button
                   type="button"
                   class="btn btn-tool"
@@ -628,6 +628,7 @@
 <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
 <script src="{% static 'assets/dist/js/alleleviewer.js' %}"></script>
 <script src="{% static 'assets/dist/js/tools.js' %}"></script>
+<script src="{% static 'assets/dist/js/mapa.js' %}"></script>
 <script>
 
 

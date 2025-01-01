@@ -45,6 +45,7 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
     path("usuarios/", login_required(pages.usuarios), name="usuarios"),
+    path("population/", pages.population, name="population"),
     path("alleleviewer/", pages.alleleviewer, name="alleleviewer"),
     path(
         "uploadfile/",
