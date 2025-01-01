@@ -21,6 +21,7 @@ from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 from apps.business_app.views.initial_xyz_expansion_data import (
     InitialXyzExpansionDataViewSet,
 )
+from apps.business_app.views.region import RegionViewSet
 from apps.business_app.views.working_copy_of_original_file import (
     WorkingCopyOfOriginalFileViewSet,
 )
@@ -36,30 +37,30 @@ router.register(
     SiteConfigurationViewSet,
     basename="event-configurations",
 )
-(
-    router.register(
-        "uploaded-files",
-        UploadedFilesViewSet,
-        basename="uploaded-files-nodes",
-    ).register(
-        "allele-node-by-uploaded-file",
-        AlleleNodeViewSet,
-        basename="allele-node-by-uploaded-file",
-        parents_query_lookups=["uploaded_file"],
-    )
+
+router.register(
+    "uploaded-files",
+    UploadedFilesViewSet,
+    basename="uploaded-files-nodes",
+).register(
+    "allele-node-by-uploaded-file",
+    AlleleNodeViewSet,
+    basename="allele-node-by-uploaded-file",
+    parents_query_lookups=["uploaded_file"],
 )
-(
-    router.register(
-        "uploaded-files",
-        UploadedFilesViewSet,
-        basename="uploaded-files-data",
-    ).register(
-        "initial-file-data",
-        InitialFileDataViewSet,
-        basename="initial-file-data",
-        parents_query_lookups=["uploaded_file"],
-    )
+
+
+router.register(
+    "uploaded-files",
+    UploadedFilesViewSet,
+    basename="uploaded-files-data",
+).register(
+    "initial-file-data",
+    InitialFileDataViewSet,
+    basename="initial-file-data",
+    parents_query_lookups=["uploaded_file"],
 )
+
 router.register(
     "allele-nodes",
     AlleleNodeViewSet,
@@ -89,6 +90,11 @@ router.register(
     "extract-allele-parents-tree",
     AlleleParentsViewSet,
     basename="extract-allele-parents-tree",
+)
+router.register(
+    "regions",
+    RegionViewSet,
+    basename="regions",
 )
 
 router.register(

@@ -1,3 +1,5 @@
+# Create your models here.
+from django.db import models
 import uuid
 
 from django.contrib.auth.models import User
@@ -9,9 +11,6 @@ from apps.business_app.models.uploaded_files import UploadedFiles
 from apps.business_app.models.working_copy_of_original_file import (
     WorkingCopyOfOriginalFile,
 )
-
-
-# Create your models here.
 
 
 def get_file_path(instance, filename):
@@ -75,16 +74,3 @@ class SystemUser(
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
-
-class Country(models.Model):
-    name = models.CharField(verbose_name=_("Country name"), max_length=50)
-    code = models.CharField(verbose_name=_("Country code"), max_length=2)
-    enabled = models.BooleanField(verbose_name=_("Enabled"), default=True)
-
-    class Meta(User.Meta):
-        verbose_name = _("Country")
-        verbose_name_plural = _("Countries")
-
-    def __str__(self):
-        return f"{self.name}"
