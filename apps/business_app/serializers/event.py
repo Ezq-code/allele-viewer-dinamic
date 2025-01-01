@@ -12,5 +12,3 @@ class EventSerializer(serializers.ModelSerializer):
             "event_name",
             "event_icon",
         ]
-
-

@@ -12,7 +12,6 @@ from apps.common.pagination import AllResultsSetPagination
 
 
 class LayerViewSet(viewsets.ModelViewSet, GenericAPIView):
-
     queryset = Layer.objects.all()
     serializer_class = LayerSerializer
     pagination_class = AllResultsSetPagination

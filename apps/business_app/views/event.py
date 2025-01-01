@@ -12,7 +12,6 @@ from apps.common.pagination import AllResultsSetPagination
 
 
 class EventViewSet(viewsets.ModelViewSet, GenericAPIView):
-
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     pagination_class = AllResultsSetPagination

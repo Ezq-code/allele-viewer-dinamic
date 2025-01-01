@@ -11,5 +11,3 @@ class LayerSerializer(serializers.ModelSerializer):
             "name",
             "is_visible",
         ]
-
-

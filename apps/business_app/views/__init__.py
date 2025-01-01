@@ -10,7 +10,6 @@ __all__ = [
     "MarkerViewSet",
     "FeatureViewSet",
     "LayerViewSet",
-
 ]
 from .allowed_extensions import AllowedExtensionsViewSet
 from .site_configurations import SiteConfigurationViewSet
