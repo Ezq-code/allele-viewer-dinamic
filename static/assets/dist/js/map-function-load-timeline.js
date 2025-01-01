@@ -2,7 +2,42 @@
                     // también se modifica el zoom y posición del mapa según los diferentes años de la línea del tiempo.
                     const date = new Date();
                     var year = date.getFullYear();
+                    var timeMarkerArray = [];
+                    var timeLinePosition = 315000;
+                    var pauseTimeline = false;
+                    var delayTimePauseTimeLine = 6000;
                     
+                    function playTimeLine() {
+                        timelineControl.play();
+                        pauseTimeline = false;
+                    }
+
+                    const triggerTimer = () => {
+                        if (timeMarkerArray.length > 0){ 
+                         if (pauseTimeline == false) {
+                            var find = false;
+                            var aDelay = 317;
+                            if ((timeLinePosition > 0) && (year - timeLinePosition <= aDelay )){
+                                aDelay = year - timeLinePosition;   
+                            }
+                            var i = timeLinePosition - aDelay;   
+                            while ((!find) && ( i <= timeLinePosition + aDelay )) {
+                               if (timeMarkerArray.indexOf(i) !== -1){            
+                                   find = true;
+                               }
+                               i++;
+                           }
+                           if (find){
+                             timelineControl.pause();
+                             timelineControl.setTime(i);
+                             pauseTimeline = true;
+                             setTimeout(playTimeLine, delayTimePauseTimeLine);
+                           }
+                         }
+                        }
+                        setTimeout(triggerTimer, 5);
+                      };
+                                          
 					function updateList(timeline) {
 
                                             if (timeline.time < -130000) {
@@ -32,7 +67,15 @@
                                                     list.appendChild(li);
                                                 }
                                             });
+                                            timeLinePosition = timeline.time;
                                         }
+                                             // duración de la línea del tiempo en general
+                                             var timelineControl = L.timelineSliderControl({
+                                                //options: new TimelineSliderControlOptions duration: 315000                                
+                                              duration: 315000,
+                                              steps: 1000
+                                            });    
+
 
                     // eqfeed_callback es llamado una vez que el archivo geojsonp(contiene la vectorización del hielo, la tierra que emerge
                     // y las trayectorias de la migraciones) se carga. También se cargan los marcadores y los destinos de las migraciones
@@ -78,19 +121,14 @@
                                                 }
                                             };
 
-                                            // duración de la línea del tiempo en general
-                                            var timelineControl = L.timelineSliderControl({
-                                                duration: 315000,
-                                            });
-
                                             // línea del tiempo y simbología para las trayectorias de las migraciones
                                             var migrationTraceRoute = L.timeline(data, {
                                                 getInterval: getInterval,
                                                 style: function (feature) {
                                                     if ((feature.properties.id >= 1) && (feature.properties.id <= 9)) {
                                                         return {
-                                                            color: "#555555",//"#171717",
-                                                            fillColor: "#555555",//"#171717",
+                                                            color: "#444444",//"#171717",
+                                                            fillColor: "#444444",//"#171717",
                                                             fillOpacity: 1,
                                                             weight: 3,
                                                             opacity: 1,
@@ -279,6 +317,7 @@
                                                         if ((aend_format == "Before Present (YBP)") || (aend_format == "Before Christ (BC)")) {
                                                             endtime = -1 * endtime;
                                                         }
+                                                        timeMarkerArray.push(starttime); 
                                                         aFeature = {
                                                             type: "Feature",
                                                             properties: {
@@ -477,6 +516,8 @@
                                                 }
                                             });
 
+                                            setTimeout(triggerTimer, 5);
+
                                             // llamada a la función que actualiza el panel de derecho en evento "change" de los timelines y también se llama al final
                                             //map.addLayer(LandLGMShapefile);
                                             migrationTraceRoute.on("change", function (e) {
@@ -485,8 +526,8 @@
                                             migrationPoints.on("change", function (e) {
                                                 updateList(e.target);
                                             });
-                                            polygonDestinationTimeline.on("change", function (e) {
-                                                updateList(e.target);
-                                            });
+                                            //polygonDestinationTimeline.on("change", function (e) {
+                                            //    updateList(e.target);
+                                            //});
                                             updateList(migrationTraceRoute);
                                         }
