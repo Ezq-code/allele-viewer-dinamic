@@ -31,7 +31,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static_output/")
 
 # Initialise environment variables
 env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -151,7 +151,7 @@ RUNNING_FROM = env("RUNNING_FROM", default=RUNNING_FROM_LOCAL)
 if RUNNING_FROM == RUNNING_FROM_LOCAL:
     conexion = {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, 'db.sqlite3')
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 else:
     conexion = {

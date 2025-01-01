@@ -1,9 +1,15 @@
 // Funcion para eliminar el marcador
 function deleteMark(marker_id) {
+    const csrftoken = $("[name=csrfmiddlewaretoken]").val(); // Obtén el token CSRF del input oculto
     $.ajax({
-        url: `../business-gestion/markers/delete/${marker_id}/`, type: 'POST', success: function (data) {
+        url: '/business-gestion/markers/' + marker_id + '/',
+        type: 'DELETE',
+        headers: {
+                'X-CSRFToken': csrftoken
+            },
+        success: function (data) {
             console.log(data);
-            $('#modal-delete-mark').modal('hide'); // Ocultar la ventana modal después de la elminacion
+            $('#modal-delete-mark').modal('hide'); // Ocultar la ventana modal después de la eliminacion
             Swal.fire({
                 icon: "success", title: "Mark successfully removed", showConfirmButton: false, timer: 1500
             });
@@ -22,7 +28,6 @@ function deleteMark(marker_id) {
 // llama a una función para llevar a cabo la eliminación.
 $(document).ready(function () {
     let markerId;
-
     // Captura el ID del marcador cuando se abre el modal
     $('#modal-delete-mark').on('show.bs.modal', function (event) {
         const button = $(event.relatedTarget); // Botón que activó el modal
@@ -38,6 +43,7 @@ $(document).ready(function () {
 
 // Funcion para editar el marcador
 function editMark(id, event_type, start_date, start_format, end_date, end_format, description, reference, latitude, longitude) {
+    const csrftoken = $("[name=csrfmiddlewaretoken]").val(); // Obtiene el token CSRF
     var formData = new FormData();
     formData.append('event_type', event_type);
     formData.append('start_date', start_date);
@@ -50,11 +56,14 @@ function editMark(id, event_type, start_date, start_format, end_date, end_format
     formData.append('longitude', longitude);
 
     $.ajax({
-        url: '../business-gestion/markers/edit/' + id + '/',
-        type: 'POST',
+        url: '/business-gestion/markers/' + id + '/',
+        type: 'PUT',
         data: formData,
         contentType: false,
         processData: false,
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         success: function (data) {
             console.log(data);
             $('#modal-edit-mark').modal('hide'); // Ocultar la ventana modal después de la edición

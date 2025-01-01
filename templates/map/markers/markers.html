@@ -135,7 +135,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form id="editmarkForm-{{ mark.id }}" method="post">
+                                                        <form id="editmarkForm-{{ mark.id }}" >{% csrf_token %}
                                                             <div class="form-group">
                                                                 <label for="eventtype">Event Type:</label>
                                                                 <select id="mark-event_type" disabled class="form-control">

@@ -6,6 +6,7 @@ __all__ = [
     "SnpCoordinateProcessorInputSerializer",
     "XyzCoordinateProcessorInputSerializer",
     "AlleleInputSerializer",
+    "AlleleParentsSerializer",
 ]
 from .allowed_extensions import AllowedExtensionsSerializer
 from .site_configurations import SiteConfigurationSerializer
