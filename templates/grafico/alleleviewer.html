@@ -667,24 +667,16 @@
             + region
             + '" which has the code: '
             + code.toUpperCase();
-
         alert(message);
     },
-
-
     });
-
-  
-
-  
-
-
 jQuery('#world-map').on('drag', function(event)
 {
     
 });
 
 let countriesByRegion = {
+
     "Africa": [],
     "Europe": [],
     "East-Asia": [],
@@ -694,9 +686,11 @@ let countriesByRegion = {
     "Central-Asia": [],
     "Australian": []
 };
+
 const url = '../user-gestion/countries/get-codes/'
 // Función para llenar el diccionario
 async function fillCountriesByRegion(region) {
+
     try {
         const response = await axios.get(url, {
                     params: {
@@ -717,16 +711,11 @@ async function fillAllRegions() {
     const promises = regions.map(region => fillCountriesByRegion(region));
     await Promise.all(promises);
     localStorage.setItem('countriesByRegion', JSON.stringify(countriesByRegion));
-
 }
-
-
-
 let countryColors = {};
 let countryColorsWhite = {};
 async function getCountriesByRegion(region) {
-  const storedData = localStorage.getItem('countriesByRegion');
-
+    const storedData = localStorage.getItem('countriesByRegion');
   // Llamar a la función para llenar todas las regiones
   if (storedData) {
         // Si hay datos, cargar desde localStorage
@@ -741,34 +730,23 @@ async function getCountriesByRegion(region) {
     resetMap();
     countryColorsWhite = {};
     const countries = countriesByRegion[region];
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@222222222222222")  
-    console.log(countries)
     if (countries) {
         
         countries.forEach(pais => {
             countryColors[pais] = '#0000ff'; // Color azul para cada país
             countryColorsWhite[pais] = '#ffffff'; // Color azul para cada país
         });
-
         // Pintar los países en el mapa
         jQuery('#world-map').vectorMap('set', 'colors', countryColors);
-        
         // Mostrar el modal
         $('#modal-map').modal('show');
-        
-    } else {
+        } else {
         //console.log("Región no encontrada.");
     }
 }
-
-
 function resetMap() {
 jQuery('#world-map').vectorMap('set', 'colors', countryColorsWhite);
-
 }
 
 </script>
-<!-- Page specific script -->
-<!-- Page specific script -->
-
 {% endblock %}

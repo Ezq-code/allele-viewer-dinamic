@@ -77,6 +77,7 @@ $(function () {
   coordenadas();
   crearMatriz();
   poblarListasAllele();
+  fillAllRegions();
 });
 
 // Función para poblar la lista desplegable del documento
