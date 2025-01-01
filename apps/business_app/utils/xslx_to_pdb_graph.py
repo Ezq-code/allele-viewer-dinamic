@@ -2,7 +2,6 @@ import io
 import logging
 
 import pandas as pd
-import numpy as np
 
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.site_configurations import SiteConfiguration

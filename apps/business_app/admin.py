@@ -27,7 +27,32 @@ admin.site.register(SiteConfiguration, SingletonModelAdmin)
 admin.site.register(Event)
 admin.site.register(Marker)
 admin.site.register(Layer)
-admin.site.register(Feature)
+
+
+@admin.register(Feature)
+class FeatureAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "feature_type",
+        "mag",
+        "place",
+        "time",
+        "title",
+        "timefinal",
+        "geometry_type",
+        "coordinates",
+    ]
+    fields = [
+        "feature_type",
+        "mag",
+        "place",
+        "time",
+        "title",
+        "timefinal",
+        "geometry_type",
+        "coordinates",
+    ]
 
 
 @admin.register(AlleleNode)

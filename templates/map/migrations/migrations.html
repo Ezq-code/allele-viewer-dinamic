@@ -81,7 +81,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form id="createFeatureForm" method="post">
+                                                        <form id="createFeatureForm" > {% csrf_token %}
                                                             <div class="form-group">
                                                                 <label for="feature-id">Feature ID:</label>
                                                                 <input value="{{ mig.feature_id }}" type="text" class="form-control" id="feature-id"
@@ -192,7 +192,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form id="editFeatureForm" method="post">
+                                                        <form id="editFeatureForm">  {% csrf_token %}
                                                             <div class="form-group">
                                                                 <label for="feature-feature_id">Feature ID:</label>
                                                                 <input readonly type="text" class="form-control" id="feature-feature_id"

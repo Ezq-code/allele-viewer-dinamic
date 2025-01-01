@@ -1,0 +1,2957 @@
+[
+  {
+    "model": "business_app.marker",
+    "pk": 1,
+    "fields": {
+      "latitude": "-38.582526",
+      "longitude": "175.916874",
+      "start_date": 26500,
+      "end_date": 24000,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "The Oruanui eruption of New Zealand's Taupō Volcano (also known as the Kawakawa eruption or Kawakawa/Oruanui event) was the world's most recent supereruption, and largest phreatomagmatic eruption characterised to date. ",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 2,
+    "fields": {
+      "latitude": "2.598748",
+      "longitude": "98.807883",
+      "start_date": 75000,
+      "end_date": 70000,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "The Toba eruption (sometimes called the Toba supereruption or the Youngest Toba eruption) was a supervolcanic eruption that occurred about 74,000 years ago during the Late Pleistocene at the site of present-day Lake Toba in Sumatra, Indonesia. It was the last in a series of at least four caldera-forming eruptions at this location, with the earlier known caldera having formed around 1.2 million years ago.",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 3,
+    "fields": {
+      "latitude": "32.7688",
+      "longitude": "130.929384",
+      "start_date": 90000,
+      "end_date": 85000,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Aso caldera (also known as Asosan, the Aso Volcano or Mount Aso, although the later term usually is used related to its currently active vents) is a geographical feature of Kumamoto Prefecture, Japan.",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 4,
+    "fields": {
+      "latitude": "11.040414",
+      "longitude": "18.987232",
+      "start_date": 3200,
+      "end_date": 2600,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Bubonic plague (-3200 -2600). Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 5,
+    "fields": {
+      "latitude": "53.456659",
+      "longitude": "131.165612",
+      "start_date": 3200,
+      "end_date": 2600,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Bubonic plague (-3200 -2600). Eastern Asia.",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 6,
+    "fields": {
+      "latitude": "47.895722",
+      "longitude": "14.767356",
+      "start_date": 3200,
+      "end_date": 2600,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Bubonic plague (-3200 -2600). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 7,
+    "fields": {
+      "latitude": "49.519504",
+      "longitude": "67.164154",
+      "start_date": 3200,
+      "end_date": 2600,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Bubonic plague (-3200 -2600). Eastern Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 8,
+    "fields": {
+      "latitude": "0.984322",
+      "longitude": "114.567446",
+      "start_date": 3200,
+      "end_date": 2600,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Bubonic plague (-3200 -2600). Oceania",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 9,
+    "fields": {
+      "latitude": "43.986493",
+      "longitude": "261.98178",
+      "start_date": 3200,
+      "end_date": 2600,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Bubonic plague (-3200 -2600). North America",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 10,
+    "fields": {
+      "latitude": "-12.691787",
+      "longitude": "302.070606",
+      "start_date": 3200,
+      "end_date": 2600,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Bubonic plague (-3200 -2600). Latin America and Carib",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 11,
+    "fields": {
+      "latitude": "41.666348",
+      "longitude": "14.765572",
+      "start_date": 165,
+      "end_date": 180,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Smallpox or measles (165 - 180). (Roman Empire)",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 12,
+    "fields": {
+      "latitude": "46.70371",
+      "longitude": "21.448826",
+      "start_date": 450,
+      "end_date": 451,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Malaria (450 - 451)",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 13,
+    "fields": {
+      "latitude": "21.81255",
+      "longitude": "15.119012",
+      "start_date": 541,
+      "end_date": 549,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (541 - 549). North Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 14,
+    "fields": {
+      "latitude": "47.895721",
+      "longitude": "8.789197",
+      "start_date": 541,
+      "end_date": 549,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (541 - 549). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 15,
+    "fields": {
+      "latitude": "48.130901",
+      "longitude": "58.724401",
+      "start_date": 541,
+      "end_date": 549,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (541 - 549). Western Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 16,
+    "fields": {
+      "latitude": "36.428356",
+      "longitude": "138.570938",
+      "start_date": 735,
+      "end_date": 737,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Smallpox (735 – 737). Japan",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 17,
+    "fields": {
+      "latitude": "47.088082",
+      "longitude": "6.261464",
+      "start_date": 1346,
+      "end_date": 1353,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1346–1353). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 18,
+    "fields": {
+      "latitude": "51.157297",
+      "longitude": "62.557067",
+      "start_date": 1346,
+      "end_date": 1353,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1346–1353). Western Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 19,
+    "fields": {
+      "latitude": "48.783712",
+      "longitude": "128.371214",
+      "start_date": 1346,
+      "end_date": 1353,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1346–1353). Eastern Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 21,
+    "fields": {
+      "latitude": "19.410649",
+      "longitude": "20.537036",
+      "start_date": 1346,
+      "end_date": 1353,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1346–1353). North Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 22,
+    "fields": {
+      "latitude": "25.562265",
+      "longitude": "256.054643",
+      "start_date": 1519,
+      "end_date": 1520,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Smallpox (1519 - 1520). (Mexico)",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 23,
+    "fields": {
+      "latitude": "23.91798",
+      "longitude": "257.024006",
+      "start_date": 1545,
+      "end_date": 1548,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Cocoliztli (1545–1548). Mexico",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 24,
+    "fields": {
+      "latitude": "25.149257",
+      "longitude": "257.955988",
+      "start_date": 1576,
+      "end_date": 1580,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Cocoliztli (1576–1580). Mexico",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 25,
+    "fields": {
+      "latitude": "42.384519",
+      "longitude": "12.62957",
+      "start_date": 1629,
+      "end_date": 1631,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1629–1631). Italy",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 26,
+    "fields": {
+      "latitude": "39.950175",
+      "longitude": "16.018781",
+      "start_date": 1656,
+      "end_date": 1658,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1656–1658). Southern Italy",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 27,
+    "fields": {
+      "latitude": "32.324276",
+      "longitude": "53.60592",
+      "start_date": 1772,
+      "end_date": 1773,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1772–1773). Persia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 28,
+    "fields": {
+      "latitude": "3.092249",
+      "longitude": "25.148989",
+      "start_date": 1846,
+      "end_date": 1860,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Cholera (1846–1860). Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 29,
+    "fields": {
+      "latitude": "55.895027",
+      "longitude": "60.12514",
+      "start_date": 1846,
+      "end_date": 1860,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Cholera (1846–1860).  Western Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 31,
+    "fields": {
+      "latitude": "45.410792",
+      "longitude": "122.893736",
+      "start_date": 1846,
+      "end_date": 1860,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Cholera (1846–1860). Eastern Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 32,
+    "fields": {
+      "latitude": "48.609669",
+      "longitude": "6.859257",
+      "start_date": 1846,
+      "end_date": 1860,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Cholera (1846–1860). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 33,
+    "fields": {
+      "latitude": "-3.653769",
+      "longitude": "138.902052",
+      "start_date": 1846,
+      "end_date": 1860,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Cholera (1846–1860). Oceania",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 34,
+    "fields": {
+      "latitude": "41.138952",
+      "longitude": "255.300309",
+      "start_date": 1846,
+      "end_date": 1860,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Cholera (1846–1860). North America",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 35,
+    "fields": {
+      "latitude": "-7.85032",
+      "longitude": "297.147417",
+      "start_date": 1846,
+      "end_date": 1860,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Cholera (1846–1860). Latin America & Carib",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 36,
+    "fields": {
+      "latitude": "14.128055",
+      "longitude": "11.250792",
+      "start_date": 1855,
+      "end_date": 1960,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1855–1960). Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 37,
+    "fields": {
+      "latitude": "53.03593",
+      "longitude": "123.780829",
+      "start_date": 1855,
+      "end_date": 1960,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1855–1960). Eastern Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 38,
+    "fields": {
+      "latitude": "44.740492",
+      "longitude": "63.999247",
+      "start_date": 1855,
+      "end_date": 1960,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1855–1960). Western Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 39,
+    "fields": {
+      "latitude": "51.7488",
+      "longitude": "17.932263",
+      "start_date": 1855,
+      "end_date": 1960,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1855–1960). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 40,
+    "fields": {
+      "latitude": "-12.691787",
+      "longitude": "131.868925",
+      "start_date": 1855,
+      "end_date": 1960,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1855–1960). Oceania",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 41,
+    "fields": {
+      "latitude": "37.607271",
+      "longitude": "261.630124",
+      "start_date": 1855,
+      "end_date": 1960,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1855–1960). North America",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 42,
+    "fields": {
+      "latitude": "-4.705636",
+      "longitude": "302.773919",
+      "start_date": 1855,
+      "end_date": 1960,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bubonic plague (1855–1960). Latin America & Carib",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 43,
+    "fields": {
+      "latitude": "12.417267",
+      "longitude": "25.317047",
+      "start_date": 1889,
+      "end_date": 1890,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza (1889−1890). Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 44,
+    "fields": {
+      "latitude": "51.464962",
+      "longitude": "58.090722",
+      "start_date": 1889,
+      "end_date": 1890,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza (1889−1890). Western Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 45,
+    "fields": {
+      "latitude": "49.450986",
+      "longitude": "122.534805",
+      "start_date": 1889,
+      "end_date": 1890,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza (1889−1890). Eastern Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 46,
+    "fields": {
+      "latitude": "47.801348",
+      "longitude": "3.696162",
+      "start_date": 1889,
+      "end_date": 1890,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza (1889−1890). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 47,
+    "fields": {
+      "latitude": "-5.755917",
+      "longitude": "144.176898",
+      "start_date": 1889,
+      "end_date": 1890,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza (1889−1890). Oceania",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 48,
+    "fields": {
+      "latitude": "35.860566",
+      "longitude": "257.40919",
+      "start_date": 1889,
+      "end_date": 1890,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza (1889−1890). North America",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 49,
+    "fields": {
+      "latitude": "-9.934221",
+      "longitude": "307.697108",
+      "start_date": 1889,
+      "end_date": 1890,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza (1889−1890). Latin America & Carib",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 50,
+    "fields": {
+      "latitude": "1.616975",
+      "longitude": "19.338888",
+      "start_date": 1918,
+      "end_date": 1920,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H1N1 (1918–1920). Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 51,
+    "fields": {
+      "latitude": "54.490464",
+      "longitude": "53.801212",
+      "start_date": 1918,
+      "end_date": 1920,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H1N1 (1918–1920). Western Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 52,
+    "fields": {
+      "latitude": "45.484786",
+      "longitude": "116.747701",
+      "start_date": 1918,
+      "end_date": 1920,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H1N1 (1918–1920). Eastern Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 53,
+    "fields": {
+      "latitude": "49.221903",
+      "longitude": "11.431293",
+      "start_date": 1918,
+      "end_date": 1920,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H1N1 (1918–1920). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 54,
+    "fields": {
+      "latitude": "-5.406021",
+      "longitude": "106.549667",
+      "start_date": 1918,
+      "end_date": 1920,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H1N1 (1918–1920). Oceania",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 55,
+    "fields": {
+      "latitude": "38.849973",
+      "longitude": "264.648386",
+      "start_date": 1918,
+      "end_date": 1920,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H1N1 (1918–1920). North America",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 56,
+    "fields": {
+      "latitude": "-3.759018",
+      "longitude": "299.037483",
+      "start_date": 1918,
+      "end_date": 1920,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H1N1 (1918–1920). Latin America & Carib",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 57,
+    "fields": {
+      "latitude": "62.560961",
+      "longitude": "75.284374",
+      "start_date": 1918,
+      "end_date": 1922,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Typhus (1918–1922). Russia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 58,
+    "fields": {
+      "latitude": "15.826082",
+      "longitude": "16.666861",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H2N2 (1957–1958). Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 59,
+    "fields": {
+      "latitude": "50.758701",
+      "longitude": "54.571713",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H2N2 (1957–1958). Western Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 60,
+    "fields": {
+      "latitude": "48.318275",
+      "longitude": "119.172568",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H2N2 (1957–1958). Eastern Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 61,
+    "fields": {
+      "latitude": "45.410792",
+      "longitude": "3.623884",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H2N2 (1957–1958). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 62,
+    "fields": {
+      "latitude": "-16.012025",
+      "longitude": "126.975487",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H2N2 (1957–1958). Oceania",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 63,
+    "fields": {
+      "latitude": "36.484909",
+      "longitude": "250.728776",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H2N2 (1957–1958). North America",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 64,
+    "fields": {
+      "latitude": "-16.770881",
+      "longitude": "297.147417",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H2N2 (1957–1958). Latin America & Carib",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 65,
+    "fields": {
+      "latitude": "17.07359",
+      "longitude": "24.089232",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H3N2 (1957–1958). Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 66,
+    "fields": {
+      "latitude": "53.246811",
+      "longitude": "48.526367",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H3N2 (1957–1958). Western Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 67,
+    "fields": {
+      "latitude": "53.87326",
+      "longitude": "118.505983",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H3N2 (1957–1958). Eastern Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 68,
+    "fields": {
+      "latitude": "47.434033",
+      "longitude": "10.745145",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H3N2 (1957–1958). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 69,
+    "fields": {
+      "latitude": "-0.492182",
+      "longitude": "110.933336",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H3N2 (1957–1958). Oceania",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 70,
+    "fields": {
+      "latitude": "39.259481",
+      "longitude": "269.71822",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H3N2 (1957–1958). North America",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 71,
+    "fields": {
+      "latitude": "-15.351999",
+      "longitude": "305.720456",
+      "start_date": 1957,
+      "end_date": 1958,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Influenza A/H3N2 (1957–1958). Latin America & Carib",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 72,
+    "fields": {
+      "latitude": "8.859021",
+      "longitude": "15.471915",
+      "start_date": 1981,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "HIV/AIDS (1981–2024). Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 73,
+    "fields": {
+      "latitude": "49.747199",
+      "longitude": "49.682989",
+      "start_date": 1981,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "HIV/AIDS (1981–2024). Western Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 74,
+    "fields": {
+      "latitude": "44.840294",
+      "longitude": "126.614622",
+      "start_date": 1981,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "HIV/AIDS (1981–2024). Eastern Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 75,
+    "fields": {
+      "latitude": "45.113852",
+      "longitude": "5.945664",
+      "start_date": 1981,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "HIV/AIDS (1981–2024). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 76,
+    "fields": {
+      "latitude": "-17.207967",
+      "longitude": "134.840431",
+      "start_date": 1981,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "HIV/AIDS (1981–2024). Oceania",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 77,
+    "fields": {
+      "latitude": "40.259408",
+      "longitude": "260.003205",
+      "start_date": 1981,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "HIV/AIDS (1981–2024). North America",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 78,
+    "fields": {
+      "latitude": "-4.460331",
+      "longitude": "295.168794",
+      "start_date": 1981,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "HIV/AIDS (1981–2024). Latin America & Carib",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 79,
+    "fields": {
+      "latitude": "17.911842",
+      "longitude": "11.43439",
+      "start_date": 2019,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "COVID-19 (2019–2024). Africa",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 80,
+    "fields": {
+      "latitude": "46.800063",
+      "longitude": "54.924689",
+      "start_date": 2019,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "COVID-19 (2019–2024). Western Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 81,
+    "fields": {
+      "latitude": "34.132723",
+      "longitude": "116.628606",
+      "start_date": 2019,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "COVID-19 (2019–2024). Eastern Asia",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 82,
+    "fields": {
+      "latitude": "49.141476",
+      "longitude": "9.058893",
+      "start_date": 2019,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "COVID-19 (2019–2024). Europe",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 83,
+    "fields": {
+      "latitude": "2.776257",
+      "longitude": "115.391715",
+      "start_date": 2019,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "COVID-19 (2019–2024). Oceania",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 84,
+    "fields": {
+      "latitude": "36.879625",
+      "longitude": "277.234836",
+      "start_date": 2019,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "COVID-19 (2019–2024). North America",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 85,
+    "fields": {
+      "latitude": "-17.543486",
+      "longitude": "311.696643",
+      "start_date": 2019,
+      "end_date": 2024,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "COVID-19 (2019–2024). Latin America & Carib",
+      "reference": "",
+      "event_type": 2
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 86,
+    "fields": {
+      "latitude": "26.824071",
+      "longitude": "44.536784",
+      "start_date": 499,
+      "end_date": 449,
+      "start_format": "Before Christ (BC)",
+      "end_format": "Before Christ (BC)",
+      "description": "Greco–Persian Wars (499-449). Western Asia",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 87,
+    "fields": {
+      "latitude": "32.112357",
+      "longitude": "118.896401",
+      "start_date": 475,
+      "end_date": 221,
+      "start_format": "Before Christ (BC)",
+      "end_format": "Before Christ (BC)",
+      "description": "Chinese Warring States (475–221). Eastern Asia ",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 88,
+    "fields": {
+      "latitude": "38.479395",
+      "longitude": "-2.378895",
+      "start_date": 264,
+      "end_date": 146,
+      "start_format": "Before Christ (BC)",
+      "end_format": "Before Christ (BC)",
+      "description": "Punic Wars (264-146). Europe",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 89,
+    "fields": {
+      "latitude": "36.173357",
+      "longitude": "9.518158",
+      "start_date": 91,
+      "end_date": 30,
+      "start_format": "Before Christ (BC)",
+      "end_format": "Before Christ (BC)",
+      "description": "Roman civil wars (91-30). Africa",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 90,
+    "fields": {
+      "latitude": "42.55308",
+      "longitude": "0.942768",
+      "start_date": 91,
+      "end_date": 30,
+      "start_format": "Before Christ (BC)",
+      "end_format": "Before Christ (BC)",
+      "description": "Roman civil wars (91-30). Europe",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 91,
+    "fields": {
+      "latitude": "30.145127",
+      "longitude": "30.469468",
+      "start_date": 66,
+      "end_date": 136,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Jewish–Roman Wars (66-136). Africa\r\n",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 92,
+    "fields": {
+      "latitude": "38.565348",
+      "longitude": "22.076326",
+      "start_date": 66,
+      "end_date": 136,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Jewish–Roman Wars (66-136). Europe",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 93,
+    "fields": {
+      "latitude": "35.173808",
+      "longitude": "112.560138",
+      "start_date": 184,
+      "end_date": 280,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Three Kingdoms War (184-280). Eastern Asia",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 94,
+    "fields": {
+      "latitude": "29.61167",
+      "longitude": "111.942749",
+      "start_date": 184,
+      "end_date": 205,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Yellow Turban Rebellion (184-205). Eastern Asia",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 95,
+    "fields": {
+      "latitude": "54.285753",
+      "longitude": "28.130297",
+      "start_date": 128000,
+      "end_date": 74000,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Saale glaciation (-128000 -74000). Europe",
+      "reference": "",
+      "event_type": 5
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 96,
+    "fields": {
+      "latitude": "65.160888",
+      "longitude": "61.889308",
+      "start_date": 26000,
+      "end_date": 20000,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Last Glacial Maximum (-26000 -20000). Western Asia",
+      "reference": "",
+      "event_type": 5
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 97,
+    "fields": {
+      "latitude": "67.555594",
+      "longitude": "153.67162",
+      "start_date": 26000,
+      "end_date": 20000,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Last Glacial Maximum (-26000 -20000). Eastern Asia",
+      "reference": "",
+      "event_type": 5
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 98,
+    "fields": {
+      "latitude": "56.636896",
+      "longitude": "30.983979",
+      "start_date": 26000,
+      "end_date": 20000,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Last Glacial Maximum (-26000 -20000). Europe",
+      "reference": "",
+      "event_type": 5
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 99,
+    "fields": {
+      "latitude": "58.003442",
+      "longitude": "252.487058",
+      "start_date": 26000,
+      "end_date": 20000,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Last Glacial Maximum (-26000 -20000). North America",
+      "reference": "",
+      "event_type": 5
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 100,
+    "fields": {
+      "latitude": "44.740492",
+      "longitude": "27.778641",
+      "start_date": 12900,
+      "end_date": 11700,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Younger Dryas (-12900 -11700). Europe",
+      "reference": "",
+      "event_type": 5
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 101,
+    "fields": {
+      "latitude": "36.392546",
+      "longitude": "25.457311",
+      "start_date": 1600,
+      "end_date": 1599,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Minoan eruption (-1600 -1599). Thera",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 102,
+    "fields": {
+      "latitude": "38.68551",
+      "longitude": "27.673443",
+      "start_date": 1206,
+      "end_date": 1187,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Bronze Age collapse (-1206 -1187).  Eastern Mediterranean",
+      "reference": "",
+      "event_type": 7
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 103,
+    "fields": {
+      "latitude": "24.942235",
+      "longitude": "31.302975",
+      "start_date": 1206,
+      "end_date": 1187,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Bronze Age collapse (-1206 -1187).  Africa",
+      "reference": "",
+      "event_type": 7
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 104,
+    "fields": {
+      "latitude": "38.904714",
+      "longitude": "43.95533",
+      "start_date": 1206,
+      "end_date": 1187,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Bronze Age collapse (-1206 -1187). Western Asia",
+      "reference": "",
+      "event_type": 7
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 105,
+    "fields": {
+      "latitude": "41.488828",
+      "longitude": "27.678269",
+      "start_date": 535,
+      "end_date": 536,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Volcanic winter of 536 (535 - 536). Western Asia",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 106,
+    "fields": {
+      "latitude": "32.724449",
+      "longitude": "111.824512",
+      "start_date": 535,
+      "end_date": 536,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Volcanic winter of 536 (535 - 536). Eastern Asia",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 107,
+    "fields": {
+      "latitude": "46.462081",
+      "longitude": "1.404414",
+      "start_date": 535,
+      "end_date": 536,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Volcanic winter of 536 (535 - 536). Europe",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 108,
+    "fields": {
+      "latitude": "35.346049",
+      "longitude": "242.64068",
+      "start_date": 535,
+      "end_date": 536,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Volcanic winter of 536 (535 - 536). North America",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 109,
+    "fields": {
+      "latitude": "18.845995",
+      "longitude": "260.926811",
+      "start_date": 850,
+      "end_date": 851,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Severe drought of Central American (850 - 851). ",
+      "reference": "",
+      "event_type": 8
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 110,
+    "fields": {
+      "latitude": "-8.396299",
+      "longitude": "116.368535",
+      "start_date": 1257,
+      "end_date": 1258,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "1257 Samalas eruption (1257 - 1258) Oceania",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 111,
+    "fields": {
+      "latitude": "-16.955929",
+      "longitude": "288.892221",
+      "start_date": 1600,
+      "end_date": 1601,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Huaynaputina erupts in South America (1600 – 1601). ",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 112,
+    "fields": {
+      "latitude": "25.673218",
+      "longitude": "90.373474",
+      "start_date": 1770,
+      "end_date": 1771,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bengal famine (1770 - 1771). Eastern Asia",
+      "reference": "",
+      "event_type": 9
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 113,
+    "fields": {
+      "latitude": "63.875521",
+      "longitude": "-18.701404",
+      "start_date": 1783,
+      "end_date": 1784,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Laki erupts (1783 - 1784).  Iceland",
+      "reference": "",
+      "event_type": 1
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 114,
+    "fields": {
+      "latitude": "53.351864",
+      "longitude": "9.283626",
+      "start_date": 1845,
+      "end_date": 1857,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Wet weather in Northern Europe (1845 – 1857). ",
+      "reference": "",
+      "event_type": 10
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 115,
+    "fields": {
+      "latitude": "3.215109",
+      "longitude": "95.775549",
+      "start_date": 2004,
+      "end_date": 2005,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Earthquake Indian Ocean (2004 - 2005).",
+      "reference": "",
+      "event_type": 11
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 116,
+    "fields": {
+      "latitude": "18.446263",
+      "longitude": "5.802411",
+      "start_date": 7640,
+      "end_date": 7639,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Tollmann's bolide (-7640 -7639). Africa",
+      "reference": "",
+      "event_type": 6
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 117,
+    "fields": {
+      "latitude": "50.165638",
+      "longitude": "4.820942",
+      "start_date": 7640,
+      "end_date": 7639,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Tollmann's bolide (-7640 -7639). Europe",
+      "reference": "",
+      "event_type": 6
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 118,
+    "fields": {
+      "latitude": "55.219006",
+      "longitude": "66.880066",
+      "start_date": 7640,
+      "end_date": 7639,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Tollmann's bolide (-7640 -7639). Western Asia",
+      "reference": "",
+      "event_type": 6
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 119,
+    "fields": {
+      "latitude": "46.944264",
+      "longitude": "134.983776",
+      "start_date": 7640,
+      "end_date": 7639,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Tollmann's bolide (-7640 -7639). Eastern Asia",
+      "reference": "",
+      "event_type": 6
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 120,
+    "fields": {
+      "latitude": "41.138952",
+      "longitude": "244.397178",
+      "start_date": 7640,
+      "end_date": 7639,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Tollmann's bolide (-7640 -7639). North America",
+      "reference": "",
+      "event_type": 6
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 121,
+    "fields": {
+      "latitude": "-10.626054",
+      "longitude": "291.169258",
+      "start_date": 7640,
+      "end_date": 7639,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "Tollmann's bolide (-7640 -7639). Latin America & Carib",
+      "reference": "",
+      "event_type": 6
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 123,
+    "fields": {
+      "latitude": "7.850325",
+      "longitude": "27.71464",
+      "start_date": 4200,
+      "end_date": 4199,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "4.2-kiloyear event (-4200 -4199). Africa",
+      "reference": "",
+      "event_type": 8
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 124,
+    "fields": {
+      "latitude": "53.665474",
+      "longitude": "71.735687",
+      "start_date": 4200,
+      "end_date": 4199,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "4.2-kiloyear event (-4200 -4199). Western Asia",
+      "reference": "",
+      "event_type": 8
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 125,
+    "fields": {
+      "latitude": "58.18924",
+      "longitude": "133.275551",
+      "start_date": 4200,
+      "end_date": 4199,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "4.2-kiloyear event (-4200 -4199). Eastern Asia",
+      "reference": "",
+      "event_type": 8
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 126,
+    "fields": {
+      "latitude": "45.287256",
+      "longitude": "17.764017",
+      "start_date": 4200,
+      "end_date": 4199,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "4.2-kiloyear event (-4200 -4199). Europe",
+      "reference": "",
+      "event_type": 8
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 127,
+    "fields": {
+      "latitude": "-2.196726",
+      "longitude": "115.442458",
+      "start_date": 4200,
+      "end_date": 4199,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "4.2-kiloyear event (-4200 -4199). Oceania",
+      "reference": "",
+      "event_type": 8
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 128,
+    "fields": {
+      "latitude": "46.219374",
+      "longitude": "257.761904",
+      "start_date": 4200,
+      "end_date": 4199,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "4.2-kiloyear event (-4200 -4199). North America",
+      "reference": "",
+      "event_type": 8
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 129,
+    "fields": {
+      "latitude": "-21.191069",
+      "longitude": "302.026093",
+      "start_date": 4200,
+      "end_date": 4199,
+      "start_format": "Before Present (YBP)",
+      "end_format": "Before Present (YBP)",
+      "description": "4.2-kiloyear event (-4200 -4199). Latin America & Carib",
+      "reference": "",
+      "event_type": 8
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 130,
+    "fields": {
+      "latitude": "38.959409",
+      "longitude": "31.968983",
+      "start_date": 629,
+      "end_date": 1050,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Arab–Byzantine Wars (629-1050). Asia Minor",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 131,
+    "fields": {
+      "latitude": "31.278551",
+      "longitude": "23.760804",
+      "start_date": 629,
+      "end_date": 1050,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Arab–Byzantine Wars (629-1050). Africa",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 132,
+    "fields": {
+      "latitude": "39.215231",
+      "longitude": "-4.707956",
+      "start_date": 629,
+      "end_date": 1050,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Arab–Byzantine Wars (629-1050). Europe\n",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 133,
+    "fields": {
+      "latitude": "40.061257",
+      "longitude": "-3.214368",
+      "start_date": 711,
+      "end_date": 1492,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Reconquista (711-1492). Europe",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 134,
+    "fields": {
+      "latitude": "35.764343",
+      "longitude": "115.415777",
+      "start_date": 755,
+      "end_date": 763,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "An Lushan Rebellion (755-763). Eastern Asia",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 135,
+    "fields": {
+      "latitude": "38.80547",
+      "longitude": "-8.947309",
+      "start_date": 1095,
+      "end_date": 1291,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Crusades (1095-1291). Europe (Spain-Portugal)",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 136,
+    "fields": {
+      "latitude": "38.444985",
+      "longitude": "37.840565",
+      "start_date": 1095,
+      "end_date": 1291,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": " Crusades (1095-1291). Asia Minor",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 138,
+    "fields": {
+      "latitude": "52.855864",
+      "longitude": "32.500635",
+      "start_date": 1206,
+      "end_date": 1368,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Mongol invasions and conquests (1206-1368). Europe",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 139,
+    "fields": {
+      "latitude": "37.439974",
+      "longitude": "106.499541",
+      "start_date": 1206,
+      "end_date": 1368,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Mongol invasions and conquests (1206-1368). Asia",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 140,
+    "fields": {
+      "latitude": "47.872144",
+      "longitude": "0.327826",
+      "start_date": 1337,
+      "end_date": 1453,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Hundred Years' War (1337-1453). Europe",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 141,
+    "fields": {
+      "latitude": "48.122101",
+      "longitude": "48.158062",
+      "start_date": 1370,
+      "end_date": 1405,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Conquests of Timur (1370-1405). Europe",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 142,
+    "fields": {
+      "latitude": "35.603719",
+      "longitude": "53.856461",
+      "start_date": 1370,
+      "end_date": 1405,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Conquests of Timur (1370-1405). Western Asia",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 143,
+    "fields": {
+      "latitude": "19.87006",
+      "longitude": "259.840651",
+      "start_date": 1519,
+      "end_date": 1632,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Spanish conquest of the Aztec Empire (1519-1632). Latin America and the Caribbean",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 144,
+    "fields": {
+      "latitude": "20.282809",
+      "longitude": "271.331825",
+      "start_date": 1519,
+      "end_date": 1595,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Spanish conquest of Yucatán (1519–1595). Latin America and the Caribbean",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 145,
+    "fields": {
+      "latitude": "-15.114553",
+      "longitude": "286.928675",
+      "start_date": 1533,
+      "end_date": 1572,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Spanish conquest of the Inca Empire (1533-1572). Latin America and the Caribbean",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 146,
+    "fields": {
+      "latitude": "47.665387",
+      "longitude": "2.433283",
+      "start_date": 1562,
+      "end_date": 1598,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "French Wars of Religion (1562-1598). Europe",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 147,
+    "fields": {
+      "latitude": "42.682435",
+      "longitude": "124.250469",
+      "start_date": 1616,
+      "end_date": 1683,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Transition from Ming to Qing (1616-1683). Asia ",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 148,
+    "fields": {
+      "latitude": "50.875311",
+      "longitude": "12.100813",
+      "start_date": 1618,
+      "end_date": 1648,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Thirty Years' War (1618-1648). Europe",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 149,
+    "fields": {
+      "latitude": "19.973349",
+      "longitude": "77.492098",
+      "start_date": 1658,
+      "end_date": 1707,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Mughal–Maratha Wars (1658-1707). Eastern Asia",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 150,
+    "fields": {
+      "latitude": "49.14219",
+      "longitude": "16.719861",
+      "start_date": 1805,
+      "end_date": 1806,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Napoleonic Wars. War of the Third Coalition (1805-1806). Europe (Czech Republic)",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 151,
+    "fields": {
+      "latitude": "52.520282",
+      "longitude": "13.409493",
+      "start_date": 1806,
+      "end_date": 1807,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Napoleonic Wars. War of the Fourth Coalition (1806-1807). Central Europe (Germany)",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 152,
+    "fields": {
+      "latitude": "39.368279",
+      "longitude": "-8.816464",
+      "start_date": 1807,
+      "end_date": 1814,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Napoleonic Wars. Peninsular War (1807-1814). Europe (Iberian Peninsula)",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 153,
+    "fields": {
+      "latitude": "42.850799",
+      "longitude": "-2.676928",
+      "start_date": 1807,
+      "end_date": 1814,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Napoleonic Wars. Peninsular War (1807-1814). Europe (Spain)",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 154,
+    "fields": {
+      "latitude": "48.56752",
+      "longitude": "12.127222",
+      "start_date": 1808,
+      "end_date": 1810,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Napoleonic Wars. War of the Fifth Coalition (1808-1810). Europe (Germany)",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 155,
+    "fields": {
+      "latitude": "55.751849",
+      "longitude": "37.618157",
+      "start_date": 1811,
+      "end_date": 1813,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Napoleonic Wars. French invasion of Russia (1811-1813). Europe (Russia)",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 156,
+    "fields": {
+      "latitude": "51.330612",
+      "longitude": "12.374585",
+      "start_date": 1812,
+      "end_date": 1814,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Napoleonic Wars. War of the Sixth Coalition (1812-1814). Europe (Germany)",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 157,
+    "fields": {
+      "latitude": "48.853873",
+      "longitude": "2.35525",
+      "start_date": 1812,
+      "end_date": 1814,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Napoleonic Wars. War of the Sixth Coalition (1812-1814). Europe (France)",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 158,
+    "fields": {
+      "latitude": "50.683408",
+      "longitude": "4.396886",
+      "start_date": 1814,
+      "end_date": 1816,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Napoleonic Wars. Hundred Days (March 1815-July 1815). Europe (France-Netherlands)",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 159,
+    "fields": {
+      "latitude": "32.324276",
+      "longitude": "114.49328",
+      "start_date": 1850,
+      "end_date": 1864,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Taiping Rebellion (1850-1864). Eastern Asia ",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 160,
+    "fields": {
+      "latitude": "40.111689",
+      "longitude": "77.374497",
+      "start_date": 1862,
+      "end_date": 1877,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Dungan Revolt (1862-1877). Eastern Asia",
+      "reference": "",
+      "event_type": 3
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 161,
+    "fields": {
+      "latitude": "50.092393",
+      "longitude": "5.707003",
+      "start_date": 1914,
+      "end_date": 1918,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War I (1914-1918). Western Europe, Western Front: Includes France, Belgium, and parts of the Netherlands",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 162,
+    "fields": {
+      "latitude": "45.602509",
+      "longitude": "11.22658",
+      "start_date": 1914,
+      "end_date": 1918,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War I (1914-1918). Western Europe, Italian Front: Mainly in northern Italy.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 163,
+    "fields": {
+      "latitude": "50.680797",
+      "longitude": "24.325105",
+      "start_date": 1914,
+      "end_date": 1918,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War I (1914-1918). Western Europe, Eastern Front: Includes parts of Poland, Russia and the Balkans",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 164,
+    "fields": {
+      "latitude": "55.341642",
+      "longitude": "35.612008",
+      "start_date": 1914,
+      "end_date": 1918,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War I (1914-1918). Eastern Europe, Russia: Participated in the Eastern Front and then withdrew after the October Revolution.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 165,
+    "fields": {
+      "latitude": "47.279229",
+      "longitude": "17.373041",
+      "start_date": 1914,
+      "end_date": 1918,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War I (1914-1918). Eastern Europe, Austro-Hungarian Empire: Includes areas of Austria, Hungary, and parts of the Balkans.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 166,
+    "fields": {
+      "latitude": "34.597042",
+      "longitude": "41.989844",
+      "start_date": 1914,
+      "end_date": 1918,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War I (1914-1918). Middle East, Ottoman Empire: Participated in the Balkan Front and the conflict in Palestine",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 167,
+    "fields": {
+      "latitude": "34.813803",
+      "longitude": "17.72634",
+      "start_date": 1914,
+      "end_date": 1918,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War I (1914-1918). Maritime, Mediterranean: Naval battles and landings in North Africa.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 168,
+    "fields": {
+      "latitude": "50.569283",
+      "longitude": "8.153522",
+      "start_date": 1914,
+      "end_date": 1918,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War I (1914-1918). Europe, Germany: Mainly on the Western Front.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 169,
+    "fields": {
+      "latitude": "51.727028",
+      "longitude": "-0.198002",
+      "start_date": 1914,
+      "end_date": 1918,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War I (1914-1918). Europe, United Kingdom: Although it was not invaded, it was a key actor in the conflict.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 170,
+    "fields": {
+      "latitude": "57.136239",
+      "longitude": "42.169694",
+      "start_date": 1917,
+      "end_date": 1922,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Russian Civil War (1917-1922). Eastern Asia",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 171,
+    "fields": {
+      "latitude": "38.754083",
+      "longitude": "111.944904",
+      "start_date": 1927,
+      "end_date": 1949,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Chinese Civil War (1927-1949). Eastern Asia",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 172,
+    "fields": {
+      "latitude": "41.574361",
+      "longitude": "128.203153",
+      "start_date": 1937,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Second Sino-Japanese War (1937-1945). Asia",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 173,
+    "fields": {
+      "latitude": "37.996163",
+      "longitude": "127.214968",
+      "start_date": 1950,
+      "end_date": 1953,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Korean War (1950-1953). Asia",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 174,
+    "fields": {
+      "latitude": "17.287709",
+      "longitude": "106.495271",
+      "start_date": 1955,
+      "end_date": 1975,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Vietnam War (1955-1975). Western Asia",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 175,
+    "fields": {
+      "latitude": "10.141932",
+      "longitude": "7.800391",
+      "start_date": 1967,
+      "end_date": 1970,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Nigerian Civil War (1967-1970). Africa",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 176,
+    "fields": {
+      "latitude": "-2.108899",
+      "longitude": "27.047826",
+      "start_date": 1998,
+      "end_date": 2003,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Second Congo War (1998-2003). Africa",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 177,
+    "fields": {
+      "latitude": "28.921631",
+      "longitude": "72.927051",
+      "start_date": 1970,
+      "end_date": 1972,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "Bangladesh Liberation War (1970-1972). Western Asia. was an armed conflict sparked by the rise of the Bengali nationalist and self-determination movement in East Pakistan, which resulted in the independence of Bangladesh.The war began when the Pakistani military junta based in West Pakistan—under the orders of Yahya Khan—launched Operation Searchlight against East Pakistanis on the night of 25 March 1971, initiating the Bangladesh genocide.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 178,
+    "fields": {
+      "latitude": "34.452218",
+      "longitude": "132.465854",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Asia: Japan. The \"Little Boy\" bomb was dropped on Hiroshima on August 6, 1945.",
+      "reference": "",
+      "event_type": 12
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 179,
+    "fields": {
+      "latitude": "32.750323",
+      "longitude": "129.918741",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Asia: Japan. The \"Fat Man\" bomb was dropped on Nagasaki on August 9, 1945. ",
+      "reference": "",
+      "event_type": 12
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 180,
+    "fields": {
+      "latitude": "52.241256",
+      "longitude": "20.998662",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Europe, Western Front: Invasion of Poland by Germany in 1939.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 181,
+    "fields": {
+      "latitude": "48.880973",
+      "longitude": "2.355792",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Europe, Western Front: Battle of France, May 10–June 25, 1940.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 182,
+    "fields": {
+      "latitude": "51.481383",
+      "longitude": "-0.1004",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Europe, Western Front: Battle of Britain July 10 to October 31, 1940.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 183,
+    "fields": {
+      "latitude": "49.317961",
+      "longitude": "-0.149822",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Europe, Western Front: Normandy landings (D-Day) in 1944, France.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 184,
+    "fields": {
+      "latitude": "50.903033",
+      "longitude": "34.519912",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Europe, Eastern Front: Invasion of the Soviet Union by Germany in 1941.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 185,
+    "fields": {
+      "latitude": "48.04871",
+      "longitude": "45.327507",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Europe, Eastern Front: The Battle of Stalingrad was a major World War II battle that took place from August 1942 to February 1943.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 186,
+    "fields": {
+      "latitude": "52.173932",
+      "longitude": "34.821105",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Europe, Eastern Front: The Battle of Kursk was a major World War II Eastern Front battle between the forces of Nazi Germany and the Soviet Union near Kursk in southwestern Russia during the summer of 1943.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 187,
+    "fields": {
+      "latitude": "52.49616",
+      "longitude": "13.341347",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Europe, Eastern Front: Liberation of Berlin in 1945.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 188,
+    "fields": {
+      "latitude": "44.746733",
+      "longitude": "20.427752",
+      "start_date": 1938,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Europe, Balkans: Invasion of Yugoslavia and Greece by Germany and Italy in 1941.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 189,
+    "fields": {
+      "latitude": "44.229457",
+      "longitude": "17.792084",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Europe, Balkans: Yugoslav resistance. In World War II, the Balkan Peninsula maintained its neutrality until 1941. That year, it was invaded and divided between Axis forces and two puppet regimes: Croatia and Serbia.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 190,
+    "fields": {
+      "latitude": "30.770159",
+      "longitude": "29.557214",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Africa, North Africa: Western Desert Campaign in June 1940. Tobruk and El Alamein, Egypt.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 191,
+    "fields": {
+      "latitude": "31.28794",
+      "longitude": "27.025534",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Africa, North Africa: The Second Battle of El Alamein (23 October – 11 November 1942) was a battle of the Second World War that took place near the Egyptian railway halt of El Alamein.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 192,
+    "fields": {
+      "latitude": "35.083956",
+      "longitude": "-3.696928",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Africa, North Africa: Operation Torch (allied landing in Morocco and Algeria in 1942).",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 193,
+    "fields": {
+      "latitude": "21.43773",
+      "longitude": "201.998472",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Asia and the Pacific, Pacific War: Attack on Pearl Harbor in 1941. The attack on Pearl Harbor was a surprise military offensive carried out by the Imperial Japanese Navy against the United States naval base at Pearl Harbor (Hawaii) on the morning of Sunday, December 7, 1941.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 194,
+    "fields": {
+      "latitude": "28.206096",
+      "longitude": "182.619801",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Asia and the Pacific, Pacific War: The Battle of Midway was an important air-naval battle of World War II that took place between June 4 and 7, 1942, when a large fleet of the Imperial Japanese Navy, commanded by Isoroku Yamamoto, attacked the American bases on the atoll of Midway in its campaign for the central Pacific Ocean.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 195,
+    "fields": {
+      "latitude": "-9.516788",
+      "longitude": "160.089234",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Asia and the Pacific, Pacific War: The naval battle of Guadalcanal itself consisted of a sequence of combined sea and air attacks that lasted more than four days (from November 12 to 15, 1942), most of them in the area around the island of Guadalcanal. Guadalcanal very close to the island of Savo, in the Solomon Islands.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 196,
+    "fields": {
+      "latitude": "1.406109",
+      "longitude": "103.682658",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Asia and the Pacific, Southeast Asia: The Battle of Singapore, also known as the Fall of Singapore, took place in the Southeast Asian theater of World War II when the Empire of Japan invaded the British fortress of Singapore. The fighting lasted from February 8 to 15, 1942 and ended with the conquest of Singapore by Japanese troops.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 197,
+    "fields": {
+      "latitude": "4.806365",
+      "longitude": "117.283241",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Asia and the Pacific, Southeast Asia: The Malaya Campaign is the name given to the Japanese expansionist offensive that led to the occupation of Thailand and the expulsion of British troops from Malaya and Singapore. It began on December 8, 1941 and ended with the Battle of Singapore on January 31, 1942.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 198,
+    "fields": {
+      "latitude": "18.875103",
+      "longitude": "94.629232",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Asia and the Pacific, Southeast Asia: The Burma Campaign encompasses all the combats fought in British Burma, now Burma (or Myanmar), between the Allied forces and Japanese forces, supported by local independence movements at the beginning of 1942.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 199,
+    "fields": {
+      "latitude": "24.5771",
+      "longitude": "117.672587",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Asia and the Pacific, Southeast Asia: The Second Sino-Japanese War was a military conflict between the Republic of China and the Empire of Japan that was fought between July 7, 1937 and September 9, 1945, within the framework of World War II.",
+      "reference": "",
+      "event_type": 4
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 200,
+    "fields": {
+      "latitude": "56.559482",
+      "longitude": "-28.187393",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). North Atlantic: The Battle of the Atlantic was the naval confrontation that had the Atlantic Ocean as the scene of operations, practically in its entirety, fought during the Second World War between the large German ships, the U-Boats commanded by Admiral Karl Dönitz and almost the entire of the British Royal Navy.",
+      "reference": "",
+      "event_type": 13
+    }
+  },
+  {
+    "model": "business_app.marker",
+    "pk": 201,
+    "fields": {
+      "latitude": "39.095963",
+      "longitude": "13.600693",
+      "start_date": 1939,
+      "end_date": 1945,
+      "start_format": "After Christ (AC)",
+      "end_format": "After Christ (AC)",
+      "description": "World War II (1939-1945). Mediterranean: The Battle of the Mediterranean was the name given to the naval campaign fought in the Mediterranean Sea during World War II, from June 10, 1940 to May 2, 1945.",
+      "reference": "",
+      "event_type": 13
+    }
+  }
+]

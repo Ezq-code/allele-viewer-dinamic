@@ -25,7 +25,7 @@ from .initial_xyz_expansion_data import InitialXyzExpansionData
 from .marker import Marker
 from .event import Event
 from .layer import Layer
-from .human_migrations import Feature
+from .feature import Feature
 from .working_copy_of_original_file import WorkingCopyOfOriginalFile
 from .region import Region
 from .region_county import RegionCountry

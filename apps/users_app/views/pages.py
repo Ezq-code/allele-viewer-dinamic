@@ -32,7 +32,7 @@ def mapgeneral(request):
 
 
 def events(request):
-    events = Event.objects.all()
+    events = Event.objects.order_by("-id").all()
     return render(request, "map/event/events.html", {"events": events})
 
 

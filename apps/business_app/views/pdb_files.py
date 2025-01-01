@@ -1,5 +1,4 @@
 from rest_framework import permissions, viewsets, status
-from rest_framework.generics import GenericAPIView
 
 
 from apps.business_app.models import PdbFiles

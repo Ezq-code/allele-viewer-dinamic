@@ -39,9 +39,27 @@
                     // a partir de llamadas ajax.
 					function eqfeed_callback(data) {
 
-                                            // intervalos de tiempo para los vectores del hielo, la tierra que emerge y las trayectorias de las migraciones
+                                            // intervalos de tiempo para las trayectorias de las migraciones
                                             var getInterval = function (quake) {
-                                                if ((quake.properties.id == 100) || (quake.properties.id == 160) || (quake.properties.id == 220) || (quake.properties.id == 280) || (quake.properties.id == 340) || (quake.properties.id == 400) || (quake.properties.id == 480) || (quake.properties.id == 560) || (quake.properties.id == 640) || (quake.properties.id == 700) || (quake.properties.id == 750) || ((quake.properties.id >= 1000) && (quake.properties.id <= 4500))) {
+                                                if (( quake.properties.id >= 1) && (quake.properties.id <= 9)) {
+                                                    return {
+                                                        start: quake.properties.timefinal,
+                                                        end: year
+                                                    };
+                                                }
+                                            };
+                                            
+                                            var getIntervalIce = function (quake) {
+                                                if (quake.properties.id == 100 ) {
+                                                    return {
+                                                        start: quake.properties.timefinal,
+                                                        end: quake.properties.time
+                                                    };
+                                                }
+                                            };
+
+                                            var getIntervalLandEmerge = function (quake) {
+                                                if ((quake.properties.id >= 1000) && (quake.properties.id <= 4500)) {
                                                     return {
                                                         start: quake.properties.timefinal,
                                                         end: quake.properties.time
@@ -52,7 +70,7 @@
                                             // intervalos de tiempo para los destinos de las migraciones
                                             var getShortInterval = function (quake) {
 
-                                                if ((quake.properties.id == 10) || ((quake.properties.id >= 1) && (quake.properties.id <= 9.9))) {
+                                                if ((quake.properties.id == 10)  || (quake.properties.id == 11)) {
                                                     return {
                                                         start: quake.properties.timefinal,
                                                         end: year//quake.properties.time
@@ -65,11 +83,49 @@
                                                 duration: 315000,
                                             });
 
-                                            // línea del tiempo y simbología para los vectores del hielo, la tierra que emerge y las trayectorias de las migraciones
+                                            // línea del tiempo y simbología para las trayectorias de las migraciones
                                             var migrationTraceRoute = L.timeline(data, {
                                                 getInterval: getInterval,
                                                 style: function (feature) {
-                                                    if ((feature.properties.id == 100) || (feature.properties.id == 160) || (feature.properties.id == 220) || (feature.properties.id == 280) || (feature.properties.id == 340) || (feature.properties.id == 400) || (feature.properties.id == 480) || (feature.properties.id == 560) || (feature.properties.id == 640) || (feature.properties.id == 700) || (feature.properties.id == 750)) {
+                                                    if ((feature.properties.id >= 1) && (feature.properties.id <= 9)) {
+                                                        return {
+                                                            color: "#555555",//"#171717",
+                                                            fillColor: "#555555",//"#171717",
+                                                            fillOpacity: 1,
+                                                            weight: 3,
+                                                            opacity: 1,
+                                                        }
+                                                    }
+                                                },
+                                                pointToLayer: function (data, latlng) {
+
+                                                    if (data.properties.id == 100) {
+                                                        return L.polyline(latlngs, {
+                                                            color: 'red'
+                                                        });
+                                                    } else
+                                                      if
+                                                     (data.properties.id == 10) {
+                                                        return L.circleMarker(latlng, {
+                                                            radius: data.properties.mag,
+                                                            color: "#050400",
+                                                            fillColor: "#f5d843",
+                                                            fillOpacity: 0.7,
+                                                            weight: 3,
+                                                            opacity: 0.8,
+                                                        }).bindPopup(L.popup({
+                                                            closeOnClick: false,
+                                                            autoClose: false
+                                                        }).setContent(data.properties.place));
+                                                    }
+                                                },
+                                            });
+
+                                            // línea del tiempo y simbología para los vectores del hielo
+                                            var timelineIce = L.timeline(data, {
+                                                getInterval: getIntervalIce,
+                                                style: function (feature) {
+                                                    if (feature.properties.id == 100) {
                                                         return {
                                                             color: '#FFFFFF',
                                                             fillColor: '#FFFFFF',
@@ -78,6 +134,33 @@
                                                             opacity: 1,
                                                         }
                                                     }
+                                                },
+                                                pointToLayer: function (data, latlng) {
+
+                                                    if (data.properties.id == 100) {
+                                                        return L.polyline(latlngs, {
+                                                            color: 'red'
+                                                        });
+                                                    } else if (data.properties.id == 10) {
+                                                        return L.circleMarker(latlng, {
+                                                            radius: data.properties.mag,
+                                                            color: "#050400",
+                                                            fillColor: "#f5d843",
+                                                            fillOpacity: 0.7,
+                                                            weight: 3,
+                                                            opacity: 0.8,
+                                                        }).bindPopup(L.popup({
+                                                            closeOnClick: false,
+                                                            autoClose: false
+                                                        }).setContent(data.properties.place));
+                                                    }
+                                                },
+                                            });
+
+                                            // línea del tiempo para la tierra que emerge
+                                            var timelineLandEmerge = L.timeline(data, {
+                                                getInterval: getIntervalLandEmerge,
+                                                style: function (feature) {
                                                     if ((feature.properties.id >= 1000) && (feature.properties.id <= 4500)) { 
                                                         return {
                                                             color: feature.properties.mag,
@@ -90,7 +173,7 @@
                                                 },
                                                 pointToLayer: function (data, latlng) {
 
-                                                    if ((data.properties.id == 100) || (data.properties.id == 160) || (data.properties.id == 220) || (data.properties.id == 280) || (data.properties.id == 340) || (data.properties.id == 400) || (data.properties.id == 480) || (data.properties.id == 560) || (data.properties.id == 640) || (data.properties.id == 700) || (data.properties.id == 750) || (data.properties.id == 1000) || (data.properties.id == 1100) || (data.properties.id == 1200) || (data.properties.id == 1300) || (data.properties.id == 1400)) {
+                                                    if (data.properties.id == 100) {
                                                         return L.polyline(latlngs, {
                                                             color: 'red'
                                                         });
@@ -114,30 +197,46 @@
                                             var migrationPoints = L.timeline(data, {
                                                 getInterval: getShortInterval,
                                                 style: function (feature) {
-                                                    if ((feature.properties.id >= 1) && (feature.properties.id <= 9.9)) {
+                                                    if (feature.properties.id == 10) {
                                                         return {
-                                                            color: "#171717",
-                                                            fillColor: "#171717",
-                                                            fillOpacity: 1,
-                                                            weight: 6,
-                                                            opacity: 1,
+
+                                                            radius: 10, //features.properties.mag,
+                                                            color: "#050400", //"#000000",
+                                                            fillColor: "#f5d843",//"#000000",
+                                                            fillOpacity: 0.7,
+                                                            weight: 3,
+                                                            opacity: 0.8,
+                                                        }
+                                                    }
+                                                    else
+                                                    if (feature.properties.id == 11) {
+                                                        return {
+
+                                                            radius: 6, //features.properties.mag,
+                                                            color: "#050400", //"#000000",
+                                                            fillColor: "#f5d843",//"#000000",
+                                                            fillOpacity: 0.7,
+                                                            weight: 3,
+                                                            opacity: 0.8,
                                                         }
                                                     }
                                                 },
                                                 pointToLayer: function (data, latlng) {
                                                    
-                                                    if (data.properties.id == 10) {
+                                                    if ((data.properties.id == 10) || (data.properties.id == 11)) {
                                                         return L.circleMarker(latlng, {
-                                                            radius: 0,//data.properties.mag,
-                                                            color: "#000000",//"#050400",
-                                                            fillColor: "#000000",//"#f5d843",
-                                                            fillOpacity: 0,//0.7,
-                                                            weight: 0,//3,
-                                                            opacity: 0,//0.8,
-                                                        });//.bindPopup(L.popup({
-                                                            //closeOnClick: false,
-                                                            //autoClose: false
-                                                        //}).setContent(data.properties.place));
+
+                                                            radius: 10, //features.properties.mag,
+                                                            color: "#050400", //"#000000",
+                                                            fillColor: "#f5d843",//"#000000",
+                                                            fillOpacity: 0.7,
+                                                            weight: 3,
+                                                            opacity: 0.8,
+
+                                                        }).bindPopup(L.popup({
+                                                            closeOnClick: false,
+                                                            autoClose: false
+                                                        }).setContent(data.properties.place));
                                                     }
                                                 },
                                             });
@@ -163,21 +262,21 @@
                                                 dataType: 'json',
                                                 success: function (response) {
                                                     var data;
-                                                    data = response;
+                                                    data = response.results;
                                                     data.forEach(function (marker) {
                                                         var descriptionLoad = marker.description;
                                                         var latitudeLoad = marker.latitude;
                                                         var longitudeLoad = marker.longitude;
-                                                        var typeEventLoad = marker.event_type.event_id;
-                                                        var iconUrlCurrentMarkerLoad = marker.event_type.event_icon_url;
+                                                        var typeEventLoad = marker.event_type_data.event_id;
+                                                        var iconUrlCurrentMarkerLoad = marker.event_type_data.event_icon_url;
                                                         var starttime = marker.start_date;
                                                         var endtime = marker.end_date;
                                                         var astart_format = marker.start_format;
                                                         var aend_format = marker.end_format;
-                                                        if ((astart_format == "Beforepresent") || (astart_format == "Beforechrist")) {
+                                                        if ((astart_format == "Before Present (YBP)") || (astart_format == "Before Christ (BC)")) {
                                                             starttime = -1 * starttime;
                                                         }
-                                                        if ((aend_format == "Beforepresent") || (aend_format == "Beforechrist")) {
+                                                        if ((aend_format == "Before Present (YBP)") || (aend_format == "Before Christ (BC)")) {
                                                             endtime = -1 * endtime;
                                                         }
                                                         aFeature = {
@@ -222,7 +321,6 @@
                                                                         shadowAnchor: [13, 20]
                                                                     })
                                                             }).bindPopup(features.properties.description);
-
                                                         }
                                                     });
                                                     timelineControl.addTimelines(polygonTimeline);
@@ -232,7 +330,7 @@
                                             });
 
                                             // llamada ajax para cargar los destinos de las migraciones, su simbología, su línea del tiempo y adición al mapa
-                                            var polygonDestinationTimeline;
+                                            /*var polygonDestinationTimeline;
                                             var polygons;
                                             var aFeaturesDestination = [];
                                             var aFeaturesAllDestination = [];
@@ -309,20 +407,22 @@
                                                             }).setContent(features.properties.title));
                                                         }
                                                     });
-
                                                     timelineControl.addTimelines(polygonDestinationTimeline);
                                                     polygonDestinationTimeline.addTo(map);
+
                                                 }
-                                            });
+                                            });*/
                                             
                                             // capa para los alleles
                                             AlleleGeographicZonesLayer = new L.featureGroup().addTo(map);
 
                                             // adicion de los timelines al timelineControl, y adición al mapa
                                             timelineControl.addTo(map);
-                                            timelineControl.addTimelines(migrationTraceRoute, migrationPoints);
+                                            timelineControl.addTimelines(migrationTraceRoute, timelineIce, timelineLandEmerge, migrationPoints); 
                                             migrationTraceRoute.addTo(map);
                                             migrationPoints.addTo(map);
+                                            timelineIce.addTo(map);
+                                            timelineLandEmerge.addTo(map);
 
                                             // creación de las capas bases y adición al control de capas del mapa
                                             const baseLayers = {
@@ -332,7 +432,9 @@
                                             };
 
                                             const overlays = {
-                                                'Land Last Glacial Maximum': LandLGMShapefile,
+                                                //'Land Last Glacial Maximum': LandLGMShapefile,
+                                                'Glacials': timelineIce,
+                                                'Land Emerge': timelineLandEmerge,
                                                 'Migration Trace Route': migrationTraceRoute,
                                                 'Migration Points': migrationPoints,
                                                 'Marker Layer': markerLayer,
@@ -356,7 +458,7 @@
                                                 dataType: 'json',
                                                 success: function (response) {
                                                     var data;
-                                                    data = response;
+                                                    data = response.results;
                                                     data.forEach(function (aLayer) {
                                                         //if ((aLayer.name == "osmcountriesLayers") && (aLayer.is_visible == false) ) {layerControl.removeLayer(osmcountriesLayers)}
                                                         //if ((aLayer.name == "satelitalLayer") && (aLayer.is_visible == false) ) {layerControl.removeLayer(satelitalLayer)}
