@@ -96,7 +96,6 @@ function poblarListasAllele() {
 }
 // Función para poblar la lista desplegable de los pdb
 function poblarListasPdb(versionAllele) {
-  console.log("✌️versionAllele --->", versionAllele);
   var $selectPdb = document.getElementById("selectPdb");
 
   $selectPdb.innerHTML = "";
@@ -107,23 +106,23 @@ function poblarListasPdb(versionAllele) {
 }
 
 function poblarListasCopy(uploadFileId) {
-console.log('✌️uploadFileId --->', uploadFileId);
- 
-console.log('✌️localStorage.getItem("id") --->', localStorage.getItem("id"));
   if (
-    localStorage.getItem("id") && localStorage.getItem("id") !== "null" && localStorage.getItem("id") !== ""
+    localStorage.getItem("id") &&
+    localStorage.getItem("id") !== "null" &&
+    localStorage.getItem("id") !== ""
   ) {
-   
     var userId = localStorage.getItem("id");
     var url =
-      "/business-gestion/working-copy-of-original-file-for-user/?system_user=" +userId +"&uploaded_file=" +uploadFileId;
+      "/business-gestion/working-copy-of-original-file-for-user/?system_user=" +
+      userId +
+      "&uploaded_file=" +
+      uploadFileId;
     var $selectCopy = document.getElementById("selectCopy");
     var $inputGroup = document.getElementById("inputGroupCopy");
     $selectCopy.innerHTML = "";
     // Mostrar un mensaje de carga
     var loadingOption = new Option("Cargando...", "");
     $selectCopy.add(loadingOption);
-
     axios
       .get(url)
       .then(function (response) {
@@ -160,8 +159,6 @@ viewer = $3Dmol.createViewer(element, {
   controls: "trackball orbit fps scroll dnd",
 });
 
-
-
 var data1;
 function displaySNPData() {
   // Datos proporcionados
@@ -174,7 +171,6 @@ function displaySNPData() {
     )
     .then(function (response) {
       data1 = response.data.results;
-      console.log("✌️data1 --->", data1);
       var table = document.getElementById("snptable");
       if (!table.querySelector("thead") && !table.querySelector("tbody")) {
         // Crear el encabezado de la tabla
@@ -245,7 +241,6 @@ function displaySNPData() {
 function sendRSControlValues() {
   var rsControlInputs = document.querySelectorAll(".irs-hidden-input");
   var values = [];
-
   for (var i = 0; i < rsControlInputs.length; i++) {
     var inputValue = rsControlInputs[i].value;
     var inputId = parseInt(rsControlInputs[i].id.replace("rs_control", ""), 10);
@@ -256,7 +251,6 @@ function sendRSControlValues() {
   }
 
   var fileId = localStorage.getItem("uploadFileId");
-
   var data = {
     values: values,
     file_id: fileId,
@@ -282,34 +276,33 @@ function sendRSControlValues() {
     });
 }
 
- function selectPdbContainer() {
-   zoom.value = 0;
-   var $selectfile = document.getElementById("selectfile");
-   var idFile = $selectfile.value;
-   axios
-     .get("/business-gestion/uploaded-files/" + idFile + "/")
-     .then(function (response) {
-       const elemento = response.data;
-       let versionAllele = elemento.pdb_files;
-       console.log("✌️versionAllele --->", versionAllele);
-       poblarListasPdb(versionAllele);
-       poblarListasCopy(elemento.id);
-     })
-     .catch(function (error) {
-       Toast.fire({
-         icon: "error",
-         title: `${error.response.data.detail}`,
-       });
-     });
- }
+function selectPdbContainer() {
+  zoom.value = 0;
+  var $selectfile = document.getElementById("selectfile");
+  var idFile = $selectfile.value;
+  axios
+    .get("/business-gestion/uploaded-files/" + idFile + "/")
+    .then(function (response) {
+      const elemento = response.data;
+      let versionAllele = elemento.pdb_files;
+      poblarListasPdb(versionAllele);
+      poblarListasCopy(elemento.id);
+    })
+    .catch(function (error) {
+      Toast.fire({
+        icon: "error",
+        title: `${error.response.data.detail}`,
+      });
+    });
+}
 
 function selectUrl() {
   zoom.value = 0;
   var $selectfile = document.getElementById("selectfile");
   var $selectPdb = document.getElementById("selectPdb");
   var idFile = $selectfile.value;
- document.getElementById("animation").disabled=false;
-
+  document.getElementById("animation").disabled = false;
+  document.getElementById("filter_region").disabled = false;
   console.log(" idFile:", idFile);
   axios
     .get("/business-gestion/uploaded-files/" + idFile + "/")
@@ -336,38 +329,6 @@ function selectUrl() {
     });
 }
 
-// function selectUrlPersonal() {
-//   zoom.value = 0;
-//   var $selectCopy = document.getElementById("selectCopy");
-//   var idFile = $selectCopy.value;
-
-//   console.log(" idFile:", idFile);
-//   axios
-//     .get(
-//       "/business-gestion/working-copy-of-original-file-for-user/" + idFile + "/"
-//     )
-//     .then(function (response) {
-//       const elemento = response.data;
-//       console.log("✌️response.data --->", response.data);
-//       // let pos = findPosition(elemento.pdb_files, $selectPdb.value);
-//       let versionAllele = elemento.pdb_file_copy;
-
-//       // localStorage.setItem("uploadFileId", idFile);
-//       graficar(versionAllele);
-
-//       // To enable the button
-//       loadOriginalXYZ();
-//       snpModalShowBotton.disabled = false;
-//       ExpandModalShowBotton.disabled = false;
-//     })
-//     .catch(function (error) {
-//       Toast.fire({
-//         icon: "error",
-//         title: `${error.response.data.detail}`,
-//       });
-//     });
-// }
-
 function findPosition(data, id) {
   for (var i = 0; i < data.length; i++) {
     if (data[i].id == id) {
@@ -379,7 +340,7 @@ function findPosition(data, id) {
 
 function showInfo(atom) {
   $(".showalleleinfo").toast("hide");
- 
+
   atomNumber = atom.serial;
   load.hidden = false;
   let toastClass = seleccionarEstiloAleatorio();
@@ -393,12 +354,9 @@ function showInfo(atom) {
     )
     .then(function (response) {
       const elemento = response.data;
-      console.log("✌️elemento --->", elemento);
-      const imageHtml = ' <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style=" border-radius: 14px; width: -webkit-fill-available"/>';
+      const imageHtml =
+        ' <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style=" border-radius: 14px; width: -webkit-fill-available"/>';
       children = elemento.children;
-
-      // console.log(children);
-
       if (elemento.children_qty == 0) {
         $(document).Toasts("create", {
           class: toastClass,
@@ -406,7 +364,7 @@ function showInfo(atom) {
           // title: elemento.serial,
           subtitle: elemento.children_qty,
           body:
-          imageHtml+
+            imageHtml +
             elemento.rs +
             '<button type="button" class="btn btn-block btn-secondary" onclick="marcar(' +
             atom.x +
@@ -414,7 +372,13 @@ function showInfo(atom) {
             atom.y +
             "," +
             atom.z +
-            ')">Bookmark</button>' +
+            ')">Bookmark</button>' +'<button type="button" class="btn btn-block bg-teal" onclick="childFull(' +
+            elemento.number +
+            ')">Progenitores</button>' +'<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion(\'' +
+            elemento.region +
+            "')\">Region " +
+            elemento.region +
+            "</button>" +
             "<hr> Data for control (temporary):<br> X " +
             atom.x +
             " | Y " +
@@ -438,7 +402,7 @@ function showInfo(atom) {
             elemento.children_qty +
             "</span>",
           body:
-          imageHtml+
+            imageHtml +
             elemento.rs +
             '<button type="button" class="btn btn-block bg-lime" onclick="loadFamily(' +
             elemento.number +
@@ -453,10 +417,11 @@ function showInfo(atom) {
             "," +
             atom.z +
             ')">Bookmark</button>' +
-            '<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion(\'' + elemento.region + '\')">Region ' +
-elemento.region +
-'</button>'
- +
+            '<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion(\'' +
+            elemento.region +
+            "')\">Region " +
+            elemento.region +
+            "</button>" +
             "<hr> Data Control(temp):<br> X: " +
             atom.x +
             " | Y " +
@@ -614,8 +579,6 @@ function getAtomBySerial(serial) {
 }
 
 function child() {
-  console.log("✌️child --->", "child");
-
   console.log("localStorage.getItem :", localStorage.getItem("uploadFileId"));
   axios
     .get(
@@ -627,7 +590,6 @@ function child() {
       const elemento = response.data;
       let atomData = elemento.results;
       datos = atomData;
-      
 
       atomData.forEach((element) => {
         const stickRadius =
@@ -647,11 +609,9 @@ function child() {
             },
           }
         );
-        // console.log("stickRadius :", stickRadius);
-        // console.log("sphereRadius :", sphereRadius);
       });
       viewer.zoomTo();
-      viewer.zoom(2,1000);
+      viewer.zoom(2, 1000);
       viewer.render();
       load.hidden = true;
     })
@@ -702,10 +662,104 @@ function childFull(id) {
 }
 
 function childFamily(id) {
+  console.log("✌️datos --->", datos);
   datos.forEach((element) => {
     const isVisible =
       children.some((item) => item.number === element.number) ||
       element.number === id;
+
+    if (!isVisible) {
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: {
+            hidden: true, // Ocultar esfera
+          },
+          stick: {
+            hidden: true, // Ocultar stick
+          },
+        }
+      );
+    }
+  });
+  viewer.render();
+}
+
+function filter_Region() {
+  Swal.fire({
+    title: "Select a Region",
+    input: "select",
+    inputOptions: {
+      Africa: "Africa",
+      Europe: "Europe",
+      "East-Asia": "East-Asia",
+      "South-Asia": "South-Asia",
+      America: "America",
+      "Middle-East": "Middle-East",
+      "Central-Asia": "Central-Asia",
+      Australian: "Australian",
+    },
+    inputPlaceholder: "Select a region",
+    showCancelButton: true,
+    inputValidator: (value) => {
+      return new Promise((resolve) => {
+        if (value) {
+          resolve();
+        } else {
+          resolve("You need to select a region");
+        }
+      });
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      applyRegionFilter(result.value);
+    }
+  });
+}
+
+function applyRegionFilter(region) {
+  resetGraficView();
+  datos.forEach((element) => {
+    const isVisible = element.region === region;
+
+    if (!isVisible) {
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: {
+            hidden: true, // Ocultar esfera
+          },
+          stick: {
+            hidden: true, // Ocultar stick
+          },
+        }
+      );
+    }
+  });
+  viewer.render();
+}
+
+function resetGraficView() { 
+  datos.forEach((element) => {
+    viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: {
+            hidden: false, // Ocultar esfera
+          },
+          stick: {
+            hidden: false, // Ocultar stick
+          },
+        }
+      );    
+  });
+  // viewer.render();
+}
+
+function filterByRegion(region) {
+  console.log("✌️datos --->", datos);
+  datos.forEach((element) => {
+    const isVisible = element.region === region;
 
     if (!isVisible) {
       viewer.setStyle(
@@ -748,7 +802,7 @@ function childZoom() {
 }
 
 var zoom = document.getElementById("customRange1");
-zoom.addEventListener("input", function () {
+zoomentListener("input", function () {
   let load = document.getElementById("load");
   zoomLevel = zoom.value;
   childZoom();
@@ -843,7 +897,6 @@ function animation() {
   $(".controlpanel").toast("hide");
   load.hidden = false;
   datos.forEach((element) => {
-   
     viewer.setStyle(
       { serial: element.number },
       {
@@ -861,60 +914,68 @@ function animation() {
   viewer.render();
   load.hidden = true;
   $(".controlpanel").toast("hide");
-   pausa = false; // Variable de control para pausar
-   indiceActual = 0;
+  pausa = false; // Variable de control para pausar
+  indiceActual = 0;
   // let ordenada=ordenarPorTimeline(datos);
   animationWindows();
-  mostrarElementos(datos,0.1);
-  
+  mostrarElementos(datos, 0.1);
 }
 // function ordenarPorTimeline(lista) {
 //   // Ordenar la lista por la propiedad timeline_appearence
 //   const listaOrdenada = lista.sort((a, b) => a.timeline_appearence - b.timeline_appearence);
-  
+
 //   // Retornar la lista ordenada
 //   return listaOrdenada;
 // }
-
 
 let pausa = false; // Variable de control para pausar
 let indiceActual = 0; // Índice del elemento actual
 let timeoutId; // Para almacenar el timeout
 
 function mostrarElementos(lista, tiempo) {
-    if (indiceActual >= lista.length){$(".controlpanel").toast("hide");return;}  // Si ya se mostraron todos los elementos
+  if (indiceActual >= lista.length) {
+    $(".controlpanel").toast("hide");
+    return;
+  } // Si ya se mostraron todos los elementos
 
-    const element = lista[indiceActual];
-    const stickRadius =
-        element.children_qty === 0
-            ? 0.2
-            : 0.5 + element.children_qty * stickRadiusFactor;
-    const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
+  const element = lista[indiceActual];
+  const stickRadius =
+    element.children_qty === 0
+      ? 0.2
+      : 0.5 + element.children_qty * stickRadiusFactor;
+  const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
 
-    viewer.setStyle(
-        { serial: element.number },
-        {
-            sphere: { radius: sphereRadius, hidden: false },
-            stick: { color: "spectrum", radius: stickRadius, showNonBonded: false, hidden: false },
-        }
-    );
-
-    viewer.render();
-    document.getElementById('yearshow').textContent = element.timeline_appearence;
-    indiceActual++;
-
-    // Solo continuar si no está en pausa
-    if (!pausa) {
-        timeoutId = setTimeout(() => mostrarElementos(lista, tiempo), tiempo * 1000);
+  viewer.setStyle(
+    { serial: element.number },
+    {
+      sphere: { radius: sphereRadius, hidden: false },
+      stick: {
+        color: "spectrum",
+        radius: stickRadius,
+        showNonBonded: false,
+        hidden: false,
+      },
     }
-}
+  );
 
+  viewer.render();
+  document.getElementById("yearshow").textContent = element.timeline_appearence;
+  indiceActual++;
+
+  // Solo continuar si no está en pausa
+  if (!pausa) {
+    timeoutId = setTimeout(
+      () => mostrarElementos(lista, tiempo),
+      tiempo * 1000
+    );
+  }
+}
 
 function retroceder(lista) {
   if (indiceActual > 0) {
-      indiceActual--;
-       // Mostrar el elemento anterior inmediatamente
-      const element = datos[indiceActual];
+    indiceActual--;
+    // Mostrar el elemento anterior inmediatamente
+    const element = datos[indiceActual];
     viewer.setStyle(
       { serial: element.number },
       {
@@ -928,17 +989,28 @@ function retroceder(lista) {
     );
 
     viewer.render();
-    document.getElementById('yearshow').textContent = element.timeline_appearence;
+    document.getElementById("yearshow").textContent =
+      element.timeline_appearence;
     // mostrarElementos(lista, 0);
   }
 }
 
 function avanzar(lista) {
   if (indiceActual < lista.length) {
-      mostrarElementos(lista, 0); // Mostrar el siguiente elemento inmediatamente
+    mostrarElementos(lista, 0); // Mostrar el siguiente elemento inmediatamente
   }
 }
 
+// Variable global para la velocidad
+let currentSpeedIndex = 0;
+console.log("✌️currentSpeedIndex --->", currentSpeedIndex);
+const speeds = [
+  { label: "x1", value: 0.5 },
+  { label: "x2", value: 0.25 },
+  { label: "x3", value: 0.1 },
+  { label: "x4", value: 0.05 },
+  { label: "x5", value: 0.025 },
+];
 
 // Variable global para la velocidad
 let currentSpeedIndex = 0;
@@ -952,11 +1024,13 @@ const speeds = [
 ];
 
 function animationWindows() {
-  $(document).Toasts('create', {
-    class: 'bg-lightblue controlpanel',
-    title: 'Animation Control',
-    position: 'bottomLeft',
-    icon: 'nav-icon fas fa-vr-cardboard',
+
+  $(document).Toasts("create", {
+    class: "bg-lightblue controlpanel",
+    title: "Animation Control",
+    position: "bottomLeft",
+    icon: "nav-icon fas fa-vr-cardboard",
+
     body: ` <div class=" d-flex justify-content-center"><h3 id='yearshow'>years</h3></div>
     <div class="btn-group d-flex justify-content-center mb-2">
                     <button
@@ -993,13 +1067,16 @@ function animationWindows() {
                     >
                       <i class="nav-icon fas fa-forward"></i>
                     </button>                   
+
                   </div>`
   })
+
 }
 
 function changeSpeed() {
   // Incrementar el índice de velocidad
   currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
+
   
   // Obtener la nueva velocidad
   const newSpeed = speeds[currentSpeedIndex];
@@ -1012,16 +1089,18 @@ function changeSpeed() {
   // if (/* tu condición para verificar si la animación está en curso */) {
     mostrarElementos(datos, newSpeed.value);
 
+
   //}
 }
 
 function playStopAnimation(button) {
   pausa = !pausa; // Cambiar el estado de pausa
   if (!pausa) {
+
       mostrarElementos(datos, speeds[currentSpeedIndex]); // Reiniciar la visualización si se reanuda
+
   } else {
-      clearTimeout(timeoutId); // Limpiar el timeout si se pausa
+    clearTimeout(timeoutId); // Limpiar el timeout si se pausa
   }
   togglePauseButton(button);
 }
-

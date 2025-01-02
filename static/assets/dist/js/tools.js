@@ -204,8 +204,10 @@ function mostrarOcultarPlanos(mostrar) {
   });
 }
 
+let arrows = [];
+
 function marcar(xcord, ycord, zcord) {
-  viewer.addArrow({
+  const arrow = viewer.addArrow({
     start: { x: xcord + 100, y: ycord + 100, z: zcord + 100 },
     end: { x: xcord, y: ycord, z: zcord },
     radius: 8.0,
@@ -215,12 +217,35 @@ function marcar(xcord, ycord, zcord) {
     clickable: true,
     color: getRandomColor(),
     callback: function () {
-      viewer.render();
-    },
+      Swal.fire({
+        title: 'Do you want to hide this arrow?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          ocultarFlecha(arrows.indexOf(arrow));
+        }
+      });
+    }
   });
+  arrows.push(arrow);
   viewer.render();
 }
 
+function ocultarFlecha(index) {
+
+  if (index >= 0 && index < arrows.length) {
+    arrows[index].hidden = true;
+
+    viewer.render();
+    
+
+  
+  } else {
+    console.error('Índice de flecha no válido');
+  }
+}
 
 function getRandomColor() {
   // Genera valores aleatorios para los componentes rojo, verde y azul
