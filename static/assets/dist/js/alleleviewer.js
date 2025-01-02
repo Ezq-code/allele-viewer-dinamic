@@ -802,7 +802,7 @@ function childZoom() {
 }
 
 var zoom = document.getElementById("customRange1");
-zoomentListener("input", function () {
+zoom.addEventListener("input", function () {
   let load = document.getElementById("load");
   zoomLevel = zoom.value;
   childZoom();
