@@ -121,14 +121,22 @@
                                                 }
                                             };
 
+
+                                            // duración de la línea del tiempo en general
+                                            var timelineControl = L.timelineSliderControl({
+                                                duration: 315000,
+                                            });
+
                                             // línea del tiempo y simbología para las trayectorias de las migraciones
                                             var migrationTraceRoute = L.timeline(data, {
                                                 getInterval: getInterval,
                                                 style: function (feature) {
                                                     if ((feature.properties.id >= 1) && (feature.properties.id <= 9)) {
                                                         return {
+
                                                             color: "#444444",//"#171717",
                                                             fillColor: "#444444",//"#171717",
+
                                                             fillOpacity: 1,
                                                             weight: 3,
                                                             opacity: 1,
