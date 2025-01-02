@@ -1003,18 +1003,6 @@ function avanzar(lista) {
 
 // Variable global para la velocidad
 let currentSpeedIndex = 0;
-console.log("✌️currentSpeedIndex --->", currentSpeedIndex);
-const speeds = [
-  { label: "x1", value: 0.5 },
-  { label: "x2", value: 0.25 },
-  { label: "x3", value: 0.1 },
-  { label: "x4", value: 0.05 },
-  { label: "x5", value: 0.025 },
-];
-
-// Variable global para la velocidad
-let currentSpeedIndex = 0;
-console.log('✌️currentSpeedIndex --->', currentSpeedIndex);
 const speeds = [
   { label: 'x1', value: 0.5 },
   { label: 'x2', value: 0.25 },
