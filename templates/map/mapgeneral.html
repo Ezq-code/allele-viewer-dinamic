@@ -267,6 +267,8 @@
                                 <script>
                                     var authenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
                                 </script>
+                                <!-- código javascript para cargar el color dada la cantidad de habitantes -->
+                                <script src="{% static 'assets/dist/js/map-function-colors.js' %}"></script>                                
                                 <!-- código javascript para cargar la linea del tiempo -->
                                 <script src="{% static 'assets/dist/js/map-function-load-timeline.js' %}"></script>
                                 <!-- código javascript para gestionar la creacion de los marcadores y sus modales -->
