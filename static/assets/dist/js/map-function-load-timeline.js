@@ -68,7 +68,9 @@
                                                 }
                                             });
                                             timeLinePosition = timeline.time;
+                                            migrationPoblationRegion.bringToBack();
                                         }
+
                                              // duración de la línea del tiempo en general
                                              var timelineControl = L.timelineSliderControl({
                                                 //options: new TimelineSliderControlOptions duration: 315000                                
@@ -76,6 +78,8 @@
                                               steps: 1000
                                             });    
 
+                                          var migrationPoblationRegion;
+                                          var migrationPoints;
 
                     // eqfeed_callback es llamado una vez que el archivo geojsonp(contiene la vectorización del hielo, la tierra que emerge
                     // y las trayectorias de la migraciones) se carga. También se cargan los marcadores y los destinos de las migraciones
@@ -121,11 +125,17 @@
                                                 }
                                             };
 
+                                           // intervalos de tiempo para las poblaciones y las regiones
+                                           var getPoblationRegionInterval = function (quake) {
 
-                                            // duración de la línea del tiempo en general
-                                            var timelineControl = L.timelineSliderControl({
-                                                duration: 315000,
-                                            });
+                                            if (quake.properties.id == 20) {
+                                              return {
+                                                  start: quake.properties.timefinal,
+                                                  end: quake.properties.time,//quake.properties.time
+                                                  duration: 315000
+                                              };
+                                          }
+                                         };
 
                                             // línea del tiempo y simbología para las trayectorias de las migraciones
                                             var migrationTraceRoute = L.timeline(data, {
@@ -133,10 +143,8 @@
                                                 style: function (feature) {
                                                     if ((feature.properties.id >= 1) && (feature.properties.id <= 9)) {
                                                         return {
-
                                                             color: "#444444",//"#171717",
                                                             fillColor: "#444444",//"#171717",
-
                                                             fillOpacity: 1,
                                                             weight: 3,
                                                             opacity: 1,
@@ -240,7 +248,7 @@
                                             });
 
                                             // línea del tiempo y simbología para los destinos de las migraciones
-                                            var migrationPoints = L.timeline(data, {
+                                            migrationPoints = L.timeline(data, {
                                                 getInterval: getShortInterval,
                                                 style: function (feature) {
                                                     if (feature.properties.id == 10) {
@@ -282,11 +290,36 @@
                                                         }).bindPopup(L.popup({
                                                             closeOnClick: false,
                                                             autoClose: false
-                                                        }).setContent(data.properties.place));
+                                                        }).setContent(data.properties.title));
                                                     }
                                                 },
                                             });
- 
+                                            
+                                            // línea del tiempo y simbología para las poblaciones
+                                             migrationPoblationRegion = L.timeline(data, {
+                                                getInterval: getPoblationRegionInterval,
+                                                style: function (feature) {
+                                                    if (feature.properties.id == 20) {
+                                                        return {
+                                                            color: GetColorByPopulation(feature.properties.mag), //"#E6EEFF", //"#000000",
+                                                            fillColor: GetColorByPopulation(feature.properties.mag),//"#E6EEFF",//"#000000",
+                                                            fillOpacity: 0.6,
+                                                            //weight: 3,
+                                                            //opacity: 0.8,
+                                                        }
+                                                    }
+                                                },
+                                                onEachFeature: function (feature, layer) {
+                                                    let nf = new Intl.NumberFormat('en-US');
+                                                    if (feature.properties.id == 20) {
+                                                        layer.bindPopup(L.popup({
+                                                            closeOnClick: false,
+                                                            autoClose: false
+                                                        }).setContent(feature.properties.place+", "+nf.format(feature.properties.mag)+" people."));
+                                                    }
+                                                },
+                                            });                                            
+
                                             // llamada ajax para cargar los marcadores, su simbología, su línea del tiempo y adición al mapa  
                                             var polygonTimeline;
                                             var polygons;
@@ -360,7 +393,6 @@
 
                                                             return L.marker(latlng, {
                                                                 icon:
-
                                                                     L.icon({
                                                                         iconUrl: features.properties.iconUrlEvent,
                                                                         iconSize: [25, 41],
@@ -464,8 +496,9 @@
                                             AlleleGeographicZonesLayer = new L.featureGroup().addTo(map);
 
                                             // adicion de los timelines al timelineControl, y adición al mapa
+                                            migrationPoblationRegion.addTo(map);
                                             timelineControl.addTo(map);
-                                            timelineControl.addTimelines(migrationTraceRoute, timelineIce, timelineLandEmerge, migrationPoints); 
+                                            timelineControl.addTimelines(migrationPoblationRegion, migrationTraceRoute, timelineIce, timelineLandEmerge, migrationPoints); 
                                             migrationTraceRoute.addTo(map);
                                             migrationPoints.addTo(map);
                                             timelineIce.addTo(map);
@@ -485,10 +518,13 @@
                                                 'Migration Trace Route': migrationTraceRoute,
                                                 'Migration Points': migrationPoints,
                                                 'Marker Layer': markerLayer,
+                                                'Population by Region': migrationPoblationRegion,
                                                 'Allele Geographic Zones': AlleleGeographicZonesLayer
                                             };
 
                                             var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
+
+                                            migrationPoblationRegion.setZIndex(3);
 
                                             // llamada ajax para cargar la visualidad de las capas del mapa
                                             $.ajax({
