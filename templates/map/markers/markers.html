@@ -74,6 +74,7 @@
                                     <tr>
                                         <th>Nro.</th>
                                         <th>Event Type</th>
+                                        <th>Pause time(Milliseconds)</th>
                                         <th>Begin Date</th>
                                         <th>Begin Format</th>
                                         <th>End Date</th>
@@ -89,6 +90,7 @@
                                         <tr>
                                             <td>{{ forloop.counter }}</td>
                                             <td>{{ mark.event_type.event_name }}</td>
+                                            <td>{{ mark.pause_time }}</td>
                                             <td>{{ mark.start_date }}</td>
                                             <td>{{ mark.start_format }}</td>
                                             <td>{{ mark.end_date }}</td>
@@ -104,6 +106,7 @@
                                                data-target="#modal-edit-mark-{{ mark.id }}"
                                                data-mark-id="{{ mark.id }}"
                                                data-mark-event_type="{{ mark.event_type.id }}"
+                                               data-mark-pause_time="{{ mark.pause_time }}"
                                                data-mark-start_date="{{ mark.start_date }}"
                                                data-mark-start_format="{{ mark.start_format }}"
                                                data-mark-end_date="{{ mark.end_date }}"
@@ -124,7 +127,7 @@
                                             </td>
                                         </tr>
                                         <!-- Modal- Edit- Mark -->
-                                        <div class="modal fade" id="modal-edit-mark-{{ mark.id }}">
+                                        <div class="modal fade" data-mark-id="{{ mark.id }}" id="modal-edit-mark-{{ mark.id }}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -141,6 +144,12 @@
                                                                 <select id="mark-event_type" disabled class="form-control">
                                                                     <option value="{{ mark.event_type.id }}">{{ mark.event_type.event_name }}</option>
                                                                 </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="mark-pause_time">Pause time(Milliseconds):</label>
+                                                                        <input class="form-control" type="number" min="0"
+                                                                               id="mark-pause_time" value="{{ mark.pause_time }}" name="mark-pause_time"
+                                                                               required>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-12">
