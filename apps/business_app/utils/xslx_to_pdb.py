@@ -99,14 +99,9 @@ class XslxToPdb(ExcelReader):
             element = None
             # Loop over each row in the Excel file
             for _, row in self.output_df.iterrows():
-                symbol = (
-                    row[ExcelNomenclators.output_symbol_column_name]
-                    if self.upload_to_drive
-                    else ""
-                )
                 allele = row[ExcelNomenclators.output_allele_column_name]
                 region = row.get(ExcelNomenclators.output_region_column_name)
-                timeline_appearence = row.get(ExcelNomenclators.timeline_appearence)
+                age = row.get(ExcelNomenclators.age)
                 if pd.isna(allele) or pd.isna(
                     row[ExcelNomenclators.output_number_column_name]
                 ):
@@ -161,11 +156,10 @@ class XslxToPdb(ExcelReader):
                     element=element,
                     number=allele_number,
                     custom_element_name=allele,
-                    symbol=symbol,
                     rs=rs,
                     uploaded_file_id=uploaded_file_id,
                     region=region,
-                    timeline_appearence=timeline_appearence,
+                    timeline_appearence=None if pd.isna(age) else age,
                     unique_number=f"{uploaded_file_id}-{allele_number}",
                 )
 

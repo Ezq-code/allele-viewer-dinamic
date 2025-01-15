@@ -26,7 +26,6 @@ class AlleleNodeViewSet(
         "number",
         "element",
         "custom_element_name",
-        "symbol",
         "rs",
     ]
     ordering_fields = "__all__"
@@ -38,7 +37,6 @@ class AlleleNodeViewSet(
     filterset_fields = {
         "element": ["exact"],
         "custom_element_name": ["exact"],
-        "symbol": ["exact"],
         "rs": ["exact"],
         "number": ["exact"],
         "timeline_appearence": ["exact", "gte", "lte"],

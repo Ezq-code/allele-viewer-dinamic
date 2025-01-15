@@ -80,7 +80,6 @@ class XslxToPdbGraph(ExcelReader):
                     allele_number,
                     name=allele_name,
                     rs=row[ExcelNomenclators.output_rs_column_name],
-                    symbol=row[ExcelNomenclators.output_symbol_column_name],
                     parent=row[ExcelNomenclators.output_number_column_name],
                     regions=row[ExcelNomenclators.output_region_column_name],
                     # SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo

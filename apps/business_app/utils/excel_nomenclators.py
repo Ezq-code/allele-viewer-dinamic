@@ -11,8 +11,7 @@ class ExcelNomenclators:
     output_region_column_name = "Region"
     output_rs_column_name = "rs"
     output_parent_column_name = "Parent"
-    output_symbol_column_name = "Symbol"
-    timeline_appearence = "timeline_appearence"
+    age = "Age"
 
     input_original_value_column_name = "Original"
     input_min_value_column_name = "Min"
