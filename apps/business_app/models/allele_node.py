@@ -11,11 +11,12 @@ class AlleleNode(models.Model):
     custom_element_name = models.CharField(
         verbose_name=_("Custom Element Name"), null=True, blank=True, max_length=150
     )
-    symbol = models.CharField(verbose_name=_("Symbol"), max_length=150)
     region = models.CharField(
         verbose_name=_("Region"), max_length=100, null=True, blank=True
     )
-    rs = models.CharField(verbose_name=_("RS"), max_length=150)
+    rs = models.TextField(
+        verbose_name=_("RS"),
+    )
     children = models.ManyToManyField("self", symmetrical=False, blank=True)
     uploaded_file = models.ForeignKey(
         to="UploadedFiles",

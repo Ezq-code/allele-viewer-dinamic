@@ -41,21 +41,20 @@ def extract_parents_tree(G, lista, nodo, root):
 
 
 class XslxToPdbGraph(ExcelReader):
-    def __init__(self, origin_file) -> None:
+    def __init__(self, origin_file, global_configuration) -> None:
         super().__init__(origin_file)
-        config = SiteConfiguration.get_solo()
         self.dim = (
             3  # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
         )
-        self.k = config.nx_graph_k  # El óptimo es 1/sqrt(total de nodos), eso asegura que para el grafo en cuestión sea óptimo
+        self.k = global_configuration.nx_graph_k  # El óptimo es 1/sqrt(total de nodos), eso asegura que para el grafo en cuestión sea óptimo
         self.scale = (
-            config.nx_graph_scale
+            global_configuration.nx_graph_scale
         )  # Se debe adicionar este parámetro en el payload
-        self.iterations = config.nx_graph_training_iterations
+        self.iterations = global_configuration.nx_graph_training_iterations
         # Se crea una variable para el grafo
         self.G = nx.DiGraph()
 
-    def proccess_initial_file_data(self, uploaded_file_id):
+    def proccess_initial_file_data(self, *args):
         print("Proccessing initial file data...")
         """
         Esta función recibe como parámetro el ide del fichero
@@ -81,7 +80,6 @@ class XslxToPdbGraph(ExcelReader):
                     allele_number,
                     name=allele_name,
                     rs=row[ExcelNomenclators.output_rs_column_name],
-                    symbol=row[ExcelNomenclators.output_symbol_column_name],
                     parent=row[ExcelNomenclators.output_number_column_name],
                     regions=row[ExcelNomenclators.output_region_column_name],
                     # SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo

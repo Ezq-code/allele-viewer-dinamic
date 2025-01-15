@@ -13,6 +13,7 @@ class SiteConfiguration(SingletonModel):
     example_file = models.FileField(
         verbose_name=_("Example File"), upload_to="conf_files/", null=True, blank=True
     )
+    upload_to_drive = models.BooleanField(default=False)
     nx_graph_k = models.FloatField(verbose_name=_("Nx Graph K constant"), default=0.50)
     nx_graph_training_iterations = models.PositiveSmallIntegerField(
         verbose_name=_("Nx Graph Training iterations"), default=10
