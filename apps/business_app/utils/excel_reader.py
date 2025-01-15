@@ -31,7 +31,7 @@ class ExcelReader:
             ExcelNomenclators.output_region_column_name,
             ExcelNomenclators.output_rs_column_name,
             ExcelNomenclators.output_parent_column_name,
-            ExcelNomenclators.output_symbol_column_name,
+            # ExcelNomenclators.output_symbol_column_name,
             "X0",
             "Y0",
             "Z0",

@@ -4,11 +4,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('business_app', '0046_alter_marker_description'),
-        ('business_app', '0047_fill_regions_by_country'),
+        ("business_app", "0046_alter_marker_description"),
+        ("business_app", "0047_fill_regions_by_country"),
     ]
 
-    operations = [
-    ]
+    operations = []
