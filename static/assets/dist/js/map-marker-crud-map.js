@@ -31,42 +31,27 @@ $.ajax({
     },
     dataType: 'json',
     success: function (response) {
-        var data;
-        data = response.results;
+        var data = response.results;
+
         data.forEach(function (marker) {
             var descriptionLoad = marker.description;
             var latitudeLoad = marker.latitude;
             var longitudeLoad = marker.longitude;
-            var typeEventLoad = marker.event_type;
             var iconUrlCurrentMarkerLoad = "";
-            if (typeEventLoad != -1) {
-                $.ajax({
-                    type: 'GET',
-                    url: '/business-gestion/events/' + typeEventLoad + '/',
-                    error: function () {
-                        Swal.fire({
-                            icon: "error",
-                            title: "No se pudieron cargar los datos.",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        var data;
-                        data = response;
-                        iconUrlCurrentMarkerLoad = data.event_icon;
-                        var markerIcon = L.icon({
-                            iconUrl: iconUrlCurrentMarkerLoad,
-                            iconSize: [25, 41],
-                            shadowSize: [41, 41],
-                            shadowAnchor: [13, 20]
-                        });
-                        var markerFromDB = L.marker([latitudeLoad, longitudeLoad], {icon: markerIcon});//.addTo(map);
-                        var popup = markerFromDB.bindPopup(descriptionLoad);
-                        markerLayer.addLayer(markerFromDB);
-                    }
+
+            // Aquí accedemos al evento desde el objeto del marcador.
+            if (marker.event_type !== -1) {
+                iconUrlCurrentMarkerLoad = marker.event_type_data.event_icon_url; // Se accede directo al icon que devolvemos en la respuesta
+
+                var markerIcon = L.icon({
+                    iconUrl: iconUrlCurrentMarkerLoad,
+                    iconSize: [25, 41],
+                    shadowSize: [41, 41],
+                    shadowAnchor: [13, 20]
                 });
+                var markerFromDB = L.marker([latitudeLoad, longitudeLoad], {icon: markerIcon});
+                var popup = markerFromDB.bindPopup(descriptionLoad);
+                markerLayer.addLayer(markerFromDB);
             }
         });
     }
@@ -129,8 +114,8 @@ var drawControl = new L.Control.Draw({
     }
 });
 
-if (authenticated){
- map.addControl(drawControl);
+if (authenticated) {
+    map.addControl(drawControl);
 }
 
 var modal = document.getElementById("modalMarker");

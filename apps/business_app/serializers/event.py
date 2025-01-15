@@ -11,4 +11,5 @@ class EventSerializer(serializers.ModelSerializer):
             "id",
             "event_name",
             "event_icon",
+            "pause_time",
         ]
