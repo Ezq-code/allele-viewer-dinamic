@@ -3,9 +3,10 @@
                     const date = new Date();
                     var year = date.getFullYear();
                     var timeMarkerArray = [];
+                    var pauseMarkerArray = [];
                     var timeLinePosition = 315000;
                     var pauseTimeline = false;
-                    var delayTimePauseTimeLine = 6000;
+                    var delayTimePauseTimeLine = 3000;
                     
                     function playTimeLine() {
                         timelineControl.play();
@@ -22,7 +23,9 @@
                             }
                             var i = timeLinePosition - aDelay;   
                             while ((!find) && ( i <= timeLinePosition + aDelay )) {
-                               if (timeMarkerArray.indexOf(i) !== -1){            
+                               if (timeMarkerArray.indexOf(i) !== -1){  
+                                   var anIndex = timeMarkerArray.indexOf(i);  
+                                   delayTimePauseTimeLine = pauseMarkerArray[anIndex];        
                                    find = true;
                                }
                                i++;
@@ -352,13 +355,19 @@
                                                         var endtime = marker.end_date;
                                                         var astart_format = marker.start_format;
                                                         var aend_format = marker.end_format;
+                                                        var aPauseMarker = marker.pause_time;
+                                                        var aPauseEvent = marker.event_type_data.event_pause_time;
                                                         if ((astart_format == "Before Present (YBP)") || (astart_format == "Before Christ (BC)")) {
                                                             starttime = -1 * starttime;
                                                         }
                                                         if ((aend_format == "Before Present (YBP)") || (aend_format == "Before Christ (BC)")) {
                                                             endtime = -1 * endtime;
                                                         }
-                                                        timeMarkerArray.push(starttime); 
+                                                        timeMarkerArray.push(starttime);
+                                                        if (aPauseMarker == 0){
+                                                            aPauseMarker = aPauseEvent;
+                                                        }
+                                                        pauseMarkerArray.push(aPauseMarker);
                                                         aFeature = {
                                                             type: "Feature",
                                                             properties: {

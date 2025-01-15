@@ -9,6 +9,7 @@ from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDriveApi
 from apps.business_app.utils.xslx_to_pdb import XslxToPdb
 from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
+from apps.business_app.models.site_configurations import SiteConfiguration
 
 
 def user_directory_path(instance, filename):
@@ -82,11 +83,18 @@ class UploadedFiles(models.Model):
 
         else:
             try:
+                global_configuration = SiteConfiguration.get_solo()
+
                 processor_classes = [XslxToPdb, XslxToPdbGraph]
                 for processor_class in processor_classes:
-                    processor_object = processor_class(original_file)
+                    processor_object = processor_class(
+                        original_file, global_configuration
+                    )
                     # Process the file and get the processed content
-                    processor_object.proccess_initial_file_data(self.id)
+                    if global_configuration.upload_to_drive or isinstance(
+                        processor_object, XslxToPdbGraph
+                    ):
+                        processor_object.proccess_initial_file_data(self.id)
                     processor_object.proccess_pdb_file(self.id, file_name)
                     # if isinstance(processor_object, XslxToPdb):
                     #     # Upload the file to Google Drive

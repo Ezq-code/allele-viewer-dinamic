@@ -15,27 +15,31 @@ logger = logging.getLogger(__name__)
 
 
 class XslxToPdb(ExcelReader):
-    def __init__(self, origin_file) -> None:
+    def __init__(self, origin_file, global_configuration) -> None:
         super().__init__(origin_file)
-        self.input_df = pd.read_excel(
-            self.origin_file,
-            sheet_name=ExcelNomenclators.input_sheet,
-            engine="openpyxl",
-        )
-        self.constants_df = pd.read_excel(
-            self.origin_file,
-            sheet_name=ExcelNomenclators.constants_sheet,
-            engine="openpyxl",
-        )
-        self.input_mandatory_columns_for_validation = (
-            ExcelNomenclators.input_original_value_column_name,
-            ExcelNomenclators.input_min_value_column_name,
-            ExcelNomenclators.input_max_value_column_name,
-            ExcelNomenclators.input_allele_column_name,
-            ExcelNomenclators.input_marker_column_name,
-            ExcelNomenclators.input_column_to_change_value_column_name,
-        )
-        self._validate_input_sheet_file_structure()
+        self.upload_to_drive = global_configuration.upload_to_drive
+        if self.upload_to_drive:
+            self.input_df = pd.read_excel(
+                self.origin_file,
+                sheet_name=ExcelNomenclators.input_sheet,
+                engine="openpyxl",
+            )
+            self.constants_df = pd.read_excel(
+                self.origin_file,
+                sheet_name=ExcelNomenclators.constants_sheet,
+                engine="openpyxl",
+            )
+
+        if self.upload_to_drive:
+            self.input_mandatory_columns_for_validation = (
+                ExcelNomenclators.input_original_value_column_name,
+                ExcelNomenclators.input_min_value_column_name,
+                ExcelNomenclators.input_max_value_column_name,
+                ExcelNomenclators.input_allele_column_name,
+                ExcelNomenclators.input_marker_column_name,
+                ExcelNomenclators.input_column_to_change_value_column_name,
+            )
+            self._validate_input_sheet_file_structure()
 
     def _validate_input_sheet_file_structure(self):
         first_row_input = self.input_df.iloc[0]
@@ -95,10 +99,9 @@ class XslxToPdb(ExcelReader):
             element = None
             # Loop over each row in the Excel file
             for _, row in self.output_df.iterrows():
-                symbol = row[ExcelNomenclators.output_symbol_column_name]
                 allele = row[ExcelNomenclators.output_allele_column_name]
                 region = row.get(ExcelNomenclators.output_region_column_name)
-                timeline_appearence = row.get(ExcelNomenclators.timeline_appearence)
+                age = row.get(ExcelNomenclators.age)
                 if pd.isna(allele) or pd.isna(
                     row[ExcelNomenclators.output_number_column_name]
                 ):
@@ -108,41 +111,55 @@ class XslxToPdb(ExcelReader):
                     continue
                 allele_allele_number_pool.append(allele_number)
                 rs = row[ExcelNomenclators.output_rs_column_name]
-                parents_info = row[ExcelNomenclators.output_parent_column_name]
+                parents_info = row[ExcelNomenclators.output_parent_column_name].replace(
+                    "'", ""
+                )
                 parents = []
                 if not pd.isna(parents_info):
                     parents = (
-                        int(parent.strip()) for parent in str(parents_info).split(",")
+                        int(parent.strip()) for parent in parents_info.split(",")
                     )
+
                 for parent in parents:
                     if parent == allele_number:
                         continue
                     relations_for_the_end.setdefault(parent, []).append(allele_number)
                 element = next(self.elements_symbol_iterator)
+                print("@1")
 
                 # Write the atom record in the PDB file format
                 current_coordinate_index = 0
+
                 for memory_file in pdb_files:
+                    x_value = row[f"X{current_coordinate_index}"]
+                    y_value = row[f"Y{current_coordinate_index}"]
+                    z_value = row[f"Z{current_coordinate_index}"]
+                    if pd.isna(x_value) or pd.isna(y_value) or pd.isna(z_value):
+                        raise ValueError(
+                            f"Faltan elementos relacionados con las coordenadas. Revisar el alelo {allele_number}"
+                        )
                     memory_file.write(
                         ExcelNomenclators.get_atom_record_string(
                             allele_number=allele_number,
                             element=element,
-                            x_coordinate=int(row[f"X{current_coordinate_index}"]),
-                            y_coordinate=int(row[f"Y{current_coordinate_index}"]),
-                            z_coordinate=int(row[f"Z{current_coordinate_index}"]),
+                            x_coordinate=int(x_value),
+                            y_coordinate=int(y_value),
+                            z_coordinate=int(z_value),
                         )
                     )
                     memory_file.write("\n")
+                    print("@2")
                     current_coordinate_index += 1
+                    print("@3")
+
                 allele_nodes[allele_number] = AlleleNode.objects.create(
                     element=element,
                     number=allele_number,
                     custom_element_name=allele,
-                    symbol=symbol,
                     rs=rs,
                     uploaded_file_id=uploaded_file_id,
                     region=region,
-                    timeline_appearence=timeline_appearence,
+                    timeline_appearence=None if pd.isna(age) else age,
                     unique_number=f"{uploaded_file_id}-{allele_number}",
                 )
 

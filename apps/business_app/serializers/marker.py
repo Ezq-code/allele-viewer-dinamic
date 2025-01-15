@@ -21,6 +21,7 @@ class MarkerSerializer(serializers.ModelSerializer):
             "end_format",
             "description",
             "reference",
+            "pause_time",
             "event_type",
             "event_type_data",
         ]
@@ -30,6 +31,7 @@ class MarkerSerializer(serializers.ModelSerializer):
         event_data = {
             "event_id": obj.event_type.id,
             "event_name": obj.event_type.event_name,
+            "event_pause_time": obj.event_type.pause_time,
             "event_icon_url": request.build_absolute_uri(obj.event_type.event_icon.url)
             if request
             else obj.event_type.event_icon.url,
