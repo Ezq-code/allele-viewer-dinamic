@@ -134,17 +134,22 @@ class XslxToPdb(ExcelReader):
 
                 # Write the atom record in the PDB file format
                 current_coordinate_index = 0
+
                 for memory_file in pdb_files:
-                    print(int(row[f"X{current_coordinate_index}"]))
-                    print(int(row[f"Y{current_coordinate_index}"]))
-                    print(int(row[f"Z{current_coordinate_index}"]))
+                    x_value = row[f"X{current_coordinate_index}"]
+                    y_value = row[f"Y{current_coordinate_index}"]
+                    z_value = row[f"Z{current_coordinate_index}"]
+                    if pd.isna(x_value) or pd.isna(y_value) or pd.isna(z_value):
+                        raise ValueError(
+                            f"Faltan elementos relacionados con las coordenadas. Revisar el alelo {allele_number}"
+                        )
                     memory_file.write(
                         ExcelNomenclators.get_atom_record_string(
                             allele_number=allele_number,
                             element=element,
-                            x_coordinate=int(row[f"X{current_coordinate_index}"]),
-                            y_coordinate=int(row[f"Y{current_coordinate_index}"]),
-                            z_coordinate=int(row[f"Z{current_coordinate_index}"]),
+                            x_coordinate=int(x_value),
+                            y_coordinate=int(y_value),
+                            z_coordinate=int(z_value),
                         )
                     )
                     memory_file.write("\n")
