@@ -76,11 +76,12 @@ function submitEventForm() {
 
 
 // Funcion para editar un evento
-function editEvent(id, event_name, event_icon_url, event_icon_file) {
+function editEvent(id, event_name, pause_time, event_icon_url, event_icon_file) {
     const csrftoken = $("[name=csrfmiddlewaretoken]").val(); // Obtiene el token CSRF
     var event_id = id;
     var formData = new FormData();
     formData.append('event_name', event_name);
+    formData.append('pause_time', pause_time);
     if (event_icon_file) {
         formData.append('event_icon', event_icon_file);
     }
@@ -124,6 +125,7 @@ $(document).ready(function () {
         var event_id = $(this).data('event-id');
         var event_name = $(this).data('event-name');
         var event_icon = $(this).data('event-icon');
+        var pause_time = $(this).data('event-pause-time');
         // Guarda event_id como dato del modal
         var modalId = '#modal-edit-event-' + event_id; // Asegúrate de que el ID sea correcto
         $(modalId + ' #event-name').val(''); // Limpiar el campo del nombre del evento
@@ -132,6 +134,7 @@ $(document).ready(function () {
         $(modalId + ' #event-icon').val(''); // Limpiar el input file
 
         $(modalId + ' #event-name').val(event_name);
+        $(modalId + ' #event-pause-time').val(pause_time);
         $(modalId + ' #event-icon-preview').attr('src', event_icon);
         $(modalId + ' #event-icon-url').val(event_icon);
 
@@ -142,9 +145,10 @@ $(document).ready(function () {
         var id = $(this).data('event-id');
         var modalId = '#modal-edit-event-' + id;
         var event_name = $(modalId).find('#event-name').val();
+        var pause_time = $(modalId).find('#event-pause-time').val();
         var event_icon_file = $(modalId).find('#event-icon')[0].files[0];
         var event_icon_url = $(modalId).find('#event-icon-url').val();
-        editEvent(id, event_name, event_icon_url, event_icon_file);
+        editEvent(id, event_name,pause_time, event_icon_url, event_icon_file);
     });
 });
 

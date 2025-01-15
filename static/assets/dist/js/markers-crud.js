@@ -39,13 +39,26 @@ $(document).ready(function () {
         deleteMark(markerId);
     });
 });
+// Función para restablecer el formulario a su estado inicial
+function resetMarkForm(formId) {
+    document.getElementById(formId).reset();
+}
+
+// Agregar un evento que se dispare al cerrar la ventana modal
+$('.modal').on('hidden.bs.modal', function (e) {
+    // Obtener el ID del formulario correspondiente al modal que se cierra
+    const markId = $(this).data('mark-id'); // Obtener el ID del mark desde el modal
+    const formId = 'editmarkForm-' + markId; // Construir el ID del formulario
+    resetMarkForm(formId); // Restablecer el formulario
+});
 
 
 // Funcion para editar el marcador
-function editMark(id, event_type, start_date, start_format, end_date, end_format, description, reference, latitude, longitude) {
+function editMark(id, event_type, pause_time, start_date, start_format, end_date, end_format, description, reference, latitude, longitude) {
     const csrftoken = $("[name=csrfmiddlewaretoken]").val(); // Obtiene el token CSRF
     var formData = new FormData();
     formData.append('event_type', event_type);
+    formData.append('pause_time', pause_time);
     formData.append('start_date', start_date);
     formData.append('start_format', start_format);
     formData.append('end_date', end_date);
@@ -89,6 +102,7 @@ $(document).ready(function () {
         // Obtener los datos de la marca seleccionada
         var id = $(this).data('mark-id');
         var event_type = $(this).data('mark-event_type');
+        var pause_time = $(this).data('mark-pause_time');
         var start_date = $(this).data('mark-start_date');
         var start_format = $(this).data('mark-start_format');
         var end_date = $(this).data('mark-end_date');
@@ -100,6 +114,7 @@ $(document).ready(function () {
 
         // Mostrar los datos en el modal
         var modalId = '#modal-edit-mark-' + id;
+        $(modalId).find('#mark-pause_time').val(pause_time);
         $(modalId).find('#mark-start_date').val(start_date);
         $(modalId).find('#mark-start_format').val(start_format);
         $(modalId).find('#mark-end_date').val(end_date);
@@ -119,6 +134,7 @@ $(document).ready(function () {
         var id = $(this).data('mark-id');
         var modalId = '#modal-edit-mark-' + id;
         var event_type = $(modalId).find('#mark-event_type').val(); // Obtener el valor del select
+        var pause_time = $(modalId).find('#mark-pause_time').val();
         var start_date = $(modalId).find('#mark-start_date').val();
         var start_format = $(modalId).find('#mark-start_format').val();
         var end_date = $(modalId).find('#mark-end_date').val();
@@ -129,6 +145,6 @@ $(document).ready(function () {
         var longitude = $(modalId).find('#mark-longitude').val();
 
         // Realizar la solicitud AJAX para editar la marca
-        editMark(id, event_type, start_date, start_format, end_date, end_format, description, reference, latitude, longitude);
+        editMark(id, event_type,pause_time, start_date, start_format, end_date, end_format, description, reference, latitude, longitude);
     });
 });

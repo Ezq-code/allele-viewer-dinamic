@@ -151,6 +151,10 @@ $(document).ready(function () {
 
     $('#modal-form').validate({
         rules: {
+            pause_time: {
+                required: true,
+                integer: true // Usa la nueva regla personalizada
+            },
             fechaini: {
                 required: true,
                 integer: true // Usa la nueva regla personalizada
@@ -164,6 +168,10 @@ $(document).ready(function () {
             }
         },
         messages: {
+            pause_time: {
+                required: "Please enter a pause time",
+                integer: "Please enter an integer for the pause time"
+            },
             fechaini: {
                 required: "Please enter a start date",
                 integer: "Please enter an integer for the start date"
@@ -191,6 +199,7 @@ $(document).ready(function () {
         },
         submitHandler: function (form) {
             // Aquí es donde se maneja el envío AJAX
+            var pause_time = document.getElementById("pause_time").value;
             var fi = document.getElementById("fechaini").value;
             var ff = document.getElementById("fechafin").value;
             var desc = document.getElementById("descripcion").value;
@@ -203,6 +212,7 @@ $(document).ready(function () {
                     var formData = new FormData();
                     formData.append('latitude', document.getElementById("latitudid").value);
                     formData.append('longitude', document.getElementById("longitudid").value);
+                    formData.append('pause_time', pause_time);
                     formData.append('start_date', fi);
                     formData.append('end_date', ff);
                     formData.append('start_format', document.getElementById("selectDateTypeBegin").value);
