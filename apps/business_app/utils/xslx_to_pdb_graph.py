@@ -86,10 +86,11 @@ class XslxToPdbGraph(ExcelReader):
                     # date=row[ExcelNomenclators.output_date_column_name],
                 )
                 parents_info = row[ExcelNomenclators.output_parent_column_name]
+                print(parents_info)
                 parents = []
                 if not pd.isna(parents_info):
                     parents = (
-                        (parent.strip()) for parent in str(parents_info).split(",")[:2]
+                        (parent.strip()) for parent in str(parents_info).split(",")
                     )
                 for parent in parents:
                     int_parent = int(parent)

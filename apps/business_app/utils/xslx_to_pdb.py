@@ -111,15 +111,13 @@ class XslxToPdb(ExcelReader):
                     continue
                 allele_allele_number_pool.append(allele_number)
                 rs = row[ExcelNomenclators.output_rs_column_name]
-                parents_info = row[ExcelNomenclators.output_parent_column_name].replace(
-                    "'", ""
-                )
+                parents_info = row[ExcelNomenclators.output_parent_column_name]
+  
                 parents = []
                 if not pd.isna(parents_info):
                     parents = (
                         int(parent.strip()) for parent in parents_info.split(",")
                     )
-
                 for parent in parents:
                     if parent == allele_number:
                         continue
