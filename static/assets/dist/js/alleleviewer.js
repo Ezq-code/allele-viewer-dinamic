@@ -372,9 +372,11 @@ function showInfo(atom) {
             atom.y +
             "," +
             atom.z +
-            ')">Bookmark</button>' +'<button type="button" class="btn btn-block bg-teal" onclick="childFull(' +
+            ')">Bookmark</button>' +
+            '<button type="button" class="btn btn-block bg-teal" onclick="childFull(' +
             elemento.number +
-            ')">Progenitores</button>' +'<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion(\'' +
+            ')">Progenitores</button>' +
+            '<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion(\'' +
             elemento.region +
             "')\">Region " +
             elemento.region +
@@ -592,11 +594,8 @@ function child() {
       datos = atomData;
 
       atomData.forEach((element) => {
-        const stickRadius =
-          element.children_qty === 0
-            ? 0.2
-            : 0.5 + element.children_qty * stickRadiusFactor;
-        const sphereRadius = stickRadius * sphereRadiusFactor;
+        const stickRadius = element.stick_radius;
+        const sphereRadius = element.sphere_radius;
 
         viewer.setStyle(
           { serial: element.number },
@@ -739,19 +738,19 @@ function applyRegionFilter(region) {
   viewer.render();
 }
 
-function resetGraficView() { 
+function resetGraficView() {
   datos.forEach((element) => {
     viewer.setStyle(
-        { serial: element.number },
-        {
-          sphere: {
-            hidden: false, // Ocultar esfera
-          },
-          stick: {
-            hidden: false, // Ocultar stick
-          },
-        }
-      );    
+      { serial: element.number },
+      {
+        sphere: {
+          hidden: false, // Ocultar esfera
+        },
+        stick: {
+          hidden: false, // Ocultar stick
+        },
+      }
+    );
   });
   // viewer.render();
 }
@@ -780,11 +779,8 @@ function filterByRegion(region) {
 
 function childZoom() {
   datos.forEach((element) => {
-    const stickRadius =
-      element.children_qty === 0
-        ? 0.2
-        : 0.5 + element.children_qty * stickRadiusFactor;
-    const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
+    const stickRadius = element.stick_radius;
+    const sphereRadius = element.sphere_radius * zoomLevel;
     viewer.setStyle(
       { serial: element.number },
       {
@@ -939,11 +935,8 @@ function mostrarElementos(lista, tiempo) {
   } // Si ya se mostraron todos los elementos
 
   const element = lista[indiceActual];
-  const stickRadius =
-    element.children_qty === 0
-      ? 0.2
-      : 0.5 + element.children_qty * stickRadiusFactor;
-  const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
+  const stickRadius = element.stick_radius;
+  const sphereRadius = element.sphere_radius * zoomLevel;
 
   viewer.setStyle(
     { serial: element.number },
@@ -1004,15 +997,14 @@ function avanzar(lista) {
 // Variable global para la velocidad
 let currentSpeedIndex = 0;
 const speeds = [
-  { label: 'x1', value: 0.5 },
-  { label: 'x2', value: 0.25 },
-  { label: 'x3', value: 0.1 },
-  { label: 'x4', value: 0.05 },
-  { label: 'x5', value: 0.025 }
+  { label: "x1", value: 0.5 },
+  { label: "x2", value: 0.25 },
+  { label: "x3", value: 0.1 },
+  { label: "x4", value: 0.05 },
+  { label: "x5", value: 0.025 },
 ];
 
 function animationWindows() {
-
   $(document).Toasts("create", {
     class: "bg-lightblue controlpanel",
     title: "Animation Control",
@@ -1056,27 +1048,24 @@ function animationWindows() {
                       <i class="nav-icon fas fa-forward"></i>
                     </button>                   
 
-                  </div>`
-  })
-
+                  </div>`,
+  });
 }
 
 function changeSpeed() {
   // Incrementar el índice de velocidad
   currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
 
-  
   // Obtener la nueva velocidad
   const newSpeed = speeds[currentSpeedIndex];
-  
+
   // Actualizar el texto del botón
-  const speedButton = document.getElementById('speedButton');
+  const speedButton = document.getElementById("speedButton");
   speedButton.innerHTML = `${newSpeed.label}`;
-  console.log('✌️newSpeed.value --->', newSpeed.value);
+  console.log("✌️newSpeed.value --->", newSpeed.value);
   // Si hay una animación en curso, actualizarla con la nueva velocidad
   // if (/* tu condición para verificar si la animación está en curso */) {
-    mostrarElementos(datos, newSpeed.value);
-
+  mostrarElementos(datos, newSpeed.value);
 
   //}
 }
@@ -1084,9 +1073,7 @@ function changeSpeed() {
 function playStopAnimation(button) {
   pausa = !pausa; // Cambiar el estado de pausa
   if (!pausa) {
-
-      mostrarElementos(datos, speeds[currentSpeedIndex]); // Reiniciar la visualización si se reanuda
-
+    mostrarElementos(datos, speeds[currentSpeedIndex]); // Reiniciar la visualización si se reanuda
   } else {
     clearTimeout(timeoutId); // Limpiar el timeout si se pausa
   }
