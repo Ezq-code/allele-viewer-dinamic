@@ -89,14 +89,16 @@ class XslxToPdbGraph(ExcelReader):
                 parents = []
                 if not pd.isna(parents_info):
                     parents = (
-                        (parent.strip()) for parent in str(parents_info).split(",")
+                        (parent.strip()) for parent in str(parents_info).split(",")[:2]
                     )
                 for parent in parents:
-                    if int(parent) == int(allele_number):
+                    int_parent = int(parent)
+                    int_allele_number = int(allele_number)
+                    if int_parent == int_allele_number:
                         continue
                     # self.G.add_edge(int(parent), allele_number)#Adiciona la conexion
-                    if (int(parent), int(allele_number)) not in edges_list:
-                        edges_list.append((int(parent), int(allele_number)))
+                    if (int_parent, int_allele_number) not in edges_list:
+                        edges_list.append((int_parent, int_allele_number))
 
             # Recorrer el diccionario de nodos
             self.G.add_edges_from(edges_list)  # Add a edges list
