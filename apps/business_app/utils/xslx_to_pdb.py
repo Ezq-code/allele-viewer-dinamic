@@ -125,7 +125,6 @@ class XslxToPdb(ExcelReader):
                         continue
                     relations_for_the_end.setdefault(parent, []).append(allele_number)
                 element = next(self.elements_symbol_iterator)
-                print("@1")
 
                 # Write the atom record in the PDB file format
                 current_coordinate_index = 0
@@ -148,9 +147,7 @@ class XslxToPdb(ExcelReader):
                         )
                     )
                     memory_file.write("\n")
-                    print("@2")
                     current_coordinate_index += 1
-                    print("@3")
 
                 allele_nodes[allele_number] = AlleleNode.objects.create(
                     element=element,

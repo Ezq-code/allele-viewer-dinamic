@@ -31,7 +31,9 @@ class Marker(models.Model):
     event_type = models.ForeignKey(
         to="Event", verbose_name=_("Event Type"), on_delete=models.CASCADE
     )
-    pause_time = models.IntegerField(verbose_name=_("Pause Time in Milliseconds"), default=0)
+    pause_time = models.IntegerField(
+        verbose_name=_("Pause Time in Milliseconds"), default=0
+    )
 
     class Meta:
         verbose_name = _("Marker")
