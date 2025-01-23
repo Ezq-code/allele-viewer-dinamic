@@ -10,7 +10,7 @@ class ExcelNomenclators:
     output_number_column_name = "Numero"
     output_region_column_name = "Region"
     output_rs_column_name = "rs"
-    output_parent_column_name = "Local Lin"
+    output_parent_column_name = "Parent"
     age = "Age"
 
     input_original_value_column_name = "Original"

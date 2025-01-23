@@ -256,14 +256,14 @@ function sendRSControlValues() {
     file_id: fileId,
   };
 
-  console.log(data);
+  // console.log(data);
   load.hidden = false;
   $("#modal-xl").modal("hide");
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
   axios
     .post("/business-gestion/new-coordinate-processor/", data)
     .then(function (response) {
-      console.log("mi data:", response.data.pdb_content);
+      // console.log("mi data:", response.data.pdb_content);
       graficar_string(response.data.pdb_content);
       load.hidden = true;
     })
@@ -596,6 +596,9 @@ function child() {
       atomData.forEach((element) => {
         const stickRadius = element.stick_radius;
         const sphereRadius = element.sphere_radius;
+        console.log(stickRadius);
+        console.log(sphereRadius);
+        console.log("@@@@@@@");
 
         viewer.setStyle(
           { serial: element.number },
