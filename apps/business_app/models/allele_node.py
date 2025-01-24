@@ -26,6 +26,8 @@ class AlleleNode(models.Model):
     timeline_appearence = models.IntegerField(
         verbose_name="Appearance on the timeline", null=True
     )
+    sphere_radius = models.FloatField(verbose_name=_("Sphere Radius"), null=True)
+    stick_radius = models.FloatField(verbose_name=_("Stick Radius"), null=True)
 
     class Meta:
         verbose_name = _("Allele Node")

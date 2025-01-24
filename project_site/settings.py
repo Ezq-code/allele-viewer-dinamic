@@ -304,6 +304,6 @@ CREDENTIAL_FILE_NAME = env("CREDENTIAL_FILE_NAME", default="credentials.json")
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "TIMEOUT": 600,
+        "TIMEOUT": 36000,
     }
 }

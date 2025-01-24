@@ -1,3 +1,4 @@
+from functools import cache
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions
 from apps.business_app.models import AlleleNode
@@ -6,9 +7,10 @@ from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from rest_framework.viewsets import GenericViewSet
 from rest_framework_extensions.mixins import NestedViewSetMixin
 from apps.common.pagination import AllResultsSetPagination
-from django.http import Http404
-from rest_framework_extensions.settings import extensions_api_settings
+from django.core.cache import cache
 
+
+from rest_framework.response import Response
 
 from apps.common.views import CommonOrderingFilter
 
@@ -45,3 +47,17 @@ class AlleleNodeViewSet(
     }
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = "unique_number"
+    
+    # def list(self, request, *args, **kwargs):
+    #     key = kwargs.get('parent_lookup_uploaded_file')
+    #     if not cache.get(key):
+    #         queryset = self.filter_queryset(self.get_queryset())
+
+    #         page = self.paginate_queryset(queryset)
+    #         if page is not None:
+    #             serializer = self.get_serializer(page, many=True)
+    #             cache.set(key, serializer.data, timeout=36000)
+    #             return self.get_paginated_response(serializer.data)
+    #         serializer = self.get_serializer(queryset, many=True)
+    #         cache.set(key, serializer.data, timeout=36000)
+    #     return Response(cache.get(key))

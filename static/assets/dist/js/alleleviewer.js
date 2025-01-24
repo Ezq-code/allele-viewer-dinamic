@@ -596,10 +596,6 @@ function child() {
       atomData.forEach((element) => {
         const stickRadius = element.stick_radius;
         const sphereRadius = element.sphere_radius;
-        console.log(stickRadius);
-        console.log(sphereRadius);
-        console.log("@@@@@@@");
-
         viewer.setStyle(
           { serial: element.number },
           {
