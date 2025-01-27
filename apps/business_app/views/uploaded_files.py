@@ -7,6 +7,8 @@ from apps.common.views import CommonOrderingFilter
 from apps.business_app.models import UploadedFiles
 from apps.business_app.serializers import UploadedFilesSerializer
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 # Create your views here.
 
@@ -27,3 +29,7 @@ class UploadedFilesViewSet(viewsets.ModelViewSet, GenericAPIView):
     ]
 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @method_decorator(cache_page(60 * 60 * 24))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)

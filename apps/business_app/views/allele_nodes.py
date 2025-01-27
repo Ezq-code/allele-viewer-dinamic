@@ -50,19 +50,7 @@ class AlleleNodeViewSet(
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = "unique_number"
     
-    @method_decorator(cache_page(60 * 60 * 2))
+    @method_decorator(cache_page(60 * 60 * 24))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
     
-    #     key = kwargs.get('parent_lookup_uploaded_file')
-    #     if not cache.get(key):
-    #         queryset = self.filter_queryset(self.get_queryset())
-
-    #         page = self.paginate_queryset(queryset)
-    #         if page is not None:
-    #             serializer = self.get_serializer(page, many=True)
-    #             cache.set(key, serializer.data, timeout=36000)
-    #             return self.get_paginated_response(serializer.data)
-    #         serializer = self.get_serializer(queryset, many=True)
-    #         cache.set(key, serializer.data, timeout=36000)
-    #     return Response(cache.get(key))
