@@ -7,7 +7,9 @@ from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from rest_framework.viewsets import GenericViewSet
 from rest_framework_extensions.mixins import NestedViewSetMixin
 from apps.common.pagination import AllResultsSetPagination
-from django.core.cache import cache
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 
 
 from rest_framework.response import Response
@@ -48,7 +50,10 @@ class AlleleNodeViewSet(
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = "unique_number"
     
-    # def list(self, request, *args, **kwargs):
+    @method_decorator(cache_page(60 * 60 * 2))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
     #     key = kwargs.get('parent_lookup_uploaded_file')
     #     if not cache.get(key):
     #         queryset = self.filter_queryset(self.get_queryset())
