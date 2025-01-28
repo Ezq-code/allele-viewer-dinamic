@@ -338,6 +338,8 @@ function findPosition(data, id) {
   return -1;
 }
 
+
+
 function showInfo(atom) {
   $(".showalleleinfo").toast("hide");
 
@@ -353,7 +355,7 @@ function showInfo(atom) {
         "/"
     )
     .then(function (response) {
-      const elemento = response.data;
+      const elemento = response.data;      
       const imageHtml =
         ' <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style=" border-radius: 14px; width: -webkit-fill-available"/>';
       children = elemento.children;
@@ -364,8 +366,8 @@ function showInfo(atom) {
           // title: elemento.serial,
           subtitle: elemento.children_qty,
           body:
-            imageHtml +
-            elemento.rs +
+            imageHtml + '<div class="card-body">'+
+            '<button type="button" class="btn btn-block btn-info" onclick="mostrarRS(\'' + elemento.rs+ '\')">Show RS</button>' +
             '<button type="button" class="btn btn-block btn-secondary" onclick="marcar(' +
             atom.x +
             "," +
@@ -404,8 +406,8 @@ function showInfo(atom) {
             elemento.children_qty +
             "</span>",
           body:
-            imageHtml +
-            elemento.rs +
+            imageHtml +'<div class="card-body">'+
+            '<button type="button" class="btn btn-block btn-info" onclick="mostrarRS(\'' + elemento.rs+ '\')">Show RS</button>' +
             '<button type="button" class="btn btn-block bg-lime" onclick="loadFamily(' +
             elemento.number +
             ')">Descendant</button>' +
@@ -446,6 +448,15 @@ function showInfo(atom) {
     });
 
   load.hidden = true;
+}
+
+function mostrarRS(rsList) {
+  Swal.fire({
+    title: 'RS List',
+    text: rsList,
+    icon: 'info',
+    confirmButtonText: 'Ok'
+  });
 }
 
 function seleccionarEstiloAleatorio() {
