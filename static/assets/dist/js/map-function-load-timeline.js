@@ -42,7 +42,7 @@
                       };
                                           
 					function updateList(timeline) {
-
+                                          
                                             if (timeline.time < -130000) {
                                                 map.setView(new L.LatLng(10, 120), 2);
                                             }
@@ -51,7 +51,7 @@
                                             } else if (timeline.time > -61051) {
                                                 map.setView(new L.LatLng(10, 120), 2);
                                             }
-
+                                           
                                             if (timeline.time == year) {
                                                 markerLayer.addTo(map);
                                             }
@@ -146,8 +146,8 @@
                                                 style: function (feature) {
                                                     if ((feature.properties.id >= 1) && (feature.properties.id <= 9)) {
                                                         return {
-                                                            color: "#444444",//"#171717",
-                                                            fillColor: "#444444",//"#171717",
+                                                            color: "#ffd700",//"#171717", ffd700
+                                                            fillColor: "#ffd700",//"#171717", eac102
                                                             fillOpacity: 1,
                                                             weight: 3,
                                                             opacity: 1,
@@ -281,6 +281,18 @@
                                                 pointToLayer: function (data, latlng) {
                                                    
                                                     if ((data.properties.id == 10) || (data.properties.id == 11)) {
+
+                                                        return L.marker(latlng, {
+                                                            icon:
+                                                                L.icon({
+                                                                    iconUrl: iconUrlpathDestinationMigration,
+                                                                    iconSize: [44, 42],
+                                                                    shadowSize: [41, 41],
+                                                                    shadowAnchor: [13, 20]
+                                                                })
+                                                        }).bindPopup(data.properties.title);
+                                                        
+                                                       /*
                                                         return L.circleMarker(latlng, {
 
                                                             radius: 10, //features.properties.mag,
@@ -294,6 +306,7 @@
                                                             closeOnClick: false,
                                                             autoClose: false
                                                         }).setContent(data.properties.title));
+                                                        */
                                                     }
                                                 },
                                             });
