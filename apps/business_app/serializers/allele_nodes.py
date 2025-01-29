@@ -50,7 +50,3 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "sphere_radius",
             "stick_radius",
         ]
-
-   
-        
-        

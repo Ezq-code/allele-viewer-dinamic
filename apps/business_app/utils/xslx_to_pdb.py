@@ -119,7 +119,7 @@ class XslxToPdb(ExcelReader):
                 allele_allele_number_pool.append(allele_number)
                 rs = row[ExcelNomenclators.output_rs_column_name]
                 parents_info = row[ExcelNomenclators.output_parent_column_name]
-  
+
                 parents = []
                 if not pd.isna(parents_info):
                     parents = (
@@ -184,9 +184,18 @@ class XslxToPdb(ExcelReader):
 
                     for child in children_list:
                         current_node.children.add(child)
-                    current_node.sphere_radius = self._get_sphere_radius(current_node.children.count())
-                    current_node.stick_radius = self._get_stick_radius(current_node.children.count())
-                    current_node.save(update_fields = ("sphere_radius","stick_radius",))
+                    current_node.sphere_radius = self._get_sphere_radius(
+                        current_node.children.count()
+                    )
+                    current_node.stick_radius = self._get_stick_radius(
+                        current_node.children.count()
+                    )
+                    current_node.save(
+                        update_fields=(
+                            "sphere_radius",
+                            "stick_radius",
+                        )
+                    )
 
             index = 0
             for memory_file in pdb_files:
@@ -207,26 +216,33 @@ class XslxToPdb(ExcelReader):
             AlleleNode.objects.filter(uploaded_file__isnull=True).delete()
             logger.error(f"An error occurred during file parsing: {e}")
             raise ValueError(f"An error occurred during file parsing: {e}.")
-    
+
     def _get_sphere_radius(self, children_count):
-        cached_sphere_radious = cache.get(f"sphere_radius_for_{children_count}_children")
+        cached_sphere_radious = cache.get(
+            f"sphere_radius_for_{children_count}_children"
+        )
         if cached_sphere_radious:
             return cached_sphere_radious
-        new_sphere_radius_value = self._get_stick_radius(children_count) * self.sphere_radius_factor
-        cache.set(f"sphere_radius_for_{children_count}_children", new_sphere_radius_value)
+        new_sphere_radius_value = (
+            self._get_stick_radius(children_count) * self.sphere_radius_factor
+        )
+        cache.set(
+            f"sphere_radius_for_{children_count}_children", new_sphere_radius_value
+        )
         return new_sphere_radius_value
-        
 
     def _get_stick_radius(self, children_count):
         cached_stick_radious = cache.get(f"stick_radius_for_{children_count}_children")
         if cached_stick_radious:
             return cached_stick_radious
-        
+
         const_to_use = (
             self.stick_radius_min_value
             if not children_count
             else self.stick_radius_if_children
         )
-        new_stick_radius_value = const_to_use + self.stick_radius_factor * children_count
+        new_stick_radius_value = (
+            const_to_use + self.stick_radius_factor * children_count
+        )
         cache.set(f"stick_radius_for_{children_count}_children", new_stick_radius_value)
         return new_stick_radius_value
