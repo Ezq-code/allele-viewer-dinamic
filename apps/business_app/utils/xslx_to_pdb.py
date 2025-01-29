@@ -236,7 +236,6 @@ class XslxToPdb(ExcelReader):
         return new_sphere_radius_value
 
     def _get_stick_radius(self, children_count):
-        print(children_count)
         cached_stick_radious = cache.get(f"stick_radius_for_{children_count}_children")
         if cached_stick_radious:
             return cached_stick_radious
