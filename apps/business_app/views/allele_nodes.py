@@ -49,6 +49,6 @@ class AlleleNodeViewSet(
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = "unique_number"
 
-    @method_decorator(cache_page(60 * 60 * 24))
+    @method_decorator(cache_page(timeout=None))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)

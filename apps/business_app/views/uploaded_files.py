@@ -30,6 +30,6 @@ class UploadedFilesViewSet(viewsets.ModelViewSet, GenericAPIView):
 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @method_decorator(cache_page(60 * 60 * 24))
+    @method_decorator(cache_page(timeout=None))
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
