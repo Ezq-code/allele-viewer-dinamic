@@ -256,14 +256,14 @@ function sendRSControlValues() {
     file_id: fileId,
   };
 
-  console.log(data);
+  // console.log(data);
   load.hidden = false;
   $("#modal-xl").modal("hide");
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
   axios
     .post("/business-gestion/new-coordinate-processor/", data)
     .then(function (response) {
-      console.log("mi data:", response.data.pdb_content);
+      // console.log("mi data:", response.data.pdb_content);
       graficar_string(response.data.pdb_content);
       load.hidden = true;
     })
@@ -338,6 +338,8 @@ function findPosition(data, id) {
   return -1;
 }
 
+
+
 function showInfo(atom) {
   $(".showalleleinfo").toast("hide");
 
@@ -353,7 +355,7 @@ function showInfo(atom) {
         "/"
     )
     .then(function (response) {
-      const elemento = response.data;
+      const elemento = response.data;      
       const imageHtml =
         ' <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style=" border-radius: 14px; width: -webkit-fill-available"/>';
       children = elemento.children;
@@ -364,17 +366,19 @@ function showInfo(atom) {
           // title: elemento.serial,
           subtitle: elemento.children_qty,
           body:
-            imageHtml +
-            elemento.rs +
+            imageHtml + '<div class="card-body">'+
+            '<button type="button" class="btn btn-block btn-info" onclick="mostrarRS(\'' + elemento.rs+ '\')">Show RS</button>' +
             '<button type="button" class="btn btn-block btn-secondary" onclick="marcar(' +
             atom.x +
             "," +
             atom.y +
             "," +
             atom.z +
-            ')">Bookmark</button>' +'<button type="button" class="btn btn-block bg-teal" onclick="childFull(' +
+            ')">Bookmark</button>' +
+            '<button type="button" class="btn btn-block bg-teal" onclick="childFull(' +
             elemento.number +
-            ')">Progenitores</button>' +'<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion(\'' +
+            ')">Progenitores</button>' +
+            '<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion(\'' +
             elemento.region +
             "')\">Region " +
             elemento.region +
@@ -402,8 +406,8 @@ function showInfo(atom) {
             elemento.children_qty +
             "</span>",
           body:
-            imageHtml +
-            elemento.rs +
+            imageHtml +'<div class="card-body">'+
+            '<button type="button" class="btn btn-block btn-info" onclick="mostrarRS(\'' + elemento.rs+ '\')">Show RS</button>' +
             '<button type="button" class="btn btn-block bg-lime" onclick="loadFamily(' +
             elemento.number +
             ')">Descendant</button>' +
@@ -444,6 +448,15 @@ function showInfo(atom) {
     });
 
   load.hidden = true;
+}
+
+function mostrarRS(rsList) {
+  Swal.fire({
+    title: 'RS List',
+    text: rsList,
+    icon: 'info',
+    confirmButtonText: 'Ok'
+  });
 }
 
 function seleccionarEstiloAleatorio() {
@@ -592,12 +605,8 @@ function child() {
       datos = atomData;
 
       atomData.forEach((element) => {
-        const stickRadius =
-          element.children_qty === 0
-            ? 0.2
-            : 0.5 + element.children_qty * stickRadiusFactor;
-        const sphereRadius = stickRadius * sphereRadiusFactor;
-
+        const stickRadius = element.stick_radius;
+        const sphereRadius = element.sphere_radius;
         viewer.setStyle(
           { serial: element.number },
           {
@@ -739,19 +748,19 @@ function applyRegionFilter(region) {
   viewer.render();
 }
 
-function resetGraficView() { 
+function resetGraficView() {
   datos.forEach((element) => {
     viewer.setStyle(
-        { serial: element.number },
-        {
-          sphere: {
-            hidden: false, // Ocultar esfera
-          },
-          stick: {
-            hidden: false, // Ocultar stick
-          },
-        }
-      );    
+      { serial: element.number },
+      {
+        sphere: {
+          hidden: false, // Ocultar esfera
+        },
+        stick: {
+          hidden: false, // Ocultar stick
+        },
+      }
+    );
   });
   // viewer.render();
 }
@@ -780,11 +789,8 @@ function filterByRegion(region) {
 
 function childZoom() {
   datos.forEach((element) => {
-    const stickRadius =
-      element.children_qty === 0
-        ? 0.2
-        : 0.5 + element.children_qty * stickRadiusFactor;
-    const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
+    const stickRadius = element.stick_radius;
+    const sphereRadius = element.sphere_radius * zoomLevel;
     viewer.setStyle(
       { serial: element.number },
       {
@@ -939,11 +945,8 @@ function mostrarElementos(lista, tiempo) {
   } // Si ya se mostraron todos los elementos
 
   const element = lista[indiceActual];
-  const stickRadius =
-    element.children_qty === 0
-      ? 0.2
-      : 0.5 + element.children_qty * stickRadiusFactor;
-  const sphereRadius = stickRadius * sphereRadiusFactor * zoomLevel;
+  const stickRadius = element.stick_radius;
+  const sphereRadius = element.sphere_radius * zoomLevel;
 
   viewer.setStyle(
     { serial: element.number },
@@ -1004,15 +1007,14 @@ function avanzar(lista) {
 // Variable global para la velocidad
 let currentSpeedIndex = 0;
 const speeds = [
-  { label: 'x1', value: 0.5 },
-  { label: 'x2', value: 0.25 },
-  { label: 'x3', value: 0.1 },
-  { label: 'x4', value: 0.05 },
-  { label: 'x5', value: 0.025 }
+  { label: "x1", value: 0.5 },
+  { label: "x2", value: 0.25 },
+  { label: "x3", value: 0.1 },
+  { label: "x4", value: 0.05 },
+  { label: "x5", value: 0.025 },
 ];
 
 function animationWindows() {
-
   $(document).Toasts("create", {
     class: "bg-lightblue controlpanel",
     title: "Animation Control",
@@ -1056,27 +1058,24 @@ function animationWindows() {
                       <i class="nav-icon fas fa-forward"></i>
                     </button>                   
 
-                  </div>`
-  })
-
+                  </div>`,
+  });
 }
 
 function changeSpeed() {
   // Incrementar el índice de velocidad
   currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
 
-  
   // Obtener la nueva velocidad
   const newSpeed = speeds[currentSpeedIndex];
-  
+
   // Actualizar el texto del botón
-  const speedButton = document.getElementById('speedButton');
+  const speedButton = document.getElementById("speedButton");
   speedButton.innerHTML = `${newSpeed.label}`;
-  console.log('✌️newSpeed.value --->', newSpeed.value);
+  console.log("✌️newSpeed.value --->", newSpeed.value);
   // Si hay una animación en curso, actualizarla con la nueva velocidad
   // if (/* tu condición para verificar si la animación está en curso */) {
-    mostrarElementos(datos, newSpeed.value);
-
+  mostrarElementos(datos, newSpeed.value);
 
   //}
 }
@@ -1084,9 +1083,7 @@ function changeSpeed() {
 function playStopAnimation(button) {
   pausa = !pausa; // Cambiar el estado de pausa
   if (!pausa) {
-
-      mostrarElementos(datos, speeds[currentSpeedIndex]); // Reiniciar la visualización si se reanuda
-
+    mostrarElementos(datos, speeds[currentSpeedIndex]); // Reiniciar la visualización si se reanuda
   } else {
     clearTimeout(timeoutId); // Limpiar el timeout si se pausa
   }

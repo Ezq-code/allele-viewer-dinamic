@@ -1,8 +1,11 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from apps.business_app.models.site_configurations import SiteConfiguration
+
 
 class AlleleNode(models.Model):
+    site_configuration = SiteConfiguration.get_solo()
     number = models.PositiveIntegerField(verbose_name=_("Number"))
     unique_number = models.CharField(
         verbose_name=_("Unique Number"), unique=True, max_length=100
@@ -26,6 +29,8 @@ class AlleleNode(models.Model):
     timeline_appearence = models.IntegerField(
         verbose_name="Appearance on the timeline", null=True
     )
+    sphere_radius = models.FloatField(verbose_name=_("Sphere Radius"), null=True)
+    stick_radius = models.FloatField(verbose_name=_("Stick Radius"), null=True)
 
     class Meta:
         verbose_name = _("Allele Node")
