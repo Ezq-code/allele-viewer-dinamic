@@ -182,13 +182,13 @@ class XslxToPdb(ExcelReader):
                                 )
                                 memory_file.write("\n")
 
-                    for child in children_list:
-                        current_node.children.add(child)
+                    current_node.children.set(children_list)
+
                     current_node.sphere_radius = self._get_sphere_radius(
-                        current_node.children.count()
+                        len(children_list)
                     )
                     current_node.stick_radius = self._get_stick_radius(
-                        current_node.children.count()
+                        len(children_list)
                     )
                     current_node.save(
                         update_fields=(
@@ -234,6 +234,7 @@ class XslxToPdb(ExcelReader):
         return new_sphere_radius_value
 
     def _get_stick_radius(self, children_count):
+        print(children_count)
         cached_stick_radious = cache.get(f"stick_radius_for_{children_count}_children")
         if cached_stick_radious:
             return cached_stick_radious
@@ -242,7 +243,8 @@ class XslxToPdb(ExcelReader):
             new_stick_radius_value = self.stick_radius_min_value
         else:
             new_stick_radius_value = (
-                self.stick_radius_if_children + self.stick_radius_factor * children_count
+                self.stick_radius_if_children
+                + self.stick_radius_factor * children_count
             )
         cache.set(
             f"stick_radius_for_{children_count}_children",

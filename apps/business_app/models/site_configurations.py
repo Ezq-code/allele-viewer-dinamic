@@ -7,7 +7,6 @@ from solo.models import SingletonModel
 from django.core.cache import cache
 
 
-
 class SiteConfiguration(SingletonModel):
     viewer_representation_mode = models.CharField(
         verbose_name=_("Viewer Representation mode"), max_length=150

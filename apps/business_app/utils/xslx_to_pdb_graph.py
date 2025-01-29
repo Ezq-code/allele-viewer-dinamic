@@ -88,7 +88,6 @@ class XslxToPdbGraph(ExcelReader):
                     # date=row[ExcelNomenclators.output_date_column_name],
                 )
                 parents_info = row[ExcelNomenclators.output_parent_column_name]
-                print(parents_info)
                 parents = []
                 if not pd.isna(parents_info):
                     parents = (
@@ -161,7 +160,6 @@ class XslxToPdbGraph(ExcelReader):
                         raise ValueError(f"An error writing the ATOMs lines: {ew}.")
             # If no changes are made, means that it is the first time upload
 
-            print("Sucedió un cambio..............")
             # CONECT
             for edge in edges_list:
                 try:
