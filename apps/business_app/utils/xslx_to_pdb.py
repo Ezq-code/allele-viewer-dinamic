@@ -227,7 +227,9 @@ class XslxToPdb(ExcelReader):
             self._get_stick_radius(children_count) * self.sphere_radius_factor
         )
         cache.set(
-            f"sphere_radius_for_{children_count}_children", new_sphere_radius_value
+            f"sphere_radius_for_{children_count}_children",
+            new_sphere_radius_value,
+            timeout=60,
         )
         return new_sphere_radius_value
 
@@ -244,5 +246,9 @@ class XslxToPdb(ExcelReader):
         new_stick_radius_value = (
             const_to_use + self.stick_radius_factor * children_count
         )
-        cache.set(f"stick_radius_for_{children_count}_children", new_stick_radius_value)
+        cache.set(
+            f"stick_radius_for_{children_count}_children",
+            new_stick_radius_value,
+            timeout=60,
+        )
         return new_stick_radius_value
