@@ -238,14 +238,12 @@ class XslxToPdb(ExcelReader):
         if cached_stick_radious:
             return cached_stick_radious
 
-        const_to_use = (
-            self.stick_radius_min_value
-            if not children_count
-            else self.stick_radius_if_children
-        )
-        new_stick_radius_value = (
-            const_to_use + self.stick_radius_factor * children_count
-        )
+        if not children_count:
+            new_stick_radius_value = self.stick_radius_min_value
+        else:
+            new_stick_radius_value = (
+                self.stick_radius_if_children + self.stick_radius_factor * children_count
+            )
         cache.set(
             f"stick_radius_for_{children_count}_children",
             new_stick_radius_value,
