@@ -41,11 +41,13 @@ def extract_parents_tree(G, lista, nodo, root):
 
 
 class XslxToPdbGraph(ExcelReader):
-    def __init__(self, origin_file, global_configuration) -> None:
+    def __init__(self, origin_file, global_configuration=None) -> None:
         super().__init__(origin_file)
         self.dim = (
             3  # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
         )
+        if not global_configuration:
+            global_configuration = SiteConfiguration.get_solo()
         self.k = global_configuration.nx_graph_k  # El óptimo es 1/sqrt(total de nodos), eso asegura que para el grafo en cuestión sea óptimo
         self.scale = (
             global_configuration.nx_graph_scale
