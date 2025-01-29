@@ -163,6 +163,8 @@ class XslxToPdb(ExcelReader):
                     region=region,
                     timeline_appearence=None if pd.isna(age) else age,
                     unique_number=f"{uploaded_file_id}-{allele_number}",
+                    sphere_radius=self._get_sphere_radius(0),
+                    stick_radius=self._get_stick_radius(0),
                 )
 
             for k, v in relations_for_the_end.items():
