@@ -41,11 +41,13 @@ def extract_parents_tree(G, lista, nodo, root):
 
 
 class XslxToPdbGraph(ExcelReader):
-    def __init__(self, origin_file, global_configuration) -> None:
+    def __init__(self, origin_file, global_configuration=None) -> None:
         super().__init__(origin_file)
         self.dim = (
             3  # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
         )
+        if not global_configuration:
+            global_configuration = SiteConfiguration.get_solo()
         self.k = global_configuration.nx_graph_k  # El óptimo es 1/sqrt(total de nodos), eso asegura que para el grafo en cuestión sea óptimo
         self.scale = (
             global_configuration.nx_graph_scale
@@ -92,11 +94,13 @@ class XslxToPdbGraph(ExcelReader):
                         (parent.strip()) for parent in str(parents_info).split(",")
                     )
                 for parent in parents:
-                    if int(parent) == int(allele_number):
+                    int_parent = int(parent)
+                    int_allele_number = int(allele_number)
+                    if int_parent == int_allele_number:
                         continue
                     # self.G.add_edge(int(parent), allele_number)#Adiciona la conexion
-                    if (int(parent), int(allele_number)) not in edges_list:
-                        edges_list.append((int(parent), int(allele_number)))
+                    if (int_parent, int_allele_number) not in edges_list:
+                        edges_list.append((int_parent, int_allele_number))
 
             # Recorrer el diccionario de nodos
             self.G.add_edges_from(edges_list)  # Add a edges list
@@ -156,7 +160,6 @@ class XslxToPdbGraph(ExcelReader):
                         raise ValueError(f"An error writing the ATOMs lines: {ew}.")
             # If no changes are made, means that it is the first time upload
 
-            print("Sucedió un cambio..............")
             # CONECT
             for edge in edges_list:
                 try:

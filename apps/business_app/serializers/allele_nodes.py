@@ -1,6 +1,8 @@
+from logging import config
 from rest_framework import serializers
 
 from apps.business_app.models import AlleleNode
+from apps.business_app.models.site_configurations import SiteConfiguration
 
 
 class ChildSerializer(serializers.ModelSerializer):
@@ -36,11 +38,15 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "children",
             "region",
             "timeline_appearence",
+            "sphere_radius",
+            "stick_radius",
         ]
         read_only_fields = [
             "id",
             "uploaded_file",
             "unique_number",
-            "children_qtity",
+            "children_qty",
             "children",
+            "sphere_radius",
+            "stick_radius",
         ]
