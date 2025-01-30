@@ -9,6 +9,7 @@ from apps.business_app.models import (
     UploadedFiles,
     AlleleNode,
     Marker,
+    MarkerGallery,
     Event,
     Layer,
     Feature,
@@ -26,6 +27,7 @@ logger = logging.getLogger(__name__)
 admin.site.register(SiteConfiguration, SingletonModelAdmin)
 admin.site.register(Event)
 admin.site.register(Marker)
+admin.site.register(MarkerGallery)
 admin.site.register(Layer)
 
 

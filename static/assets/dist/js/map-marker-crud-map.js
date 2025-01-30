@@ -35,8 +35,10 @@ $.ajax({
 
         data.forEach(function (marker) {
             var descriptionLoad = marker.description;
+            var referenceLoad = marker.reference;
             var latitudeLoad = marker.latitude;
             var longitudeLoad = marker.longitude;
+            var galleryLoad = marker.gallery; // Obtener el array de imágenes
             var iconUrlCurrentMarkerLoad = "";
 
             // Aquí accedemos al evento desde el objeto del marcador.
@@ -50,7 +52,34 @@ $.ajax({
                     shadowAnchor: [13, 20]
                 });
                 var markerFromDB = L.marker([latitudeLoad, longitudeLoad], {icon: markerIcon});
-                var popup = markerFromDB.bindPopup(descriptionLoad);
+                // se agrega un evento click al marcador para mostrar la ventana modal
+                markerFromDB.on('click', function () {
+                    var eventImagesDiv = document.getElementById('eventImages');
+                    eventImagesDiv.innerHTML = '';
+                    // Mostrar la descripción y otra información en el modal
+                    document.getElementById('eventDescription').innerHTML = descriptionLoad; // aqui enviamos la description
+                    document.getElementById('eventReference').innerHTML = referenceLoad; // aqui enviamos la referencia
+                    // Iterar sobre el array de imágenes y crear las tarjetas
+                    if (galleryLoad && galleryLoad.length > 0) {
+                        galleryLoad.forEach(function (image) {
+                            var cardHtml = `
+                            <div class="card m-2" style="width: 100px;">
+                            <a href="${image.image_url}" data-lightbox="event-gallery"
+                                    data-title="${image.name}">
+                                 <img src="${image.image_url}" class="card-img-top" alt="${image.name}"
+                                          style="width: 100%; height: auto;">
+                            </a>
+                        </div>
+                    `;
+                            eventImagesDiv.innerHTML += cardHtml;
+                        });
+                    } else {
+                        // Mostrar mensaje si no hay imágenes
+                        eventImagesDiv.innerHTML = '<p>There are no images available for this event.</p>';
+                    }
+
+                    $('#eventModal').modal('show'); // Mostrar el modal
+                });
                 markerLayer.addLayer(markerFromDB);
             }
         });
