@@ -334,7 +334,7 @@
                                                         }).setContent(feature.properties.place+", "+nf.format(feature.properties.mag)+" people."));
                                                     }
                                                 },
-                                            });                                            
+                                            });
 
                                             // llamada ajax para cargar los marcadores, su simbología, su línea del tiempo y adición al mapa  
                                             var polygonTimeline;
@@ -360,6 +360,7 @@
                                                     data = response.results;
                                                     data.forEach(function (marker) {
                                                         var descriptionLoad = marker.description;
+                                                        var referenceLoad = marker.reference;
                                                         var latitudeLoad = marker.latitude;
                                                         var longitudeLoad = marker.longitude;
                                                         var typeEventLoad = marker.event_type_data.event_id;
@@ -370,6 +371,7 @@
                                                         var aend_format = marker.end_format;
                                                         var aPauseMarker = marker.pause_time;
                                                         var aPauseEvent = marker.event_type_data.event_pause_time;
+                                                        var galleryLoad = marker.gallery; // Obtener el array de imágenes
                                                         if ((astart_format == "Before Present (YBP)") || (astart_format == "Before Christ (BC)")) {
                                                             starttime = -1 * starttime;
                                                         }
@@ -385,10 +387,12 @@
                                                             type: "Feature",
                                                             properties: {
                                                                 description: descriptionLoad,
+                                                                reference: referenceLoad,
                                                                 event_type_id: typeEventLoad,
                                                                 iconUrlEvent: iconUrlCurrentMarkerLoad,
                                                                 start: starttime,
                                                                 end: endtime,
+                                                                gallery: galleryLoad
                                                             },
                                                             geometry: {
                                                                 type: "Point",
@@ -412,16 +416,45 @@
                                                     var polygonTimeline = L.timeline(polygons, {
                                                         getInterval: getpoligonInterval,
                                                         pointToLayer: function (features, latlng) {
+                                                            // Crear el marcador sin bindPopup
+                                                            var marker = L.marker(latlng, {
+                                                                icon: L.icon({
+                                                                    iconUrl: features.properties.iconUrlEvent,
+                                                                    iconSize: [25, 41],
+                                                                    shadowSize: [41, 41],
+                                                                    shadowAnchor: [13, 20]
+                                                                })
+                                                            });
 
-                                                            return L.marker(latlng, {
-                                                                icon:
-                                                                    L.icon({
-                                                                        iconUrl: features.properties.iconUrlEvent,
-                                                                        iconSize: [25, 41],
-                                                                        shadowSize: [41, 41],
-                                                                        shadowAnchor: [13, 20]
-                                                                    })
-                                                            }).bindPopup(features.properties.description);
+                                                            // Agregar el evento de clic al marcador
+                                                            marker.on('click', function () {
+                                                                // Mostrar la galería de imágenes en el modal
+                                                                var eventImagesDiv = document.getElementById('eventImages');
+                                                                eventImagesDiv.innerHTML = '';
+                                                                // Mostrar la descripción y otra información en el modal
+                                                                document.getElementById('eventDescription').innerHTML = features.properties.description; // aqui enviamos la description
+                                                                document.getElementById('eventReference').innerHTML = features.properties.reference; // aqui enviamos la referencia
+                                                                // Aquí usamos la galería que agregamos en las propiedades
+                                                                if (features.properties.gallery && features.properties.gallery.length > 0) {
+                                                                    features.properties.gallery.forEach(function (image) {
+                                                                        var cardHtml = `
+                                                                            <div class="card m-2" style="width: 100px;">
+                                                                                <a href="${image.image_url}" data-lightbox="event-gallery" data-title="${image.name}">
+                                                                                    <img src="${image.image_url}" class="card-img-top" alt="${image.name}" style="width: 100%; height: auto;">
+                                                                                </a>
+                                                                            </div>
+                                                                        `;
+                                                                        eventImagesDiv.innerHTML += cardHtml;
+                                                                    });
+                                                                } else {
+                                                                    eventImagesDiv.innerHTML = '<p>There are no images available for this event.</p>';
+                                                                }
+
+                                                                $('#eventModal').modal('show'); // Mostrar el modal
+                                                            });
+
+                                                            // Devolver el marcador
+                                                            return marker;
                                                         }
                                                     });
                                                     timelineControl.addTimelines(polygonTimeline);
