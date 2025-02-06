@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from apps.business_app.models import Event, Feature, Marker
+from apps.business_app.models import Event, Feature, Marker, MarkerGallery
 
 # Create your views here.
 
@@ -49,3 +49,8 @@ def markers_list(request):
 
 def register(request):
     return render(request, "login/register.html")
+
+def marker_gallery(request):
+    gallery = MarkerGallery.objects.order_by("-id").all()
+    markers = Marker.objects.order_by("-id").all()
+    return render(request, "map/marker_gallery/marker_gallery.html", {"gallery": gallery, "markers": markers})

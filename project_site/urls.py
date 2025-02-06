@@ -60,6 +60,8 @@ urlpatterns = [
     path("events/list", pages.events, name="events"),
     path("features/list", pages.human_migrations, name="features"),
     path("markers/list", pages.markers_list, name="markers-list"),
+    path("gallery/list", pages.marker_gallery, name="gallery-list"),
+
 ]
 
 # This is for serving media on development stages
