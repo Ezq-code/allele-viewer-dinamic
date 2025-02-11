@@ -135,13 +135,9 @@ function poblarListasCopy(uploadFileId) {
               element.id
             );
             $selectCopy.add(option);
-            // $inputGroup.style.display = "flex"; // Muestra el div si hay resultados
             $inputGroup.hidden = false;
           });
         } else {
-          // var noResultsOption = new Option("Sin resultados", "");
-          // $selectCopy.add(noResultsOption);
-          // $inputGroup.style.display = "none"; // Oculta el div si no hay resultados
           $inputGroup.hidden = true;
         }
       })
@@ -256,7 +252,6 @@ function sendRSControlValues() {
     file_id: fileId,
   };
 
-  // console.log(data);
   load.hidden = false;
   $("#modal-xl").modal("hide");
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
@@ -310,12 +305,8 @@ function selectUrl() {
       const elemento = response.data;
       let pos = findPosition(elemento.pdb_files, $selectPdb.value);
       let versionAllele = elemento.pdb_files[pos].pdb_content;
-
-      console.log(" versionAllele:", elemento.pdb_files[0].id);
-      console.log(" versionAllele2:", versionAllele);
       localStorage.setItem("uploadFileId", idFile);
       graficar_string(versionAllele);
-
       // To enable the button
       loadOriginalXYZ();
       snpModalShowBotton.disabled = false;
@@ -338,124 +329,80 @@ function findPosition(data, id) {
   return -1;
 }
 
-
-
 function showInfo(atom) {
   $(".showalleleinfo").toast("hide");
 
-  atomNumber = atom.serial;
-  load.hidden = false;
-  let toastClass = seleccionarEstiloAleatorio();
+  const atomNumber = atom.serial;
+  //load.hidden = false;
+  const toastClass = seleccionarEstiloAleatorio();
+  const uploadFileId = localStorage.getItem("uploadFileId");
+  const url = `/business-gestion/allele-nodes/${uploadFileId}-${atomNumber}/`;
+
   axios
-    .get(
-      "/business-gestion/allele-nodes/" +
-        localStorage.getItem("uploadFileId") +
-        "-" +
-        String(atomNumber) +
-        "/"
-    )
-    .then(function (response) {
-      const elemento = response.data;      
-      const imageHtml =
-        ' <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style=" border-radius: 14px; width: -webkit-fill-available"/>';
+    .get(url)
+    .then((response) => {
+      const elemento = response.data;
+      const imageHtml = `
+        <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
+      `;
       children = elemento.children;
-      if (elemento.children_qty == 0) {
-        $(document).Toasts("create", {
-          class: toastClass,
-          title: elemento.custom_element_name,
-          // title: elemento.serial,
-          subtitle: elemento.children_qty,
-          body:
-            imageHtml + '<div class="card-body">'+
-            '<button type="button" class="btn btn-block btn-info" onclick="mostrarRS(\'' + elemento.rs+ '\')">Show RS</button>' +
-            '<button type="button" class="btn btn-block btn-secondary" onclick="marcar(' +
-            atom.x +
-            "," +
-            atom.y +
-            "," +
-            atom.z +
-            ')">Bookmark</button>' +
-            '<button type="button" class="btn btn-block bg-teal" onclick="childFull(' +
-            elemento.number +
-            ')">Progenitores</button>' +
-            '<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion(\'' +
-            elemento.region +
-            "')\">Region " +
-            elemento.region +
-            "</button>" +
-            "<hr> Data for control (temporary):<br> X " +
-            atom.x +
-            " | Y " +
-            atom.y +
-            " | Z " +
-            atom.z +
-            " #: " +
-            elemento.number,
-          position: "bottomRight",
-        });
-      } else {
-        selectActual = elemento.number;
-        $(document).Toasts("create", {
-          class: toastClass,
-          title: elemento.custom_element_name,
-          // title: elemento.serial,
-          subtitle:
-            elemento.number +
-            " " +
-            '<span class="badge badge-danger ">Childs ' +
-            elemento.children_qty +
-            "</span>",
-          body:
-            imageHtml +'<div class="card-body">'+
-            '<button type="button" class="btn btn-block btn-info" onclick="mostrarRS(\'' + elemento.rs+ '\')">Show RS</button>' +
-            '<button type="button" class="btn btn-block bg-lime" onclick="loadFamily(' +
-            elemento.number +
-            ')">Descendant</button>' +
-            '<button type="button" class="btn btn-block bg-teal" onclick="childFull(' +
-            elemento.number +
-            ')">Progenitores</button>' +
-            '<button type="button" class="btn btn-block bg-olive" onclick="marcar(' +
-            atom.x +
-            "," +
-            atom.y +
-            "," +
-            atom.z +
-            ')">Bookmark</button>' +
-            '<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion(\'' +
-            elemento.region +
-            "')\">Region " +
-            elemento.region +
-            "</button>" +
-            "<hr> Data Control(temp):<br> X: " +
-            atom.x +
-            " | Y " +
-            atom.y +
-            " | Z " +
-            atom.z +
-            " #: " +
-            elemento.number +
-            "<br> Appeared: " +
-            elemento.timeline_appearence,
-          position: "bottomRight",
-        });
-      }
+      const buttons = `
+        <button type="button" class="btn btn-block btn-info" onclick="mostrarRS('${
+          elemento.rs
+        }')">Show RS</button>
+        <button type="button" class="btn btn-block btn-secondary" onclick="marcar(${
+          atom.x
+        }, ${atom.y}, ${atom.z})">Bookmark</button>
+        <button type="button" class="btn btn-block bg-teal" onclick="childFull(${
+          elemento.number
+        })">Parents</button>
+        <button type="button" class="btn btn-block bg-lime" onclick="loadFamily(${
+          elemento.number
+        })">Descendant</button>
+        ${
+          elemento.region != "nan"
+            ? `<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion('${elemento.region}')">Region ${elemento.region}</button>`
+            : ""
+        }
+      `;
+
+      const additionalInfo =
+        elemento.children_qty === 0
+          ? `<hr> Data for control (temporary):<br> X ${atom.x} | Y ${atom.y} | Z ${atom.z} #: ${elemento.number}`
+          : `<hr> Data Control(temp):<br> X: ${atom.x} | Y ${atom.y} | Z ${atom.z} #: ${elemento.number}<br> Appeared: ${elemento.timeline_appearence}`;
+
+      const subtitle =
+        elemento.children_qty === 0
+          ? `${elemento.custom_element_name} - ${elemento.children_qty}`
+          : `${elemento.number} <span class="badge badge-danger">Childs ${elemento.children_qty}</span>`;
+
+      $(document).Toasts("create", {
+        class: toastClass,
+        title: elemento.custom_element_name,
+        subtitle: subtitle,
+        body:
+          imageHtml +
+          `<div class="card-body">${buttons}${additionalInfo}</div>`,
+        position: "bottomRight",
+      });
     })
-    .catch(function (error) {
+    .catch((error) => {
       Toast.fire({
         icon: "error",
         title: `${error.response.data.detail}`,
       });
+    })
+    .finally(() => {
+      load.hidden = true;
     });
-
-  load.hidden = true;
 }
 
 function mostrarRS(rsList) {
   Swal.fire({
-    title: 'RS List',
+    title: "RS List",
     text: rsList,
-    icon: 'info',
-    confirmButtonText: 'Ok'
+    icon: "info",
+    confirmButtonText: "Ok",
   });
 }
 
@@ -646,7 +593,24 @@ function childFull(id) {
         const isVisible =
           atomData.some((item) => item === element.number) ||
           element.number === id;
-        if (!isVisible) {
+        if (isVisible) {
+          viewer.setStyle(
+            { serial: element.number },
+            {
+              sphere: {
+                hidden: false, // Ocultar esfera
+              },
+              stick: {
+                hidden: false, // Ocultar stick
+              },
+            }
+          );
+
+
+
+
+          
+        } else {
           viewer.setStyle(
             { serial: element.number },
             {
@@ -671,13 +635,24 @@ function childFull(id) {
 }
 
 function childFamily(id) {
-  console.log("✌️datos --->", datos);
   datos.forEach((element) => {
     const isVisible =
       children.some((item) => item.number === element.number) ||
       element.number === id;
 
-    if (!isVisible) {
+    if (isVisible) {
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: {
+            hidden: false, // Ocultar esfera
+          },
+          stick: {
+            hidden: false, // Ocultar stick
+          },
+        }
+      );
+    } else {
       viewer.setStyle(
         { serial: element.number },
         {
@@ -798,11 +773,8 @@ function childZoom() {
         stick: { color: "spectrum", radius: stickRadius, showNonBonded: false },
       }
     );
-    // console.log("stickRadius :", stickRadius);
-    // console.log("sphereRadius :", sphereRadius);
+   
   });
-
-  // console.log("zoomLevel :", zoomLevel);
   viewer.render();
   load.hidden = true;
 }
@@ -813,8 +785,8 @@ zoom.addEventListener("input", function () {
   zoomLevel = zoom.value;
   childZoom();
 });
-// displaySNPModal
 
+// displaySNPModal
 snpModalShowBotton.addEventListener("click", function () {
   displaySNPData();
 });
@@ -885,10 +857,6 @@ function sendExpantionValues() {
     })
     .catch(function (error) {
       load.hidden = true;
-      // Toast.fire({
-      //     icon: 'error',
-      //     title: `${error.response.data.detail}`
-      // })
       Swal.fire({
         icon: "error",
         title: "Oops...",
