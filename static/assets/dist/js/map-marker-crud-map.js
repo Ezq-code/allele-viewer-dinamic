@@ -38,7 +38,7 @@ $.ajax({
             var referenceLoad = marker.reference;
             var latitudeLoad = marker.latitude;
             var longitudeLoad = marker.longitude;
-            var galleryLoad = marker.gallery; // Obtener el array de imágenes
+            var galleryLoad = marker.marker_galleries; // Obtener el array de imágenes
             var iconUrlCurrentMarkerLoad = "";
 
             // Aquí accedemos al evento desde el objeto del marcador.
@@ -64,9 +64,9 @@ $.ajax({
                         galleryLoad.forEach(function (image) {
                             var cardHtml = `
                             <div class="card m-2" style="width: 100px;">
-                            <a href="${image.image_url}" data-lightbox="event-gallery"
+                            <a href="${image.image}" data-lightbox="event-gallery"
                                     data-title="${image.name}">
-                                 <img src="${image.image_url}" class="card-img-top" alt="${image.name}"
+                                 <img src="${image.image}" class="card-img-top" alt="${image.name}"
                                           style="width: 100%; height: auto;">
                             </a>
                         </div>

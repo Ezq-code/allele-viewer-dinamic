@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from apps.business_app.models.marker import Marker
 from apps.business_app.models.event import Event
-from apps.business_app.models.marker_gallery import MarkerGallery
 from apps.business_app.serializers.marker_gallery import MarkerGallerySerializer
 
 
@@ -10,7 +9,7 @@ class MarkerSerializer(serializers.ModelSerializer):
     event_type_data = serializers.SerializerMethodField(
         method_name="get_event_type", read_only=True
     )
-    gallery = serializers.SerializerMethodField(method_name="get_gallery", read_only=True)
+    marker_galleries = MarkerGallerySerializer(many=True, read_only=True)
 
     class Meta:
         model = Marker
@@ -27,7 +26,7 @@ class MarkerSerializer(serializers.ModelSerializer):
             "pause_time",
             "event_type",
             "event_type_data",
-            "gallery",
+            "marker_galleries",
         ]
 
     def get_event_type(self, obj):
@@ -42,7 +41,3 @@ class MarkerSerializer(serializers.ModelSerializer):
         }
         return event_data
 
-    def get_gallery(self, obj):
-        # Obtener todas las imágenes relacionadas con el marcador
-        gallery_items = MarkerGallery.objects.filter(marker=obj)
-        return MarkerGallerySerializer(gallery_items, many=True, context=self.context).data

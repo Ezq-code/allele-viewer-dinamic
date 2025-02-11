@@ -1,4 +1,4 @@
-# from functools import cache
+from functools import cache
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions
 from apps.business_app.models import AlleleNode

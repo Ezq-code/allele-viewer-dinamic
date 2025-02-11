@@ -334,7 +334,7 @@
                                                         }).setContent(feature.properties.place+", "+nf.format(feature.properties.mag)+" people."));
                                                     }
                                                 },
-                                            });
+                                            });                                            
 
                                             // llamada ajax para cargar los marcadores, su simbología, su línea del tiempo y adición al mapa  
                                             var polygonTimeline;
@@ -371,7 +371,7 @@
                                                         var aend_format = marker.end_format;
                                                         var aPauseMarker = marker.pause_time;
                                                         var aPauseEvent = marker.event_type_data.event_pause_time;
-                                                        var galleryLoad = marker.gallery; // Obtener el array de imágenes
+                                                        var galleryLoad = marker.marker_galleries; // Obtener el array de imágenes
                                                         if ((astart_format == "Before Present (YBP)") || (astart_format == "Before Christ (BC)")) {
                                                             starttime = -1 * starttime;
                                                         }
@@ -439,8 +439,8 @@
                                                                     features.properties.gallery.forEach(function (image) {
                                                                         var cardHtml = `
                                                                             <div class="card m-2" style="width: 100px;">
-                                                                                <a href="${image.image_url}" data-lightbox="event-gallery" data-title="${image.name}">
-                                                                                    <img src="${image.image_url}" class="card-img-top" alt="${image.name}" style="width: 100%; height: auto;">
+                                                                                <a href="${image.image}" data-lightbox="event-gallery" data-title="${image.name}">
+                                                                                    <img src="${image.image}" class="card-img-top" alt="${image.name}" style="width: 100%; height: auto;">
                                                                                 </a>
                                                                             </div>
                                                                         `;
