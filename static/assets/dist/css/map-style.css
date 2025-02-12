@@ -151,3 +151,11 @@
     border-radius: 5px; /* Bordes redondeados para inputs */
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Sombra interna*/
 }
+
+.scrollable {
+    max-height: 200px; /* Ajusta la altura máxima según sea necesario */
+    overflow-y: auto; /* Permite el scroll vertical */
+    border: 1px solid #ddd; /* Opcional: agrega un borde para distinguir la sección */
+    padding: 10px; /* Opcional: agrega un poco de padding */
+    border-radius: 5px; /* Opcional: bordes redondeados */
+}
