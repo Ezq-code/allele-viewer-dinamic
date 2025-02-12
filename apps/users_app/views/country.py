@@ -9,6 +9,9 @@ from apps.users_app.models import Country
 from apps.users_app.serializers import CountrySerializer
 from rest_framework.decorators import action
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 
 # Create your views here.
 
@@ -36,6 +39,7 @@ class CountryViewSet(
 
     permission_classes = [permissions.AllowAny]
 
+    @method_decorator(cache_page(timeout=3600, key_prefix="get_codes"))
     @action(
         methods=["get"],
         detail=False,
