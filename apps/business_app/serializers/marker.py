@@ -1,11 +1,9 @@
 from rest_framework import serializers
 from apps.business_app.models.marker import Marker
-from apps.business_app.models.event import Event
 from apps.business_app.serializers.marker_gallery import MarkerGallerySerializer
 
 
 class MarkerSerializer(serializers.ModelSerializer):
-    event_type = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all())
     event_type_data = serializers.SerializerMethodField(
         method_name="get_event_type", read_only=True
     )
@@ -40,4 +38,3 @@ class MarkerSerializer(serializers.ModelSerializer):
             else obj.event_type.event_icon.url,
         }
         return event_data
-

@@ -3,7 +3,6 @@ from django.db import models
 import uuid
 
 from django.contrib.auth.models import User
-from django.db import models
 from django.utils._os import safe_join
 from django.utils.translation import gettext_lazy as _
 
