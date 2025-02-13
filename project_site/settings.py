@@ -41,7 +41,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG", cast=bool)
+DEBUG = env.bool("DEBUG", default=False)
 DEBUG_PROPAGATE_EXCEPTIONS = DEBUG
 
 
@@ -301,9 +301,12 @@ LOGGING = {
 SPREADSHEET_ID = env("SPREADSHEET_ID")
 CREDENTIAL_FILE_NAME = env("CREDENTIAL_FILE_NAME", default="credentials.json")
 
+CACHE_DEFAULT_TIMEOUT = env.int("CACHE_DEFAULT_TIMEOUT", default=300)
+
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "TIMEOUT": 36000,
+        "BACKEND":"django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "TIMEOUT": CACHE_DEFAULT_TIMEOUT
     }
 }
