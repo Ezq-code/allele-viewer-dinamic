@@ -197,11 +197,38 @@
                             <div class="card-header">
                                 <h3 class="card-title">Map - CYP2D6 Alleles-Expansions</h3>
                                 <div class="card-tools">
+                                    <div class="d-inline-block">
+                                        <select class="form-control form-control-sm" name="timeRange" id="timeRange">
+                                            <option value="All the Time">All the Time</option>                                        
+                                            <option value="from 315000 YBP to 200000 YBP">from 315000 YBP to 200000 YBP</option>
+                                            <option value="from 200000 YBP to 70000 YBP">from 200000 YBP to 70000 YBP</option>
+                                            <option value="from 70000 YBP to 1">from 70000 YBP to 1</option>
+                                            <option value="from 1 to 2025">from 1 to 2025</option>
+                                        </select>
+                                            </div>
+                                        <div class="d-inline-block">
+                                        <select class="form-control form-control-sm" name="regionTimeLine" id="regionTimeLine">
+                                            <option value="All the World">All the World</option>
+                                            <option value="Africa">Africa</option>
+                                            <option value="Western Asia">Western Asia</option>
+                                            <option value="Eastern Asia">Eastern Asia</option>
+                                            <option value="Europe">Europe</option>
+                                            <option value="Oceania">Oceania</option>
+                                            <option value="North America">North America</option>
+                                            <option value="Latin America">Latin America & Carib</option>
+                                        </select>  
+                                            </div>
+                                        <div class="d-inline-block">
+                                        <button class="btn btn-primary btn-sm border-right" id="btreload">Load</button>
+                                            </div>
+                                        <div class="d-inline-block">
+    
                                     <button type="button" class="btn btn-tool" title="CYP2D6 Alleles-Expansions"
                                             data-widget="control-sidebar"
                                             data-controlsidebar-slide="true">
                                         <i class="fas fa-walking"></i>
                                     </button>
+                                  </div>
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -217,6 +244,25 @@
                                 <script src="{% static 'assets/dist/js/map-load-shape.js' %}"></script>
 
                                 <script>
+          
+                                    if (!sessionStorage.getItem('inicializado')) {
+                                     // Código que solo se ejecuta en la primera carga
+                                     sessionStorage.setItem('beginIntervalsesion', -315000);
+                                     sessionStorage.setItem('endIntervalsesion', 2025);
+                                     sessionStorage.setItem('durationSesion', 317025);  
+                                     sessionStorage.setItem('lat', 10);
+                                     sessionStorage.setItem('long', 120);
+                                     sessionStorage.setItem('zoom', 2); 
+                                     sessionStorage.setItem('timeRange', 'All the Time'); 
+                                     sessionStorage.setItem('region', 'All the World'); 
+                                     sessionStorage.setItem('inicializado', 'true');
+                                    }
+
+                                    var timeRangeIni = document.getElementById("timeRange");
+                                    var regionTimeLineIni = document.getElementById("regionTimeLine");
+                                    timeRangeIni.value = sessionStorage.getItem('timeRange');
+                                    regionTimeLineIni.value = sessionStorage.getItem('region');
+
                                     // Capa Base con mapa político
                                     var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";  //"http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
                                     var osmAttrib = "CYP2D6 Alleles-Expansions";
@@ -253,13 +299,17 @@
                                     // Creación de la variable del Mapa
                                     var map = L.map("map", {
                                         layers: [satelitalLayer],
-                                        center: new L.LatLng(-3, 20),
-                                        zoom: 4,
+                                        center: new L.LatLng(10, 120),//new L.LatLng(-3, 20),
+                                        zoom: 2,//4,
                                         maxBounds: [
                                             [90, -50],
                                             [-90, 335],
                                         ],
                                     });
+
+                                      map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
+                                    
+
 
                                     // Capa de las marcas
                                     markerLayer = new L.featureGroup().addTo(map);
