@@ -1,6 +1,5 @@
 # from rest_framework import routers
 from rest_framework_extensions.routers import ExtendedSimpleRouter
-from django.urls import path
 
 from apps.business_app.views import (
     AllowedExtensionsViewSet,

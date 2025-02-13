@@ -5,7 +5,6 @@ from rest_framework.generics import GenericAPIView
 from apps.business_app.serializers.layer import LayerSerializer
 from apps.common.views import CommonOrderingFilter
 from apps.business_app.models import Layer
-from apps.business_app.serializers import AllowedExtensionsSerializer
 from apps.common.pagination import AllResultsSetPagination
 
 # Create your views here.

@@ -2,9 +2,6 @@
 
 from django.db import migrations
 
-from apps.business_app.models import region_county
-from apps.business_app.models.region import Region
-
 
 def fill_regions(apps, schema_editor):
     Region = apps.get_model("business_app", "Region")
