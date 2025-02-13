@@ -1,8 +1,6 @@
-from logging import config
 from rest_framework import serializers
 
 from apps.business_app.models import AlleleNode
-from apps.business_app.models.site_configurations import SiteConfiguration
 
 
 class ChildSerializer(serializers.ModelSerializer):
