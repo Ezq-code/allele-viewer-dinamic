@@ -40,4 +40,3 @@ class MarkerSerializer(serializers.ModelSerializer):
             else obj.event_type.event_icon.url,
         }
         return event_data
-

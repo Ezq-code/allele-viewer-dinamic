@@ -305,8 +305,10 @@ CACHE_DEFAULT_TIMEOUT = env.int("CACHE_DEFAULT_TIMEOUT", default=300)
 
 CACHES = {
     "default": {
-        "BACKEND":"django.core.cache.backends.redis.RedisCache",
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        if DEBUG
+        else "django.core.cache.backends.redis.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379",
-        "TIMEOUT": CACHE_DEFAULT_TIMEOUT
+        "TIMEOUT": CACHE_DEFAULT_TIMEOUT,
     }
 }
