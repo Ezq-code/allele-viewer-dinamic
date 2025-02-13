@@ -4,10 +4,11 @@
                     var year = date.getFullYear();
                     var timeMarkerArray = [];
                     var pauseMarkerArray = [];
-                    var timeLinePosition = 315000;
+                    var timeLinePosition = parseInt(sessionStorage.getItem('beginIntervalsesion'));
                     var pauseTimeline = false;
                     var delayTimePauseTimeLine = 3000;
-                    
+                    var finaPosition = parseInt(sessionStorage.getItem('endIntervalsesion'));
+
                     function playTimeLine() {
                         timelineControl.play();
                         pauseTimeline = false;
@@ -17,9 +18,9 @@
                         if (timeMarkerArray.length > 0){ 
                          if (pauseTimeline == false) {
                             var find = false;
-                            var aDelay = 317;
-                            if ((timeLinePosition > 0) && (year - timeLinePosition <= aDelay )){
-                                aDelay = year - timeLinePosition;   
+                            var aDelay = Math.trunc(parseInt(sessionStorage.getItem('durationSesion'))/1000)-1; //317;
+                            if ((timeLinePosition > 0) && (finaPosition - timeLinePosition <= aDelay )){
+                                aDelay = finaPosition - timeLinePosition;   
                             }
                             var i = timeLinePosition - aDelay;   
                             while ((!find) && ( i <= timeLinePosition + aDelay )) {
@@ -43,14 +44,14 @@
                                           
 					function updateList(timeline) {
                                           
-                                            if (timeline.time < -130000) {
+                                          /*  if (timeline.time < -130000) {
                                                 map.setView(new L.LatLng(10, 120), 2);
                                             }
                                             else if ((timeline.time >= -130000) && (timeline.time <= -61051)) {
                                                 map.setView(new L.LatLng(-3, 20), 3);
                                             } else if (timeline.time > -61051) {
                                                 map.setView(new L.LatLng(10, 120), 2);
-                                            }
+                                            } */
                                            
                                             if (timeline.time == year) {
                                                 markerLayer.addTo(map);
@@ -73,14 +74,19 @@
                                             timeLinePosition = timeline.time;
                                             migrationPoblationRegion.bringToBack();
                                         }
-
-                                             // duración de la línea del tiempo en general
-                                             var timelineControl = L.timelineSliderControl({
-                                                //options: new TimelineSliderControlOptions duration: 315000                                
-                                              duration: 315000,
-                                              steps: 1000
-                                            });    
-
+                                            
+                                            var localbeginIntervalsesion = parseInt(sessionStorage.getItem('beginIntervalsesion'));
+                                            var localendIntervalsesion = parseInt(sessionStorage.getItem('endIntervalsesion'));
+                                            var localdurationSesion = parseInt(sessionStorage.getItem('durationSesion'));
+                                            
+                                            // duración de la línea del tiempo en general
+                                            var timelineControl = L.timelineSliderControl({                                
+                                             duration: localdurationSesion, //sessionStorage.getItem('durationSesion'), //315000, //55000
+                                             steps: 1000,//(Math.abs(localbeginIntervalsesion)-Math.abs(localendIntervalsesion))/315,//1000, //175
+                                             start: localbeginIntervalsesion, //sessionStorage.getItem('beginIntervalsesion'), //-315000,
+                                             end: localendIntervalsesion //sessionStorage.getItem('endIntervalsesion') //2025
+                                          });  
+                                            
                                           var migrationPoblationRegion;
                                           var migrationPoints;
 
@@ -104,7 +110,7 @@
                                                     return {
                                                         start: quake.properties.timefinal,
                                                         end: quake.properties.time
-                                                    };
+                                                        };
                                                 }
                                             };
 
@@ -113,7 +119,7 @@
                                                     return {
                                                         start: quake.properties.timefinal,
                                                         end: quake.properties.time
-                                                    };
+                                                        };                                                  
                                                 }
                                             };
 
@@ -123,8 +129,8 @@
                                                 if ((quake.properties.id == 10)  || (quake.properties.id == 11)) {
                                                     return {
                                                         start: quake.properties.timefinal,
-                                                        end: year//quake.properties.time
-                                                    };
+                                                        end: year
+                                                        };
                                                 }
                                             };
 
@@ -132,11 +138,10 @@
                                            var getPoblationRegionInterval = function (quake) {
 
                                             if (quake.properties.id == 20) {
-                                              return {
-                                                  start: quake.properties.timefinal,
-                                                  end: quake.properties.time,//quake.properties.time
-                                                  duration: 315000
-                                              };
+                                                return {
+                                                    start: quake.properties.timefinal,
+                                                    end: quake.properties.time
+                                                    };
                                           }
                                          };
 
@@ -334,7 +339,7 @@
                                                         }).setContent(feature.properties.place+", "+nf.format(feature.properties.mag)+" people."));
                                                     }
                                                 },
-                                            });                                            
+                                            });
 
                                             // llamada ajax para cargar los marcadores, su simbología, su línea del tiempo y adición al mapa  
                                             var polygonTimeline;
@@ -411,7 +416,8 @@
                                                         return {
                                                             start: polygons.properties.start,
                                                             end: polygons.properties.end,
-                                                        }
+                                                        };                                                      
+
                                                     };
                                                     var polygonTimeline = L.timeline(polygons, {
                                                         getInterval: getpoligonInterval,
@@ -630,3 +636,119 @@
                                             //});
                                             updateList(migrationTraceRoute);
                                         }
+
+                                        document.getElementById('btreload').addEventListener('click', function() {
+                                            
+                                        var aTimeRange = document.getElementById("timeRange");
+                                        var aRegionTimeLine = document.getElementById("regionTimeLine");
+                                        sessionStorage.setItem('timeRange', aTimeRange.value);
+                                        sessionStorage.setItem('region', aRegionTimeLine.value);
+                                         
+                                        if (aTimeRange.value == "All the Time"){
+                                            sessionStorage.setItem('beginIntervalsesion', '-315000');
+                                            sessionStorage.setItem('endIntervalsesion', '2025');  
+                                            sessionStorage.setItem('durationSesion', '317025');    
+                                        } 
+                                        else
+                                        if (aTimeRange.value == "from 315000 YBP to 200000 YBP"){
+                                            sessionStorage.setItem('beginIntervalsesion', '-315000');
+                                            sessionStorage.setItem('endIntervalsesion', '-200000');  
+                                            sessionStorage.setItem('durationSesion', '115000');    
+                                        }
+                                        else
+                                        if (aTimeRange.value == "from 200000 YBP to 70000 YBP"){
+                                            sessionStorage.setItem('beginIntervalsesion', '-200000');
+                                            sessionStorage.setItem('endIntervalsesion', '-70000');  
+                                            sessionStorage.setItem('durationSesion', '130000');    
+                                        }
+                                        else
+                                        if (aTimeRange.value == "from 70000 YBP to 1"){
+                                            sessionStorage.setItem('beginIntervalsesion', '-70000');
+                                            sessionStorage.setItem('endIntervalsesion', '1');  
+                                            sessionStorage.setItem('durationSesion', '70001');    
+                                        }
+                                        else
+                                        if (aTimeRange.value == "from 1 to 2025"){
+                                            sessionStorage.setItem('beginIntervalsesion', '1');
+                                            sessionStorage.setItem('endIntervalsesion', '2025');  
+                                            sessionStorage.setItem('durationSesion', '2024');    
+                                        }                                                                                                                         
+                                        else{
+                                            sessionStorage.setItem('beginIntervalsesion', '-315000');
+                                            sessionStorage.setItem('endIntervalsesion', '2025');  
+                                            sessionStorage.setItem('durationSesion', '317025');                                               
+                                        }
+
+                                        if (aRegionTimeLine.value == "All the World"){ 
+                                          sessionStorage.setItem('lat', '10');
+                                          sessionStorage.setItem('long', '120');  
+                                          sessionStorage.setItem('zoom', '2');    
+                                        }
+                                        else
+                                        if (aRegionTimeLine.value == "Africa"){
+                                          sessionStorage.setItem('lat', '-3');
+                                          sessionStorage.setItem('long', '20');  
+                                          sessionStorage.setItem('zoom', '3');   
+                                        }                             
+                                        else
+                                        if (aRegionTimeLine.value == "Western Asia"){
+                                          sessionStorage.setItem('lat', '47');
+                                          sessionStorage.setItem('long', '60');  
+                                          sessionStorage.setItem('zoom', '3');    
+                                        }
+                                        else
+                                        if (aRegionTimeLine.value == "Eastern Asia"){
+                                            sessionStorage.setItem('lat', '47');
+                                            sessionStorage.setItem('long', '120');  
+                                            sessionStorage.setItem('zoom', '3');      
+                                        }
+                                        else
+                                        if (aRegionTimeLine.value == "Europe"){   
+                                            sessionStorage.setItem('lat', '49');
+                                            sessionStorage.setItem('long', '0');  
+                                            sessionStorage.setItem('zoom', '3');    
+                                        }
+                                        else
+                                        if (aRegionTimeLine.value == "Oceania"){
+                                            sessionStorage.setItem('lat', '-20');
+                                            sessionStorage.setItem('long', '140');  
+                                            sessionStorage.setItem('zoom', '3');                                               
+                                        }
+                                        else
+                                        if (aRegionTimeLine.value == "North America"){
+                                            sessionStorage.setItem('lat', '50');
+                                            sessionStorage.setItem('long', '315');  
+                                            sessionStorage.setItem('zoom', '3');   
+                                        }
+                                        else
+                                        if (aRegionTimeLine.value == "Latin America & Carib"){
+                                            sessionStorage.setItem('lat', '-20');
+                                            sessionStorage.setItem('long', '360');  
+                                            sessionStorage.setItem('zoom', '3');                                                
+                                        }
+                                        else{
+                                            sessionStorage.setItem('lat', '10');
+                                            sessionStorage.setItem('long', '120');  
+                                            sessionStorage.setItem('zoom', '2');                                             
+                                        }                                        
+
+                                            //var beginInterval =  -70000;
+                                            //var endInterval = -14999;
+                                            //var setAndInterval = true;
+                                            // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
+                                            Swal.fire({
+                                                title: 'Updating TimeLine...',
+                                                showConfirmButton: false,
+                                                willOpen: () => {
+                                                    Swal.showLoading();
+                                                }
+                                            });
+                                            // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
+                                            setTimeout(function () {
+                                                location.reload()
+                                            }, 500);
+
+                                        });
+
+
+                                    
