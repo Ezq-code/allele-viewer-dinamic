@@ -44,6 +44,7 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env.bool("DEBUG", default=False)
 DEBUG_PROPAGATE_EXCEPTIONS = DEBUG
 
+
 if not DEBUG:
     sentry_sdk.init(
         dsn=env("SENTRY_DSN", default=None),
