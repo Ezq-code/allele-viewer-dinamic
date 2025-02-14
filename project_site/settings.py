@@ -45,22 +45,23 @@ DEBUG = env.bool("DEBUG", default=False)
 DEBUG_PROPAGATE_EXCEPTIONS = DEBUG
 
 
-sentry_sdk.init(
-    dsn=env("SENTRY_DSN", default=None) if not DEBUG else None,
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for tracing.
-    traces_sample_rate=env.float("SENTRY_SAMPLE_RATE", default=0),
-    # Set profiles_sample_rate to 1.0 to profile 100%
-    # of sampled transactions.
-    # We recommend adjusting this value in production.
-    profiles_sample_rate=env.float("SENTRY_SAMPLE_RATE", default=0),
-    _experiments={
-        # Set continuous_profiling_auto_start to True
-        # to automatically start the profiler on when
-        # possible.
-        "continuous_profiling_auto_start": True,
-    },
-)
+if not DEBUG:
+    sentry_sdk.init(
+        dsn=env("SENTRY_DSN", default=None),
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for tracing.
+        traces_sample_rate=env.float("SENTRY_SAMPLE_RATE", default=0),
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=env.float("SENTRY_SAMPLE_RATE", default=0),
+        _experiments={
+            # Set continuous_profiling_auto_start to True
+            # to automatically start the profiler on when
+            # possible.
+            "continuous_profiling_auto_start": True,
+        },
+    )
 
 
 ALLOWED_HOSTS = ["*"]
@@ -303,12 +304,18 @@ CREDENTIAL_FILE_NAME = env("CREDENTIAL_FILE_NAME", default="credentials.json")
 
 CACHE_DEFAULT_TIMEOUT = env.int("CACHE_DEFAULT_TIMEOUT", default=300)
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
-        if DEBUG
-        else "django.core.cache.backends.redis.RedisCache",
+if DEBUG:
+    cache_backend = {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "TIMEOUT": CACHE_DEFAULT_TIMEOUT,
+    }
+else:
+    cache_backend = {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379",
         "TIMEOUT": CACHE_DEFAULT_TIMEOUT,
     }
+
+CACHES = {
+    "default": cache_backend
 }
