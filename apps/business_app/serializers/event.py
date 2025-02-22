@@ -1,15 +1,15 @@
 from rest_framework import serializers
 
 
-# from apps.business_app.models.event import Event
+from apps.business_app.models.event import Event
 
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
-        model = "Event"
+        model = Event
         fields = [
             "id",
-            "name",
-            "icon",
+            "event_name",
+            "event_icon",
             "pause_time",
         ]

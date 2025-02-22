@@ -5,8 +5,8 @@ from apps.business_app.models.event_type import EventType
 
 
 class Event(models.Model):
-    name = models.CharField(_("Event Name"), max_length=255)
-    icon = models.ImageField(
+    event_name = models.CharField(_("Event Name"), max_length=255)
+    event_icon = models.ImageField(
         verbose_name=_("Event Icon"), upload_to="images/", null=True, blank=True
     )
     pause_time = models.IntegerField(

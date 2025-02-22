@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from apps.users_app.models.country import Country
-from apps.users_app.models.system_user import  SystemUser
+from apps.users_app.models.system_user import SystemUser
 
 
 @admin.register(SystemUser)
