@@ -54,15 +54,12 @@ class FeatureAdmin(admin.ModelAdmin):
         "coordinates",
     ]
 
+
 @admin.register(EventGallery)
 class EventGalleryAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
-    list_display = [
-        "id", "name", "event", "image"
-    ]
-    fields = [
-        "name", "event", "image"
-    ]
+    list_display = ["id", "name", "event", "image"]
+    fields = ["name", "event", "image"]
 
 
 @admin.register(AlleleNode)
