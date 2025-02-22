@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from apps.business_app.models import Event, Feature, Marker, MarkerGallery
+from apps.business_app.models import Event, Feature, Marker, EventGallery
 from django.views.decorators.cache import cache_page
+
+from apps.business_app.models.event_gallery import EventGallery
 
 
 # Create your views here.
@@ -66,7 +68,7 @@ def register(request):
 
 @cache_page(60 * 15)
 def marker_gallery(request):
-    gallery = MarkerGallery.objects.order_by("-id").all()
+    gallery = EventGallery.objects.order_by("-id").all()
     markers = Marker.objects.order_by("-id").all()
     return render(
         request,

@@ -7,7 +7,7 @@ __all__ = [
     "InitialFileData",
     "InitialXyzExpansionData",
     "Marker",
-    "MarkerGallery",
+    "EventGallery",
     "Event",
     "Layer",
     "Feature",
@@ -24,7 +24,7 @@ from .pdb_files import PdbFiles
 from .initial_file_data import InitialFileData
 from .initial_xyz_expansion_data import InitialXyzExpansionData
 from .marker import Marker
-from .marker_gallery import MarkerGallery
+from .event_gallery import EventGallery
 from .event import Event
 from .layer import Layer
 from .feature import Feature

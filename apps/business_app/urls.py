@@ -12,7 +12,7 @@ from apps.business_app.views import (
     FeatureViewSet,
     EventViewSet,
     MarkerViewSet,
-    MarkerGalleryViewSet,
+    EventGalleryViewSet,
     LayerViewSet,
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
@@ -120,9 +120,9 @@ router.register(
     basename="markers",
 )
 router.register(
-    "markers-gallery",
-    MarkerGalleryViewSet,
-    basename="markers-gallery",
+    "event-gallery",
+    EventGalleryViewSet,
+    basename="event-gallery",
 )
 router.register(
     "layers",

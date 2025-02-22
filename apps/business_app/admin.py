@@ -9,7 +9,7 @@ from apps.business_app.models import (
     UploadedFiles,
     AlleleNode,
     Marker,
-    MarkerGallery,
+    EventGallery,
     Event,
     Layer,
     Feature,
@@ -26,7 +26,6 @@ logger = logging.getLogger(__name__)
 # Register your models here.
 
 admin.site.register(SiteConfiguration, SingletonModelAdmin)
-admin.site.register(MarkerGallery)
 admin.site.register(Layer)
 
 
@@ -53,6 +52,16 @@ class FeatureAdmin(admin.ModelAdmin):
         "timefinal",
         "geometry_type",
         "coordinates",
+    ]
+
+@admin.register(EventGallery)
+class EventGalleryAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id", "name", "event", "image"
+    ]
+    fields = [
+        "name", "event", "image"
     ]
 
 

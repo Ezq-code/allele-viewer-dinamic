@@ -16,7 +16,7 @@ class EventViewSet(viewsets.ModelViewSet, GenericAPIView):
         Event.objects.annotate(num_markers=Count("markers"))
         .filter(num_markers__gte=1)
         .select_related("event_type")
-        .prefetch_related("markers")
+        .prefetch_related("markers", "event_gallery")
     )
     serializer_class = EventSerializer
     pagination_class = AllResultsSetPagination
