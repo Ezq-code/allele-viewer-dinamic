@@ -6,12 +6,18 @@ from apps.business_app.serializers.event import EventSerializer
 from apps.common.views import CommonOrderingFilter
 from apps.business_app.models.event import Event
 from apps.common.pagination import AllResultsSetPagination
+from django.db.models import Count
 
 # Create your views here.
 
 
 class EventViewSet(viewsets.ModelViewSet, GenericAPIView):
-    queryset = Event.objects.all()
+    queryset = (
+        Event.objects.annotate(num_markers=Count("markers"))
+        .filter(num_markers__gte=1)
+        .select_related("event_type")
+        .prefetch_related("markers")
+    )
     serializer_class = EventSerializer
     pagination_class = AllResultsSetPagination
     search_fields = [

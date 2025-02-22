@@ -9,6 +9,7 @@ def migrate_info(apps, schema_editor):
     EventType = apps.get_model("business_app", "EventType")
 
     events = Event.objects.all().iterator()
+    to_delete = []
 
     for event in events:
         event_type = EventType.objects.create(
@@ -18,7 +19,7 @@ def migrate_info(apps, schema_editor):
         )
         event.event_type = event_type
         event.save(update_fields=["event_type"])
-        markers = Marker.objects.filter(event=event)
+        markers = Marker.objects.filter(event_type=event)
         for marker in markers:
             event = Event.objects.create(
                 event_name="Fill later",
@@ -29,6 +30,8 @@ def migrate_info(apps, schema_editor):
             )
             marker.event_type = event
             marker.save(update_fields=["event_type"])
+        to_delete.append(event.id)
+    Event.objects.filter(id__in=to_delete).delete()
 
 
 class Migration(migrations.Migration):

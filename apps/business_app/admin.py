@@ -26,7 +26,6 @@ logger = logging.getLogger(__name__)
 # Register your models here.
 
 admin.site.register(SiteConfiguration, SingletonModelAdmin)
-admin.site.register(Event)
 admin.site.register(MarkerGallery)
 admin.site.register(Layer)
 
@@ -96,6 +95,31 @@ class EventTypeAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "event_name",
+        "event_icon",
+        "pause_time",
+        "event_type",
+        "description",
+        "start_date",
+        "end_date",
+        "reference",
+    ]
+    fields = [
+        "event_name",
+        "event_icon",
+        "pause_time",
+        "event_type",
+        "description",
+        "start_date",
+        "end_date",
+        "reference",
+    ]
+
 
 @admin.register(Marker)
 class MarkerAdmin(admin.ModelAdmin):
@@ -104,24 +128,12 @@ class MarkerAdmin(admin.ModelAdmin):
         "id",
         "latitude",
         "longitude",
-        "start_date",
-        "end_date",
-        "start_format",
-        "end_format",
-        "description",
-        "event_type",
-        "pause_time",
+        "event",
     ]
     fields = [
         "latitude",
         "longitude",
-        "start_date",
-        "end_date",
-        "start_format",
-        "end_format",
-        "description",
-        "event_type",
-        "pause_time",
+        "event",
     ]
 
 
