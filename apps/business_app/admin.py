@@ -15,6 +15,7 @@ from apps.business_app.models import (
     Feature,
     WorkingCopyOfOriginalFile,
 )
+from apps.business_app.models.event_type import EventType
 from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.region import Region
@@ -77,6 +78,22 @@ class AlleleNodeAdmin(admin.ModelAdmin):
         "rs",
         "uploaded_file",
         "timeline_appearence",
+    ]
+
+
+@admin.register(EventType)
+class EventTypeAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "icon",
+        "pause_time",
+    ]
+    fields = [
+        "name",
+        "icon",
+        "pause_time",
     ]
 
 

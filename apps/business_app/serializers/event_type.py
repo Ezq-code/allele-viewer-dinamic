@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
 
-# from apps.business_app.models.event import Event
+from apps.business_app.models.event_type import EventType
 
 
-class EventSerializer(serializers.ModelSerializer):
+class EventTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = "Event"
+        model = EventType
         fields = [
             "id",
             "name",

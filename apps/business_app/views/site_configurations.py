@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from apps.business_app.models import SiteConfiguration
-from apps.business_app.serializers import SiteConfigurationSerializer
+from apps.business_app.models.site_configurations import SiteConfiguration
+from apps.business_app.serializers.site_configurations import SiteConfigurationSerializer
 
 # Create your views here.
 

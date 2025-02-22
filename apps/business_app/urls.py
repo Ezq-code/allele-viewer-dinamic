@@ -18,6 +18,7 @@ from apps.business_app.views import (
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 
 
+from apps.business_app.views.event_type import EventTypeViewSet
 from apps.business_app.views.initial_xyz_expansion_data import (
     InitialXyzExpansionDataViewSet,
 )
@@ -107,6 +108,11 @@ router.register(
     "events",
     EventViewSet,
     basename="events",
+)
+router.register(
+    "event-types",
+    EventTypeViewSet,
+    basename="event-types",
 )
 router.register(
     "markers",
