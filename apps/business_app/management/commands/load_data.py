@@ -7,7 +7,6 @@ class Command(BaseCommand):
     help = "Loads initial fixtures"
 
     def handle(self, *args, **options):
-
         call_command("loaddata", "event_type.json")
         print(
             colored(
@@ -32,4 +31,3 @@ class Command(BaseCommand):
                 attrs=["blink"],
             )
         )
-        
