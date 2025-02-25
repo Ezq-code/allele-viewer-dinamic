@@ -1,188 +1,6 @@
 [
   {
     "model": "business_app.event",
-    "pk": 1,
-    "fields": {
-      "event_name": "volcano",
-      "event_icon": "images/volcan.png",
-      "pause_time": 6000,
-      "event_type": 1,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 2,
-    "fields": {
-      "event_name": "Epidemics-Pandemics",
-      "event_icon": "images/epid31.png",
-      "pause_time": 6000,
-      "event_type": 2,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 3,
-    "fields": {
-      "event_name": "Wars before 1900",
-      "event_icon": "images/war8.png",
-      "pause_time": 6000,
-      "event_type": 3,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 4,
-    "fields": {
-      "event_name": "Wars after 1900",
-      "event_icon": "images/war10.png",
-      "pause_time": 6000,
-      "event_type": 4,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 5,
-    "fields": {
-      "event_name": "Glaciations",
-      "event_icon": "images/gla6.png",
-      "pause_time": 6000,
-      "event_type": 5,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 6,
-    "fields": {
-      "event_name": "Bolides",
-      "event_icon": "images/bolide2.png",
-      "pause_time": 6000,
-      "event_type": 6,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 7,
-    "fields": {
-      "event_name": " Economic Crisis",
-      "event_icon": "images/crisis-eco1.png",
-      "pause_time": 6000,
-      "event_type": 7,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 8,
-    "fields": {
-      "event_name": " Droughts",
-      "event_icon": "images/seq10.png",
-      "pause_time": 6000,
-      "event_type": 8,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 9,
-    "fields": {
-      "event_name": " Famines",
-      "event_icon": "images/hambruna.png",
-      "pause_time": 6000,
-      "event_type": 9,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 10,
-    "fields": {
-      "event_name": "Wet Weather",
-      "event_icon": "images/wet-wether.png",
-      "pause_time": 6000,
-      "event_type": 10,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 11,
-    "fields": {
-      "event_name": "Earthquakes",
-      "event_icon": "images/earthquakes.png",
-      "pause_time": 6000,
-      "event_type": 11,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 12,
-    "fields": {
-      "event_name": "Nuclear Bomb",
-      "event_icon": "images/explosion.png",
-      "pause_time": 6000,
-      "event_type": 12,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
-    "pk": 13,
-    "fields": {
-      "event_name": "War ship",
-      "event_icon": "images/buque-de-guerra.png",
-      "pause_time": 6000,
-      "event_type": 13,
-      "description": null,
-      "start_date": 1,
-      "end_date": 1,
-      "reference": null
-    }
-  },
-  {
-    "model": "business_app.event",
     "pk": 14,
     "fields": {
       "event_name": "Fill later",
@@ -190,8 +8,8 @@
       "pause_time": 6000,
       "event_type": 1,
       "description": "The Oruanui eruption of New Zealand's Taupō Volcano (also known as the Kawakawa eruption or Kawakawa/Oruanui event) was the world's most recent supereruption, and largest phreatomagmatic eruption characterised to date. ",
-      "start_date": 26500,
-      "end_date": 24000,
+      "start_date": -26500,
+      "end_date": -24000,
       "reference": null
     }
   },
@@ -204,8 +22,8 @@
       "pause_time": 6000,
       "event_type": 1,
       "description": "The Toba eruption (sometimes called the Toba supereruption or the Youngest Toba eruption) was a supervolcanic eruption that occurred about 74,000 years ago during the Late Pleistocene at the site of present-day Lake Toba in Sumatra, Indonesia. It was the last in a series of at least four caldera-forming eruptions at this location, with the earlier known caldera having formed around 1.2 million years ago.",
-      "start_date": 75000,
-      "end_date": 70001,
+      "start_date": -75000,
+      "end_date": -70001,
       "reference": null
     }
   },
@@ -218,8 +36,8 @@
       "pause_time": 6000,
       "event_type": 1,
       "description": "Aso caldera (also known as Asosan, the Aso Volcano or Mount Aso, although the later term usually is used related to its currently active vents) is a geographical feature of Kumamoto Prefecture, Japan.",
-      "start_date": 90000,
-      "end_date": 85000,
+      "start_date": -90000,
+      "end_date": -85000,
       "reference": null
     }
   },
@@ -232,8 +50,8 @@
       "pause_time": 6000,
       "event_type": 1,
       "description": "Minoan eruption (-1600 -1599). Thera",
-      "start_date": 1600,
-      "end_date": 1599,
+      "start_date": -1600,
+      "end_date": -1599,
       "reference": null
     }
   },
@@ -330,8 +148,8 @@
       "pause_time": 6000,
       "event_type": 2,
       "description": "Bubonic plague (-3200 -2600). Africa",
-      "start_date": 3200,
-      "end_date": 2600,
+      "start_date": -3200,
+      "end_date": -2600,
       "reference": null
     }
   },
@@ -344,8 +162,8 @@
       "pause_time": 6000,
       "event_type": 2,
       "description": "Bubonic plague (-3200 -2600). Eastern Asia.",
-      "start_date": 3200,
-      "end_date": 2600,
+      "start_date": -3200,
+      "end_date": -2600,
       "reference": null
     }
   },
@@ -358,8 +176,8 @@
       "pause_time": 6000,
       "event_type": 2,
       "description": "Bubonic plague (-3200 -2600). Europe",
-      "start_date": 3200,
-      "end_date": 2600,
+      "start_date": -3200,
+      "end_date": -2600,
       "reference": null
     }
   },
@@ -372,8 +190,8 @@
       "pause_time": 6000,
       "event_type": 2,
       "description": "Bubonic plague (-3200 -2600). Eastern Asia",
-      "start_date": 3200,
-      "end_date": 2600,
+      "start_date": -3200,
+      "end_date": -2600,
       "reference": null
     }
   },
@@ -386,8 +204,8 @@
       "pause_time": 6000,
       "event_type": 2,
       "description": "Bubonic plague (-3200 -2600). Oceania",
-      "start_date": 3200,
-      "end_date": 2600,
+      "start_date": -3200,
+      "end_date": -2600,
       "reference": null
     }
   },
@@ -400,8 +218,8 @@
       "pause_time": 6000,
       "event_type": 2,
       "description": "Bubonic plague (-3200 -2600). North America",
-      "start_date": 3200,
-      "end_date": 2600,
+      "start_date": -3200,
+      "end_date": -2600,
       "reference": null
     }
   },
@@ -414,8 +232,8 @@
       "pause_time": 6000,
       "event_type": 2,
       "description": "Bubonic plague (-3200 -2600). Latin America and Carib",
-      "start_date": 3200,
-      "end_date": 2600,
+      "start_date": -3200,
+      "end_date": -2600,
       "reference": null
     }
   },
@@ -1436,8 +1254,8 @@
       "pause_time": 6000,
       "event_type": 3,
       "description": "Greco–Persian Wars (499-449). Western Asia",
-      "start_date": 499,
-      "end_date": 449,
+      "start_date": -499,
+      "end_date": -449,
       "reference": null
     }
   },
@@ -1450,8 +1268,8 @@
       "pause_time": 6000,
       "event_type": 3,
       "description": "Chinese Warring States (475–221). Eastern Asia ",
-      "start_date": 475,
-      "end_date": 221,
+      "start_date": -475,
+      "end_date": -221,
       "reference": null
     }
   },
@@ -1464,8 +1282,8 @@
       "pause_time": 6000,
       "event_type": 3,
       "description": "Punic Wars (264-146). Europe",
-      "start_date": 264,
-      "end_date": 146,
+      "start_date": -264,
+      "end_date": -146,
       "reference": null
     }
   },
@@ -1478,7 +1296,7 @@
       "pause_time": 6000,
       "event_type": 3,
       "description": "Roman civil wars (91-30). Africa",
-      "start_date": 91,
+      "start_date": -91,
       "end_date": 30,
       "reference": null
     }
@@ -1492,7 +1310,7 @@
       "pause_time": 6000,
       "event_type": 3,
       "description": "Roman civil wars (91-30). Europe",
-      "start_date": 91,
+      "start_date": -91,
       "end_date": 30,
       "reference": null
     }
@@ -1505,7 +1323,7 @@
       "event_icon": "",
       "pause_time": 6000,
       "event_type": 3,
-      "description": "Jewish–Roman Wars (66-136). Africa\r\n",
+      "description": "Jewish–Roman Wars (66-136). Africa",
       "start_date": 66,
       "end_date": 136,
       "reference": null
@@ -1660,7 +1478,7 @@
       "pause_time": 6000,
       "event_type": 3,
       "description": "Mongol invasions and conquests (1206-1368). Europe",
-      "start_date": 1206,
+      "start_date": -1206,
       "end_date": 1368,
       "reference": null
     }
@@ -1674,7 +1492,7 @@
       "pause_time": 6000,
       "event_type": 3,
       "description": "Mongol invasions and conquests (1206-1368). Asia",
-      "start_date": 1206,
+      "start_date": -1206,
       "end_date": 1368,
       "reference": null
     }
@@ -2472,8 +2290,8 @@
       "pause_time": 6000,
       "event_type": 5,
       "description": "Saale glaciation (-128000 -74000). Europe",
-      "start_date": 128000,
-      "end_date": 74000,
+      "start_date": -128000,
+      "end_date": -74000,
       "reference": null
     }
   },
@@ -2486,8 +2304,8 @@
       "pause_time": 6000,
       "event_type": 5,
       "description": "Last Glacial Maximum (-26000 -20000). Western Asia",
-      "start_date": 26000,
-      "end_date": 20000,
+      "start_date": -26000,
+      "end_date": -20000,
       "reference": null
     }
   },
@@ -2500,8 +2318,8 @@
       "pause_time": 6000,
       "event_type": 5,
       "description": "Last Glacial Maximum (-26000 -20000). Eastern Asia",
-      "start_date": 26000,
-      "end_date": 20000,
+      "start_date": -26000,
+      "end_date": -20000,
       "reference": null
     }
   },
@@ -2514,8 +2332,8 @@
       "pause_time": 6000,
       "event_type": 5,
       "description": "Last Glacial Maximum (-26000 -20000). Europe",
-      "start_date": 26000,
-      "end_date": 20000,
+      "start_date": -26000,
+      "end_date": -20000,
       "reference": null
     }
   },
@@ -2528,8 +2346,8 @@
       "pause_time": 6000,
       "event_type": 5,
       "description": "Last Glacial Maximum (-26000 -20000). North America",
-      "start_date": 26000,
-      "end_date": 20000,
+      "start_date": -26000,
+      "end_date": -20000,
       "reference": null
     }
   },
@@ -2542,8 +2360,8 @@
       "pause_time": 6000,
       "event_type": 6,
       "description": "Tollmann's bolide (-7640 -7639). Africa",
-      "start_date": 7640,
-      "end_date": 7639,
+      "start_date": -7640,
+      "end_date": -7639,
       "reference": null
     }
   },
@@ -2556,8 +2374,8 @@
       "pause_time": 6000,
       "event_type": 6,
       "description": "Tollmann's bolide (-7640 -7639). Europe",
-      "start_date": 7640,
-      "end_date": 7639,
+      "start_date": -7640,
+      "end_date": -7639,
       "reference": null
     }
   },
@@ -2570,8 +2388,8 @@
       "pause_time": 6000,
       "event_type": 6,
       "description": "Tollmann's bolide (-7640 -7639). Western Asia",
-      "start_date": 7640,
-      "end_date": 7639,
+      "start_date": -7640,
+      "end_date": -7639,
       "reference": null
     }
   },
@@ -2584,8 +2402,8 @@
       "pause_time": 6000,
       "event_type": 6,
       "description": "Tollmann's bolide (-7640 -7639). Eastern Asia",
-      "start_date": 7640,
-      "end_date": 7639,
+      "start_date": -7640,
+      "end_date": -7639,
       "reference": null
     }
   },
@@ -2598,8 +2416,8 @@
       "pause_time": 6000,
       "event_type": 6,
       "description": "Tollmann's bolide (-7640 -7639). North America",
-      "start_date": 7640,
-      "end_date": 7639,
+      "start_date": -7640,
+      "end_date": -7639,
       "reference": null
     }
   },
@@ -2612,8 +2430,8 @@
       "pause_time": 6000,
       "event_type": 7,
       "description": "Bronze Age collapse (-1206 -1187).  Eastern Mediterranean",
-      "start_date": 1206,
-      "end_date": 1187,
+      "start_date": -1206,
+      "end_date": -1187,
       "reference": null
     }
   },
@@ -2626,8 +2444,8 @@
       "pause_time": 6000,
       "event_type": 7,
       "description": "Bronze Age collapse (-1206 -1187).  Africa",
-      "start_date": 1206,
-      "end_date": 1187,
+      "start_date": -1206,
+      "end_date": -1187,
       "reference": null
     }
   },
@@ -2654,8 +2472,8 @@
       "pause_time": 6000,
       "event_type": 8,
       "description": "4.2-kiloyear event (-4200 -4199). Africa",
-      "start_date": 4200,
-      "end_date": 4199,
+      "start_date": -4200,
+      "end_date": -4199,
       "reference": null
     }
   },
@@ -2668,8 +2486,8 @@
       "pause_time": 6000,
       "event_type": 8,
       "description": "4.2-kiloyear event (-4200 -4199). Western Asia",
-      "start_date": 4200,
-      "end_date": 4199,
+      "start_date": -4200,
+      "end_date": -4199,
       "reference": null
     }
   },
@@ -2682,8 +2500,8 @@
       "pause_time": 6000,
       "event_type": 8,
       "description": "4.2-kiloyear event (-4200 -4199). Eastern Asia",
-      "start_date": 4200,
-      "end_date": 4199,
+      "start_date": -4200,
+      "end_date": -4199,
       "reference": null
     }
   },
@@ -2696,8 +2514,8 @@
       "pause_time": 6000,
       "event_type": 8,
       "description": "4.2-kiloyear event (-4200 -4199). Europe",
-      "start_date": 4200,
-      "end_date": 4199,
+      "start_date": -4200,
+      "end_date": -4199,
       "reference": null
     }
   },
@@ -2710,8 +2528,8 @@
       "pause_time": 6000,
       "event_type": 8,
       "description": "4.2-kiloyear event (-4200 -4199). Oceania",
-      "start_date": 4200,
-      "end_date": 4199,
+      "start_date": -4200,
+      "end_date": -4199,
       "reference": null
     }
   },
@@ -2724,8 +2542,8 @@
       "pause_time": 6000,
       "event_type": 8,
       "description": "4.2-kiloyear event (-4200 -4199). North America",
-      "start_date": 4200,
-      "end_date": 4199,
+      "start_date": -4200,
+      "end_date": -4199,
       "reference": null
     }
   },
