@@ -9,6 +9,7 @@ __all__ = [
     "Marker",
     "EventGallery",
     "Event",
+    "EventType",
     "Layer",
     "Feature",
     "WorkingCopyOfOriginalFile",
@@ -26,6 +27,7 @@ from .initial_xyz_expansion_data import InitialXyzExpansionData
 from .marker import Marker
 from .event_gallery import EventGallery
 from .event import Event
+from .event_type import EventType
 from .layer import Layer
 from .feature import Feature
 from .working_copy_of_original_file import WorkingCopyOfOriginalFile

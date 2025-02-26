@@ -350,7 +350,7 @@
                                             var aFeature;
                                             $.ajax({
                                                 type: 'GET',
-                                                url: '/business-gestion/markers/',
+                                                url: '/business-gestion/events/',
                                                 error: function () {
                                                     Swal.fire({
                                                         icon: "error",
@@ -363,34 +363,37 @@
                                                 success: function (response) {
                                                     var data;
                                                     data = response.results;
-                                                    data.forEach(function (marker) {
-                                                        var descriptionLoad = marker.description;
-                                                        var referenceLoad = marker.reference;
-                                                        var latitudeLoad = marker.latitude;
-                                                        var longitudeLoad = marker.longitude;
-                                                        var typeEventLoad = marker.event_type_data.event_id;
-                                                        var iconUrlCurrentMarkerLoad = marker.event_type_data.event_icon_url;
-                                                        var starttime = marker.start_date;
-                                                        var endtime = marker.end_date;
-                                                        var astart_format = marker.start_format;
-                                                        var aend_format = marker.end_format;
-                                                        var aPauseMarker = marker.pause_time;
-                                                        var aPauseEvent = marker.event_type_data.event_pause_time;
-                                                        var galleryLoad = marker.marker_galleries; // Obtener el array de imágenes
-                                                        if ((astart_format == "Before Present (YBP)") || (astart_format == "Before Christ (BC)")) {
-                                                            starttime = -1 * starttime;
-                                                        }
-                                                        if ((aend_format == "Before Present (YBP)") || (aend_format == "Before Christ (BC)")) {
-                                                            endtime = -1 * endtime;
-                                                        }
+                                                    data.forEach(function (event) {
+                                                        var nameLoad = event.event_name;
+                                                        var descriptionLoad = event.description;
+                                                        var referenceLoad = event.reference;
+                                                        var typeEventLoad = event.event_type_info.id;
+                                                        if (event.event_icon == null)
+                                                         {var iconUrlCurrentMarkerLoad = event.event_type_info.icon;}
+                                                        else
+                                                         {var iconUrlCurrentMarkerLoad = event.event_icon;}
+                                                         var starttime = event.start_date;
+                                                        var endtime = event.end_date;
+                                                        var aPauseMarker = event.pause_time;
+                                                        var aPauseEvent = event.event_type_info.pause_time;
+                                                        var galleryLoad = event.event_gallery;
+
                                                         timeMarkerArray.push(starttime);
                                                         if (aPauseMarker == 0){
                                                             aPauseMarker = aPauseEvent;
                                                         }
+                                                        
                                                         pauseMarkerArray.push(aPauseMarker);
-                                                        aFeature = {
+                                                        
+                                                        var markerList = event.markers;
+                                                        markerList.forEach(function (marker) {
+                                                         var latitudeLoad = marker.latitude;
+                                                         var longitudeLoad = marker.longitude;
+
+                                                         aFeature = {
                                                             type: "Feature",
                                                             properties: {
+                                                                event_name: nameLoad,
                                                                 description: descriptionLoad,
                                                                 reference: referenceLoad,
                                                                 event_type_id: typeEventLoad,
@@ -410,6 +413,7 @@
                                                             type: "FeatureCollection",
                                                             features: aFeatures,
                                                         };
+                                                    });
                                                     });
 
                                                     var getpoligonInterval = function (polygons) {
@@ -438,6 +442,7 @@
                                                                 var eventImagesDiv = document.getElementById('eventImages');
                                                                 eventImagesDiv.innerHTML = '';
                                                                 // Mostrar la descripción y otra información en el modal
+                                                                document.getElementById('eventName').innerHTML = features.properties.event_name;
                                                                 document.getElementById('eventDescription').innerHTML = features.properties.description; // aqui enviamos la description
                                                                 document.getElementById('eventReference').innerHTML = features.properties.reference; // aqui enviamos la referencia
                                                                 // Aquí usamos la galería que agregamos en las propiedades
@@ -468,90 +473,6 @@
 
                                                 }
                                             });
-
-                                            // llamada ajax para cargar los destinos de las migraciones, su simbología, su línea del tiempo y adición al mapa
-                                            /*var polygonDestinationTimeline;
-                                            var polygons;
-                                            var aFeaturesDestination = [];
-                                            var aFeaturesAllDestination = [];
-                                            var aFeatureAllDestination = [];
-                                            var aFeatureDestination;
-                                            $.ajax({
-                                                type: 'GET',
-                                                url: '/business-gestion/features/list',
-                                                error: function () {
-                                                    Swal.fire({
-                                                        icon: "error",
-                                                        title: "No se pudieron cargar los datos.",
-                                                        showConfirmButton: false,
-                                                        timer: 1500
-                                                    });
-                                                },
-                                                dataType: 'json',
-                                                success: function (response) {
-                                                    var data;
-                                                    data = response;
-                                                    data.forEach(function (destination) {
-                                                        var id = destination.id;
-                                                        var idLoad = destination.feature_id;
-                                                        var magLoad = destination.mag;
-                                                        var placeLoad = destination.place;
-                                                        var descriptionLoad = destination.title;
-                                                        var latitudeLoad = destination.latitude;
-                                                        var longitudeLoad = destination.longitude;
-                                                        var starttime = destination.timefinal;
-                                                        var endtime = destination.time;
-                                                        aFeatureDestination = {
-                                                            type: "Feature",
-                                                            properties: {
-                                                                id: idLoad,
-                                                                mag: magLoad,
-                                                                place: placeLoad,   
-                                                                title: descriptionLoad,
-                                                                timefinal: starttime,
-                                                                time: endtime,
-                                                            },
-                                                            geometry: {
-                                                                type: "Point",
-                                                                coordinates:
-                                                                    [longitudeLoad, latitudeLoad],
-                                                            },
-                                                        };
-                                                        aFeaturesDestination.push(aFeatureDestination);
-                                                        polygons = {
-                                                            type: "FeatureCollection",
-                                                            features: aFeaturesDestination,
-                                                        };
-                                                    });
-
-                                                    var getpoligonIntervalDestintation = function (polygons) {
-                                                        return {
-                                                            start: polygons.properties.timefinal,
-                                                            end: year,//polygons.properties.time,
-                                                        }
-                                                    };
-
-                                                    var polygonDestinationTimeline = L.timeline(polygons, {
-                                                        getInterval: getpoligonIntervalDestintation,
-                                                        pointToLayer: function (features, latlng) {
-                                                            return L.circleMarker(latlng, {
-                                                            radius: 10, //features.properties.mag,
-                                                            color: "#050400", //"#000000",
-                                                            fillColor: "#f5d843",//"#000000",
-                                                            fillOpacity: 0.7,
-                                                            weight: 3,
-                                                            opacity: 0.8,
-                                                            }).bindPopup(L.popup({
-                                                             closeOnClick: false,
-                                                             autoClose: false
-                                                            }).setContent(features.properties.title));
-                                                        }
-                                                    });
-                                                    timelineControl.addTimelines(polygonDestinationTimeline);
-                                                    polygonDestinationTimeline.addTo(map);
-
-                                                }
-                                            });*/
                                             
                                             // capa para los alleles
                                             AlleleGeographicZonesLayer = new L.featureGroup().addTo(map);
@@ -639,45 +560,20 @@
 
                                         document.getElementById('btreload').addEventListener('click', function() {
                                             
-                                        var aTimeRange = document.getElementById("timeRange");
-                                        var aRegionTimeLine = document.getElementById("regionTimeLine");
-                                        sessionStorage.setItem('timeRange', aTimeRange.value);
-                                        sessionStorage.setItem('region', aRegionTimeLine.value);
+                                            var aTimeRange = document.getElementById("timeRange");
+                                            var aRegionTimeLine = document.getElementById("regionTimeLine");
+                                            sessionStorage.setItem('timeRange', aTimeRange.value);
+                                            sessionStorage.setItem('region', aRegionTimeLine.value);
+                                            
+                                            var aPosition = aTimeRange.value.indexOf("/");
+                                            var aBegin = aTimeRange.value.substring(0,aPosition);
+                                            var anEnd = aTimeRange.value.substring(aPosition+1);
+    
+                                            sessionStorage.setItem('beginIntervalsesion', parseInt(aBegin));
+                                            sessionStorage.setItem('endIntervalsesion', parseInt(anEnd));  
+                                            sessionStorage.setItem('durationSesion', parseInt(anEnd)-parseInt(aBegin));
                                          
-                                        if (aTimeRange.value == "All the Time"){
-                                            sessionStorage.setItem('beginIntervalsesion', '-315000');
-                                            sessionStorage.setItem('endIntervalsesion', '2025');  
-                                            sessionStorage.setItem('durationSesion', '317025');    
-                                        } 
-                                        else
-                                        if (aTimeRange.value == "from 315000 YBP to 200000 YBP"){
-                                            sessionStorage.setItem('beginIntervalsesion', '-315000');
-                                            sessionStorage.setItem('endIntervalsesion', '-200000');  
-                                            sessionStorage.setItem('durationSesion', '115000');    
-                                        }
-                                        else
-                                        if (aTimeRange.value == "from 200000 YBP to 70000 YBP"){
-                                            sessionStorage.setItem('beginIntervalsesion', '-200000');
-                                            sessionStorage.setItem('endIntervalsesion', '-70000');  
-                                            sessionStorage.setItem('durationSesion', '130000');    
-                                        }
-                                        else
-                                        if (aTimeRange.value == "from 70000 YBP to 1"){
-                                            sessionStorage.setItem('beginIntervalsesion', '-70000');
-                                            sessionStorage.setItem('endIntervalsesion', '1');  
-                                            sessionStorage.setItem('durationSesion', '70001');    
-                                        }
-                                        else
-                                        if (aTimeRange.value == "from 1 to 2025"){
-                                            sessionStorage.setItem('beginIntervalsesion', '1');
-                                            sessionStorage.setItem('endIntervalsesion', '2025');  
-                                            sessionStorage.setItem('durationSesion', '2024');    
-                                        }                                                                                                                         
-                                        else{
-                                            sessionStorage.setItem('beginIntervalsesion', '-315000');
-                                            sessionStorage.setItem('endIntervalsesion', '2025');  
-                                            sessionStorage.setItem('durationSesion', '317025');                                               
-                                        }
+
 
                                         if (aRegionTimeLine.value == "All the World"){ 
                                           sessionStorage.setItem('lat', '10');
@@ -687,44 +583,44 @@
                                         else
                                         if (aRegionTimeLine.value == "Africa"){
                                           sessionStorage.setItem('lat', '-3');
-                                          sessionStorage.setItem('long', '20');  
-                                          sessionStorage.setItem('zoom', '3');   
+                                          sessionStorage.setItem('long', '15');  
+                                          sessionStorage.setItem('zoom', '4');   
                                         }                             
                                         else
                                         if (aRegionTimeLine.value == "Western Asia"){
                                           sessionStorage.setItem('lat', '47');
                                           sessionStorage.setItem('long', '60');  
-                                          sessionStorage.setItem('zoom', '3');    
+                                          sessionStorage.setItem('zoom', '4');    
                                         }
                                         else
                                         if (aRegionTimeLine.value == "Eastern Asia"){
                                             sessionStorage.setItem('lat', '47');
-                                            sessionStorage.setItem('long', '120');  
-                                            sessionStorage.setItem('zoom', '3');      
+                                            sessionStorage.setItem('long', '130');  
+                                            sessionStorage.setItem('zoom', '4');      
                                         }
                                         else
                                         if (aRegionTimeLine.value == "Europe"){   
                                             sessionStorage.setItem('lat', '49');
-                                            sessionStorage.setItem('long', '0');  
-                                            sessionStorage.setItem('zoom', '3');    
+                                            sessionStorage.setItem('long', '115');  
+                                            sessionStorage.setItem('zoom', '4');    
                                         }
                                         else
                                         if (aRegionTimeLine.value == "Oceania"){
                                             sessionStorage.setItem('lat', '-20');
                                             sessionStorage.setItem('long', '140');  
-                                            sessionStorage.setItem('zoom', '3');                                               
+                                            sessionStorage.setItem('zoom', '4');                                               
                                         }
                                         else
                                         if (aRegionTimeLine.value == "North America"){
                                             sessionStorage.setItem('lat', '50');
                                             sessionStorage.setItem('long', '315');  
-                                            sessionStorage.setItem('zoom', '3');   
+                                            sessionStorage.setItem('zoom', '4');   
                                         }
                                         else
                                         if (aRegionTimeLine.value == "Latin America & Carib"){
                                             sessionStorage.setItem('lat', '-20');
                                             sessionStorage.setItem('long', '360');  
-                                            sessionStorage.setItem('zoom', '3');                                                
+                                            sessionStorage.setItem('zoom', '4');                                                
                                         }
                                         else{
                                             sessionStorage.setItem('lat', '10');
@@ -732,9 +628,6 @@
                                             sessionStorage.setItem('zoom', '2');                                             
                                         }                                        
 
-                                            //var beginInterval =  -70000;
-                                            //var endInterval = -14999;
-                                            //var setAndInterval = true;
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
                                             Swal.fire({
                                                 title: 'Updating TimeLine...',

@@ -73,14 +73,9 @@
                                     <thead>
                                     <tr>
                                         <th>Nro.</th>
-                                        <th>Event Type</th>
-                                        <th>Pause time(Milliseconds)</th>
-                                        <th>Begin Date</th>
-                                        <th>Begin Format</th>
-                                        <th>End Date</th>
-                                        <th>End Format</th>
-                                        <th>Description</th>
-                                        <th>Reference</th>
+                                        <th>Event</th>
+                                        <th>Latitude</th>
+                                        <th>longitude</th>
                                         <th>Actions</th>
                                         
                                     </tr>
@@ -89,14 +84,9 @@
                                     {% for mark in markers %}
                                         <tr>
                                             <td>{{ forloop.counter }}</td>
-                                            <td>{{ mark.event_type.event_name }}</td>
-                                            <td>{{ mark.pause_time }}</td>
-                                            <td>{{ mark.start_date }}</td>
-                                            <td>{{ mark.start_format }}</td>
-                                            <td>{{ mark.end_date }}</td>
-                                            <td>{{ mark.end_format }}</td>
-                                            <td>{{ mark.description|truncatechars:50 }}</td>
-                                            <td>{{ mark.reference|truncatechars:50 }}</td>
+                                            <td>{{ mark.event.id }}-{{ mark.event.event_name }}</td>
+                                            <td>{{ mark.latitude }}</td>
+                                            <td>{{ mark.longitude }}</td>
                                             <td>
                                            
                                             <span class="input-group-append">
@@ -105,14 +95,7 @@
                                                data-toggle="modal"
                                                data-target="#modal-edit-mark-{{ mark.id }}"
                                                data-mark-id="{{ mark.id }}"
-                                               data-mark-event_type="{{ mark.event_type.id }}"
-                                               data-mark-pause_time="{{ mark.pause_time }}"
-                                               data-mark-start_date="{{ mark.start_date }}"
-                                               data-mark-start_format="{{ mark.start_format }}"
-                                               data-mark-end_date="{{ mark.end_date }}"
-                                               data-mark-end_format="{{ mark.end_format }}"
-                                               data-mark-description="{{ mark.description }}"
-                                               data-mark-reference="{{ mark.reference }}"
+                                               data-mark-event="{{ mark.event.id }}"
                                                data-mark-latitude="{{ mark.latitude }}"
                                                data-mark-longitude="{{ mark.longitude }}">
                                                 <i class="fa fa-edit"></i>
@@ -140,87 +123,10 @@
                                                     <div class="modal-body">
                                                         <form id="editmarkForm-{{ mark.id }}" >{% csrf_token %}
                                                             <div class="form-group">
-                                                                <label for="eventtype">Event Type:</label>
-                                                                <select id="mark-event_type" disabled class="form-control">
-                                                                    <option value="{{ mark.event_type.id }}">{{ mark.event_type.event_name }}</option>
+                                                                <label for="eventtype">Event:</label>
+                                                                <select id="mark-event" disabled class="form-control">
+                                                                    <option value="{{ mark.event.id }}">{{ mark.event.id }}-{{ mark.event.event_name }}</option>
                                                                 </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="mark-pause_time">Pause time(Milliseconds):</label>
-                                                                        <input class="form-control" type="number" min="0"
-                                                                               id="mark-pause_time" value="{{ mark.pause_time }}" name="mark-pause_time"
-                                                                               required>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <!-- Contenedor form-group -->
-                                                                        <label for="mark-start_date"
-                                                                               class="mr-2">Begin:</label>
-                                                                        <!-- Etiqueta "Begin:" -->
-                                                                        <div class="d-flex align-items-center">
-                                                                            <!-- Contenedor para input y select -->
-                                                                            <input type="text" class="form-control mr-2"
-                                                                                   id="mark-start_date"
-                                                                                   name="mark-start_date"
-                                                                                   size="5">
-                                                                            <select class="form-control"
-                                                                                    name="mark-start_format"
-                                                                                    id="mark-start_format">
-                                                                                <option value="Before Present (YBP)">
-                                                                                    Before Present (YBP)
-                                                                                </option>
-                                                                                <option value="Before Christ (BC)">
-                                                                                    Before Christ (BC)
-                                                                                </option>
-                                                                                <option selected
-                                                                                        value="After Christ (AC)">After
-                                                                                    Christ (AC)
-                                                                                </option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <label for="mark-end_date"
-                                                                               class="mr-2">End:</label>
-                                                                        <!-- Etiqueta "End:" -->
-                                                                        <div class="d-flex align-items-center">
-                                                                            <!-- Contenedor para input y select -->
-                                                                            <input class="form-control mr-2" type="text"
-                                                                                   id="mark-end_date"
-                                                                                   name="mark-end_date"
-                                                                                   size="5">
-                                                                            <select class="form-control"
-                                                                                    name="mark-end_format"
-                                                                                    id="mark-end_format">
-                                                                                <option value="Before Present (YBP)">
-                                                                                    Before Present (YBP)
-                                                                                </option>
-                                                                                <option value="Before Christ (BC)">
-                                                                                    Before Christ (BC)
-                                                                                </option>
-                                                                                <option selected
-                                                                                        value="After Christ (AC)">After
-                                                                                    Christ (AC)
-                                                                                </option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="mark-description">Description:</label>
-                                                                <textarea class="form-control" id="mark-description"
-                                                                          name="mark-description"></textarea>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="mark-reference">Reference:</label>
-                                                                <textarea class="form-control" id="mark-reference"
-                                                                          name="mark-reference"></textarea>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-6">
@@ -343,7 +249,7 @@
     <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
     <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
     {#<script src="{% static 'assets/dist/js/createuser.js' %}"></script>#}
-    <script src="{% static 'assets/dist/js/markers-crud.js' %}"></script>
+    <script src="{% static 'assets/dist/js/crud_events/markers.crud.js' %}"></script>
     <script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
 
     <!-- Page specific script -->

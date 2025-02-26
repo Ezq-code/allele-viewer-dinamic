@@ -41,12 +41,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>{% blocktranslate %}Gallery List{% endblocktranslate %}</h1>
+                        <h1>{% blocktranslate %}Event-Gallery List{% endblocktranslate %}</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">{% blocktranslate %}Markers-Gallery{% endblocktranslate %}</li>
+                            <li class="breadcrumb-item active">{% blocktranslate %}Event-Gallery{% endblocktranslate %}</li>
                         </ol>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Markers-Gallery</h3>
+                                <h3 class="card-title">Event-Gallery</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -77,7 +77,7 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title">Add Image to Gallery</h4>
+                                                        <h4 class="modal-title">Add Image to Event-Gallery</h4>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
@@ -93,12 +93,12 @@
                                                                        name="name" required>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="marker">Marker:</label>
-                                                                <select class="form-control" id="marker" name="marker"
+                                                                <label for="event">Event:</label>
+                                                                <select class="form-control" id="event" name="event"
                                                                         required>
                                                                     <!-- Aquí puedes cargar dinámicamente los marcadores disponibles -->
-                                                                    {% for marker in markers %}
-                                                                        <option value="{{ marker.id }}">{{ marker.description|truncatechars:80 }}</option>
+                                                                    {% for event in event_all %}
+                                                                        <option value="{{ event.id }}">{{ event.id }}-{{ event.event_name}}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </div>
@@ -128,7 +128,7 @@
                                     <tr>
                                         <th>Nro.</th>
                                         <th>Name</th>
-                                        <th>Marker-info</th>
+                                        <th>Event Name</th>
                                         <th>Image</th>
                                         <th>Actions</th>
                                     </tr>
@@ -138,7 +138,7 @@
                                         <tr>
                                             <td>{{ forloop.counter }}</td>
                                             <td>{{ gal.name }}</td>
-                                            <td>{{ gal.marker.description|truncatechars:120 }}</td>
+                                            <td>{{ gal.event.event_name }}</td>
                                             <td class="icon-cell">
                                                 <img src="{{ gal.image.url }}" alt="Gallery Image"
                                                      class="circular-icon">
@@ -150,7 +150,7 @@
                                                data-target="#modal-edit-gallery-{{ gal.id }}"
                                                data-gallery-id="{{ gal.id }}"
                                                data-gallery-name="{{ gal.name }}"
-                                               data-gallery-marker="{{ gal.marker.id }}"
+                                               data-gallery-event="{{ gal.event.id }}"
                                                data-gallery-image="{{ gal.image.url }}"> <i class="fa fa-edit"></i> </a>
 
                                             <a href="#" class="btn bg-olive" data-toggle="modal"
@@ -166,7 +166,7 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title">Details Markers-Gallery</h4>
+                                                        <h4 class="modal-title">Details Events-Gallery</h4>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
@@ -180,11 +180,11 @@
                                                                        name="gallery_name" required>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="gallery-marker">Marker:</label>
-                                                                <select class="form-control" id="gallery-marker"
-                                                                        name="gallery_marker">
-                                                                    {% for marker in markers %}
-                                                                        <option value="{{ marker.id }}">{{ marker.description|truncatechars:80 }}</option>
+                                                                <label for="gallery-event">Event Name:</label>
+                                                                <select class="form-control" id="gallery-event"
+                                                                        name="gallery_event">
+                                                                    {% for event in event_all %}
+                                                                        <option value="{{ event.id }}">{{ event.id }}-{{ event.event_name }}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </div>
@@ -302,7 +302,7 @@
     <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
     <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
     {#<script src="{% static 'assets/dist/js/createuser.js' %}"></script>#}
-    <script src="{% static 'assets/dist/js/marker-gallery.js' %}"></script>
+    <script src="{% static 'assets/dist/js/crud_events/event-gallery.crud.js' %}"></script>
     <script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
 
     <!-- Page specific script -->
