@@ -1295,9 +1295,9 @@
       "event_icon": "",
       "pause_time": 6000,
       "event_type": 3,
-      "description": "Roman civil wars (91-30). Africa",
+      "description": "Roman civil wars (-91-30). Africa",
       "start_date": -91,
-      "end_date": 30,
+      "end_date": -30,
       "reference": null
     }
   },
@@ -1309,9 +1309,9 @@
       "event_icon": "",
       "pause_time": 6000,
       "event_type": 3,
-      "description": "Roman civil wars (91-30). Europe",
+      "description": "Roman civil wars (-91-30). Europe",
       "start_date": -91,
-      "end_date": 30,
+      "end_date": -30,
       "reference": null
     }
   },
@@ -1478,7 +1478,7 @@
       "pause_time": 6000,
       "event_type": 3,
       "description": "Mongol invasions and conquests (1206-1368). Europe",
-      "start_date": -1206,
+      "start_date": 1206,
       "end_date": 1368,
       "reference": null
     }
@@ -1492,7 +1492,7 @@
       "pause_time": 6000,
       "event_type": 3,
       "description": "Mongol invasions and conquests (1206-1368). Asia",
-      "start_date": -1206,
+      "start_date": 1206,
       "end_date": 1368,
       "reference": null
     }
