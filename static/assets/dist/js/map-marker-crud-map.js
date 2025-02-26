@@ -151,9 +151,9 @@ var drawControl = new L.Control.Draw({
     }
 });
 
-//if (authenticated) {
+if (authenticated) {
     map.addControl(drawControl);
-//}
+}
 
 var modal = document.getElementById("modalMarker");
 var modalEvent = document.getElementById("modalTypeEventMarker");
