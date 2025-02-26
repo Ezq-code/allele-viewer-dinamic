@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from apps.business_app.models import Event, Feature, Marker, EventGallery, EventType
 from django.views.decorators.cache import cache_page
+from django.db.models import Count
 
 # Create your views here.
 
@@ -53,7 +54,7 @@ def human_migrations(request):
 
 @cache_page(60 * 15)
 def events(request):
-    eventos = Event.objects.order_by("-id").all()
+    eventos = Event.objects.annotate(num_markers=Count('markers')).filter(num_markers__gt=0).order_by("-id")
     events_type = EventType.objects.order_by("-id").all()
     return render(
         request,
