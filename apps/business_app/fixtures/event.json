@@ -1,106 +1,2578 @@
 [
   {
     "model": "business_app.event",
-    "pk": 1,
+    "pk": 14,
     "fields": {
-      "event_name": "volcano",
-      "event_icon": "images/volcan.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 1,
+      "description": "The Oruanui eruption of New Zealand's Taupō Volcano (also known as the Kawakawa eruption or Kawakawa/Oruanui event) was the world's most recent supereruption, and largest phreatomagmatic eruption characterised to date. ",
+      "start_date": -26500,
+      "end_date": -24000,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 2,
+    "pk": 15,
     "fields": {
-      "event_name": "Epidemics-Pandemics",
-      "event_icon": "images/epid31.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 1,
+      "description": "The Toba eruption (sometimes called the Toba supereruption or the Youngest Toba eruption) was a supervolcanic eruption that occurred about 74,000 years ago during the Late Pleistocene at the site of present-day Lake Toba in Sumatra, Indonesia. It was the last in a series of at least four caldera-forming eruptions at this location, with the earlier known caldera having formed around 1.2 million years ago.",
+      "start_date": -75000,
+      "end_date": -70001,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 3,
+    "pk": 16,
     "fields": {
-      "event_name": "Wars before 1900",
-      "event_icon": "images/war8.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 1,
+      "description": "Aso caldera (also known as Asosan, the Aso Volcano or Mount Aso, although the later term usually is used related to its currently active vents) is a geographical feature of Kumamoto Prefecture, Japan.",
+      "start_date": -90000,
+      "end_date": -85000,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 4,
+    "pk": 17,
     "fields": {
-      "event_name": "Wars after 1900",
-      "event_icon": "images/war10.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 1,
+      "description": "Minoan eruption (-1600 -1599). Thera",
+      "start_date": -1600,
+      "end_date": -1599,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 5,
+    "pk": 18,
     "fields": {
-      "event_name": "Glaciations",
-      "event_icon": "images/gla6.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 1,
+      "description": "Volcanic winter of 536 (535 - 536). Western Asia",
+      "start_date": 535,
+      "end_date": 536,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 6,
+    "pk": 19,
     "fields": {
-      "event_name": "Bolides",
-      "event_icon": "images/bolide2.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 1,
+      "description": "Volcanic winter of 536 (535 - 536). Eastern Asia",
+      "start_date": 535,
+      "end_date": 536,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 7,
+    "pk": 20,
     "fields": {
-      "event_name": " Economic Crisis",
-      "event_icon": "images/crisis-eco1.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 1,
+      "description": "Volcanic winter of 536 (535 - 536). Europe",
+      "start_date": 535,
+      "end_date": 536,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 8,
+    "pk": 21,
     "fields": {
-      "event_name": " Droughts",
-      "event_icon": "images/seq10.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 1,
+      "description": "Volcanic winter of 536 (535 - 536). North America",
+      "start_date": 535,
+      "end_date": 536,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 9,
+    "pk": 22,
     "fields": {
-      "event_name": " Famines",
-      "event_icon": "images/hambruna.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 1,
+      "description": "1257 Samalas eruption (1257 - 1258) Oceania",
+      "start_date": 1257,
+      "end_date": 1258,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 10,
+    "pk": 23,
     "fields": {
-      "event_name": "Wet Weather",
-      "event_icon": "images/wet-wether.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 1,
+      "description": "Huaynaputina erupts in South America (1600 – 1601). ",
+      "start_date": 1600,
+      "end_date": 1601,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 11,
+    "pk": 25,
     "fields": {
-      "event_name": "Earthquakes",
-      "event_icon": "images/earthquakes.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (-3200 -2600). Africa",
+      "start_date": -3200,
+      "end_date": -2600,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 12,
+    "pk": 26,
     "fields": {
-      "event_name": "Nuclear Bomb",
-      "event_icon": "images/explosion.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (-3200 -2600). Eastern Asia.",
+      "start_date": -3200,
+      "end_date": -2600,
+      "reference": null
     }
   },
   {
     "model": "business_app.event",
-    "pk": 13,
+    "pk": 27,
     "fields": {
-      "event_name": "War ship",
-      "event_icon": "images/buque-de-guerra.png"
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (-3200 -2600). Europe",
+      "start_date": -3200,
+      "end_date": -2600,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 28,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (-3200 -2600). Eastern Asia",
+      "start_date": -3200,
+      "end_date": -2600,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 29,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (-3200 -2600). Oceania",
+      "start_date": -3200,
+      "end_date": -2600,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 30,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (-3200 -2600). North America",
+      "start_date": -3200,
+      "end_date": -2600,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 31,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (-3200 -2600). Latin America and Carib",
+      "start_date": -3200,
+      "end_date": -2600,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 32,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Smallpox or measles (165 - 180). (Roman Empire)",
+      "start_date": 165,
+      "end_date": 180,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 33,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Malaria (450 - 451)",
+      "start_date": 450,
+      "end_date": 451,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 34,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (541 - 549). North Africa",
+      "start_date": 541,
+      "end_date": 549,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 35,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (541 - 549). Europe",
+      "start_date": 541,
+      "end_date": 549,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 36,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (541 - 549). Western Asia",
+      "start_date": 541,
+      "end_date": 549,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 37,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Smallpox (735 – 737). Japan",
+      "start_date": 735,
+      "end_date": 737,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 38,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1346–1353). Europe",
+      "start_date": 1346,
+      "end_date": 1353,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 39,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1346–1353). Western Asia",
+      "start_date": 1346,
+      "end_date": 1353,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 40,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1346–1353). Eastern Asia",
+      "start_date": 1346,
+      "end_date": 1353,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 41,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1346–1353). North Africa",
+      "start_date": 1346,
+      "end_date": 1353,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 42,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Smallpox (1519 - 1520). (Mexico)",
+      "start_date": 1519,
+      "end_date": 1520,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 43,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Cocoliztli (1545–1548). Mexico",
+      "start_date": 1545,
+      "end_date": 1548,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 44,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Cocoliztli (1576–1580). Mexico",
+      "start_date": 1576,
+      "end_date": 1580,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 45,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1629–1631). Italy",
+      "start_date": 1629,
+      "end_date": 1631,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 46,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1656–1658). Southern Italy",
+      "start_date": 1656,
+      "end_date": 1658,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 47,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1772–1773). Persia",
+      "start_date": 1772,
+      "end_date": 1773,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 48,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Cholera (1846–1860). Africa",
+      "start_date": 1846,
+      "end_date": 1860,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 49,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Cholera (1846–1860).  Western Asia",
+      "start_date": 1846,
+      "end_date": 1860,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 50,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Cholera (1846–1860). Eastern Asia",
+      "start_date": 1846,
+      "end_date": 1860,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 51,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Cholera (1846–1860). Europe",
+      "start_date": 1846,
+      "end_date": 1860,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 52,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Cholera (1846–1860). Oceania",
+      "start_date": 1846,
+      "end_date": 1860,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 53,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Cholera (1846–1860). North America",
+      "start_date": 1846,
+      "end_date": 1860,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 54,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Cholera (1846–1860). Latin America & Carib",
+      "start_date": 1846,
+      "end_date": 1860,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 55,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1855–1960). Africa",
+      "start_date": 1855,
+      "end_date": 1960,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 56,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1855–1960). Eastern Asia",
+      "start_date": 1855,
+      "end_date": 1960,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 57,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1855–1960). Western Asia",
+      "start_date": 1855,
+      "end_date": 1960,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 58,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1855–1960). Europe",
+      "start_date": 1855,
+      "end_date": 1960,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 59,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1855–1960). Oceania",
+      "start_date": 1855,
+      "end_date": 1960,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 60,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1855–1960). North America",
+      "start_date": 1855,
+      "end_date": 1960,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 61,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Bubonic plague (1855–1960). Latin America & Carib",
+      "start_date": 1855,
+      "end_date": 1960,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 62,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza (1889−1890). Africa",
+      "start_date": 1889,
+      "end_date": 1890,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 63,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza (1889−1890). Western Asia",
+      "start_date": 1889,
+      "end_date": 1890,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 64,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza (1889−1890). Eastern Asia",
+      "start_date": 1889,
+      "end_date": 1890,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 65,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza (1889−1890). Europe",
+      "start_date": 1889,
+      "end_date": 1890,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 66,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza (1889−1890). Oceania",
+      "start_date": 1889,
+      "end_date": 1890,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 67,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza (1889−1890). North America",
+      "start_date": 1889,
+      "end_date": 1890,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 68,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza (1889−1890). Latin America & Carib",
+      "start_date": 1889,
+      "end_date": 1890,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 69,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H1N1 (1918–1920). Africa",
+      "start_date": 1918,
+      "end_date": 1920,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 70,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H1N1 (1918–1920). Western Asia",
+      "start_date": 1918,
+      "end_date": 1920,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 71,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H1N1 (1918–1920). Eastern Asia",
+      "start_date": 1918,
+      "end_date": 1920,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 72,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H1N1 (1918–1920). Europe",
+      "start_date": 1918,
+      "end_date": 1920,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 73,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H1N1 (1918–1920). Oceania",
+      "start_date": 1918,
+      "end_date": 1920,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 74,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H1N1 (1918–1920). North America",
+      "start_date": 1918,
+      "end_date": 1920,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 75,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H1N1 (1918–1920). Latin America & Carib",
+      "start_date": 1918,
+      "end_date": 1920,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 76,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Typhus (1918–1922). Russia",
+      "start_date": 1918,
+      "end_date": 1922,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 77,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H2N2 (1957–1958). Africa",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 78,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H2N2 (1957–1958). Western Asia",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 79,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H2N2 (1957–1958). Eastern Asia",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 80,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H2N2 (1957–1958). Europe",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 81,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H2N2 (1957–1958). Oceania",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 82,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H2N2 (1957–1958). North America",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 83,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H2N2 (1957–1958). Latin America & Carib",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 84,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H3N2 (1957–1958). Africa",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 85,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H3N2 (1957–1958). Western Asia",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 86,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H3N2 (1957–1958). Eastern Asia",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 87,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H3N2 (1957–1958). Europe",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 88,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H3N2 (1957–1958). Oceania",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 89,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H3N2 (1957–1958). North America",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 90,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "Influenza A/H3N2 (1957–1958). Latin America & Carib",
+      "start_date": 1957,
+      "end_date": 1958,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 91,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "HIV/AIDS (1981–2024). Africa",
+      "start_date": 1981,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 92,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "HIV/AIDS (1981–2024). Western Asia",
+      "start_date": 1981,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 93,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "HIV/AIDS (1981–2024). Eastern Asia",
+      "start_date": 1981,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 94,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "HIV/AIDS (1981–2024). Europe",
+      "start_date": 1981,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 95,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "HIV/AIDS (1981–2024). Oceania",
+      "start_date": 1981,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 96,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "HIV/AIDS (1981–2024). North America",
+      "start_date": 1981,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 97,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "HIV/AIDS (1981–2024). Latin America & Carib",
+      "start_date": 1981,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 98,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "COVID-19 (2019–2024). Africa",
+      "start_date": 2019,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 99,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "COVID-19 (2019–2024). Western Asia",
+      "start_date": 2019,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 100,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "COVID-19 (2019–2024). Eastern Asia",
+      "start_date": 2019,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 101,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "COVID-19 (2019–2024). Europe",
+      "start_date": 2019,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 102,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "COVID-19 (2019–2024). Oceania",
+      "start_date": 2019,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 103,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 2,
+      "description": "COVID-19 (2019–2024). North America",
+      "start_date": 2019,
+      "end_date": 2024,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 105,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Greco–Persian Wars (499-449). Western Asia",
+      "start_date": -499,
+      "end_date": -449,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 106,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Chinese Warring States (475–221). Eastern Asia ",
+      "start_date": -475,
+      "end_date": -221,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 107,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Punic Wars (264-146). Europe",
+      "start_date": -264,
+      "end_date": -146,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 108,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Roman civil wars (-91-30). Africa",
+      "start_date": -91,
+      "end_date": -30,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 109,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Roman civil wars (-91-30). Europe",
+      "start_date": -91,
+      "end_date": -30,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 110,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Jewish–Roman Wars (66-136). Africa",
+      "start_date": 66,
+      "end_date": 136,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 111,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Jewish–Roman Wars (66-136). Europe",
+      "start_date": 66,
+      "end_date": 136,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 112,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Three Kingdoms War (184-280). Eastern Asia",
+      "start_date": 184,
+      "end_date": 280,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 113,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Yellow Turban Rebellion (184-205). Eastern Asia",
+      "start_date": 184,
+      "end_date": 205,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 114,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Arab–Byzantine Wars (629-1050). Asia Minor",
+      "start_date": 629,
+      "end_date": 1050,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 115,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Arab–Byzantine Wars (629-1050). Africa",
+      "start_date": 629,
+      "end_date": 1050,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 116,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Arab–Byzantine Wars (629-1050). Europe\n",
+      "start_date": 629,
+      "end_date": 1050,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 117,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Reconquista (711-1492). Europe",
+      "start_date": 711,
+      "end_date": 1492,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 118,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "An Lushan Rebellion (755-763). Eastern Asia",
+      "start_date": 755,
+      "end_date": 763,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 119,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Crusades (1095-1291). Europe (Spain-Portugal)",
+      "start_date": 1095,
+      "end_date": 1291,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 120,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": " Crusades (1095-1291). Asia Minor",
+      "start_date": 1095,
+      "end_date": 1291,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 121,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Mongol invasions and conquests (1206-1368). Europe",
+      "start_date": 1206,
+      "end_date": 1368,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 122,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Mongol invasions and conquests (1206-1368). Asia",
+      "start_date": 1206,
+      "end_date": 1368,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 123,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Hundred Years' War (1337-1453). Europe",
+      "start_date": 1337,
+      "end_date": 1453,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 124,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Conquests of Timur (1370-1405). Europe",
+      "start_date": 1370,
+      "end_date": 1405,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 125,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Conquests of Timur (1370-1405). Western Asia",
+      "start_date": 1370,
+      "end_date": 1405,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 126,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Spanish conquest of the Aztec Empire (1519-1632). Latin America and the Caribbean",
+      "start_date": 1519,
+      "end_date": 1632,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 127,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Spanish conquest of Yucatán (1519–1595). Latin America and the Caribbean",
+      "start_date": 1519,
+      "end_date": 1595,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 128,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Spanish conquest of the Inca Empire (1533-1572). Latin America and the Caribbean",
+      "start_date": 1533,
+      "end_date": 1572,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 129,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "French Wars of Religion (1562-1598). Europe",
+      "start_date": 1562,
+      "end_date": 1598,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 130,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Transition from Ming to Qing (1616-1683). Asia ",
+      "start_date": 1616,
+      "end_date": 1683,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 131,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Thirty Years' War (1618-1648). Europe",
+      "start_date": 1618,
+      "end_date": 1648,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 132,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Mughal–Maratha Wars (1658-1707). Eastern Asia",
+      "start_date": 1658,
+      "end_date": 1707,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 133,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Napoleonic Wars. War of the Third Coalition (1805-1806). Europe (Czech Republic)",
+      "start_date": 1805,
+      "end_date": 1806,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 134,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Napoleonic Wars. War of the Fourth Coalition (1806-1807). Central Europe (Germany)",
+      "start_date": 1806,
+      "end_date": 1807,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 135,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Napoleonic Wars. Peninsular War (1807-1814). Europe (Iberian Peninsula)",
+      "start_date": 1807,
+      "end_date": 1814,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 136,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Napoleonic Wars. Peninsular War (1807-1814). Europe (Spain)",
+      "start_date": 1807,
+      "end_date": 1814,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 137,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Napoleonic Wars. War of the Fifth Coalition (1808-1810). Europe (Germany)",
+      "start_date": 1808,
+      "end_date": 1810,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 138,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Napoleonic Wars. French invasion of Russia (1811-1813). Europe (Russia)",
+      "start_date": 1811,
+      "end_date": 1813,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 139,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Napoleonic Wars. War of the Sixth Coalition (1812-1814). Europe (Germany)",
+      "start_date": 1812,
+      "end_date": 1814,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 140,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Napoleonic Wars. War of the Sixth Coalition (1812-1814). Europe (France)",
+      "start_date": 1812,
+      "end_date": 1814,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 141,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Napoleonic Wars. Hundred Days (March 1815-July 1815). Europe (France-Netherlands)",
+      "start_date": 1814,
+      "end_date": 1816,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 142,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 3,
+      "description": "Taiping Rebellion (1850-1864). Eastern Asia ",
+      "start_date": 1850,
+      "end_date": 1864,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 144,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War I (1914-1918). Western Europe, Western Front: Includes France, Belgium, and parts of the Netherlands",
+      "start_date": 1914,
+      "end_date": 1918,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 145,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War I (1914-1918). Western Europe, Italian Front: Mainly in northern Italy.",
+      "start_date": 1914,
+      "end_date": 1918,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 146,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War I (1914-1918). Western Europe, Eastern Front: Includes parts of Poland, Russia and the Balkans",
+      "start_date": 1914,
+      "end_date": 1918,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 147,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War I (1914-1918). Eastern Europe, Russia: Participated in the Eastern Front and then withdrew after the October Revolution.",
+      "start_date": 1914,
+      "end_date": 1918,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 148,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War I (1914-1918). Eastern Europe, Austro-Hungarian Empire: Includes areas of Austria, Hungary, and parts of the Balkans.",
+      "start_date": 1914,
+      "end_date": 1918,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 149,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War I (1914-1918). Middle East, Ottoman Empire: Participated in the Balkan Front and the conflict in Palestine",
+      "start_date": 1914,
+      "end_date": 1918,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 150,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War I (1914-1918). Maritime, Mediterranean: Naval battles and landings in North Africa.",
+      "start_date": 1914,
+      "end_date": 1918,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 151,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War I (1914-1918). Europe, Germany: Mainly on the Western Front.",
+      "start_date": 1914,
+      "end_date": 1918,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 152,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War I (1914-1918). Europe, United Kingdom: Although it was not invaded, it was a key actor in the conflict.",
+      "start_date": 1914,
+      "end_date": 1918,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 153,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "Russian Civil War (1917-1922). Eastern Asia",
+      "start_date": 1917,
+      "end_date": 1922,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 154,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "Chinese Civil War (1927-1949). Eastern Asia",
+      "start_date": 1927,
+      "end_date": 1949,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 155,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "Second Sino-Japanese War (1937-1945). Asia",
+      "start_date": 1937,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 156,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "Korean War (1950-1953). Asia",
+      "start_date": 1950,
+      "end_date": 1953,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 157,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "Vietnam War (1955-1975). Western Asia",
+      "start_date": 1955,
+      "end_date": 1975,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 158,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "Nigerian Civil War (1967-1970). Africa",
+      "start_date": 1967,
+      "end_date": 1970,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 159,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "Second Congo War (1998-2003). Africa",
+      "start_date": 1998,
+      "end_date": 2003,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 160,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "Bangladesh Liberation War (1970-1972). Western Asia. was an armed conflict sparked by the rise of the Bengali nationalist and self-determination movement in East Pakistan, which resulted in the independence of Bangladesh.The war began when the Pakistani military junta based in West Pakistan—under the orders of Yahya Khan—launched Operation Searchlight against East Pakistanis on the night of 25 March 1971, initiating the Bangladesh genocide.",
+      "start_date": 1970,
+      "end_date": 1972,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 161,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Europe, Western Front: Invasion of Poland by Germany in 1939.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 162,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Europe, Western Front: Battle of France, May 10–June 25, 1940.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 163,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Europe, Western Front: Battle of Britain July 10 to October 31, 1940.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 164,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Europe, Western Front: Normandy landings (D-Day) in 1944, France.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 165,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Europe, Eastern Front: Invasion of the Soviet Union by Germany in 1941.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 166,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Europe, Eastern Front: The Battle of Stalingrad was a major World War II battle that took place from August 1942 to February 1943.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 167,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Europe, Eastern Front: The Battle of Kursk was a major World War II Eastern Front battle between the forces of Nazi Germany and the Soviet Union near Kursk in southwestern Russia during the summer of 1943.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 168,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Europe, Eastern Front: Liberation of Berlin in 1945.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 169,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Europe, Balkans: Invasion of Yugoslavia and Greece by Germany and Italy in 1941.",
+      "start_date": 1938,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 170,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Europe, Balkans: Yugoslav resistance. In World War II, the Balkan Peninsula maintained its neutrality until 1941. That year, it was invaded and divided between Axis forces and two puppet regimes: Croatia and Serbia.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 171,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Africa, North Africa: Western Desert Campaign in June 1940. Tobruk and El Alamein, Egypt.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 172,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Africa, North Africa: The Second Battle of El Alamein (23 October – 11 November 1942) was a battle of the Second World War that took place near the Egyptian railway halt of El Alamein.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 173,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Africa, North Africa: Operation Torch (allied landing in Morocco and Algeria in 1942).",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 174,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Asia and the Pacific, Pacific War: Attack on Pearl Harbor in 1941. The attack on Pearl Harbor was a surprise military offensive carried out by the Imperial Japanese Navy against the United States naval base at Pearl Harbor (Hawaii) on the morning of Sunday, December 7, 1941.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 175,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Asia and the Pacific, Pacific War: The Battle of Midway was an important air-naval battle of World War II that took place between June 4 and 7, 1942, when a large fleet of the Imperial Japanese Navy, commanded by Isoroku Yamamoto, attacked the American bases on the atoll of Midway in its campaign for the central Pacific Ocean.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 176,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Asia and the Pacific, Pacific War: The naval battle of Guadalcanal itself consisted of a sequence of combined sea and air attacks that lasted more than four days (from November 12 to 15, 1942), most of them in the area around the island of Guadalcanal. Guadalcanal very close to the island of Savo, in the Solomon Islands.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 177,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Asia and the Pacific, Southeast Asia: The Battle of Singapore, also known as the Fall of Singapore, took place in the Southeast Asian theater of World War II when the Empire of Japan invaded the British fortress of Singapore. The fighting lasted from February 8 to 15, 1942 and ended with the conquest of Singapore by Japanese troops.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 178,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Asia and the Pacific, Southeast Asia: The Malaya Campaign is the name given to the Japanese expansionist offensive that led to the occupation of Thailand and the expulsion of British troops from Malaya and Singapore. It began on December 8, 1941 and ended with the Battle of Singapore on January 31, 1942.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 179,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 4,
+      "description": "World War II (1939-1945). Asia and the Pacific, Southeast Asia: The Burma Campaign encompasses all the combats fought in British Burma, now Burma (or Myanmar), between the Allied forces and Japanese forces, supported by local independence movements at the beginning of 1942.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 181,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 5,
+      "description": "Saale glaciation (-128000 -74000). Europe",
+      "start_date": -128000,
+      "end_date": -74000,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 182,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 5,
+      "description": "Last Glacial Maximum (-26000 -20000). Western Asia",
+      "start_date": -26000,
+      "end_date": -20000,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 183,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 5,
+      "description": "Last Glacial Maximum (-26000 -20000). Eastern Asia",
+      "start_date": -26000,
+      "end_date": -20000,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 184,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 5,
+      "description": "Last Glacial Maximum (-26000 -20000). Europe",
+      "start_date": -26000,
+      "end_date": -20000,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 185,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 5,
+      "description": "Last Glacial Maximum (-26000 -20000). North America",
+      "start_date": -26000,
+      "end_date": -20000,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 187,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 6,
+      "description": "Tollmann's bolide (-7640 -7639). Africa",
+      "start_date": -7640,
+      "end_date": -7639,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 188,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 6,
+      "description": "Tollmann's bolide (-7640 -7639). Europe",
+      "start_date": -7640,
+      "end_date": -7639,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 189,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 6,
+      "description": "Tollmann's bolide (-7640 -7639). Western Asia",
+      "start_date": -7640,
+      "end_date": -7639,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 190,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 6,
+      "description": "Tollmann's bolide (-7640 -7639). Eastern Asia",
+      "start_date": -7640,
+      "end_date": -7639,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 191,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 6,
+      "description": "Tollmann's bolide (-7640 -7639). North America",
+      "start_date": -7640,
+      "end_date": -7639,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 193,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 7,
+      "description": "Bronze Age collapse (-1206 -1187).  Eastern Mediterranean",
+      "start_date": -1206,
+      "end_date": -1187,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 194,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 7,
+      "description": "Bronze Age collapse (-1206 -1187).  Africa",
+      "start_date": -1206,
+      "end_date": -1187,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 196,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 8,
+      "description": "Severe drought of Central American (850 - 851). ",
+      "start_date": 850,
+      "end_date": 851,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 197,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 8,
+      "description": "4.2-kiloyear event (-4200 -4199). Africa",
+      "start_date": -4200,
+      "end_date": -4199,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 198,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 8,
+      "description": "4.2-kiloyear event (-4200 -4199). Western Asia",
+      "start_date": -4200,
+      "end_date": -4199,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 199,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 8,
+      "description": "4.2-kiloyear event (-4200 -4199). Eastern Asia",
+      "start_date": -4200,
+      "end_date": -4199,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 200,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 8,
+      "description": "4.2-kiloyear event (-4200 -4199). Europe",
+      "start_date": -4200,
+      "end_date": -4199,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 201,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 8,
+      "description": "4.2-kiloyear event (-4200 -4199). Oceania",
+      "start_date": -4200,
+      "end_date": -4199,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 202,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 8,
+      "description": "4.2-kiloyear event (-4200 -4199). North America",
+      "start_date": -4200,
+      "end_date": -4199,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 207,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 12,
+      "description": "World War II (1939-1945). Asia: Japan. The \"Little Boy\" bomb was dropped on Hiroshima on August 6, 1945.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
+    }
+  },
+  {
+    "model": "business_app.event",
+    "pk": 209,
+    "fields": {
+      "event_name": "Fill later",
+      "event_icon": "",
+      "pause_time": 6000,
+      "event_type": 13,
+      "description": "World War II (1939-1945). North Atlantic: The Battle of the Atlantic was the naval confrontation that had the Atlantic Ocean as the scene of operations, practically in its entirety, fought during the Second World War between the large German ships, the U-Boats commanded by Admiral Karl Dönitz and almost the entire of the British Royal Navy.",
+      "start_date": 1939,
+      "end_date": 1945,
+      "reference": null
     }
   }
 ]

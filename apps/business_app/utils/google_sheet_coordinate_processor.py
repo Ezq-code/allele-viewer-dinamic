@@ -14,7 +14,7 @@ from apps.business_app.utils.excel_nomenclators import ExcelNomenclators
 from apps.business_app.utils.google_api_coordinator import GoogleApiCoordinator
 from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDriveApi
 from project_site import settings
-from apps.users_app.models import SystemUser
+from apps.users_app.models.system_user import SystemUser
 
 logger = logging.getLogger(__name__)
 

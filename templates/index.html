@@ -229,19 +229,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <p>Map view</p>
                                 </a>
                             </li>
-                           
-                    
+                        
                             {% if user.is_authenticated %}
                             <li class="nav-item">
-                                <a href="{% url 'events' %}" class="nav-link">
+                                <a href="{% url 'events-list' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Events</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'features' %}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Human Migrations</p>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -251,13 +244,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{% url 'gallery-list' %}" class="nav-link">
+                                <a href="{% url 'events-gallery-list' %}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Markers Gallery</p>
+                                    <p>Events Gallery</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{% url 'events-type' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Events Types</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{% url 'features' %}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Human Migrations</p>
                                 </a>
                             </li>
                             {% endif %}
-
                         </ul>
                     </li>
                 </ul>

@@ -4,7 +4,7 @@ from rest_framework.generics import GenericAPIView
 
 from apps.common.views import CommonOrderingFilter
 from apps.business_app.models import AllowedExtensions
-from apps.business_app.serializers import AllowedExtensionsSerializer
+from apps.business_app.serializers.allowed_extensions import AllowedExtensionsSerializer
 
 # Create your views here.
 

@@ -8,7 +8,7 @@ __all__ = [
     "AlleleParentsViewSet",
     "EventViewSet",
     "MarkerViewSet",
-    "MarkerGalleryViewSet",
+    "EventGalleryViewSet",
     "FeatureViewSet",
     "LayerViewSet",
 ]
@@ -21,6 +21,6 @@ from .pdb_files import PdbFileViewSet
 from .allele_parents import AlleleParentsViewSet
 from .event import EventViewSet
 from .marker import MarkerViewSet
-from .marker_gallery import MarkerGalleryViewSet
+from .event_gallery import EventGalleryViewSet
 from .layer import LayerViewSet
 from .feature import FeatureViewSet
