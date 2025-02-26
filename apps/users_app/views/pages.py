@@ -53,6 +53,7 @@ def human_migrations(request):
 
 
 @cache_page(60 * 15)
+def events(request):
     eventos = Event.objects.order_by("-id").all()
     events_type = EventType.objects.order_by("-id").all()
     return render(
