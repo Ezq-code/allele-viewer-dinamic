@@ -601,7 +601,7 @@
                                         else
                                         if (aRegionTimeLine.value == "Europe"){   
                                             sessionStorage.setItem('lat', '49');
-                                            sessionStorage.setItem('long', '115');  
+                                            sessionStorage.setItem('long', '15');  
                                             sessionStorage.setItem('zoom', '4');    
                                         }
                                         else
@@ -613,7 +613,7 @@
                                         else
                                         if (aRegionTimeLine.value == "North America"){
                                             sessionStorage.setItem('lat', '50');
-                                            sessionStorage.setItem('long', '315');  
+                                            sessionStorage.setItem('long', '265');  
                                             sessionStorage.setItem('zoom', '4');   
                                         }
                                         else
