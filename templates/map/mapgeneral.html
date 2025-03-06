@@ -74,7 +74,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTypeEventMarkerLabel">Select Event Type</h5>
+                    <h5 class="modal-title" id="modalTypeEventMarkerLabel">Select Event</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -82,10 +82,15 @@
                 <div class="modal-body">
                     <form id="event-type-form">
                         <div class="form-group">
+                            <label for="eventoModal">Event:</label>
+                            <select required class="form-group" id="eventoModal">
+                            </select>
+                        </div>
+                       <!-- <div class="form-group">
                             <label for="tipoeventofirtmodal">Event Type:</label>
                             <select required class="form-group" id="tipoeventofirtmodal">
                             </select>
-                        </div>
+                        </div> -->
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -110,6 +115,10 @@
                 <div class="modal-body">
                     <form id="modal-form"> {% csrf_token %}
                         <div class="form-group">
+                            <label for="evento">Event:</label>
+                            <select class="form-control" id="evento"></select>
+                        </div>
+                    <!--    <div class="form-group">
                             <label for="tipoevento">Event Type:</label>
                             <select class="form-control" id="tipoevento"></select>
                         </div>
@@ -120,9 +129,9 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">  <!-- Contenedor form-group -->
-                                    <label for="fechaini" class="mr-2">Begin:</label>  <!-- Etiqueta "Begin:" -->
-                                    <div class="d-flex align-items-center">  <!-- Contenedor para input y select -->
+                                <div class="form-group">   
+                                    <label for="fechaini" class="mr-2">Begin:</label>
+                                    <div class="d-flex align-items-center">  
                                         <input type="text" class="form-control mr-2" id="fechaini" name="fechaini"
                                                size="5">
                                         <select class="form-control" name="selectDateTypeBegin"
@@ -138,8 +147,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="fechafin" class="mr-2">End:</label>  <!-- Etiqueta "End:" -->
-                                    <div class="d-flex align-items-center">  <!-- Contenedor para input y select -->
+                                    <label for="fechafin" class="mr-2">End:</label>  
+                                    <div class="d-flex align-items-center">  
                                         <input class="form-control mr-2" type="text" id="fechafin" name="fechafin"
                                                size="5">
                                         <select class="form-control" name="selectDateTypeEnd" id="selectDateTypeEnd">
@@ -152,6 +161,10 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="event_name">Name:</label>
+                            <input class="form-control" type="text" id="event_name" name="event_name">
+                        </div>
+                        <div class="form-group">
                             <label for="descripcion">Description:</label>
                             <textarea class="form-control" rows="1" id="descripcion" name="descripcion"></textarea>
                         </div>
@@ -159,6 +172,7 @@
                             <label for="reference">Reference:</label>
                             <textarea class="form-control" rows="1" id="reference" name="reference"></textarea>
                         </div>
+                        -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -199,11 +213,23 @@
                                 <div class="card-tools">
                                     <div class="d-inline-block">
                                         <select class="form-control form-control-sm" name="timeRange" id="timeRange">
-                                            <option value="All the Time">All the Time</option>                                        
-                                            <option value="from 315000 YBP to 200000 YBP">from 315000 YBP to 200000 YBP</option>
-                                            <option value="from 200000 YBP to 70000 YBP">from 200000 YBP to 70000 YBP</option>
-                                            <option value="from 70000 YBP to 1">from 70000 YBP to 1</option>
-                                            <option value="from 1 to 2025">from 1 to 2025</option>
+                                            <option value="-315000/2025">All the Time</option>
+                                            <option value="-315000/-4000">Stone Age (315000 YBP to 4000 YBP)</option>
+                                            <option value="-315000/-10000">Paleolithic (315000 YBP to 10000 YBP)</option>
+                                            <option value="-10000/-8500">Mesolithic (10000 YBP to 8500 YBP)</option>
+                                            <option value="-8500/-4000">Neolithic (8500 YBP to 4000 YBP)</option>
+                                            <option value="-4000/800">Age of Metals (4000 YBP to 800)</option>
+                                            <option value="-4000/-3000">Cooper Age (4000 YBP to 3000 YBP)</option>
+                                            <option value="-3000/-1200">Bronze Age (3000 YBP to 1200 YBP)</option>
+                                            <option value="-1200/800">Iron Age (1200 YBP to 800)</option>
+                                            <option value="-3300/476">Ancient Age (3300 YBP to 476)</option>
+                                            <option value="476/1453">Middle Age (476 YBP to 1453)</option>
+                                            <option value="1453/1789">Modern Age (1453 YBP to 1789)</option>                                        
+                                            <option value="1789/2025">Contemporary Age (1789 YBP to 2025)</option>
+                                            <option value="-315000/-200000">from 315000 YBP to 200000 YBP</option>
+                                            <option value="-200000/-70000">from 200000 YBP to 70000 YBP</option>
+                                            <option value="-70000/1">from 70000 YBP to 1</option>
+                                            <option value="1/2025">from 1 to 2025</option>
                                         </select>
                                             </div>
                                         <div class="d-inline-block">
@@ -215,7 +241,7 @@
                                             <option value="Europe">Europe</option>
                                             <option value="Oceania">Oceania</option>
                                             <option value="North America">North America</option>
-                                            <option value="Latin America">Latin America & Carib</option>
+                                            <option value="Latin America & Carib">Latin America & Carib</option>
                                         </select>  
                                             </div>
                                         <div class="d-inline-block">
@@ -253,7 +279,7 @@
                                      sessionStorage.setItem('lat', 10);
                                      sessionStorage.setItem('long', 120);
                                      sessionStorage.setItem('zoom', 2); 
-                                     sessionStorage.setItem('timeRange', 'All the Time'); 
+                                     sessionStorage.setItem('timeRange', '-315000/2025'); 
                                      sessionStorage.setItem('region', 'All the World'); 
                                      sessionStorage.setItem('inicializado', 'true');
                                     }
@@ -369,6 +395,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <!-- Sección de Nombre -->
+                    <h5 class="mt-3 mb-2">Name:</h5>
+                    <div id="eventName" class="scrollable mb-4"></div>
+
                     <!-- Sección de Descripción -->
                     <h5 class="mt-3 mb-2">Description:</h5>
                     <div id="eventDescription" class="scrollable mb-4"></div>

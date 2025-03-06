@@ -57,10 +57,11 @@ urlpatterns = [
     path("register/", pages.register, name="register"),
     path("index/", pages.index, name="index"),
     path("mapgeneral/", pages.mapgeneral, name="mapgeneral"),
-    path("events/list", pages.events, name="events"),
+    path("event-type/list", pages.events_types, name="events-type"),
+    path("events/list", pages.events, name="events-list"),
     path("features/list", pages.human_migrations, name="features"),
     path("markers/list", pages.markers_list, name="markers-list"),
-    path("gallery/list", pages.marker_gallery, name="gallery-list"),
+    path("events-gallery/list", pages.event_gallery, name="events-gallery-list"),
 ]
 
 # This is for serving media on development stages

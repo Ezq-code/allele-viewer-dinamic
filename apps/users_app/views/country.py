@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 
 from apps.common.views import GetAllMixin
-from apps.users_app.models import Country
+from apps.users_app.models.country import Country
 from apps.users_app.serializers import CountrySerializer
 from rest_framework.decorators import action
 

@@ -54,23 +54,16 @@ $('.modal').on('hidden.bs.modal', function (e) {
 
 
 // Funcion para editar el marcador
-function editMark(id, event_type, pause_time, start_date, start_format, end_date, end_format, description, reference, latitude, longitude) {
+function editMark(id, event, latitude, longitude) {
     const csrftoken = $("[name=csrfmiddlewaretoken]").val(); // Obtiene el token CSRF
     var formData = new FormData();
-    formData.append('event_type', event_type);
-    formData.append('pause_time', pause_time);
-    formData.append('start_date', start_date);
-    formData.append('start_format', start_format);
-    formData.append('end_date', end_date);
-    formData.append('end_format', end_format);
-    formData.append('description', description);
-    formData.append('reference', reference);
+    formData.append('event', event);
     formData.append('latitude', latitude);
     formData.append('longitude', longitude);
 
     $.ajax({
         url: '/business-gestion/markers/' + id + '/',
-        type: 'PUT',
+        type: 'PATCH',
         data: formData,
         contentType: false,
         processData: false,
@@ -101,26 +94,12 @@ $(document).ready(function () {
     $(document).on('click', '.btn-edit', function () {
         // Obtener los datos de la marca seleccionada
         var id = $(this).data('mark-id');
-        var event_type = $(this).data('mark-event_type');
-        var pause_time = $(this).data('mark-pause_time');
-        var start_date = $(this).data('mark-start_date');
-        var start_format = $(this).data('mark-start_format');
-        var end_date = $(this).data('mark-end_date');
-        var end_format = $(this).data('mark-end_format');
-        var description = $(this).data('mark-description');
-        var reference = $(this).data('mark-reference');
+        var event = $(this).data('mark-event');
         var latitude = $(this).data('mark-latitude');
         var longitude = $(this).data('mark-longitude');
 
         // Mostrar los datos en el modal
         var modalId = '#modal-edit-mark-' + id;
-        $(modalId).find('#mark-pause_time').val(pause_time);
-        $(modalId).find('#mark-start_date').val(start_date);
-        $(modalId).find('#mark-start_format').val(start_format);
-        $(modalId).find('#mark-end_date').val(end_date);
-        $(modalId).find('#mark-end_format').val(end_format);
-        $(modalId).find('#mark-description').val(description);
-        $(modalId).find('#mark-reference').val(reference);
         $(modalId).find('#mark-latitude').val(latitude);
         $(modalId).find('#mark-longitude').val(longitude);
         $(modalId).find('#btn-edit-mark').data('mark-id', id); // Guardamos el ID aquí
@@ -133,18 +112,11 @@ $(document).ready(function () {
     $(document).on('click', '#btn-edit-mark', function () {
         var id = $(this).data('mark-id');
         var modalId = '#modal-edit-mark-' + id;
-        var event_type = $(modalId).find('#mark-event_type').val(); // Obtener el valor del select
-        var pause_time = $(modalId).find('#mark-pause_time').val();
-        var start_date = $(modalId).find('#mark-start_date').val();
-        var start_format = $(modalId).find('#mark-start_format').val();
-        var end_date = $(modalId).find('#mark-end_date').val();
-        var end_format = $(modalId).find('#mark-end_format').val();
-        var description = $(modalId).find('#mark-description').val();
-        var reference = $(modalId).find('#mark-reference').val();
+        var event = $(modalId).find('#mark-event').val(); // Obtener el valor del select
         var latitude = $(modalId).find('#mark-latitude').val();
         var longitude = $(modalId).find('#mark-longitude').val();
 
         // Realizar la solicitud AJAX para editar la marca
-        editMark(id, event_type,pause_time, start_date, start_format, end_date, end_format, description, reference, latitude, longitude);
+        editMark(id, event, latitude, longitude);
     });
 });

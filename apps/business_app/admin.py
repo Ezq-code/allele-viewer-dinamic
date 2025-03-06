@@ -9,12 +9,13 @@ from apps.business_app.models import (
     UploadedFiles,
     AlleleNode,
     Marker,
-    MarkerGallery,
+    EventGallery,
     Event,
     Layer,
     Feature,
     WorkingCopyOfOriginalFile,
 )
+from apps.business_app.models.event_type import EventType
 from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.region import Region
@@ -25,9 +26,6 @@ logger = logging.getLogger(__name__)
 # Register your models here.
 
 admin.site.register(SiteConfiguration, SingletonModelAdmin)
-admin.site.register(Event)
-admin.site.register(Marker)
-admin.site.register(MarkerGallery)
 admin.site.register(Layer)
 
 
@@ -57,6 +55,13 @@ class FeatureAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(EventGallery)
+class EventGalleryAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = ["id", "name", "event", "image"]
+    fields = ["name", "event", "image"]
+
+
 @admin.register(AlleleNode)
 class AlleleNodeAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
@@ -77,6 +82,64 @@ class AlleleNodeAdmin(admin.ModelAdmin):
         "rs",
         "uploaded_file",
         "timeline_appearence",
+    ]
+
+
+@admin.register(EventType)
+class EventTypeAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "icon",
+        "pause_time",
+    ]
+    fields = [
+        "name",
+        "icon",
+        "pause_time",
+    ]
+
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "event_name",
+        "event_icon",
+        "pause_time",
+        "event_type",
+        "description",
+        "start_date",
+        "end_date",
+        "reference",
+    ]
+    fields = [
+        "event_name",
+        "event_icon",
+        "pause_time",
+        "event_type",
+        "description",
+        "start_date",
+        "end_date",
+        "reference",
+    ]
+
+
+@admin.register(Marker)
+class MarkerAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "latitude",
+        "longitude",
+        "event",
+    ]
+    fields = [
+        "latitude",
+        "longitude",
+        "event",
     ]
 
 
