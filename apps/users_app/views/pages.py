@@ -63,6 +63,10 @@ def markers_list(request):
 def register(request):
     return render(request, "login/register.html")
 
+# @cache_page(60 * 15)
+def introduction(request):
+    return render(request, "introduction/introduction.html")
+
 
 @cache_page(60 * 15)
 def marker_gallery(request):

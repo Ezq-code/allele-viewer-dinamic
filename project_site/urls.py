@@ -54,6 +54,7 @@ urlpatterns = [
     ),
     path("", pages.alleleviewer, name="alleleviewer"),
     path("login/", pages.first_login, name="first_login"),
+    path("introduction/", pages.introduction, name="introducction"),
     path("register/", pages.register, name="register"),
     path("index/", pages.index, name="index"),
     path("mapgeneral/", pages.mapgeneral, name="mapgeneral"),

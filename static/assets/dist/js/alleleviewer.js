@@ -1057,3 +1057,10 @@ function playStopAnimation(button) {
   }
   togglePauseButton(button);
 }
+
+
+function centerGrafig() {
+ viewer.zoomTo();
+ viewer.zoom(2, 1000);
+  viewer.render();
+}

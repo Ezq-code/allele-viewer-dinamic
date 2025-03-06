@@ -1,0 +1,216 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE HTML>
+<!--
+	Ethereal by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		 <link rel="icon" type="image/png" href="{% static 'assets/dist/img/AdminLTELogo.png' %}">
+    <title>PGxSoftware Allele View</title>
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'assets/ethereal-master/assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'assets/ethereal-master/assets/css/noscript.css' %}" /></noscript>
+	</head>
+	<body>
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Wrapper -->
+					<div id="wrapper">
+
+						<!-- Panel (Banner) - Introduction -->
+							<section class="panel banner right">
+								<div class="content color0 span-3-75">
+									<h1 class="major">CYP2D6 Evolution:<br />
+									A Comprehensive Study</h1>
+									<p>This page delves into the evolutionary history of the CYP2D6 gene, one of the most polymorphic genes in humans. With over 177 alleles identified, we explore their origins, the role of ancestral DNA, and the tools that facilitate this research, such as <strong>AlleleViewer.pgxsoftware.com</strong>.</p>
+									<ul class="actions">
+										<li><a href="#alleleviewer" class="button special color1 circle icon fa-angle-right">Next</a></li>
+									</ul>
+								</div>
+								<div class="image filtered span-1-75" data-position="25% 25%">
+									<img src="{% static 'assets/ethereal-master/images/pic01.jpg' %}" alt="" />
+								</div>
+							</section>
+
+						<!-- Panel (Spotlight) - AlleleViewer -->
+							<section class="panel spotlight medium right" id="alleleviewer">
+								<div class="content span-7">
+									<h2 class="major">AlleleViewer.pgxsoftware.com</h2>
+									<p><strong>AlleleViewer</strong> is a powerful tool for studying the CYP2D6 gene. It provides a detailed view of allele formation, including SNPs, recombination events, and gene duplications. The updated version incorporates ancestral DNA data, offering insights into the evolutionary timeline of CYP2D6 alleles.</p>
+									<ul>
+										<li><strong>Advantages:</strong></li>
+										<li>Integration of ancestral DNA from primates, Neanderthals, and Denisovans.</li>
+										<li>Visualization of allele formation through intuitive maps.</li>
+										<li>Comparison of genetic data across species for accurate time-stamping of SNPs.</li>
+									</ul>
+									<ul class="actions">
+										<li><a href="{% url 'alleleviewer' %}" class="button special color2 icon fa-cube">3D Grapher</a></li>
+										<li><a href="{% url 'mapgeneral' %}" class="button special color3 icon fa-map">Migration Map</a></li>
+									</ul>
+								</div>
+								<div class="image filtered tinted" data-position="top left">
+									<img src="{% static 'assets/ethereal-master/images/pic02.jpg' %}" alt="" />
+								</div>
+							</section>
+
+						<!-- Panel (Gallery) - Image 1: SNP Visualization -->
+							<section class="panel color2">
+								
+								<div class="gallery">
+									<a href="{% static 'assets/ethereal-master/images/prehumans.webp' %}" class="image filtered span-2-5" data-position="top"><img src="{% static 'assets/ethereal-master/images/prehumans.webp' %}" alt="" /></a>
+								</div>
+							</section>
+
+						<!-- Panel (Color1) - Key SNPs Inherited from Primates -->
+							<section class="panel color1">
+								<div class="intro joined">
+									<h2 class="major">Key SNPs Inherited from Primates</h2>
+									<p>From a common ancestor of orangutans and chimpanzees, humans inherited the following SNPs:</p>
+									<ul>
+										<li>180+130G>T (rs28371699)</li>
+										<li>181-41T>G (rs28371702)</li>
+										<li>1173+40A>C (rs1985842)</li>
+										<li>1457G>C (rs1135840) S486T</li>
+										<li>408G>C (rs1058164)</li>
+									</ul>
+									<p>These SNPs are present in 78% to 67% of African individuals.</p>
+								</div>
+								<div class="inner">
+									<ul class="grid-icons three connected">
+										<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-hélice-de-adn-60.png' %}" alt="SNPs"/><span class="label"></span></span></li>
+										<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-orangután-60.png' %}" alt="Primates" /><span class="label"></span></span></li>
+										<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-evolución-48.png' %}" alt="Evolution" /><span class="label"></span></span></li>
+										
+									</ul>
+								</div>
+							</section>
+
+						<!-- Panel (Gallery) - Image 2: Allele Formation in Homo Heidelbergensis -->
+							<section class="panel color2">
+								<div class="intro">
+									<h2 class="major">Allele Formation in Homo Heidelbergensis</h2>
+									<p>Around 700,000 years ago, <em>Homo heidelbergensis</em> emerged, leading to the diversification of CYP2D6 alleles. Key allele conversions include:</p>
+									<ul>
+										<li>*39ILU-Ergaster/Erectus/Ora → *2 Heidelbergensis</li>
+										<li>*39ILU-Ergaster/Erectus → *10 Heidelbergensis</li>
+										<li>*82ILU-Ergaster/Erectus/Chimp → *4.012</li>
+									</ul>
+								</div>
+								<div class="gallery">
+									<a href="{% static 'assets/ethereal-master/images/Homo_heidelbergensis.jpg' %}" class="image filtered" data-position="center"><img src="{% static 'assets/ethereal-master/images/Homo_heidelbergensis.jpg' %}" alt="Homo heidelbergensis" /></a>
+								</div>
+							</section>
+
+
+						<!-- Panel (Gallery) - Image 3: Denisovans and Neanderthals Contributions -->
+							
+							<section class="panel color4-alt">
+								<div class="intro color4">
+									<h2 class="major">Denisovans and Neanderthals Contributions</h2>
+									<p>Denisovans and Neanderthals contributed significantly to the CYP2D6 gene pool. Key findings include:</p>
+									<ul>
+										<li><strong>Denisovans:</strong> *2 Heidelbergensis → *2 Denisovans (with additional SNPs).</li>
+										<li><strong>Neanderthals:</strong> Presence of *41 and 2XN alleles.</li>
+									</ul>
+								</div>
+								<div class="gallery ">
+									<a href="{% static 'assets/ethereal-master/images/ojos.jpg' %}" class="image filtered span-3-75" data-position="center"><img src="{% static 'assets/ethereal-master/images/ojos.jpg' %}" alt="" /></a>
+								</div>
+								<div class="inner columns divided">
+									<div class="span-3-25">
+										<h4>Denisovans SNPs</h4>
+										<div class="table-wrapper">
+											<table>
+												<thead>
+													<tr>
+														<th>SNP</th>
+														<th>Description</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>-740C>T</td>
+														<td>rs28624811</td>
+													</tr>
+													<tr>
+														<td>1174-215G>A</td>
+														<td>rs28371730</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</section>
+
+						<!-- Panel (Color3) - Migration and Allele Expansion -->
+							<section class="panel color3">
+								<div class="intro joined">
+									<h2 class="major">Migration and Allele Expansion</h2>
+									<p>Between 74,000 and 11,700 years ago, human populations expanded 50-fold, leading to the spread of CYP2D6 alleles. Key events include:</p>
+									<ul>
+										<li>Migration out of Africa by a small group carrying limited alleles.</li>
+										<li>Admixture with Neanderthals in the Middle East and Denisovans in Southeast Asia.</li>
+									</ul>
+								</div>
+								<div class="inner">
+									<ul class="grid-icons three connected">
+									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-diaspora-64.png' %}" alt="Migration"/><span class="label"></span></span></li>
+									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-expansion-64.png' %}" alt="Expansion"/><span class="label"></span></span></li>
+									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-el-embarazo-64.png' %}" alt="Admixture"/><span class="label"></span></span></li>
+									</ul>
+								</div>
+							</section>
+
+						<!-- Panel (Color2-alt) - Challenges in CYP2D6 Research -->
+							<section class="panel color2-alt">
+								<div class="intro color2">
+									<h2 class="major">Challenges in CYP2D6 Research</h2>
+									<p>Despite advancements, challenges remain in CYP2D6 research:</p>
+									<ul>
+										<li>Incorrect SNP categorization in NCBI databases.</li>
+										<li>Incomplete allele data in PharmVar.</li>
+										<li>Need for better cross-species comparison tools.</li>
+									</ul>
+								</div>
+								<div class="inner">
+									<ul class="grid-icons three connected">
+									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-biology-64.png' %}" alt="Challenges"/><span class="label"></span></span></li>
+									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-big-data-64.png' %}" alt="Data Issues"/><span class="label"></span></span></li>
+									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-futuro-64.png' %}" alt="Future Work"/><span class="label"></span></span></li>
+									</ul>
+								</div>
+							</section>
+
+						<!-- Panel (Color4) - Contact -->
+							<section class="panel color4-alt">
+								<div class="intro color4">
+									<h2 class="major">Contact Us</h2>
+									<p>For collaborations or inquiries, please reach out. We welcome contributions to advance CYP2D6 research. <strong>info@pgxsoftware.com</strong>.</p>
+								</div>
+								
+							</section>
+
+						<!-- Copyright -->
+							<div class="copyright">&copy; CYP2D6 Evolution. Designed by <strong>PGxSoftware.com</strong></div>
+
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="{% static 'assets/ethereal-master/assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'assets/ethereal-master/assets/js/skel.min.js' %}"></script>
+			<script src="{% static 'assets/ethereal-master/assets/js/main.js' %}"></script>
+			
+
+	</body>
+</html>
