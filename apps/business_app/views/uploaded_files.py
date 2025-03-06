@@ -4,8 +4,8 @@ from rest_framework.generics import GenericAPIView
 
 
 from apps.common.views import CommonOrderingFilter
-from apps.business_app.models import UploadedFiles
-from apps.business_app.serializers import UploadedFilesSerializer
+from apps.business_app.models.uploaded_files import UploadedFiles
+from apps.business_app.serializers.uploaded_files import UploadedFilesSerializer
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page

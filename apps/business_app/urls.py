@@ -12,12 +12,13 @@ from apps.business_app.views import (
     FeatureViewSet,
     EventViewSet,
     MarkerViewSet,
-    MarkerGalleryViewSet,
+    EventGalleryViewSet,
     LayerViewSet,
 )
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 
 
+from apps.business_app.views.event_type import EventTypeViewSet
 from apps.business_app.views.initial_xyz_expansion_data import (
     InitialXyzExpansionDataViewSet,
 )
@@ -109,14 +110,19 @@ router.register(
     basename="events",
 )
 router.register(
+    "event-types",
+    EventTypeViewSet,
+    basename="event-types",
+)
+router.register(
     "markers",
     MarkerViewSet,
     basename="markers",
 )
 router.register(
-    "markers-gallery",
-    MarkerGalleryViewSet,
-    basename="markers-gallery",
+    "event-gallery",
+    EventGalleryViewSet,
+    basename="event-gallery",
 )
 router.register(
     "layers",

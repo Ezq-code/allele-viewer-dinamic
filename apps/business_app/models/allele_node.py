@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
 class AlleleNode(models.Model):
     number = models.PositiveIntegerField(verbose_name=_("Number"))
     unique_number = models.CharField(

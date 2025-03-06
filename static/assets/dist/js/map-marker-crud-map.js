@@ -1,12 +1,14 @@
 // funciones para gestionar los marcadores en el mapa
+var campoTextoNombreEvento = document.getElementById("event_name");
+var textNombreEvento = document.getElementById("event_name");
 var campoTextoDescripcion = document.getElementById("descripcion");
 var textDescripcion = document.getElementById("descripcion");
 var campoTextoreference = document.getElementById("reference");
 var textreference = document.getElementById("reference");
 var datefechaini = document.getElementById("fechaini");
 var datefechafin = document.getElementById("fechafin");
-var selectEventTypeFirtModal = document.getElementById("tipoeventofirtmodal");
-var selectEventType = document.getElementById("tipoevento");
+var selectEventTypeFirtModal = document.getElementById("eventoModal");
+var selectEventType = document.getElementById("evento");
 var option = document.createElement("option");
 var option1 = document.createElement("option");
 option.text = "-- Select an option --";
@@ -20,7 +22,7 @@ var idEditMarker = 0;
 // llamada ajax para cargar los marcadores y adicionarlos en la capa de los marcadores
 $.ajax({
     type: 'GET',
-    url: '/business-gestion/markers/',
+    url: '/business-gestion/events/',
     error: function () {
         Swal.fire({
             icon: "error",
@@ -33,17 +35,21 @@ $.ajax({
     success: function (response) {
         var data = response.results;
 
-        data.forEach(function (marker) {
-            var descriptionLoad = marker.description;
-            var referenceLoad = marker.reference;
-            var latitudeLoad = marker.latitude;
-            var longitudeLoad = marker.longitude;
-            var galleryLoad = marker.marker_galleries; // Obtener el array de imágenes
+        data.forEach(function (event) {
+            var nameLoad = event.event_name;           
+            var descriptionLoad = event.description;
+            var referenceLoad = event.reference;
+            var galleryLoad = event.event_gallery; // Obtener el array de imágenes
             var iconUrlCurrentMarkerLoad = "";
 
             // Aquí accedemos al evento desde el objeto del marcador.
-            if (marker.event_type !== -1) {
-                iconUrlCurrentMarkerLoad = marker.event_type_data.event_icon_url; // Se accede directo al icon que devolvemos en la respuesta
+            if (event.event_type !== -1) {
+                iconUrlCurrentMarkerLoad = event.event_type_info.icon; // Se accede directo al icon que devolvemos en la respuesta
+
+                var markerList = event.markers;
+                markerList.forEach(function (marker) {
+                    var latitudeLoad = marker.latitude;
+                    var longitudeLoad = marker.longitude;
 
                 var markerIcon = L.icon({
                     iconUrl: iconUrlCurrentMarkerLoad,
@@ -56,7 +62,8 @@ $.ajax({
                 markerFromDB.on('click', function () {
                     var eventImagesDiv = document.getElementById('eventImages');
                     eventImagesDiv.innerHTML = '';
-                    // Mostrar la descripción y otra información en el modal
+                    // Mostrar la descripción y otra información en el modal 
+                    document.getElementById('eventName').innerHTML = nameLoad; // aqui enviamos el nombre
                     document.getElementById('eventDescription').innerHTML = descriptionLoad; // aqui enviamos la description
                     document.getElementById('eventReference').innerHTML = referenceLoad; // aqui enviamos la referencia
                     // Iterar sobre el array de imágenes y crear las tarjetas
@@ -81,6 +88,7 @@ $.ajax({
                     $('#eventModal').modal('show'); // Mostrar el modal
                 });
                 markerLayer.addLayer(markerFromDB);
+            });
             }
         });
     }
@@ -162,9 +170,9 @@ var markSave = false;
 var markerList = [];
 
 // evento que se dispara al seleccionar el tipo de evento para hacer llamada ajax para obtener el ícono del tipo de evento
-document.getElementById("tipoeventofirtmodal").addEventListener("change", function () {
+document.getElementById("eventoModal").addEventListener("change", function () {
 
-    var ideventtype = document.getElementById("tipoeventofirtmodal").value;
+    var ideventtype = document.getElementById("eventoModal").value;
 
     if (ideventtype != -1) {
         $.ajax({
@@ -182,7 +190,7 @@ document.getElementById("tipoeventofirtmodal").addEventListener("change", functi
             success: function (response) {
                 var data;
                 data = response;
-                iconUrlCurrentMarker = data.event_icon;
+                iconUrlCurrentMarker = data.event_type_info.icon;
             }
         });
     } else {
@@ -200,13 +208,13 @@ $(document).ready(function () {
 
     $('#event-type-form').validate({
         rules: {
-            tipoeventofirtmodal: {
+            eventoModal: {
                 required: true,
                 notEqual: -1 // Usar la regla personalizada
             }
         },
         messages: {
-            tipoeventofirtmodal: {
+            eventoModal: {
                 required: "Please select an event type",
                 notEqual: "Please select a valid event type"
             }
