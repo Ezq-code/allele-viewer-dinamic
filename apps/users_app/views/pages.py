@@ -8,7 +8,7 @@ from django.views.decorators.cache import cache_page
 
 @cache_page(60 * 15)
 def index(request):
-    return render(request, "index.html")
+    return render(request, "introduction.html")
 
 
 @cache_page(60 * 15)
@@ -83,3 +83,7 @@ def event_gallery(request):
         "map/event_gallery/event_gallery.html",
         {"gallery": gallery, "event_all": event_all},
     )
+
+# @cache_page(60 * 15)
+def introduction(request):
+    return render(request, "introduction/introduction.html")

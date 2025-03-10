@@ -49,7 +49,8 @@ class AlleleNodeViewSet(
 
     def list(self, request, *args, **kwargs):
         parent_lookup_key = kwargs.get("parent_lookup_uploaded_file")
-        cache_key = f"allele_nodes_list_{parent_lookup_key}"
+        search_criteria = request.query_params.get("search", "")
+        cache_key = f"allele_nodes_list_{parent_lookup_key}{search_criteria}"
         response_content = cache.get(cache_key, None)
         if not response_content:
             queryset = self.filter_queryset(self.get_queryset())
