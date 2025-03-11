@@ -316,4 +316,6 @@ else:
         "TIMEOUT": CACHE_DEFAULT_TIMEOUT,
     }
 
-CACHES = {"default": cache_backend}
+CACHES = {
+    "default": cache_backend
+}
