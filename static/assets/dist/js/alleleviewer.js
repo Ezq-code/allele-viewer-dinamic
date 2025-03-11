@@ -428,28 +428,23 @@ function buscar(params) {
   var searchurl =
     "/business-gestion/uploaded-files/" +
     localStorage.getItem("uploadFileId") +
-    "/allele-node-by-uploaded-file/?";
+    "/allele-node-by-uploaded-file/?search=" +
+    params;
 
-  if (params[0] === "=") {
-    searchurl += "custom_element_name=" + params.substring(1);
-  } else {
-    searchurl += "search=" + params;
-  }
   axios
     .get(searchurl)
     .then(function (response) {
       const elemento = response.data;
       let atomData = elemento.results;
+console.log('✌️atomData --->', atomData);
       const highlightColor = "#ffaa02";
       datos.forEach((element) => {
-        const stickRadius =
-          element.children_qty === 0 ? 0.5 : 0.5 + element.children_qty * 0.005;
-        const sphereRadius = stickRadius * 8 * zoomLevel;
-        if (atomData.some((item) => item.number === element.number)) {
+        const stickRadius = element.stick_radius;
+        const sphereRadius = element.sphere_radius;        
+        if (atomData.some((item) => item.number == element.number)) {          
           viewer.setStyle(
             { serial: element.number },
-            {
-              sphere: { color: "#ff1414", radius: sphereRadius },
+            { sphere: { color: "#ff1414", radius: sphereRadius },
               stick: {
                 color: "#fcfcfc",
                 radius: stickRadius,
@@ -457,7 +452,7 @@ function buscar(params) {
               },
             }
           );
-        } else {
+        } else {          
           viewer.setStyle(
             { serial: element.number },
             {
@@ -472,6 +467,7 @@ function buscar(params) {
         }
       });
       viewer.render();
+console.log('✌️ viewer --->');
       load.hidden = true;
     })
     .catch(function (error) {
@@ -605,11 +601,6 @@ function childFull(id) {
               },
             }
           );
-
-
-
-
-          
         } else {
           viewer.setStyle(
             { serial: element.number },
@@ -773,7 +764,6 @@ function childZoom() {
         stick: { color: "spectrum", radius: stickRadius, showNonBonded: false },
       }
     );
-   
   });
   viewer.render();
   load.hidden = true;
@@ -1056,4 +1046,10 @@ function playStopAnimation(button) {
     clearTimeout(timeoutId); // Limpiar el timeout si se pausa
   }
   togglePauseButton(button);
+}
+
+function centerGrafig() {
+  viewer.zoomTo();
+  viewer.zoom(2, 1000);
+  viewer.render();
 }
