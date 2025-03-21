@@ -13,7 +13,7 @@ import networkx as nx
 logger = logging.getLogger(__name__)
 
 
-def find_root_node(G):
+def find_root_nodes(G):
     """La raíz del grafo dirigido y conexo es el nodo
     que solamente emite, o sea que su orden de out_degree es positivo
     pero su orden de in_degree es igual a 0.
@@ -21,11 +21,11 @@ def find_root_node(G):
     Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
     """
     nodes_in_degree = [(k, v) for k, v in G.in_degree()]
-    root = 0
+    root_list = []
     for k, v in nodes_in_degree:
         if v == 0:
-            root = k
-    return root
+            root_list.append(k)
+    return root_list
 
 
 def extract_parents_tree(G, lista, nodo, root):
@@ -33,11 +33,13 @@ def extract_parents_tree(G, lista, nodo, root):
     if nodo == root:  # Si el nodo es la raíz sale de la función
         return lista
     if len(padres) == 0:  # Si lista de padres es 0 sale de la función
-        return lista
-    else:  # Lo contrario, itera sobre los padres y se llama a si misma
-        for padre in padres:
+        return lista                          
+    for padre in padres: # Lo contrario, itera sobre los padres y se llama a si misma
+        if padre in lista:
+            continue
+        else:
             lista.append(padre)
-            return extract_parents_tree(G, lista, padre, root)
+        return extract_parents_tree(G, lista, padre, root)
 
 
 class XslxToPdbGraph(ExcelReader):
@@ -210,9 +212,11 @@ class XslxToPdbGraph(ExcelReader):
         """
         try:
             parents_tree = []
-            root = find_root_node(self.G)
-            parents_tree = extract_parents_tree(self.G, parents_tree, allele_id, root)
-            return parents_tree
+            roots = find_root_nodes(self.G)
+            for root in roots: 
+                parents_tree += extract_parents_tree(self.G, parents_tree, allele_id, root)
+            return list(set(parents_tree ))
+        
 
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")
