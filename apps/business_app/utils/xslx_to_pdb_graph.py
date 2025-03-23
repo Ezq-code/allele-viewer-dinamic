@@ -30,10 +30,7 @@ def find_root_nodes(G):
 
 def extract_parents_tree(G, to_return, node):
     to_return.append(node)
-    parents = G.predecessors(node)
-    if not parents:  # Si el nodo no tiene padres, es raíz del grafo
-        return to_return
-    for parent in parents:  # Lo contrario, itera sobre los padres y se llama a si misma
+    for parent in G.predecessors(node):
         to_return.extend(extract_parents_tree(G, to_return, parent))
     return to_return
 
