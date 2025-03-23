@@ -6,7 +6,6 @@ from apps.business_app.serializers.event import EventSerializer
 from apps.common.views import CommonOrderingFilter
 from apps.business_app.models.event import Event
 from apps.common.pagination import AllResultsSetPagination
-from django.db.models import Count
 
 # Create your views here.
 
