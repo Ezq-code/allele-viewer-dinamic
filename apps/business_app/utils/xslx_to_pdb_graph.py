@@ -28,18 +28,14 @@ def find_root_nodes(G):
     return root_list
 
 
-def extract_parents_tree(G, lista, nodo, root):
-    padres = list(G.predecessors(nodo))
-    if nodo == root:  # Si el nodo es la raíz sale de la función
-        return lista
-    if len(padres) == 0:  # Si lista de padres es 0 sale de la función
-        return lista                          
-    for padre in padres: # Lo contrario, itera sobre los padres y se llama a si misma
-        if padre in lista:
-            continue
-        else:
-            lista.append(padre)
-        return extract_parents_tree(G, lista, padre, root)
+def extract_parents_tree(G, to_return, node):
+    to_return.append(node)
+    parents = G.predecessors(node)
+    if not parents:  # Si el nodo no tiene padres, es raíz del grafo
+        return to_return
+    for parent in parents:  # Lo contrario, itera sobre los padres y se llama a si misma
+        to_return.extend(extract_parents_tree(G, to_return, parent))
+    return to_return
 
 
 class XslxToPdbGraph(ExcelReader):
@@ -211,12 +207,8 @@ class XslxToPdbGraph(ExcelReader):
         que integran el árbol del mismo.
         """
         try:
-            parents_tree = []
-            roots = find_root_nodes(self.G)
-            for root in roots: 
-                parents_tree += extract_parents_tree(self.G, parents_tree, allele_id, root)
-            return list(set(parents_tree ))
-        
+            parents_tree = set(extract_parents_tree(self.G, [], allele_id))
+            return list(parents_tree)
 
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.")

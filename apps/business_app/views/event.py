@@ -12,9 +12,8 @@ from django.db.models import Count
 
 
 class EventViewSet(viewsets.ModelViewSet, GenericAPIView):
-    queryset = (
-        Event.objects.select_related("event_type")
-        .prefetch_related("markers", "event_gallery")
+    queryset = Event.objects.select_related("event_type").prefetch_related(
+        "markers", "event_gallery"
     )
     serializer_class = EventSerializer
     pagination_class = AllResultsSetPagination
