@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from apps.business_app.models.marker import Marker
-from apps.business_app.serializers.event_gallery import EventGallerySerializer
 
 
 class MarkerSerializer(serializers.ModelSerializer):
