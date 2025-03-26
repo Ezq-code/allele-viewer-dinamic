@@ -59,13 +59,16 @@ def events(request):
     return render(
         request,
         "map/events/events.html",
-        {"eventos": eventos, "events_type": events_type})
+        {"eventos": eventos, "events_type": events_type},
+    )
 
 
 @cache_page(60 * 15)
 def events_types(request):
     events_type = EventType.objects.order_by("-id").all()
-    return render(request, "map/event_type/event_type.html", {"events_type": events_type})
+    return render(
+        request, "map/event_type/event_type.html", {"events_type": events_type}
+    )
 
 
 @cache_page(60 * 15)
@@ -83,6 +86,7 @@ def event_gallery(request):
         "map/event_gallery/event_gallery.html",
         {"gallery": gallery, "event_all": event_all},
     )
+
 
 # @cache_page(60 * 15)
 def introduction(request):
