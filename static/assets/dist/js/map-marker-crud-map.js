@@ -62,10 +62,18 @@ $.ajax({
                 markerFromDB.on('click', function () {
                     var eventImagesDiv = document.getElementById('eventImages');
                     eventImagesDiv.innerHTML = '';
-                    // Mostrar la descripción y otra información en el modal 
+                    // Mostrar la descripción y otra información en el modal
                     document.getElementById('eventName').innerHTML = nameLoad; // aqui enviamos el nombre
                     document.getElementById('eventDescription').innerHTML = descriptionLoad; // aqui enviamos la description
-                    document.getElementById('eventReference').innerHTML = referenceLoad; // aqui enviamos la referencia
+                    var eventReference = document.getElementById('eventReference');
+                    eventReference.innerHTML = referenceLoad; // Aquí enviamos la referencia
+                    document.getElementById('eventReference').href = referenceLoad;
+                    // abrir el enlace en una nueva pestaña
+                    eventReference.target = "_blank";
+                    eventReference.onclick = function () {
+                        window.open(this.href, '_blank');
+                        return false; // Evita que el navegador intente navegar directamente
+                    };
                     // Iterar sobre el array de imágenes y crear las tarjetas
                     if (galleryLoad && galleryLoad.length > 0) {
                         galleryLoad.forEach(function (image) {
