@@ -58,7 +58,7 @@ class XslxToPdb(ExcelReader):
                 raise ValueError(
                     f"Invalid file structure, the table on the sheet '{ExcelNomenclators.input_sheet}' "
                     f"has at least the next column missing: {column}."
-                )
+                ) from None
 
     def proccess_initial_file_data(self, uploaded_file_id):
         print("Proccessing initial file data...")
@@ -217,7 +217,7 @@ class XslxToPdb(ExcelReader):
         except Exception as e:
             AlleleNode.objects.filter(uploaded_file__isnull=True).delete()
             logger.error(f"An error occurred during file parsing: {e}")
-            raise ValueError(f"An error occurred during file parsing: {e}.")
+            raise ValueError(f"An error occurred during file parsing: {e}.") from e
 
     def _get_sphere_radius(self, children_count):
         cached_sphere_radious = cache.get(

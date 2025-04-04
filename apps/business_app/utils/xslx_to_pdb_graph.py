@@ -102,7 +102,7 @@ class XslxToPdbGraph(ExcelReader):
             edges_list = []
 
         except Exception as e:
-            raise ValueError(f"An error occurred during file parsing: {e}.")
+            raise ValueError(f"An error occurred during file parsing: {e}.") from e
 
     def proccess_pdb_file(
         self, uploaded_file_id, pdb_filename_base, existing_pdb_file=None
@@ -152,7 +152,9 @@ class XslxToPdbGraph(ExcelReader):
                         )
                         memory_file.write("\n")
                     except Exception as ew:
-                        raise ValueError(f"An error writing the ATOMs lines: {ew}.")
+                        raise ValueError(
+                            f"An error writing the ATOMs lines: {ew}."
+                        ) from ew
             # If no changes are made, means that it is the first time upload
 
             # CONECT
@@ -170,7 +172,7 @@ class XslxToPdbGraph(ExcelReader):
                 except Exception as ec:
                     raise ValueError(
                         f"An error occurred during witing CONECT lines: {ec}."
-                    )
+                    ) from ec
 
             index = 0
             try:
