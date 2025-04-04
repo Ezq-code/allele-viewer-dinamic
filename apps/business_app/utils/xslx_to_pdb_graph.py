@@ -193,11 +193,13 @@ class XslxToPdbGraph(ExcelReader):
                         existing_pdb_file.save(update_fields=["pdb_content"])
                     index += 1
             except Exception as ep:
-                raise ValueError(f"An error occurred creating PDB object: {ep}.")
+                raise ValueError(
+                    f"An error occurred creating PDB object: {ep}."
+                ) from ep
 
             # return pdb_file_0
         except Exception as e:
-            raise ValueError(f"An error occurred during file parsing: {e}.")
+            raise ValueError(f"An error occurred during file parsing: {e}.") from e
 
     def proccess_allele_parents(self, allele_id):
         """
@@ -210,7 +212,7 @@ class XslxToPdbGraph(ExcelReader):
             return list(parents_tree)
 
         except Exception as e:
-            raise ValueError(f"An error occurred during file parsing: {e}.")
+            raise ValueError(f"An error occurred during file parsing: {e}.") from e
 
     def proccess_alleles_time_line(self, date):
         pass
