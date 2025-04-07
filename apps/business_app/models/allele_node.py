@@ -26,6 +26,16 @@ class AlleleNode(models.Model):
     timeline_appearence = models.IntegerField(
         verbose_name="Appearance on the timeline", null=True
     )
+    origin_1 = models.IntegerField(
+        verbose_name="Origin 1",
+        null=True,
+        help_text="First value in the appereance range",
+    )
+    origin_2 = models.IntegerField(
+        verbose_name="Appearance on the timeline",
+        null=True,
+        help_text="Last value in the appereance range",
+    )
     sphere_radius = models.FloatField(verbose_name=_("Sphere Radius"), null=True)
     stick_radius = models.FloatField(verbose_name=_("Stick Radius"), null=True)
 
