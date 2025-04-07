@@ -14,6 +14,8 @@ class ExcelNomenclators:
     age = "Age"
     origin_1 = "Origen1"
     origin_2 = "Origen2"
+    loss = "Loss"
+    increment = "Increment"
 
     input_original_value_column_name = "Original"
     input_min_value_column_name = "Min"

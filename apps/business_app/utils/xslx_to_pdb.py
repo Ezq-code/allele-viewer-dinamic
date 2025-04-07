@@ -111,6 +111,8 @@ class XslxToPdb(ExcelReader):
                 age = row.get(ExcelNomenclators.age)
                 origin_1 = row.get(ExcelNomenclators.origin_1)
                 origin_2 = row.get(ExcelNomenclators.origin_2)
+                loss = row.get(ExcelNomenclators.loss)
+                increment = row.get(ExcelNomenclators.increment)
                 if pd.isna(allele) or pd.isna(
                     row[ExcelNomenclators.output_number_column_name]
                 ):
@@ -166,6 +168,8 @@ class XslxToPdb(ExcelReader):
                     timeline_appearence=None if pd.isna(age) else age,
                     origin_1=None if pd.isna(origin_1) else origin_1,
                     origin_2=None if pd.isna(origin_2) else origin_2,
+                    loss=loss,
+                    increment=increment,
                     unique_number=f"{uploaded_file_id}-{allele_number}",
                     sphere_radius=self._get_sphere_radius(0),
                     stick_radius=self._get_stick_radius(0),
