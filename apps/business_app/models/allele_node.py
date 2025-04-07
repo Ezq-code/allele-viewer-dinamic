@@ -36,6 +36,8 @@ class AlleleNode(models.Model):
         null=True,
         help_text="Last value in the appereance range",
     )
+    loss = models.TextField(null=True, verbose_name=_("RS lost"))
+    increment = models.TextField(null=True, verbose_name=_("RS incremented"))
     sphere_radius = models.FloatField(verbose_name=_("Sphere Radius"), null=True)
     stick_radius = models.FloatField(verbose_name=_("Stick Radius"), null=True)
 
