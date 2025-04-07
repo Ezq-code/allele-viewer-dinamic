@@ -12,6 +12,9 @@ class ExcelNomenclators:
     output_rs_column_name = "rs"
     output_parent_column_name = "Parent"
     age = "Age"
+    origin_1 = "Origen1"
+    origin_2 = "Origen2"
+
 
     input_original_value_column_name = "Original"
     input_min_value_column_name = "Min"
