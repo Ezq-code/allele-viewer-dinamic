@@ -1,6 +1,8 @@
+from networkx import predecessor
 from rest_framework import serializers
 
 from apps.business_app.models import AlleleNode
+from apps.business_app.utils.xslx_to_pdb_graph import extract_parents_tree
 
 
 class ChildSerializer(serializers.ModelSerializer):
@@ -21,6 +23,8 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
         source="children.count",
     )
     children = ChildSerializer(many=True)
+    predecessors = serializers.SerializerMethodField()
+    sucessors = serializers.SerializerMethodField()
 
     class Meta:
         model = AlleleNode
@@ -47,6 +51,8 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "frec_sas",
             "frec_eur",
             "frec_ame",
+            "predecessors",
+            "sucessors",
         ]
         read_only_fields = [
             "id",
@@ -56,4 +62,21 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "children",
             "sphere_radius",
             "stick_radius",
+            "loss",
+            "increment",
+            "origin_1",
+            "origin_2",
+            "frec_afr",
+            "frec_eas",
+            "frec_sas",
+            "frec_eur",
+            "frec_ame",
+            "predecessors",
+            "sucessors",
         ]
+
+    def get_predecessors(self, obj):
+        return ""
+
+    def get_sucessors(self, obj):
+        return ""
