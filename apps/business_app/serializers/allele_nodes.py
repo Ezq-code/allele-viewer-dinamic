@@ -84,7 +84,7 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
              processor_object = XslxToPdbGraph(
                 origin_file=obj.uploaded_file.original_file, uploaded_file_id=obj.uploaded_file_id
             )
-             pdb=PdbFiles.objects.filter(original_file=obj.uploaded_file.original_file).first()
+             pdb=PdbFiles.objects.filter(original_file=obj.uploaded_file).first()
              processor_object.proccess_initial_file_data(pdb)
         return list(set(extract_parents_tree(cache.get(graph_key), [], obj.id))),
         
