@@ -170,7 +170,7 @@ class XslxToPdb(ExcelReader):
                     rs=rs,
                     uploaded_file_id=uploaded_file_id,
                     region=region,
-                    #! Age is no longer coming in the exel file, for timeline we will use temporarily origin_1
+                    #! Age is no longer coming in the excel file, for timeline we will use temporarily origin_1
                     # timeline_appearence=None if pd.isna(age) else age,
                     timeline_appearence=None if pd.isna(origin_1) else origin_1,
                     origin_1=None if pd.isna(origin_1) else origin_1,
