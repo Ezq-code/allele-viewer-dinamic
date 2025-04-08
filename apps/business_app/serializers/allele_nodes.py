@@ -38,6 +38,15 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "timeline_appearence",
             "sphere_radius",
             "stick_radius",
+            "loss",
+            "increment",
+            "origin_1",
+            "origin_2",
+            "frec_afr",
+            "frec_eas",
+            "frec_sas",
+            "frec_eur",
+            "frec_ame",
         ]
         read_only_fields = [
             "id",
