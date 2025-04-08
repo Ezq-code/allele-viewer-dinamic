@@ -61,7 +61,7 @@ class ExcelReader:
                 raise ValueError(
                     f"Invalid file structure, the table on the sheet '{ExcelNomenclators.output_sheet}' "
                     f"has at least the next column missing: {column}."
-                )
+                ) from None
         else:
             for index in range(sys.maxsize):
                 try:

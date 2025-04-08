@@ -214,21 +214,9 @@
                                     <div class="d-inline-block">
                                         <select class="form-control form-control-sm" name="timeRange" id="timeRange">
                                             <option value="-315000/2025">All the Time</option>
-                                            <option value="-315000/-4000">Stone Age (315000 YBP to 4000 YBP)</option>
-                                            <option value="-315000/-10000">Paleolithic (315000 YBP to 10000 YBP)</option>
-                                            <option value="-10000/-8500">Mesolithic (10000 YBP to 8500 YBP)</option>
-                                            <option value="-8500/-4000">Neolithic (8500 YBP to 4000 YBP)</option>
-                                            <option value="-4000/800">Age of Metals (4000 YBP to 800)</option>
-                                            <option value="-4000/-3000">Cooper Age (4000 YBP to 3000 YBP)</option>
-                                            <option value="-3000/-1200">Bronze Age (3000 YBP to 1200 YBP)</option>
-                                            <option value="-1200/800">Iron Age (1200 YBP to 800)</option>
-                                            <option value="-3300/476">Ancient Age (3300 YBP to 476)</option>
-                                            <option value="476/1453">Middle Age (476 YBP to 1453)</option>
-                                            <option value="1453/1789">Modern Age (1453 YBP to 1789)</option>                                        
-                                            <option value="1789/2025">Contemporary Age (1789 YBP to 2025)</option>
-                                            <option value="-315000/-200000">from 315000 YBP to 200000 YBP</option>
-                                            <option value="-200000/-70000">from 200000 YBP to 70000 YBP</option>
-                                            <option value="-70000/1">from 70000 YBP to 1</option>
+                                            <option value="-315000/-75000">from 315000 YBP to 75000 YBP</option>
+                                            <option value="-75000/-12000">from 75000 YBP to 12000 YBP</option>
+                                            <option value="-12000/1">from 12000 YBP to 1</option>
                                             <option value="1/2025">from 1 to 2025</option>
                                         </select>
                                             </div>
@@ -334,17 +322,13 @@
                                     });
 
                                       map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
-                                    
-
-
                                     // Capa de las marcas
                                     markerLayer = new L.featureGroup().addTo(map);
                                     var markerMigrationPointLayer = new L.featureGroup().addTo(map);
                                     var labeled = false;
 
                                     var iconUrlpath = "{% static 'assets/dist/Leaflet/marker_black.png' %}";
-                                    var iconUrlpathDestinationMigration = "{% static 'assets/dist/Leaflet/primitive-man.png' %}";
-
+                                    var iconUrlpathDestinationMigration = "{% static 'assets/dist/Leaflet/primitive-man4.png' %}";
                                 </script>
                                 <!-- Script que almacena en la variable authenticated el estado del usuario, si esta autenticado o no -->
                                 <script>

@@ -30,4 +30,4 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
             return super().save()
         except Exception as e:
             logger.error(f"{str(e)}")
-            raise serializers.ValidationError(e)
+            raise serializers.ValidationError(e) from e

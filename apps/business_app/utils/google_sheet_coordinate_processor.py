@@ -44,7 +44,7 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
             created = True
         except Exception as e:
             logger.error(f"Error creating WorkingCopyOfOriginalFile object: {e}")
-            raise e
+            raise e from e
         try:
             if not self.working_files.google_sheet_id_copy:
                 self.working_files.google_sheet_id_copy = (
@@ -56,7 +56,7 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
             self.working_files_status_is_created = created
         except Exception as e:
             logger.error(f"Error creating WorkingCopyOfOriginalFile object: {e}")
-            raise e
+            raise e from e
 
     def _format_coordinate(self, coordinate_string):
         try:
@@ -210,13 +210,13 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
             if self.working_files_status_is_created:
                 self.working_files.delete()
             print("Raising error...")
-            raise err
+            raise err from err
         except Exception as err:
             print(f"An Exception occurred: {err}")
             if self.working_files_status_is_created:
                 self.working_files.delete()
             print("Raising error...")
-            raise err
+            raise err from err
 
     def recursive_realocate_numeric_values(self, numeric_value_set, numeric_value):
         if numeric_value in numeric_value_set:

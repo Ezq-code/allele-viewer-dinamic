@@ -22,8 +22,8 @@ class Command(BaseCommand):
                 "green",
                 attrs=["blink"],
             )
-        )        
-        
+        )
+
         call_command("loaddata", "event_gallery.json")
         print(
             colored(
@@ -32,7 +32,7 @@ class Command(BaseCommand):
                 attrs=["blink"],
             )
         )
-        
+
         call_command("loaddata", "marker_new.json")
         print(
             colored(
