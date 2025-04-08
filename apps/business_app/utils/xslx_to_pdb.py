@@ -183,7 +183,6 @@ class XslxToPdb(ExcelReader):
                     frec_eur=None if pd.isna(frec_eur) else frec_eur,
                     frec_sas=None if pd.isna(frec_sas) else frec_sas,
                     frec_ame=None if pd.isna(frec_ame) else frec_ame,
-
                     loss=loss,
                     increment=increment,
                     unique_number=f"{uploaded_file_id}-{allele_number}",

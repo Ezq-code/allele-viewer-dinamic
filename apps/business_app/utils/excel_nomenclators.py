@@ -18,10 +18,9 @@ class ExcelNomenclators:
     increment = "Increment"
     frec_afr = "AFR"
     frec_eas = "EAS"
-    frec_eur="EUR"
-    frec_sas="SAS"
-    frec_ame="AME"
-
+    frec_eur = "EUR"
+    frec_sas = "SAS"
+    frec_ame = "AME"
 
     input_original_value_column_name = "Original"
     input_min_value_column_name = "Min"
