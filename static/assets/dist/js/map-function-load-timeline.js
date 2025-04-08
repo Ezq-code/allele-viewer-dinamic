@@ -72,7 +72,7 @@
                                                 }
                                             });
                                             timeLinePosition = timeline.time;
-                                            migrationPoblationRegion.bringToBack();
+                                            //migrationPoblationRegion.bringToBack();
                                         }
                                             
                                             var localbeginIntervalsesion = parseInt(sessionStorage.getItem('beginIntervalsesion'));
@@ -151,8 +151,8 @@
                                                 style: function (feature) {
                                                     if ((feature.properties.id >= 1) && (feature.properties.id <= 9)) {
                                                         return {
-                                                            color: "#ffd700",//"#171717", ffd700
-                                                            fillColor: "#ffd700",//"#171717", eac102
+                                                            color: "#f6500c",//"#e1245a",//"#ffd700",//"#171717", "ffd700", "#051074",
+                                                            fillColor: "#f6500c",//"#e1245a",//"#ffd700",//"#171717", eac102, "#051074",
                                                             fillOpacity: 1,
                                                             weight: 3,
                                                             opacity: 1,
@@ -507,6 +507,8 @@
                                             var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
 
                                             migrationPoblationRegion.setZIndex(3);
+
+                                            migrationPoblationRegion.remove();
 
                                             // llamada ajax para cargar la visualidad de las capas del mapa
                                             $.ajax({
