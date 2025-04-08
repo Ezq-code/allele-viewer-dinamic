@@ -1770,7 +1770,7 @@ input[type="reset"].special.color3,
 input[type="button"].special.color3,
 button.special.color3,
 .button.special.color3 {
-  color: #ffe4b4 !important;
+  color: #727746 !important;
 }
 
 input[type="submit"].special.color4,
@@ -2399,7 +2399,7 @@ button:disabled,
       rgba(255, 228, 180, 0.175)
     );
   background-size: 128px 128px, auto;
-  background-color: #fedea6;
+  background-color: #727746;
 }
 
 .panel > *.color4-alt {
