@@ -1,8 +1,11 @@
-from networkx import predecessor
 from rest_framework import serializers
+from django.core.cache import cache
+
 
 from apps.business_app.models import AlleleNode
-from apps.business_app.utils.xslx_to_pdb_graph import extract_parents_tree
+from apps.business_app.models.pdb_files import PdbFiles
+from apps.business_app.models.uploaded_files import UploadedFiles
+from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph, extract_parents_tree
 
 
 class ChildSerializer(serializers.ModelSerializer):
@@ -76,7 +79,15 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
         ]
 
     def get_predecessors(self, obj):
-        return ""
+        graph_key = f"graph_for_{obj.uploaded_file_id}"
+        if not cache.get(graph_key):
+             processor_object = XslxToPdbGraph(
+                origin_file=obj.uploaded_file.original_file, uploaded_file_id=obj.uploaded_file_id
+            )
+             pdb=PdbFiles.objects.filter(original_file=obj.uploaded_file.original_file).first()
+             processor_object.proccess_initial_file_data(pdb)
+        return list(set(extract_parents_tree(cache.get(graph_key), [], obj.id))),
+        
 
     def get_sucessors(self, obj):
         return ""
