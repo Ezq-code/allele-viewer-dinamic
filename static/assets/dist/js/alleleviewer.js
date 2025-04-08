@@ -436,15 +436,16 @@ function buscar(params) {
     .then(function (response) {
       const elemento = response.data;
       let atomData = elemento.results;
-console.log('✌️atomData --->', atomData);
+      console.log("✌️atomData --->", atomData);
       const highlightColor = "#ffaa02";
       datos.forEach((element) => {
         const stickRadius = element.stick_radius;
-        const sphereRadius = element.sphere_radius;        
-        if (atomData.some((item) => item.number == element.number)) {          
+        const sphereRadius = element.sphere_radius;
+        if (atomData.some((item) => item.number == element.number)) {
           viewer.setStyle(
             { serial: element.number },
-            { sphere: { color: "#ff1414", radius: sphereRadius },
+            {
+              sphere: { color: "#ff1414", radius: sphereRadius },
               stick: {
                 color: "#fcfcfc",
                 radius: stickRadius,
@@ -452,7 +453,7 @@ console.log('✌️atomData --->', atomData);
               },
             }
           );
-        } else {          
+        } else {
           viewer.setStyle(
             { serial: element.number },
             {
@@ -467,7 +468,7 @@ console.log('✌️atomData --->', atomData);
         }
       });
       viewer.render();
-console.log('✌️ viewer --->');
+      console.log("✌️ viewer --->");
       load.hidden = true;
     })
     .catch(function (error) {
@@ -581,7 +582,7 @@ function childFull(id) {
   };
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
   axios
-    .post("/business-gestion/extract-allele-parents-tree/", data)
+    .post("/business-gestion/extract-allele-full-family-tree/", data)
     .then(function (response) {
       let atomData = response.data;
 
