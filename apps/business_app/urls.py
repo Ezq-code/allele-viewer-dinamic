@@ -15,6 +15,8 @@ from apps.business_app.views import (
     EventGalleryViewSet,
     LayerViewSet,
 )
+from apps.business_app.views.allele_descendants import AlleleDescendantsViewSet
+from apps.business_app.views.allele_full_family import AlleleFullFamilyViewSet
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 
 
@@ -91,6 +93,16 @@ router.register(
     "extract-allele-parents-tree",
     AlleleParentsViewSet,
     basename="extract-allele-parents-tree",
+)
+router.register(
+    "extract-allele-descendant-tree",
+    AlleleDescendantsViewSet,
+    basename="extract-allele-descendant-tree",
+)
+router.register(
+    "extract-allele-full-family-tree",
+    AlleleFullFamilyViewSet,
+    basename="extract-allele-full-family-tree",
 )
 router.register(
     "regions",
