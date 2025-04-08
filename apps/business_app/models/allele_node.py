@@ -40,6 +40,21 @@ class AlleleNode(models.Model):
     increment = models.TextField(null=True, verbose_name=_("RS incremented"))
     sphere_radius = models.FloatField(verbose_name=_("Sphere Radius"), null=True)
     stick_radius = models.FloatField(verbose_name=_("Stick Radius"), null=True)
+    frec_afr = models.FloatField(
+        verbose_name=_("Frequency AFR"), null=True, blank=True
+    )
+    frec_eas = models.FloatField(
+        verbose_name=_("Frequency EAS"), null=True, blank=True
+    )
+    frec_eur = models.FloatField(
+        verbose_name=_("Frequency EUR"), null=True, blank=True
+    )
+    frec_sas = models.FloatField(
+        verbose_name=_("Frequency SAS"), null=True, blank=True
+    )
+    frec_ame = models.FloatField(
+        verbose_name=_("Frequency AME"), null=True, blank=True
+    )
 
     class Meta:
         verbose_name = _("Allele Node")
