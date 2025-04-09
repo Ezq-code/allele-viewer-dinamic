@@ -16,6 +16,8 @@ from apps.business_app.models.uploaded_files import UploadedFiles
 
 # Create your views here.
 class AlleleParentsViewSet(viewsets.ViewSet, GenericAPIView):
+    # TODO evaluate if can be removed
+
     """
     API endpoint that allows to compute extract allele family parents tree.
     Recieve as imput parameters an ID PDB and Allele number (eg. 285)
