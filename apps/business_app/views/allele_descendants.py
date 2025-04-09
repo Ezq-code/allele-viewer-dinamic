@@ -17,6 +17,7 @@ from apps.business_app.models.uploaded_files import UploadedFiles
 
 # Create your views here.
 class AlleleDescendantsViewSet(viewsets.ViewSet, GenericAPIView):
+    # TODO evaluate if can be removed
     """
     API endpoint that allows to compute extract allele family descentant tree.
     Recieve as imput parameters an ID PDB and Allele number (eg. 285)

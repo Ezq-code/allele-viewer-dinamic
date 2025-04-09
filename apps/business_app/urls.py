@@ -89,16 +89,16 @@ router.register(
     PdbFileViewSet,
     basename="compute-graph-changes",
 )
-router.register(
-    "extract-allele-parents-tree",
-    AlleleParentsViewSet,
-    basename="extract-allele-parents-tree",
-)
-router.register(
-    "extract-allele-descendant-tree",
-    AlleleDescendantsViewSet,
-    basename="extract-allele-descendant-tree",
-)
+# router.register(
+#     "extract-allele-parents-tree",
+#     AlleleParentsViewSet,
+#     basename="extract-allele-parents-tree",
+# )
+# router.register(
+#     "extract-allele-descendant-tree",
+#     AlleleDescendantsViewSet,
+#     basename="extract-allele-descendant-tree",
+# )
 router.register(
     "extract-allele-full-family-tree",
     AlleleFullFamilyViewSet,
