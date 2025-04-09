@@ -5,6 +5,7 @@
                     var timeMarkerArray = [];
                     var pauseMarkerArray = [];
                     var timeLinePosition = parseInt(sessionStorage.getItem('beginIntervalsesion'));
+                    var inicialPosition = parseInt(sessionStorage.getItem('beginIntervalsesion'));
                     var pauseTimeline = false;
                     var delayTimePauseTimeLine = 3000;
                     var finaPosition = parseInt(sessionStorage.getItem('endIntervalsesion'));
@@ -15,10 +16,12 @@
                     }
 
                     const triggerTimer = () => {
+                      var aDelay = Math.trunc(parseInt(sessionStorage.getItem('durationSesion'))/1000)-1; //317;
+                      if (finaPosition - timeLinePosition - 2 > aDelay ) {
                         if (timeMarkerArray.length > 0){ 
                          if (pauseTimeline == false) {
                             var find = false;
-                            var aDelay = Math.trunc(parseInt(sessionStorage.getItem('durationSesion'))/1000)-1; //317;
+                            //var aDelay = Math.trunc(parseInt(sessionStorage.getItem('durationSesion'))/1000)-1; //317;
                             if ((timeLinePosition > 0) && (finaPosition - timeLinePosition <= aDelay )){
                                 aDelay = finaPosition - timeLinePosition;   
                             }
@@ -40,7 +43,8 @@
                          }
                         }
                         setTimeout(triggerTimer, 5);
-                      };
+                       }
+                    };
                                           
 					function updateList(timeline) {
                                           
