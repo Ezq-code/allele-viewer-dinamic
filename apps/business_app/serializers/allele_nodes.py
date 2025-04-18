@@ -81,6 +81,7 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "predecessors",
             "sucessors",
         ]
+
     def _get_graph_info(self, obj, function_to_call):
         graph_key = f"graph_for_{obj.uploaded_file_id}"
         if not cache.get(graph_key):
@@ -92,10 +93,8 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
 
         return set(function_to_call(cache.get(graph_key), [], obj.number))
 
-
     def get_predecessors(self, obj):
         return self._get_graph_info(obj, extract_parents_tree)
 
     def get_sucessors(self, obj):
         return self._get_graph_info(obj, extract_children_tree)
-
