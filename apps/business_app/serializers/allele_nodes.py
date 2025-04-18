@@ -30,8 +30,8 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
         source="children.count",
     )
     children = ChildSerializer(many=True)
-    # predecessors = serializers.SerializerMethodField()
-    # sucessors = serializers.SerializerMethodField()
+    predecessors = serializers.SerializerMethodField()
+    sucessors = serializers.SerializerMethodField()
 
     class Meta:
         model = AlleleNode
@@ -58,8 +58,8 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "frec_sas",
             "frec_eur",
             "frec_ame",
-            # "predecessors",
-            # "sucessors",
+            "predecessors",
+            "sucessors",
         ]
         read_only_fields = [
             "id",
@@ -78,28 +78,24 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "frec_sas",
             "frec_eur",
             "frec_ame",
-            # "predecessors",
-            # "sucessors",
+            "predecessors",
+            "sucessors",
         ]
+    def _get_graph_info(self, obj, function_to_call):
+        graph_key = f"graph_for_{obj.uploaded_file_id}"
+        if not cache.get(graph_key):
+            processor_object = XslxToPdbGraph(
+                origin_file=obj.uploaded_file.original_file,
+                uploaded_file_id=obj.uploaded_file_id,
+            )
+            processor_object.proccess_initial_file_data()
+
+        return set(function_to_call(cache.get(graph_key), [], obj.number))
+
 
     def get_predecessors(self, obj):
-        graph_key = f"graph_for_{obj.uploaded_file_id}"
-        if not cache.get(graph_key):
-            processor_object = XslxToPdbGraph(
-                origin_file=obj.uploaded_file.original_file,
-                uploaded_file_id=obj.uploaded_file_id,
-            )
-            #  pdb=PdbFiles.objects.filter(original_file=obj.uploaded_file).first()
-            processor_object.proccess_initial_file_data()
-        return (list(set(extract_parents_tree(cache.get(graph_key), [], obj.number))),)
+        return self._get_graph_info(obj, extract_parents_tree)
 
     def get_sucessors(self, obj):
-        graph_key = f"graph_for_{obj.uploaded_file_id}"
-        if not cache.get(graph_key):
-            processor_object = XslxToPdbGraph(
-                origin_file=obj.uploaded_file.original_file,
-                uploaded_file_id=obj.uploaded_file_id,
-            )
-            #  pdb=PdbFiles.objects.filter(original_file=obj.uploaded_file).first()
-            processor_object.proccess_initial_file_data()
-        return (list(set(extract_children_tree(cache.get(graph_key), [], obj.number))),)
+        return self._get_graph_info(obj, extract_children_tree)
+
