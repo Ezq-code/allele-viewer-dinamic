@@ -14,15 +14,22 @@ class ExcelReader:
     def __init__(self, origin_file) -> None:
         self.origin_file = origin_file
         _elements_symbol_pool = (
-            "LI",
-            "BE",
-            "B",
-            "N",
-            "F",
             "NA",
-            "TA",
-            "Au",
-        )
+
+        )        
+        # _elements_symbol_pool = (
+        # "C", # Gris
+        # "S", # Amarillo
+        # "Ca", # Gris oscuro
+        # "Mg", # Verde brillante
+        #     "LI", # Rojo
+        #     "BE", Rosado
+        #     "B", Verde claro brillante
+        #     "N", # Azul
+        #     "NA",
+        #     "TA",
+        #     "Au",
+        # )
         self.elements_symbol_iterator = itertools.cycle(_elements_symbol_pool)
 
         self._output_mandatory_columns_for_validation = (
