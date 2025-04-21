@@ -28,6 +28,15 @@ class ExcelReader:
             "Fe",  # Naraja
             "I",  # Violeta
         )
+        self.region_color_maping = {
+            "nort_america": "B",
+            "south_america": "Mg",
+            "africa": "S",
+            "asia": "TA",
+            "europe": "LI",
+            "australia": "I",
+            "": "C",
+        }
         self.elements_symbol_iterator = itertools.cycle(_elements_symbol_pool)
 
         self._output_mandatory_columns_for_validation = (
