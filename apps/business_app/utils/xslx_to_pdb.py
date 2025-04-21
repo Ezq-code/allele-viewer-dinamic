@@ -129,7 +129,12 @@ class XslxToPdb(ExcelReader):
                     if parent == allele_number:
                         continue
                     relations_for_the_end.setdefault(parent, []).append(allele_number)
-                element = next(self.elements_symbol_iterator)
+                # element = next(self.elements_symbol_iterator)
+                if isinstance(region, str):
+                    region = region.lower()
+                element = self.region_color_maping.get(
+                    region, self.default_value_if_no_region
+                )
 
                 # Write the atom record in the PDB file format
                 current_coordinate_index = 0

@@ -35,8 +35,8 @@ class ExcelReader:
             "asia": "TA",
             "europe": "LI",
             "australia": "I",
-            "": "C",
         }
+        self.default_value_if_no_region = "C"
         self.elements_symbol_iterator = itertools.cycle(_elements_symbol_pool)
 
         self._output_mandatory_columns_for_validation = (

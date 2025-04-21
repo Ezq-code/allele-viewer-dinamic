@@ -78,7 +78,7 @@ class XslxToPdbGraph(ExcelReader):
                     name=allele_name,
                     rs=row[ExcelNomenclators.output_rs_column_name],
                     parent=row[ExcelNomenclators.output_number_column_name],
-                    regions=row[ExcelNomenclators.output_region_column_name],
+                    region=row[ExcelNomenclators.output_region_column_name],
                     # SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
                     # date=row[ExcelNomenclators.output_date_column_name],
                 )
@@ -127,9 +127,15 @@ class XslxToPdbGraph(ExcelReader):
             # Iterar sobre la lista de nodos
             for node in nodes_list:
                 # Write the atom record in the PDB file format
-                element = next(
-                    self.elements_symbol_iterator
-                )  # "AL" #Averiguar que es esto
+                # element = next(
+                #     self.elements_symbol_iterator
+                # )
+                region = self.G.nodes[node]["region"]
+                if isinstance(region, str):
+                    region = region.lower()
+                element = self.region_color_maping.get(
+                    region, self.default_value_if_no_region
+                )
                 node_coordinates = pos[node]
                 # print(f"Nodo i: {int(node)}")
                 # print(f"Coordenadas: {int(node_coordinates[0] * 100)}")
