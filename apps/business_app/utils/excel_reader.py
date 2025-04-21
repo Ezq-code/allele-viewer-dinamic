@@ -15,18 +15,18 @@ class ExcelReader:
         self.origin_file = origin_file
         _elements_symbol_pool = (
             "C",  # Gris
-            "S",  # Amarillo
-            "Ca",  # Gris oscuro
-            "Mg",  # Verde brillante
             "LI",  # Rojo
-            "BE",  # Rosado
-            "B",  # Verde claro brillante
+            "S",  # Amarillo
             "N",  # Azul
+            "Ca",  # Gris oscuro
+            "BE",  # Rosado
+            "Mg",  # Verde brillante
             "NA",  # Azul fuerte
-            "TA",  # Rosado
             "Au",  # Amarillo mostaza
-            "Fe",  # Naraja
-            "I",  # Violeta
+            "Fe",  # Naranja
+            "TA",  # Rosado
+            "I"  # Violeta
+            "B",  # Verde claro brillante
         )
         self.region_color_maping = {
             "nort_america": "B",
