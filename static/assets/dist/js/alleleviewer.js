@@ -306,9 +306,9 @@ function selectUrl() {
       let pos = findPosition(elemento.pdb_files, $selectPdb.value);
       let versionAllele = elemento.pdb_files[pos].pdb_content;
       localStorage.setItem("uploadFileId", idFile);
-      graficar_string(versionAllele);
+       graficar_string(versionAllele);
       // To enable the button
-      loadOriginalXYZ();
+      // loadOriginalXYZ();
       snpModalShowBotton.disabled = false;
       ExpandModalShowBotton.disabled = false;
     })
@@ -342,29 +342,31 @@ function showInfo(atom) {
     .get(url)
     .then((response) => {
       const elemento = response.data;
-      const imageHtml = `
-        <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
-      `;
+      // const imageHtml = `
+      //   <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
+      // `;
       children = elemento.children;
-      const buttons = `
-        <button type="button" class="btn btn-block btn-info" onclick="mostrarRS('${
-          elemento.rs
-        }')">Show RS</button>
-        <button type="button" class="btn btn-block btn-secondary" onclick="marcar(${
-          atom.x
-        }, ${atom.y}, ${atom.z})">Bookmark</button>
-        <button type="button" class="btn btn-block bg-teal" onclick="childFull(${
-          elemento.number
-        })">Parents</button>
-        <button type="button" class="btn btn-block bg-lime" onclick="loadFamily(${
-          elemento.number
-        })">Descendant</button>
+      const buttons = `<div class="btn-group btn-shadow">
+        <button type="button" class="btn  btn-danger" data-toggle="tooltip" title="Show RS" onclick="mostrarRS('${elemento.rs}')">
+          <i class="fas fa-eye"></i>
+        </button>
+        <button type="button" class="btn  btn-warning" data-toggle="tooltip" title="Bookmark" onclick="marcar(${atom.x}, ${atom.y}, ${atom.z})">
+          <i class="fas fa-bookmark"></i>
+        </button>
+        <button type="button" class="btn  bg-teal" data-toggle="tooltip" title="Parents" onclick="childFull(${elemento.number})">
+          <i class="fas fa-users"></i>
+        </button>
+        <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="loadFamily(${elemento.number})">
+          <i class="fas fa-sitemap"></i>
+        </button>
         ${
           elemento.region != "nan"
-            ? `<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion('${elemento.region}')">Region ${elemento.region}</button>`
+            ? `<button type="button" class="btn  btn-primary" data-toggle="tooltip" title="Region ${elemento.region}" onclick="getCountriesByRegion('${elemento.region}')">
+                <i class="fas fa-globe"></i>
+              </button>`
             : ""
         }
-      `;
+      </div>`;
 
       const additionalInfo =
         elemento.children_qty === 0
@@ -381,7 +383,7 @@ function showInfo(atom) {
         title: elemento.custom_element_name,
         subtitle: subtitle,
         body:
-          imageHtml +
+          // imageHtml +
           `<div class="card-body">${buttons}${additionalInfo}</div>`,
         position: "bottomRight",
       });
@@ -536,45 +538,44 @@ function getAtomBySerial(serial) {
 }
 
 function child() {
-  console.log("localStorage.getItem :", localStorage.getItem("uploadFileId"));
-  axios
-    .get(
-      `/business-gestion/uploaded-files/${localStorage.getItem(
-        "uploadFileId"
-      )}/allele-node-by-uploaded-file/?ordering=timeline_appearence`
-    )
-    .then(function (response) {
-      const elemento = response.data;
-      let atomData = elemento.results;
-      datos = atomData;
+  const uploadFileId = localStorage.getItem("uploadFileId");
+  const url = `/business-gestion/uploaded-files/${uploadFileId}/allele-node-by-uploaded-file/?ordering=timeline_appearence`;
 
-      atomData.forEach((element) => {
-        const stickRadius = element.stick_radius;
-        const sphereRadius = element.sphere_radius;
+  axios.get(url)
+    .then(response => {
+      datos = response.data.results;
+
+      datos.forEach(({ number, stick_radius, sphere_radius }) => {
         viewer.setStyle(
-          { serial: element.number },
+          { serial: number },
           {
-            sphere: { radius: sphereRadius },
+            sphere: { radius: sphere_radius },
             stick: {
               color: "spectrum",
-              radius: stickRadius,
+              radius: stick_radius,
               showNonBonded: false,
             },
           }
         );
       });
+
       viewer.zoomTo();
       viewer.zoom(2, 1000);
       viewer.render();
-      load.hidden = true;
     })
-    .catch(function (error) {
+    .catch(error => {
+      const errorMessage = error.response?.data?.detail || "Error desconocido";
       Toast.fire({
         icon: "error",
-        title: `${error.response.data.detail}`,
+        title: errorMessage,
       });
+    })
+    .finally(() => {
+      load.hidden = true;
     });
 }
+
+
 function childFull(id) {
   var data = {
     pdb: localStorage.getItem("uploadFileId"),
@@ -733,7 +734,6 @@ function resetGraficView() {
 }
 
 function filterByRegion(region) {
-  console.log("✌️datos --->", datos);
   datos.forEach((element) => {
     const isVisible = element.region === region;
 
