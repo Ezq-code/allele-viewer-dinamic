@@ -31,9 +31,11 @@ def find_root_nodes(G):
 
 
 def extract_tree(G: Graph, to_return: list, node: int, graph_function):
+    if node in to_return:
+        return []
     to_return.append(node)
-    for parent in graph_function(node):
-        to_return.extend(extract_tree(G, to_return, parent, graph_function))
+    for element in graph_function(node):
+        to_return.extend(extract_tree(G, to_return, element, graph_function))
     return to_return
 
 
