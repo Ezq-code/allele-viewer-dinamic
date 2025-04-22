@@ -29,12 +29,19 @@ class ExcelReader:
             "B",  # Verde claro brillante
         )
         self.region_color_maping = {
-            "nort_america": "B",
-            "south_america": "Mg",
-            "africa": "S",
-            "asia": "TA",
-            "europe": "LI",
-            "australia": "I",
+            "AFR-EAS": "B",  # East-African
+            "AFR-SWE": "Mg",  # South-West-African
+            "AFR-NOR": "Mg",  # North-African
+            "AFR-AMR": "B",  # African American/Afro-Caribbean
+            "CSA": "Au",  # Central/South-Asian
+            "CA": "Fe",  # Central-Asian
+            "SA": "S",  # South-Asian
+            "EUR": "N",  # European
+            "EAS": "Na",  # East Asian
+            "NEA": "TA",  # Near Eastern
+            "OCE": "I",  # Oceanian
+            "AMR": "BE",  # American
+            "LAT": "LI",  # Latino
         }
         self.default_value_if_no_region = "C"
         self.elements_symbol_iterator = itertools.cycle(_elements_symbol_pool)
