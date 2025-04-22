@@ -336,7 +336,7 @@ function showInfo(atom) {
   $(".showalleleinfo").toast("hide");
 
   const atomNumber = atom.serial;
-  //load.hidden = false;
+  load.hidden = false;
   const toastClass = seleccionarEstiloAleatorio();
   const uploadFileId = localStorage.getItem("uploadFileId");
   const url = `/business-gestion/allele-nodes/${uploadFileId}-${atomNumber}/`;
@@ -361,10 +361,7 @@ function showInfo(atom) {
         <button type="button" class="btn  btn-warning" data-toggle="tooltip" title="Bookmark" onclick="marcar(${atom.x}, ${atom.y}, ${atom.z})">
           <i class="fas fa-bookmark"></i>
         </button>
-        <button type="button" class="btn  bg-teal" data-toggle="tooltip" title="Parents" onclick="childFull(${elemento.number})">
-          <i class="fas fa-users"></i>
-        </button>
-       
+              
         <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="genealogicalTree(${elemento.number})">
           <i class="fas fa-sitemap"></i>
         </button>
@@ -576,7 +573,7 @@ function child() {
       });
 
       viewer.zoomTo();
-      viewer.zoom(2, 1000);
+      viewer.zoom(15, 1000);
       viewer.render();
     })
     .catch(error => {
@@ -679,6 +676,7 @@ function childFamily(id) {
 }
 
 function genealogicalTree(id) {
+  load.hidden=false;
   datos.forEach((element) => {
     const isVisible =
       sucessors.some((item) => item === element.number) ||
@@ -698,6 +696,7 @@ function genealogicalTree(id) {
     );
   });
   viewer.render();
+  load.hidden=true;
 }
 
 function filter_Region() {
