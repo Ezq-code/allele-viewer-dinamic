@@ -6,6 +6,8 @@ var plane_hidden = false;
 let viewer;
 let spinState = false;
 var children;
+var predecessors;
+var sucessors;
 var selectActual;
 // variables para el graficador
 let element = $("#container")[0];
@@ -346,6 +348,8 @@ function showInfo(atom) {
       //   <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
       // `;
       children = elemento.children;
+      predecessors = elemento.predecessors;
+      sucessors = elemento.sucessors;
       const buttons = `<div class="btn-group btn-shadow">
         <button type="button" class="btn  btn-danger" data-toggle="tooltip" title="Show RS" onclick="mostrarRS('${elemento.rs}')">
           <i class="fas fa-eye"></i>
@@ -356,7 +360,8 @@ function showInfo(atom) {
         <button type="button" class="btn  bg-teal" data-toggle="tooltip" title="Parents" onclick="childFull(${elemento.number})">
           <i class="fas fa-users"></i>
         </button>
-        <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="loadFamily(${elemento.number})">
+     
+        <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="genealogicalTree(${elemento.number})">
           <i class="fas fa-sitemap"></i>
         </button>
         ${
@@ -367,6 +372,10 @@ function showInfo(atom) {
             : ""
         }
       </div>`;
+
+         // <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="loadFamily(${elemento.number})">
+        //   <i class="fas fa-sitemap"></i>
+        // </button>
 
       const additionalInfo =
         elemento.children_qty === 0
@@ -657,6 +666,55 @@ function childFamily(id) {
           },
         }
       );
+    }
+  });
+  viewer.render();
+}
+
+function genealogicalTree(id) {
+  datos.forEach((element) => {
+    const isVisible =
+      sucessors.some((item) => item === element.number) ||
+      predecessors.some((item) => item === element.number) ||
+      element.number === id;
+
+    viewer.setStyle(
+      { serial: element.number },
+      {
+        sphere: {
+          hidden: !isVisible, // Mostrar u ocultar esfera
+        },
+        stick: {
+          hidden: !isVisible, // Mostrar u ocultar stick
+        },
+      }
+    );
+
+    // Si el elemento es el nodo que generó el evento, añadir un anillo
+    if (element.number === id) {
+      const radius = 5 * 1.5; // Aumentar el tamaño del anillo
+      const segments = 36; // Número de segmentos para el anillo
+      const color = "rgba(255, 0, 0, 0.5)"; // Color del anillo
+      let dashLength = 0.3; // Longitud del guión
+    let gapLength = 0.3; // Longitud del espacio
+
+      for (let i = 0; i < segments; i++) {
+        let angle1 = (i * 2 * Math.PI) / segments;
+        let angle2 = ((i + dashLength) * 2 * Math.PI) / segments;
+
+        const x1 = element.x + radius * Math.cos(angle1);
+        const y1 = element.y + radius * Math.sin(angle1);
+        const x2 = element.x + radius * Math.cos(angle2);
+        const y2 = element.y + radius * Math.sin(angle2);
+
+        viewer.addLine({
+          start: { x: x1, y: y1, z: element.z },
+          end: { x: x2, y: y2, z: element.z },
+          color: color,
+          lineWidth: 2,
+          dashed: true, // Líneas discontinuas
+        });
+      }
     }
   });
   viewer.render();
