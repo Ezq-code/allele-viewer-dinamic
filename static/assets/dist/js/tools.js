@@ -23,8 +23,9 @@ function graficar_string(pdb_content) {
   load.hidden = false;
   viewer.removeAllModels();
   // viewer.render();
-  models[cont] = viewer.addModel(pdb_content, "pdb", { assignBonds: false });
-  cont++;
+  //  models[cont] = viewer.addModel(pdb_content, "pdb", { assignBonds: false });
+  //  cont++;
+  viewer.addModel(pdb_content, "pdb", { assignBonds: false });
   viewer.setClickable({}, true, function (atom, viewer, event, container) {
     showInfo(atom);
   });
