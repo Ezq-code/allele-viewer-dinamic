@@ -94,7 +94,13 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
         return set(function_to_call(cache.get(graph_key), [], obj.number))
 
     def get_predecessors(self, obj):
-        return self._get_graph_info(obj, extract_parents_tree)
+        cache_key = f"descendants_for_{obj.uploaded_file_id}-{obj.number}"
+        if not cache.get(cache_key):
+            cache.set(cache_key, self._get_graph_info(obj, extract_parents_tree))
+        return cache.get(cache_key)
 
     def get_sucessors(self, obj):
-        return self._get_graph_info(obj, extract_children_tree)
+        cache_key = f"sucessors_for_{obj.uploaded_file_id}-{obj.number}"
+        if not cache.get(cache_key):
+            cache.set(cache_key, self._get_graph_info(obj, extract_children_tree))
+        return cache.get(cache_key)
