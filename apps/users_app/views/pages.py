@@ -26,7 +26,7 @@ def first_login(request):
     return render(request, "login/login.html")
 
 
-@cache_page(60 * 15)
+# @cache_page(60 * 15)
 def alleleviewer(request):
     return render(request, "grafico/alleleviewer.html")
 

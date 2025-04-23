@@ -8,6 +8,7 @@ from apps.business_app.serializers.allele_parents import AlleleParentsSerializer
 
 from apps.business_app.utils.xslx_to_pdb_graph import (
     XslxToPdbGraph,
+    extract_children_tree,
     extract_parents_tree,
 )
 
@@ -15,9 +16,7 @@ from apps.business_app.models.uploaded_files import UploadedFiles
 
 
 # Create your views here.
-class AlleleParentsViewSet(viewsets.ViewSet, GenericAPIView):
-    # TODO evaluate if can be removed
-
+class AlleleFullFamilyViewSet(viewsets.ViewSet, GenericAPIView):
     """
     API endpoint that allows to compute extract allele family parents tree.
     Recieve as imput parameters an ID PDB and Allele number (eg. 285)
@@ -48,6 +47,13 @@ class AlleleParentsViewSet(viewsets.ViewSet, GenericAPIView):
         # list_alleles = processor_object.proccess_allele_parents(allele_node)
         allele_node = serializer.validated_data.get("allele_node")
         return JsonResponse(
-            list(set(extract_parents_tree(cache.get(graph_key), [], allele_node))),
+            data={
+                "parents": list(
+                    set(extract_parents_tree(cache.get(graph_key), [], allele_node))
+                ),
+                "children": list(
+                    set(extract_children_tree(cache.get(graph_key), [], allele_node))
+                ),
+            },
             safe=False,
         )

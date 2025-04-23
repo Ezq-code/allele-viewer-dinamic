@@ -26,8 +26,25 @@ class AlleleNode(models.Model):
     timeline_appearence = models.IntegerField(
         verbose_name="Appearance on the timeline", null=True
     )
+    origin_1 = models.IntegerField(
+        verbose_name="Origin 1",
+        null=True,
+        help_text="First value in the appereance range",
+    )
+    origin_2 = models.IntegerField(
+        verbose_name="Appearance on the timeline",
+        null=True,
+        help_text="Last value in the appereance range",
+    )
+    loss = models.TextField(null=True, verbose_name=_("RS lost"))
+    increment = models.TextField(null=True, verbose_name=_("RS incremented"))
     sphere_radius = models.FloatField(verbose_name=_("Sphere Radius"), null=True)
     stick_radius = models.FloatField(verbose_name=_("Stick Radius"), null=True)
+    frec_afr = models.FloatField(verbose_name=_("Frequency AFR"), null=True, blank=True)
+    frec_eas = models.FloatField(verbose_name=_("Frequency EAS"), null=True, blank=True)
+    frec_eur = models.FloatField(verbose_name=_("Frequency EUR"), null=True, blank=True)
+    frec_sas = models.FloatField(verbose_name=_("Frequency SAS"), null=True, blank=True)
+    frec_ame = models.FloatField(verbose_name=_("Frequency AME"), null=True, blank=True)
 
     class Meta:
         verbose_name = _("Allele Node")

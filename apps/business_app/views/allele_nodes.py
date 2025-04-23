@@ -29,6 +29,9 @@ class AlleleNodeViewSet(
         "number",
         "element",
         "custom_element_name",
+        "loss",
+        "increment",
+        "region",
         "rs",
     ]
     ordering_fields = "__all__"
@@ -43,6 +46,13 @@ class AlleleNodeViewSet(
         "rs": ["exact"],
         "number": ["exact"],
         "timeline_appearence": ["exact", "gte", "lte"],
+        "origin_1": ["exact", "gte", "lte"],
+        "origin_2": ["exact", "gte", "lte"],
+        "frec_eas": ["exact", "gte", "lte"],
+        "frec_ame": ["exact", "gte", "lte"],
+        "frec_eur": ["exact", "gte", "lte"],
+        "frec_sas": ["exact", "gte", "lte"],
+        "frec_afr": ["exact", "gte", "lte"],
     }
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = "unique_number"

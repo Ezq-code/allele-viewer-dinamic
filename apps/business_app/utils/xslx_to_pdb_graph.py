@@ -1,11 +1,13 @@
 import io
 import logging
 
+from networkx import Graph
 import pandas as pd
 
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.site_configurations import SiteConfiguration
 from apps.business_app.utils.excel_reader import ExcelNomenclators, ExcelReader
+from django.core.cache import cache
 
 # Esta es la bilbioteca necesaria para trabajar con grafos
 import networkx as nx
@@ -28,16 +30,33 @@ def find_root_nodes(G):
     return root_list
 
 
-def extract_parents_tree(G, to_return, node):
+def extract_tree(G: Graph, to_return: list, node: int, graph_function):
+    if node in to_return:
+        return []
     to_return.append(node)
-    for parent in G.predecessors(node):
-        to_return.extend(extract_parents_tree(G, to_return, parent))
+    for element in graph_function(node):
+        to_return.extend(extract_tree(G, to_return, element, graph_function))
     return to_return
 
 
+def extract_parents_tree(G: Graph, to_return: list, node: int):
+    return extract_tree(
+        G=G, to_return=to_return, node=node, graph_function=G.predecessors
+    )
+
+
+def extract_children_tree(G: Graph, to_return: list, node: int):
+    return extract_tree(
+        G=G, to_return=to_return, node=node, graph_function=G.successors
+    )
+
+
 class XslxToPdbGraph(ExcelReader):
-    def __init__(self, origin_file, global_configuration=None) -> None:
+    def __init__(
+        self, origin_file, global_configuration=None, uploaded_file_id=None
+    ) -> None:
         super().__init__(origin_file)
+        self.uploaded_file_id = uploaded_file_id
         self.dim = (
             3  # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
         )
@@ -99,7 +118,12 @@ class XslxToPdbGraph(ExcelReader):
 
             # Recorrer el diccionario de nodos
             self.G.add_edges_from(edges_list)  # Add a edges list
-            edges_list = []
+            cache.set(
+                f"graph_for_{self.uploaded_file_id}",
+                self.G,
+                timeout=None,
+            )
+            # edges_list = []
 
         except Exception as e:
             raise ValueError(f"An error occurred during file parsing: {e}.") from e
