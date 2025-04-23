@@ -1,3 +1,6 @@
+// Mostrar alerta cuando se carga la página
+
+
 jQuery("#world-map").vectorMap({
   map: "world_en",
   backgroundColor: "#a5bfdd",
@@ -29,11 +32,11 @@ jQuery("#world-map").vectorMap({
     ],
   },
 
-  onRegionClick: function (element, code, region) {
-    var message =
-      'You clicked "' + region + '" which has the code: ' + code.toUpperCase();
-    alert(message);
-  },
+  // onRegionClick: function (element, code, region) {
+  //   var message =
+  //     'You clicked "' + region + '" which has the code: ' + code.toUpperCase();
+  //   alert(message);
+  // },
 });
 jQuery("#world-map").on("drag", function (event) {});
 

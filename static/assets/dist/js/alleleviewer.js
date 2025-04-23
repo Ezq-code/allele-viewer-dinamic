@@ -1,3 +1,4 @@
+
 var zoomLevel = 4;
 var stick_hidden = false;
 var sphere_hidden = false;
@@ -6,6 +7,8 @@ var plane_hidden = false;
 let viewer;
 let spinState = false;
 var children;
+var predecessors;
+var sucessors;
 var selectActual;
 // variables para el graficador
 let element = $("#container")[0];
@@ -306,9 +309,9 @@ function selectUrl() {
       let pos = findPosition(elemento.pdb_files, $selectPdb.value);
       let versionAllele = elemento.pdb_files[pos].pdb_content;
       localStorage.setItem("uploadFileId", idFile);
-      graficar_string(versionAllele);
+       graficar_string(versionAllele);
       // To enable the button
-      loadOriginalXYZ();
+      // loadOriginalXYZ();
       snpModalShowBotton.disabled = false;
       ExpandModalShowBotton.disabled = false;
     })
@@ -333,7 +336,7 @@ function showInfo(atom) {
   $(".showalleleinfo").toast("hide");
 
   const atomNumber = atom.serial;
-  //load.hidden = false;
+  load.hidden = false;
   const toastClass = seleccionarEstiloAleatorio();
   const uploadFileId = localStorage.getItem("uploadFileId");
   const url = `/business-gestion/allele-nodes/${uploadFileId}-${atomNumber}/`;
@@ -342,30 +345,37 @@ function showInfo(atom) {
     .get(url)
     .then((response) => {
       const elemento = response.data;
-      const imageHtml = `
-        <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
-      `;
+      // const imageHtml = `
+      //   <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
+      // `;
+      const map=`<div id="world-map3" style="width: 320px; height: 200px; margin: 0 auto; background-color: #fff;"></div>
+        <!-- Map card -->
+      </div>`
       children = elemento.children;
-      const buttons = `
-        <button type="button" class="btn btn-block btn-info" onclick="mostrarRS('${
-          elemento.rs
-        }')">Show RS</button>
-        <button type="button" class="btn btn-block btn-secondary" onclick="marcar(${
-          atom.x
-        }, ${atom.y}, ${atom.z})">Bookmark</button>
-        <button type="button" class="btn btn-block bg-teal" onclick="childFull(${
-          elemento.number
-        })">Parents</button>
-        <button type="button" class="btn btn-block bg-lime" onclick="loadFamily(${
-          elemento.number
-        })">Descendant</button>
+      predecessors = elemento.predecessors;
+      sucessors = elemento.sucessors;
+      const buttons = `<div class="btn-group btn-shadow">
+        <button type="button" class="btn  btn-danger" data-toggle="tooltip" title="Show RS" onclick="mostrarRS('${elemento.rs}')">
+          <i class="fas fa-eye"></i>
+        </button>
+        <button type="button" class="btn  btn-warning" data-toggle="tooltip" title="Bookmark" onclick="marcar(${atom.x}, ${atom.y}, ${atom.z})">
+          <i class="fas fa-bookmark"></i>
+        </button>
+              
+        <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="genealogicalTree(${elemento.number})">
+          <i class="fas fa-sitemap"></i>
+        </button>
         ${
           elemento.region != "nan"
-            ? `<button type="button" class="btn btn-block btn-primary" onclick="getCountriesByRegion('${elemento.region}')">Region ${elemento.region}</button>`
+            ? `<button type="button" class="btn  btn-primary" data-toggle="tooltip" title="Region ${elemento.region}" onclick="getCountriesByRegion('${elemento.region}')">
+                <i class="fas fa-globe"></i>
+              </button>`
             : ""
         }
-      `;
-
+      </div>`;
+    //   <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="loadFamily(${elemento.number})">
+    //   <i class="fas fa-sitemap"></i>
+    // </button>
       const additionalInfo =
         elemento.children_qty === 0
           ? `<hr> Data for control (temporary):<br> X ${atom.x} | Y ${atom.y} | Z ${atom.z} #: ${elemento.number}`
@@ -381,10 +391,15 @@ function showInfo(atom) {
         title: elemento.custom_element_name,
         subtitle: subtitle,
         body:
-          imageHtml +
+          // imageHtml +
+          map+
           `<div class="card-body">${buttons}${additionalInfo}</div>`,
         position: "bottomRight",
       });
+
+      initializeWorldMap("#world-map3");
+      getCountriesByRegion2(elemento.region);
+
     })
     .catch((error) => {
       Toast.fire({
@@ -436,15 +451,16 @@ function buscar(params) {
     .then(function (response) {
       const elemento = response.data;
       let atomData = elemento.results;
-console.log('✌️atomData --->', atomData);
+      console.log("✌️atomData --->", atomData);
       const highlightColor = "#ffaa02";
       datos.forEach((element) => {
         const stickRadius = element.stick_radius;
-        const sphereRadius = element.sphere_radius;        
-        if (atomData.some((item) => item.number == element.number)) {          
+        const sphereRadius = element.sphere_radius;
+        if (atomData.some((item) => item.number == element.number)) {
           viewer.setStyle(
             { serial: element.number },
-            { sphere: { color: "#ff1414", radius: sphereRadius },
+            {
+              sphere: { color: "#ff1414", radius: sphereRadius },
               stick: {
                 color: "#fcfcfc",
                 radius: stickRadius,
@@ -452,7 +468,7 @@ console.log('✌️atomData --->', atomData);
               },
             }
           );
-        } else {          
+        } else {
           viewer.setStyle(
             { serial: element.number },
             {
@@ -467,7 +483,7 @@ console.log('✌️atomData --->', atomData);
         }
       });
       viewer.render();
-console.log('✌️ viewer --->');
+      console.log("✌️ viewer --->");
       load.hidden = true;
     })
     .catch(function (error) {
@@ -535,45 +551,44 @@ function getAtomBySerial(serial) {
 }
 
 function child() {
-  console.log("localStorage.getItem :", localStorage.getItem("uploadFileId"));
-  axios
-    .get(
-      `/business-gestion/uploaded-files/${localStorage.getItem(
-        "uploadFileId"
-      )}/allele-node-by-uploaded-file/?ordering=timeline_appearence`
-    )
-    .then(function (response) {
-      const elemento = response.data;
-      let atomData = elemento.results;
-      datos = atomData;
+  const uploadFileId = localStorage.getItem("uploadFileId");
+  const url = `/business-gestion/uploaded-files/${uploadFileId}/allele-node-by-uploaded-file/?ordering=timeline_appearence`;
 
-      atomData.forEach((element) => {
-        const stickRadius = element.stick_radius;
-        const sphereRadius = element.sphere_radius;
+  axios.get(url)
+    .then(response => {
+      datos = response.data.results;
+
+      datos.forEach(({ number, stick_radius, sphere_radius }) => {
         viewer.setStyle(
-          { serial: element.number },
+          { serial: number },
           {
-            sphere: { radius: sphereRadius },
+            sphere: { radius: sphere_radius },
             stick: {
               color: "spectrum",
-              radius: stickRadius,
+              radius: stick_radius,
               showNonBonded: false,
             },
           }
         );
       });
+
       viewer.zoomTo();
-      viewer.zoom(2, 1000);
+      viewer.zoom(15, 1000);
       viewer.render();
-      load.hidden = true;
     })
-    .catch(function (error) {
+    .catch(error => {
+      const errorMessage = error.response?.data?.detail || "Error desconocido";
       Toast.fire({
         icon: "error",
-        title: `${error.response.data.detail}`,
+        title: errorMessage,
       });
+    })
+    .finally(() => {
+      load.hidden = true;
     });
 }
+
+
 function childFull(id) {
   var data = {
     pdb: localStorage.getItem("uploadFileId"),
@@ -581,7 +596,7 @@ function childFull(id) {
   };
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
   axios
-    .post("/business-gestion/extract-allele-parents-tree/", data)
+    .post("/business-gestion/extract-allele-full-family-tree/", data)
     .then(function (response) {
       let atomData = response.data;
 
@@ -660,6 +675,30 @@ function childFamily(id) {
   viewer.render();
 }
 
+function genealogicalTree(id) {
+  load.hidden=false;
+  datos.forEach((element) => {
+    const isVisible =
+      sucessors.some((item) => item === element.number) ||
+      predecessors.some((item) => item === element.number) ||
+      element.number === id;
+
+    viewer.setStyle(
+      { serial: element.number },
+      {
+        sphere: {
+          hidden: !isVisible, // Mostrar u ocultar esfera
+        },
+        stick: {
+          hidden: !isVisible, // Mostrar u ocultar stick
+        },
+      }
+    );
+  });
+  viewer.render();
+  load.hidden=true;
+}
+
 function filter_Region() {
   Swal.fire({
     title: "Select a Region",
@@ -732,7 +771,6 @@ function resetGraficView() {
 }
 
 function filterByRegion(region) {
-  console.log("✌️datos --->", datos);
   datos.forEach((element) => {
     const isVisible = element.region === region;
 

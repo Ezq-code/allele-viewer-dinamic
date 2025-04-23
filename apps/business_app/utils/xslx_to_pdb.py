@@ -109,6 +109,15 @@ class XslxToPdb(ExcelReader):
                 allele = row[ExcelNomenclators.output_allele_column_name]
                 region = row.get(ExcelNomenclators.output_region_column_name)
                 age = row.get(ExcelNomenclators.age)
+                origin_1 = row.get(ExcelNomenclators.origin_1)
+                origin_2 = row.get(ExcelNomenclators.origin_2)
+                loss = row.get(ExcelNomenclators.loss)
+                increment = row.get(ExcelNomenclators.increment)
+                frec_afr = row.get(ExcelNomenclators.frec_afr)
+                frec_eas = row.get(ExcelNomenclators.frec_eas)
+                frec_eur = row.get(ExcelNomenclators.frec_eur)
+                frec_sas = row.get(ExcelNomenclators.frec_sas)
+                frec_ame = row.get(ExcelNomenclators.frec_ame)
                 if pd.isna(allele) or pd.isna(
                     row[ExcelNomenclators.output_number_column_name]
                 ):
@@ -161,7 +170,18 @@ class XslxToPdb(ExcelReader):
                     rs=rs,
                     uploaded_file_id=uploaded_file_id,
                     region=region,
-                    timeline_appearence=None if pd.isna(age) else age,
+                    #! Age is no longer coming in the excel file, for timeline we will use temporarily origin_1
+                    # timeline_appearence=None if pd.isna(age) else age,
+                    timeline_appearence=None if pd.isna(origin_1) else origin_1,
+                    origin_1=None if pd.isna(origin_1) else origin_1,
+                    origin_2=None if pd.isna(origin_2) else origin_2,
+                    frec_afr=None if pd.isna(frec_afr) else frec_afr,
+                    frec_eas=None if pd.isna(frec_eas) else frec_eas,
+                    frec_eur=None if pd.isna(frec_eur) else frec_eur,
+                    frec_sas=None if pd.isna(frec_sas) else frec_sas,
+                    frec_ame=None if pd.isna(frec_ame) else frec_ame,
+                    loss=loss,
+                    increment=increment,
                     unique_number=f"{uploaded_file_id}-{allele_number}",
                     sphere_radius=self._get_sphere_radius(0),
                     stick_radius=self._get_stick_radius(0),
