@@ -17,17 +17,17 @@ logger = logging.getLogger(__name__)
 
 
 class XslxToPdb(ExcelReader):
-    def __init__(self, origin_file, global_configuration) -> None:
-        super().__init__(origin_file)
+    def __init__(self, age_file, global_configuration) -> None:
+        super().__init__(age_file)
         self.upload_to_drive = global_configuration.upload_to_drive
         if self.upload_to_drive:
             self.input_df = pd.read_excel(
-                self.origin_file,
+                self.age_file,
                 sheet_name=ExcelNomenclators.input_sheet,
                 engine="openpyxl",
             )
             self.constants_df = pd.read_excel(
-                self.origin_file,
+                self.age_file,
                 sheet_name=ExcelNomenclators.constants_sheet,
                 engine="openpyxl",
             )
@@ -108,16 +108,27 @@ class XslxToPdb(ExcelReader):
             for _, row in self.output_df.iterrows():
                 allele = row[ExcelNomenclators.output_allele_column_name]
                 region = row.get(ExcelNomenclators.output_region_column_name)
-                age = row.get(ExcelNomenclators.age)
-                origin_1 = row.get(ExcelNomenclators.origin_1)
-                origin_2 = row.get(ExcelNomenclators.origin_2)
+                # age = row.get(ExcelNomenclators.age)
+                age_1 = row.get(ExcelNomenclators.age_1)
+                age_2 = row.get(ExcelNomenclators.age_2)
                 loss = row.get(ExcelNomenclators.loss)
                 increment = row.get(ExcelNomenclators.increment)
-                frec_afr = row.get(ExcelNomenclators.frec_afr)
+                
+                frec_afr_amr = row.get(ExcelNomenclators.frec_afr_amr)
+                frec_amr = row.get(ExcelNomenclators.frec_amr)
+                frec_csa = row.get(ExcelNomenclators.frec_csa)
                 frec_eas = row.get(ExcelNomenclators.frec_eas)
                 frec_eur = row.get(ExcelNomenclators.frec_eur)
-                frec_sas = row.get(ExcelNomenclators.frec_sas)
-                frec_ame = row.get(ExcelNomenclators.frec_ame)
+                frec_lat = row.get(ExcelNomenclators.frec_lat)
+                frec_nea = row.get(ExcelNomenclators.frec_nea)
+                frec_oce = row.get(ExcelNomenclators.frec_oce)
+                frec_ssa = row.get(ExcelNomenclators.frec_ssa)
+                frec_afr_eas = row.get(ExcelNomenclators.frec_afr_eas)
+                frec_afr_swe = row.get(ExcelNomenclators.frec_afr_swe)
+                frec_afr_nor = row.get(ExcelNomenclators.frec_afr_nor)
+                frec_ca = row.get(ExcelNomenclators.frec_ca)
+                frec_sa = row.get(ExcelNomenclators.frec_sa)
+
                 if pd.isna(allele) or pd.isna(
                     row[ExcelNomenclators.output_number_column_name]
                 ):
@@ -175,16 +186,25 @@ class XslxToPdb(ExcelReader):
                     rs=rs,
                     uploaded_file_id=uploaded_file_id,
                     region=region,
-                    #! Age is no longer coming in the excel file, for timeline we will use temporarily origin_1
+                    #! Age is no longer coming in the excel file, for timeline we will use temporarily age_1
                     # timeline_appearence=None if pd.isna(age) else age,
-                    timeline_appearence=None if pd.isna(origin_1) else origin_1,
-                    origin_1=None if pd.isna(origin_1) else origin_1,
-                    origin_2=None if pd.isna(origin_2) else origin_2,
-                    frec_afr=None if pd.isna(frec_afr) else frec_afr,
+                    timeline_appearence=None if pd.isna(age_1) else age_1,
+                    age_1=None if pd.isna(age_1) else age_1,
+                    age_2=None if pd.isna(age_2) else age_2,
+                    frec_afr_amr=None if pd.isna(frec_afr_amr) else frec_afr_amr,
+                    frec_amr=None if pd.isna(frec_amr) else frec_amr,
+                    frec_csa=None if pd.isna(frec_csa) else frec_csa,
                     frec_eas=None if pd.isna(frec_eas) else frec_eas,
                     frec_eur=None if pd.isna(frec_eur) else frec_eur,
-                    frec_sas=None if pd.isna(frec_sas) else frec_sas,
-                    frec_ame=None if pd.isna(frec_ame) else frec_ame,
+                    frec_lat=None if pd.isna(frec_lat) else frec_lat,
+                    frec_nea=None if pd.isna(frec_nea) else frec_nea,
+                    frec_oce=None if pd.isna(frec_oce) else frec_oce,
+                    frec_ssa=None if pd.isna(frec_ssa) else frec_ssa,
+                    frec_afr_eas=None if pd.isna(frec_afr_eas) else frec_afr_eas,
+                    frec_afr_swe=None if pd.isna(frec_afr_swe) else frec_afr_swe,
+                    frec_afr_nor=None if pd.isna(frec_afr_nor) else frec_afr_nor,
+                    frec_ca=None if pd.isna(frec_ca) else frec_ca,
+                    frec_sa=None if pd.isna(frec_sa) else frec_sa,
                     loss=loss,
                     increment=increment,
                     unique_number=f"{uploaded_file_id}-{allele_number}",
@@ -203,7 +223,7 @@ class XslxToPdb(ExcelReader):
                             for memory_file in pdb_files:
                                 memory_file.write(
                                     ExcelNomenclators.get_atom_connection_record_string(
-                                        origin_index=k,
+                                        age_index=k,
                                         destination_index=value,
                                     )
                                 )

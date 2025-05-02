@@ -51,8 +51,8 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "stick_radius",
             "loss",
             "increment",
-            "origin_1",
-            "origin_2",
+            "age_1",
+            "age_2",
             "frec_afr",
             "frec_eas",
             "frec_sas",
@@ -71,8 +71,8 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "stick_radius",
             "loss",
             "increment",
-            "origin_1",
-            "origin_2",
+            "age_1",
+            "age_2",
             "frec_afr",
             "frec_eas",
             "frec_sas",
@@ -86,7 +86,7 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
         graph_key = f"graph_for_{obj.uploaded_file_id}"
         if not cache.get(graph_key):
             processor_object = XslxToPdbGraph(
-                origin_file=obj.uploaded_file.original_file,
+                age_file=obj.uploaded_file.original_file,
                 uploaded_file_id=obj.uploaded_file_id,
             )
             processor_object.proccess_initial_file_data()
