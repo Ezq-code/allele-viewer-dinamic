@@ -113,7 +113,7 @@ class XslxToPdb(ExcelReader):
                 age_2 = row.get(ExcelNomenclators.age_2)
                 loss = row.get(ExcelNomenclators.loss)
                 increment = row.get(ExcelNomenclators.increment)
-                
+
                 frec_afr_amr = row.get(ExcelNomenclators.frec_afr_amr)
                 frec_amr = row.get(ExcelNomenclators.frec_amr)
                 frec_csa = row.get(ExcelNomenclators.frec_csa)
