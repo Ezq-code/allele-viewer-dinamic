@@ -199,18 +199,14 @@ class Command(BaseCommand):
             "Central-Asia": ["kz", "kg", "tj", "tm", "uz"],
             "Australian": ["au", "nz"],
         }
+
         Region.objects.all().delete()
-        regions_to_ceate = []
+        region_countries = []
+
         for k, v in countries_by_region.items():
             name, color, countries = v
-            regions_to_ceate.append(Region(symbol=k, name=name, color=color))
-        Region.objects.bulk_create(regions_to_ceate)
-
-        created_regions = Region.objects.all()
-        region_countries = []
-        for region in created_regions:
-            countries_code = countries_by_region.get(region.name)
-            for country_code in countries_code:
+            region = Region.objects.create(symbol=k, name=name, color=color)
+            for country_code in countries:
                 db_country = Country.objects.filter(code__iexact=country_code).first()
                 if db_country:
                     region_countries.append(
