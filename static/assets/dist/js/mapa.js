@@ -1,6 +1,5 @@
 // Mostrar alerta cuando se carga la página
 
-
 jQuery("#world-map").vectorMap({
   map: "world_en",
   backgroundColor: "#a5bfdd",
@@ -41,14 +40,14 @@ jQuery("#world-map").vectorMap({
 jQuery("#world-map").on("drag", function (event) {});
 
 let countriesByRegion = {
-  "Africa": [],
-  "Europe": [],
+  Africa: [],
+  Europe: [],
   "East-Asia": [],
   "South-Asia": [],
-  "America": [],
+  America: [],
   "Middle-East": [],
   "Central-Asia": [],
-  "Australian": [],
+  Australian: [],
 };
 
 const url = "../user-gestion/countries/get-codes/";
@@ -96,7 +95,7 @@ async function getCountriesByRegion(region) {
   if (countries) {
     countries.forEach((pais) => {
       countryColors[pais] = "#0000ff"; // Color azul para cada país
-      countryColorsWhite[pais] = "#ffffff"; // Color azul para cada país
+      countryColorsWhite[pais] = "#ffffff"; // Color blanco por default
     });
     // Pintar los países en el mapa
     jQuery("#world-map").vectorMap("set", "colors", countryColors);
