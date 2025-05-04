@@ -16,7 +16,7 @@ class ExcelNomenclators:
     age_2 = "Age_2"
     loss = "Loss"
     increment = "Increment"
-    
+
     frec_afr_amr = "AFR-AMR"
     frec_amr = "AMR"
     frec_csa = "CSA"
@@ -31,7 +31,6 @@ class ExcelNomenclators:
     frec_afr_nor = "AFR-NOR"
     frec_ca = "CA"
     frec_sa = "SA"
-
 
     input_original_value_column_name = "Original"
     input_min_value_column_name = "Min"
