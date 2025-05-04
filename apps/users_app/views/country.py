@@ -25,9 +25,13 @@ class CountryViewSet(
     API endpoint that allows Countries added or edited.
     """
 
-    queryset = Country.objects.all()
+    queryset = Country.objects.prefetch_related("region_country").all()
     serializer_class = CountrySerializer
-    search_fields = ["name", "region_country__region__name"]
+    search_fields = [
+        "name",
+        "region_country__region__name",
+        "region_country__region__symbol",
+    ]
     filterset_fields = [
         "enabled",
     ]
