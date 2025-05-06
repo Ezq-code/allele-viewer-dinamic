@@ -8,14 +8,12 @@ from apps.business_app.views import (
     InitialFileDataViewSet,
     NewCoordinatesProcessorViewSet,
     PdbFileViewSet,
-    AlleleParentsViewSet,
     FeatureViewSet,
     EventViewSet,
     MarkerViewSet,
     EventGalleryViewSet,
     LayerViewSet,
 )
-from apps.business_app.views.allele_descendants import AlleleDescendantsViewSet
 from apps.business_app.views.allele_full_family import AlleleFullFamilyViewSet
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 

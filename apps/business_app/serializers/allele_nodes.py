@@ -3,8 +3,6 @@ from django.core.cache import cache
 
 
 from apps.business_app.models import AlleleNode
-from apps.business_app.models.pdb_files import PdbFiles
-from apps.business_app.models.uploaded_files import UploadedFiles
 from apps.business_app.utils.xslx_to_pdb_graph import (
     XslxToPdbGraph,
     extract_children_tree,
