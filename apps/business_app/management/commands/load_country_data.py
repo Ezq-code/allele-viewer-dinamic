@@ -8,7 +8,7 @@ from apps.users_app.models.country import Country
 
 
 class Command(BaseCommand):
-    help = "Loads initial fixtures"
+    help = "Loads regional info"
 
     def handle(self, *args, **options):
         self.fill_regions()
