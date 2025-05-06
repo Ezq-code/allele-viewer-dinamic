@@ -74,6 +74,20 @@ class AlleleNodeAdmin(admin.ModelAdmin):
         "rs",
         "uploaded_file",
         "timeline_appearence",
+        "frec_afr_amr",
+        "frec_amr",
+        "frec_csa",
+        "frec_eas",
+        "frec_eur",
+        "frec_lat",
+        "frec_nea",
+        "frec_oce",
+        "frec_ssa",
+        "frec_afr_eas",
+        "frec_afr_swe",
+        "frec_afr_nor",
+        "frec_ca",
+        "frec_sa",
     ]
     fields = [
         "number",
@@ -82,6 +96,20 @@ class AlleleNodeAdmin(admin.ModelAdmin):
         "rs",
         "uploaded_file",
         "timeline_appearence",
+        "frec_afr_amr",
+        "frec_amr",
+        "frec_csa",
+        "frec_eas",
+        "frec_eur",
+        "frec_lat",
+        "frec_nea",
+        "frec_oce",
+        "frec_ssa",
+        "frec_afr_eas",
+        "frec_afr_swe",
+        "frec_afr_nor",
+        "frec_ca",
+        "frec_sa",
     ]
 
 
@@ -223,10 +251,14 @@ class RegionAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
     list_display = [
         "id",
+        "color",
         "name",
+        "symbol",
     ]
     fields = [
+        "color",
         "name",
+        "symbol",
     ]
 
 

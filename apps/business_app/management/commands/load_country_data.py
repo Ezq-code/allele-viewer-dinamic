@@ -11,42 +11,9 @@ class Command(BaseCommand):
     help = "Loads initial fixtures"
 
     def handle(self, *args, **options):
-        call_command("loaddata", "event_type.json")
-        print(
-            colored(
-                "Successfully added event types",
-                "green",
-                attrs=["blink"],
-            )
-        )
-        call_command("loaddata", "event.json")
-        print(
-            colored(
-                "Successfully added events",
-                "green",
-                attrs=["blink"],
-            )
-        )
+        self.fill_regions()
 
-        call_command("loaddata", "event_gallery.json")
-        print(
-            colored(
-                "Successfully added gallery for events",
-                "green",
-                attrs=["blink"],
-            )
-        )
-
-        call_command("loaddata", "marker_new.json")
-        print(
-            colored(
-                "Successfully added markers for new events",
-                "green",
-                attrs=["blink"],
-            )
-        )
-
-    def fill_regions(apps, schema_editor):
+    def fill_regions(self):
         """
         This is a dict with a symbol as a key, and a tuple as a value with 3 elements in this order:
         name, color, [list_of_countries]

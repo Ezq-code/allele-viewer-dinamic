@@ -14,9 +14,12 @@ from apps.common.views import CommonOrderingFilter
 class RegionViewSet(viewsets.ModelViewSet, GenericAPIView):
     """ """
 
-    queryset = Region.objects.all()
+    queryset = Region.objects.prefetch_related("countries_for_region").all()
     serializer_class = RegionSerializer
-    search_fields = ["name"]
+    search_fields = [
+        "name",
+        "symbol",
+    ]
     ordering_fields = "__all__"
     filter_backends = [
         DjangoFilterBackend,
