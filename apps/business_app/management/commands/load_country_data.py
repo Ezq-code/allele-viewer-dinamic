@@ -39,7 +39,7 @@ class Command(BaseCommand):
             ],
             "AMR": [  # American
                 "American",
-                "#FFC0CB",
+                "#d628c2",
                 ["ca", "us"],
             ],
             "CSA": [  # Central/South-Asian

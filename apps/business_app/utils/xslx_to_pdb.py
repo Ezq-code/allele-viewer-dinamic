@@ -109,7 +109,6 @@ class XslxToPdb(ExcelReader):
                 allele = row[ExcelNomenclators.output_allele_column_name]
                 if self.ilu_search_criteria in allele:
                     continue
-                region = row.get(ExcelNomenclators.output_region_column_name)
                 # age = row.get(ExcelNomenclators.age)
                 age_1 = row.get(ExcelNomenclators.age_1)
                 age_2 = row.get(ExcelNomenclators.age_2)
@@ -152,8 +151,9 @@ class XslxToPdb(ExcelReader):
                         continue
                     relations_for_the_end.setdefault(parent, []).append(allele_number)
                 # element = next(self.elements_symbol_iterator)
+                region = row.get(ExcelNomenclators.output_region_column_name)
                 if isinstance(region, str):
-                    region = region.lower()
+                    region = region.upper()
                 element = self.region_color_maping.get(
                     region, self.default_value_if_no_region
                 )
