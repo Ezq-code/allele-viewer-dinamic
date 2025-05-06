@@ -17,17 +17,17 @@ logger = logging.getLogger(__name__)
 
 
 class XslxToPdb(ExcelReader):
-    def __init__(self, age_file, global_configuration) -> None:
-        super().__init__(age_file)
+    def __init__(self, origin_file, global_configuration) -> None:
+        super().__init__(origin_file)
         self.upload_to_drive = global_configuration.upload_to_drive
         if self.upload_to_drive:
             self.input_df = pd.read_excel(
-                self.age_file,
+                self.origin_file,
                 sheet_name=ExcelNomenclators.input_sheet,
                 engine="openpyxl",
             )
             self.constants_df = pd.read_excel(
-                self.age_file,
+                self.origin_file,
                 sheet_name=ExcelNomenclators.constants_sheet,
                 engine="openpyxl",
             )
@@ -107,6 +107,8 @@ class XslxToPdb(ExcelReader):
             # Loop over each row in the Excel file
             for _, row in self.output_df.iterrows():
                 allele = row[ExcelNomenclators.output_allele_column_name]
+                if self.ilu_search_criteria in allele:
+                    continue
                 region = row.get(ExcelNomenclators.output_region_column_name)
                 # age = row.get(ExcelNomenclators.age)
                 age_1 = row.get(ExcelNomenclators.age_1)
@@ -223,7 +225,7 @@ class XslxToPdb(ExcelReader):
                             for memory_file in pdb_files:
                                 memory_file.write(
                                     ExcelNomenclators.get_atom_connection_record_string(
-                                        age_index=k,
+                                        origin_index=k,
                                         destination_index=value,
                                     )
                                 )

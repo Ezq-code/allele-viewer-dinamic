@@ -21,7 +21,7 @@ class Command(BaseCommand):
         countries_by_region = {
             "AFR-AMR": [  # African American/Afro-Caribbean
                 "African American/Afro-Caribbean",
-                "#ffffff",
+                "#FFA500",
                 [
                     "ag",
                     "ai",
@@ -39,12 +39,12 @@ class Command(BaseCommand):
             ],
             "AMR": [  # American
                 "American",
-                "#ffffff",
+                "#FFC0CB",
                 ["ca", "us"],
             ],
             "CSA": [  # Central/South-Asian
                 "Central/South-Asian",
-                "#ffffff",
+                "#FFDB58",
                 [
                     "kz",
                     "kg",
@@ -63,12 +63,12 @@ class Command(BaseCommand):
             ],
             "EAS": [  # East Asian
                 "East Asian",
-                "#ffffff",
+                "#0000A0",
                 ["cn", "jp", "kr", "mn", "tw", "hk"],
             ],
             "EUR": [  # European
                 "European",
-                "#ffffff",
+                "#0000FF",
                 [
                     "at",
                     "be",
@@ -105,7 +105,7 @@ class Command(BaseCommand):
             ],
             "LAT": [  # Latino
                 "Latino",
-                "#ffffff",
+                "#FF0000",
                 [
                     "ar",
                     "bz",
@@ -137,7 +137,7 @@ class Command(BaseCommand):
             ],
             "NEA": [  # Near Eastern
                 "Near Eastern",
-                "#ffffff",
+                "#FF69B4",
                 [
                     "ae",
                     "bh",
@@ -157,12 +157,12 @@ class Command(BaseCommand):
             ],
             "OCE": [  # Oceanian
                 "Oceanian",
-                "#ffffff",
+                "#8A2BE2",
                 ["au", "nz"],
             ],
             "SSA": [  # Sub-Saharan African
                 "Sub-Saharan African",
-                "#ffffff",
+                "#7CFC00",
                 [
                     "bj",
                     "bf",
@@ -194,7 +194,7 @@ class Command(BaseCommand):
             ],
             "AFR-EAS": [  # East-African
                 "East-African",
-                "#ffffff",
+                "#7CFC00",
                 [
                     "bi",
                     "dj",
@@ -214,22 +214,22 @@ class Command(BaseCommand):
             ],
             "AFR-SWE": [  # South-West-African
                 "South-West-African",
-                "#ffffff",
+                "#00FF00",
                 ["ao", "bw", "ls", "na", "sz", "za", "zm", "zw"],
             ],
             "AFR-NOR": [  # North-African
                 "North-African",
-                "#ffffff",
+                "#00FF00",
                 ["dz", "eg", "ly", "ma", "tn"],
             ],
             "CA": [  # Central-Asian
                 "Central-Asian",
-                "#ffffff",
+                "#FFA500",
                 ["kz", "kg", "tj", "tm", "uz"],
             ],
             "SA": [  # South-Asian
                 "South-Asian",
-                "#ffffff",
+                "#FFFF00",
                 ["af", "bd", "bt", "in", "mv", "np", "pk", "lk"],
             ],
         }

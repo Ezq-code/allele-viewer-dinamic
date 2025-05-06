@@ -32,7 +32,8 @@ class ExcelReader:
             "AFR-EAS": "B",  # East-African
             "AFR-SWE": "Mg",  # South-West-African
             "AFR-NOR": "Mg",  # North-African
-            "AFR-AMR": "B",  # African American/Afro-Caribbean
+            "AFR-AMR": "Fe",  # African American/Afro-Caribbean
+            "SSA": "B",  # Sub-Saharan African
             "CSA": "Au",  # Central/South-Asian
             "CA": "Fe",  # Central-Asian
             "SA": "S",  # South-Asian
@@ -58,7 +59,7 @@ class ExcelReader:
         )
         self.coordinates_sets = 0
 
-        self.son_label = "I-L-U?"  # ? UNUSED
+        self.ilu_search_criteria = "ILU"  # ? UNUSED
         # dataframes = pd.read_excel(self.origin_file, sheet_name=None, engine="openpyxl")
 
         self.output_df = pd.read_excel(
