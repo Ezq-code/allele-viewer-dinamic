@@ -82,11 +82,13 @@
                                             var localbeginIntervalsesion = parseInt(sessionStorage.getItem('beginIntervalsesion'));
                                             var localendIntervalsesion = parseInt(sessionStorage.getItem('endIntervalsesion'));
                                             var localdurationSesion = parseInt(sessionStorage.getItem('durationSesion'));
+
+                                            if ((localdurationSesion > 500000) && (localdurationSesion < 2000000)) {localdurationSesion = 40000}
                                             
                                             // duración de la línea del tiempo en general
                                             var timelineControl = L.timelineSliderControl({                                
                                              duration: localdurationSesion, //sessionStorage.getItem('durationSesion'), //315000, //55000
-                                             steps: 1000,//(Math.abs(localbeginIntervalsesion)-Math.abs(localendIntervalsesion))/315,//1000, //175
+                                             steps: 1000,//1000(Math.abs(localbeginIntervalsesion)-Math.abs(localendIntervalsesion))/315,//1000, //175
                                              start: localbeginIntervalsesion, //sessionStorage.getItem('beginIntervalsesion'), //-315000,
                                              end: localendIntervalsesion //sessionStorage.getItem('endIntervalsesion') //2025
                                           });  
@@ -101,12 +103,29 @@
 
                                             // intervalos de tiempo para las trayectorias de las migraciones
                                             var getInterval = function (quake) {
-                                                if (( quake.properties.id >= 1) && (quake.properties.id <= 9)) {
+                                                if  (( quake.properties.id >= 1) && (quake.properties.id <= 9)) 
+                                                {
                                                     return {
                                                         start: quake.properties.timefinal,
                                                         end: year
                                                     };
                                                 }
+                                                else
+                                                if   (( quake.properties.id >= 11.1) && (quake.properties.id <= 11.29))    
+                                                {
+                                                    return {
+                                                        start: quake.properties.timefinal,
+                                                        end: quake.properties.time
+                                                    };
+                                                }
+                                                else
+                                                if   (( quake.properties.id >= 12.1) && (quake.properties.id <= 12.99))    
+                                                {
+                                                    return {
+                                                        start: quake.properties.timefinal,
+                                                        end: quake.properties.time
+                                                    };
+                                                }                                                                                                
                                             };
                                             
                                             var getIntervalIce = function (quake) {
@@ -136,6 +155,20 @@
                                                         end: year
                                                         };
                                                 }
+                                                else
+                                                if (quake.properties.id == 12) {
+                                                    return {
+                                                        start: quake.properties.timefinal,
+                                                        end: quake.properties.time
+                                                        };
+                                                }
+                                                else
+                                                if (quake.properties.id == 13) {
+                                                    return {
+                                                        start: quake.properties.timefinal,
+                                                        end: quake.properties.time
+                                                        };
+                                                }                                                                                                 
                                             };
 
                                            // intervalos de tiempo para las poblaciones y las regiones
@@ -153,7 +186,8 @@
                                             var migrationTraceRoute = L.timeline(data, {
                                                 getInterval: getInterval,
                                                 style: function (feature) {
-                                                    if ((feature.properties.id >= 1) && (feature.properties.id <= 9)) {
+                                                    if ((feature.properties.id >= 1) && (feature.properties.id <= 9))
+                                                     {
                                                         return {
                                                             color: "#f6500c",//"#e1245a",//"#ffd700",//"#171717", "ffd700", "#051074",
                                                             fillColor: "#f6500c",//"#e1245a",//"#ffd700",//"#171717", eac102, "#051074",
@@ -162,6 +196,28 @@
                                                             opacity: 1,
                                                         }
                                                     }
+                                                    else
+                                                    if  ((feature.properties.id >= 11.1) && (feature.properties.id <= 11.29))
+                                                     {
+                                                        return {
+                                                            color: "#F03687",//"#e1245a",//"#ffd700",//"#171717", "ffd700", "#051074",
+                                                            fillColor: "#F03687",//"#e1245a",//"#ffd700",//"#171717", eac102, "#051074",
+                                                            fillOpacity: 1,
+                                                            weight: 3,
+                                                            opacity: 1,
+                                                        }
+                                                    }
+                                                    else
+                                                    if  ((feature.properties.id >= 12.1) && (feature.properties.id <= 12.99))
+                                                     {
+                                                        return {
+                                                            color: "#00aae4",//"#e1245a",//"#ffd700",//"#171717", "ffd700", "#051074",
+                                                            fillColor: "#00aae4",//"#e1245a",//"#ffd700",//"#171717", eac102, "#051074",
+                                                            fillOpacity: 1,
+                                                            weight: 3,
+                                                            opacity: 1,
+                                                        }
+                                                    }                                                    
                                                 },
                                                 pointToLayer: function (data, latlng) {
 
@@ -286,10 +342,34 @@
                                                             opacity: 0.8,
                                                         }
                                                     }
+                                                    else
+                                                    if (feature.properties.id == 12) {
+                                                        return {
+
+                                                            radius: 6, //features.properties.mag,
+                                                            color: "#050400", //"#000000",
+                                                            fillColor: "#f5d843",//"#000000",
+                                                            fillOpacity: 0.7,
+                                                            weight: 3,
+                                                            opacity: 0.8,
+                                                        }
+                                                    }
+                                                    else
+                                                    if (feature.properties.id == 13) {
+                                                        return {
+
+                                                            radius: 6, //features.properties.mag,
+                                                            color: "#050400", //"#000000",
+                                                            fillColor: "#f5d843",//"#000000",
+                                                            fillOpacity: 0.7,
+                                                            weight: 3,
+                                                            opacity: 0.8,
+                                                        }
+                                                    }                                                    
                                                 },
                                                 pointToLayer: function (data, latlng) {
                                                    
-                                                    if ((data.properties.id == 10) || (data.properties.id == 11)) {
+                                                    if ((data.properties.id == 10) || (data.properties.id == 11))  {
 
                                                         return L.marker(latlng, {
                                                             icon:
@@ -300,23 +380,33 @@
                                                                     shadowAnchor: [13, 20]
                                                                 })
                                                         }).bindPopup(data.properties.title);
-                                                        
-                                                       /*
-                                                        return L.circleMarker(latlng, {
-
-                                                            radius: 10, //features.properties.mag,
-                                                            color: "#050400", //"#000000",
-                                                            fillColor: "#f5d843",//"#000000",
-                                                            fillOpacity: 0.7,
-                                                            weight: 3,
-                                                            opacity: 0.8,
-
-                                                        }).bindPopup(L.popup({
-                                                            closeOnClick: false,
-                                                            autoClose: false
-                                                        }).setContent(data.properties.title));
-                                                        */
                                                     }
+                                                    else
+                                                    if  (data.properties.id == 12) {
+
+                                                        return L.marker(latlng, {
+                                                            icon:
+                                                                L.icon({
+                                                                    iconUrl: iconUrlpathDestinationMigrationHomoHeidel,
+                                                                    iconSize: [44, 42],
+                                                                    shadowSize: [41, 41],
+                                                                    shadowAnchor: [13, 20]
+                                                                })
+                                                        }).bindPopup(data.properties.title);
+                                                    }
+                                                    else
+                                                    if  (data.properties.id == 13) {
+
+                                                        return L.marker(latlng, {
+                                                            icon:
+                                                                L.icon({
+                                                                    iconUrl: iconUrlpathDestinationMigrationHomoHerectus,
+                                                                    iconSize: [44, 42],
+                                                                    shadowSize: [41, 41],
+                                                                    shadowAnchor: [13, 20]
+                                                                })
+                                                        }).bindPopup(data.properties.title);
+                                                    }                                                    
                                                 },
                                             });
                                             
@@ -564,9 +654,50 @@
                                             updateList(migrationTraceRoute);
                                         }
 
+                                        document.getElementById('timeRangeMigraions').addEventListener('click', function(e) {
+
+                                            const opcionClick = e.target;
+                                            if (opcionClick.tagName === 'OPTION') {
+                                              const estaSeleccionada = opcionClick.selected;
+                                              var selectedValue = opcionClick.value;
+                                            }
+
+                                            sessionStorage.setItem('timeRange', selectedValue); 
+
+                                            timeRange = selectedValue;
+                                            //document.getElementById("timeRange").value  =  selectedValue;
+
+                                            var aPosition = selectedValue.indexOf("/");
+                                            var aBegin = selectedValue.substring(0,aPosition);
+                                            var anEnd = selectedValue.substring(aPosition+1);
+    
+                                            sessionStorage.setItem('beginIntervalsesion', parseInt(aBegin));
+                                            sessionStorage.setItem('endIntervalsesion', parseInt(anEnd));  
+                                            sessionStorage.setItem('durationSesion', parseInt(anEnd)-parseInt(aBegin));
+
+                                            // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
+                                            Swal.fire({
+                                                title: 'Updating TimeLine...',
+                                                showConfirmButton: false,
+                                                willOpen: () => {
+                                                    Swal.showLoading();
+                                                }
+                                            });
+                                            // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
+                                            setTimeout(function () {
+                                                location.reload()
+                                            }, 500);
+
+                                          });
+                             
+
+                                       // });
+
                                         document.getElementById('btreload').addEventListener('click', function() {
                                             
+                                          
                                             var aTimeRange = document.getElementById("timeRange");
+                                            aTimeRange.value = timeRange;
                                             var aRegionTimeLine = document.getElementById("regionTimeLine");
                                             sessionStorage.setItem('timeRange', aTimeRange.value);
                                             sessionStorage.setItem('region', aRegionTimeLine.value);
