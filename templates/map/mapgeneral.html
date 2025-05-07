@@ -211,17 +211,19 @@
                             <div class="card-header">
                                 <h3 class="card-title">Map - CYP2D6 Alleles-Expansions</h3>
                                 <div class="card-tools">
-                                    <div class="d-inline-block">
-                                        <select class="form-control form-control-sm" name="timeRange" id="timeRange">
-                                            <option value="-315000/2025">All the Time</option>
-                                            <option value="-315000/-75000">from 315000 YBP to 75000 YBP</option>
-                                            <option value="-75000/-12000">from 75000 YBP to 12000 YBP</option>
-                                            <option value="-12000/1">from 12000 YBP to 1</option>
-                                            <option value="1/2025">from 1 to 2025</option>
-                                        </select>
-                                            </div>
+                                   <div class="d-inline-block">
+                                        <select class="form-control form-control-sm" name="timeRange" id="timeRange" hidden="true">
+                                            <option value="-160000/2025" selected>From 160000 YBP to year 2025</option>
+                                            <option value="-1800000/-780000">Homo Erectus Migrations (1800000 YBP to 780000 YBP)</option>
+                                            <option value="-700000/-160000">Homo Heidelbergensis Migrations (700000 YBP to 160000 YBP)</option>                                            
+                                            <option value="-159999/-75000">From 160000 YBP to 75000 YBP</option>
+                                            <option value="-75000/-12000">Homo Sapiens Migrations (75000 YBP to 12000 YBP)</option>
+                                            <option value="-12000/1">From 12000 YBP to year 1</option>
+                                            <option value="1/2025">From year 1 to year 2025</option>
+                                        </select> 
+                                            </div> 
                                         <div class="d-inline-block">
-                                        <select class="form-control form-control-sm" name="regionTimeLine" id="regionTimeLine">
+                                        <select class="form-control form-control-sm" name="regionTimeLine" id="regionTimeLine" style= "width:140px;">
                                             <option value="All the World">All the World</option>
                                             <option value="Africa">Africa</option>
                                             <option value="Western Asia">Western Asia</option>
@@ -247,9 +249,21 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <div class="right-sidebar" style="padding: 10px 100px;">
-                                    <div id="map"></div>
+                                <div class="right-sidebar" class="col-12">
+                                    <div id="map" class="col-10"></div>
+                                    <div id="timeRangeMigraions" class="col-2">
+                                        <select multiple="" class="form-control" style= "height: 558px; font-size:13px; overflow-y: hidden;
+                                        -ms-overflow-style: none;  scrollbar-width: none;">
+                                            <option value="-160000/2025" selected>From 160000 YBP to year 2025</option>
+                                            <option value="-1800000/-780000">Homo Erectus Migrations (1800000 YBP to 780000 YBP)</option>
+                                            <option value="-700000/-160001">Homo Heidelbergensis Migrations (700000 YBP to 160000 YBP)</option>                                            
+                                            <option value="-159999/-75000">From 160000 YBP to 75000 YBP</option>
+                                            <option value="-75000/-12000">Homo Sapiens Migrations (75000 YBP to 12000 YBP)</option>
+                                            <option value="-12000/1">From 12000 YBP to year 1</option>
+                                            <option value="1/2025">From year 1 to year 2025</option>
+                                      </select></div>
                                 </div>
+
                                 <script>
                                     var importUrlPath = "{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/shp.js' %}";
                                 </script>
@@ -261,22 +275,27 @@
           
                                     if (!sessionStorage.getItem('inicializado')) {
                                      // Código que solo se ejecuta en la primera carga
-                                     sessionStorage.setItem('beginIntervalsesion', -315000);
+                                     sessionStorage.setItem('beginIntervalsesion', -160000);
                                      sessionStorage.setItem('endIntervalsesion', 2025);
-                                     sessionStorage.setItem('durationSesion', 317025);  
+                                     sessionStorage.setItem('durationSesion', 162025);  
                                      sessionStorage.setItem('lat', 10);
                                      sessionStorage.setItem('long', 120);
                                      sessionStorage.setItem('zoom', 2); 
                                      sessionStorage.setItem('timeRange', '-315000/2025'); 
+                                     sessionStorage.setItem('timeRangeMigraions', '-315000/2025'); 
                                      sessionStorage.setItem('region', 'All the World'); 
                                      sessionStorage.setItem('inicializado', 'true');
                                     }
 
+                                    var timeRange = sessionStorage.getItem('timeRange');
+
                                     var timeRangeIni = document.getElementById("timeRange");
                                     var regionTimeLineIni = document.getElementById("regionTimeLine");
+                                    var timeRangeMigraionsIni = document.getElementById("timeRangeMigraions");
                                     timeRangeIni.value = sessionStorage.getItem('timeRange');
                                     regionTimeLineIni.value = sessionStorage.getItem('region');
-
+                                    timeRangeMigraionsIni.value = sessionStorage.getItem('timeRange');
+ 
                                     // Capa Base con mapa político
                                     var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";  //"http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
                                     var osmAttrib = "CYP2D6 Alleles-Expansions";
@@ -329,6 +348,8 @@
 
                                     var iconUrlpath = "{% static 'assets/dist/Leaflet/marker_black.png' %}";
                                     var iconUrlpathDestinationMigration = "{% static 'assets/dist/Leaflet/primitive-man4.png' %}";
+                                    var iconUrlpathDestinationMigrationHomoHeidel = "{% static 'assets/dist/Leaflet/primitive-man1.png' %}";
+                                    var iconUrlpathDestinationMigrationHomoHerectus = "{% static 'assets/dist/Leaflet/primitive-man25.png' %}";
                                 </script>
                                 <!-- Script que almacena en la variable authenticated el estado del usuario, si esta autenticado o no -->
                                 <script>
