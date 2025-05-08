@@ -2574,5 +2574,75 @@
         "end_date": 1945,
         "reference": "https://www.britannica.com/event/Battle-of-the-Atlantic"
     }
+},
+{
+    "model": "business_app.event",
+    "pk": 210,
+    "fields": {
+        "event_name": "Population Collapse (-900000 -780000). Africa",
+        "event_icon": "images/skull-bones_41_0Bmg550.png",
+        "pause_time": 2000,
+        "event_type": 14,
+        "description": "Population Collapse (-900000 -780000). Africa",
+        "start_date": -890000,
+        "end_date": -780000,
+        "reference": ""
+    }
+},
+{
+    "model": "business_app.event",
+    "pk": 211,
+    "fields": {
+        "event_name": "Population Collapse (-900000 -780000). East Asia",
+        "event_icon": "images/skull-bones_41_FI3PcYs.png",
+        "pause_time": 2000,
+        "event_type": 14,
+        "description": "Population Collapse (-900000 -780000). East Asia",
+        "start_date": -860000,
+        "end_date": -780000,
+        "reference": ""
+    }
+},
+{
+    "model": "business_app.event",
+    "pk": 212,
+    "fields": {
+        "event_name": "Population Collapse (-900000 -780000). Java",
+        "event_icon": "images/skull-bones_41_TFlKZS5.png",
+        "pause_time": 2000,
+        "event_type": 14,
+        "description": "Population Collapse (-900000 -780000). Java",
+        "start_date": -840000,
+        "end_date": -780000,
+        "reference": ""
+    }
+},
+{
+    "model": "business_app.event",
+    "pk": 213,
+    "fields": {
+        "event_name": "Population Collapse (-900000 -780000). Europe",
+        "event_icon": "",
+        "pause_time": 2000,
+        "event_type": 14,
+        "description": "Population Collapse (-900000 -780000). Europe",
+        "start_date": -795000,
+        "end_date": -780000,
+        "reference": ""
+    }
+},
+{
+    "model": "business_app.event",
+    "pk": 214,
+    "fields": {
+        "event_name": "Population Collapse (-900000 -780000). West Asia",
+        "event_icon": "images/skull-bones_41_hzD7np2.png",
+        "pause_time": 2000,
+        "event_type": 14,
+        "description": "Population Collapse (-900000 -780000). West Asia",
+        "start_date": -785000,
+        "end_date": -780000,
+        "reference": ""
+    }
 }
 ]
