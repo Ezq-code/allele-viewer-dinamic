@@ -1,4 +1,3 @@
-
 var zoomLevel = 4;
 var stick_hidden = false;
 var sphere_hidden = false;
@@ -81,6 +80,7 @@ $(function () {
   crearMatriz();
   poblarListasAllele();
   fillAllRegions();
+  viewer.removeAllLabels();
 });
 
 // Función para poblar la lista desplegable del documento
@@ -92,8 +92,6 @@ function poblarListasAllele() {
       $selectfile.add(option);
     });
     poblarListasPdb(response.data.results[0].pdb_files);
-    console.log("✌️file --->");
-
     poblarListasCopy(response.data.results[0].id);
   });
 }
@@ -261,7 +259,6 @@ function sendRSControlValues() {
   axios
     .post("/business-gestion/new-coordinate-processor/", data)
     .then(function (response) {
-      // console.log("mi data:", response.data.pdb_content);
       graficar_string(response.data.pdb_content);
       load.hidden = true;
     })
@@ -301,7 +298,6 @@ function selectUrl() {
   var idFile = $selectfile.value;
   document.getElementById("animation").disabled = false;
   document.getElementById("filter_region").disabled = false;
-  console.log(" idFile:", idFile);
   axios
     .get("/business-gestion/uploaded-files/" + idFile + "/")
     .then(function (response) {
@@ -309,7 +305,8 @@ function selectUrl() {
       let pos = findPosition(elemento.pdb_files, $selectPdb.value);
       let versionAllele = elemento.pdb_files[pos].pdb_content;
       localStorage.setItem("uploadFileId", idFile);
-       graficar_string(versionAllele);
+      localStorage.setItem("pdb", versionAllele);
+      graficar_string(versionAllele);
       // To enable the button
       // loadOriginalXYZ();
       snpModalShowBotton.disabled = false;
@@ -348,21 +345,27 @@ function showInfo(atom) {
       // const imageHtml = `
       //   <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
       // `;
-      const map=`<div id="world-map3" style="width: 320px; height: 200px; margin: 0 auto; background-color: #fff;"></div>
+      const map = `<div id="world-map3" style="width: 320px; height: 200px; margin: 0 auto; background-color: #fff;"></div>
         <!-- Map card -->
-      </div>`
+      </div>`;
       children = elemento.children;
       predecessors = elemento.predecessors;
       sucessors = elemento.sucessors;
       const buttons = `<div class="btn-group btn-shadow">
-        <button type="button" class="btn  btn-danger" data-toggle="tooltip" title="Show RS" onclick="mostrarRS('${elemento.rs}')">
+        <button type="button" class="btn  btn-danger" data-toggle="tooltip" title="Show RS" onclick="mostrarRS('${
+          elemento.rs
+        }')">
           <i class="fas fa-eye"></i>
         </button>
-        <button type="button" class="btn  btn-warning" data-toggle="tooltip" title="Bookmark" onclick="marcar(${atom.x}, ${atom.y}, ${atom.z})">
+        <button type="button" class="btn  btn-warning" data-toggle="tooltip" title="Bookmark" onclick="marcar(${
+          atom.x
+        }, ${atom.y}, ${atom.z})">
           <i class="fas fa-bookmark"></i>
         </button>
               
-        <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="genealogicalTree(${elemento.number})">
+        <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="genealogicalTree(${
+          elemento.number
+        })">
           <i class="fas fa-sitemap"></i>
         </button>
         ${
@@ -373,9 +376,9 @@ function showInfo(atom) {
             : ""
         }
       </div>`;
-    //   <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="loadFamily(${elemento.number})">
-    //   <i class="fas fa-sitemap"></i>
-    // </button>
+      //   <button type="button" class="btn  bg-lime" data-toggle="tooltip" title="Descendant" onclick="loadFamily(${elemento.number})">
+      //   <i class="fas fa-sitemap"></i>
+      // </button>
       const additionalInfo =
         elemento.children_qty === 0
           ? `<hr> Data for control (temporary):<br> X ${atom.x} | Y ${atom.y} | Z ${atom.z} #: ${elemento.number}`
@@ -392,14 +395,12 @@ function showInfo(atom) {
         subtitle: subtitle,
         body:
           // imageHtml +
-          map+
-          `<div class="card-body">${buttons}${additionalInfo}</div>`,
+          map + `<div class="card-body">${buttons}${additionalInfo}</div>`,
         position: "bottomRight",
       });
 
       initializeWorldMap("#world-map3");
       getCountriesByRegion2(elemento.region);
-
     })
     .catch((error) => {
       Toast.fire({
@@ -451,7 +452,6 @@ function buscar(params) {
     .then(function (response) {
       const elemento = response.data;
       let atomData = elemento.results;
-      console.log("✌️atomData --->", atomData);
       const highlightColor = "#ffaa02";
       datos.forEach((element) => {
         const stickRadius = element.stick_radius;
@@ -483,7 +483,6 @@ function buscar(params) {
         }
       });
       viewer.render();
-      console.log("✌️ viewer --->");
       load.hidden = true;
     })
     .catch(function (error) {
@@ -551,11 +550,13 @@ function getAtomBySerial(serial) {
 }
 
 function child() {
+  viewer.removeAllLabels();
   const uploadFileId = localStorage.getItem("uploadFileId");
   const url = `/business-gestion/uploaded-files/${uploadFileId}/allele-node-by-uploaded-file/?ordering=timeline_appearence`;
 
-  axios.get(url)
-    .then(response => {
+  axios
+    .get(url)
+    .then((response) => {
       datos = response.data.results;
 
       datos.forEach(({ number, stick_radius, sphere_radius }) => {
@@ -571,12 +572,11 @@ function child() {
           }
         );
       });
-
       viewer.zoomTo();
       viewer.zoom(15, 1000);
       viewer.render();
     })
-    .catch(error => {
+    .catch((error) => {
       const errorMessage = error.response?.data?.detail || "Error desconocido";
       Toast.fire({
         icon: "error",
@@ -587,7 +587,6 @@ function child() {
       load.hidden = true;
     });
 }
-
 
 function childFull(id) {
   var data = {
@@ -675,28 +674,142 @@ function childFamily(id) {
   viewer.render();
 }
 
+function obtenerAtomoDesdeViewer(viewer, serial) {
+  // 1. Acceder a la estructura molecular
+  const estructura = viewer.getModel().atoms;
+  // 2. Buscar en la jerarquía de componentes
+  return estructura.find((item) => item.serial === serial) || null;
+}
+
 function genealogicalTree(id) {
-  load.hidden=false;
+  // Eliminar TODAS las etiquetas del viewer
+  viewer.removeAllLabels();
+  let sucesorLabel,
+    predecesorLabel = false;
+
+  load.hidden = false;
   datos.forEach((element) => {
     const isVisible =
       sucessors.some((item) => item === element.number) ||
       predecessors.some((item) => item === element.number) ||
       element.number === id;
 
-    viewer.setStyle(
-      { serial: element.number },
-      {
-        sphere: {
-          hidden: !isVisible, // Mostrar u ocultar esfera
+    // Aplicar estilos específicos para el nodo principal
+    if (element.number === id) {
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: {
+            color: "#ff0000", // Color rojo para destacar
+            radius: 1.5, // Tamaño mayor de la esfera
+            hidden: false,
+          },
+          stick: {
+            color: "#ff0000", // Color rojo para las conexiones
+            hidden: false,
+          },
+        }
+      );
+      let atomoEncontrado = obtenerAtomoDesdeViewer(viewer, element.number);
+      // Agregar un label al nodo original
+      viewer.addLabel("Selected allele", {
+        position: {
+          x: atomoEncontrado.x,
+          y: atomoEncontrado.y,
+          z: atomoEncontrado.z,
         },
-        stick: {
-          hidden: !isVisible, // Mostrar u ocultar stick
-        },
+        fontSize: 12,
+        fontColor: "#ff0000",
+        backgroundColor: "rgba(21, 1, 1, 0.8)",
+        borderThickness: 1,
+        borderColor: "#ff0000",
+      });
+      
+    } else if (predecessors.some((item) => item === element.number)) {
+      // Pintar predecesores de verde
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: {
+            color: "#00ff00", // Color verde
+            hidden: false,
+          },
+          stick: {
+            color: "#00ff00", // Color verde para las conexiones
+            hidden: false,
+          },
+        }
+      );
+      if (!predecesorLabel) {
+        // Si el nodo tiene hijos, mostrar un label
+        let atomoEncontradoPredecessors = obtenerAtomoDesdeViewer(
+          viewer,
+          element.number
+        );
+        // Agregar un label al nodo original
+        viewer.addLabel("Predecessor alleles", {
+          position: {
+            x: atomoEncontradoPredecessors.x,
+            y: atomoEncontradoPredecessors.y,
+            z: atomoEncontradoPredecessors.z,
+          },
+          fontSize: 12,
+          fontColor: "#00ff00",
+          backgroundColor: "rgba(21, 1, 1, 0.8)",
+          borderThickness: 1,
+          borderColor: "#00ff00",
+        });
+        predecesorLabel = true;
       }
-    );
+    } else if (sucessors.some((item) => item === element.number)) {
+      // Pintar sucesores de amarillo
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: {
+            color: "#ffff00", // Color amarillo
+            hidden: false,
+          },
+          stick: {
+            color: "#ffff00", // Color amarillo para las conexiones
+            hidden: false,
+          },
+        }
+      );
+      if (!sucesorLabel) {
+        let atomoSucessorsEncontrado = obtenerAtomoDesdeViewer(viewer, element.number);
+        // Agregar un label al nodo original
+        viewer.addLabel("Successor alleles", {
+          position: {
+            x: atomoSucessorsEncontrado.x,
+            y: atomoSucessorsEncontrado.y,
+            z: atomoSucessorsEncontrado.z,
+          },
+          fontSize: 12,
+          fontColor: "#ffff00",
+          backgroundColor: "rgba(21, 1, 1, 0.8)",
+          borderThickness: 1,
+          borderColor: "#ffff00",
+        });
+        sucesorLabel = true;
+      }
+    } else {
+      // Ocultar nodos no relacionados
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: {
+            hidden: true,
+          },
+          stick: {
+            hidden: true,
+          },
+        }
+      );
+    }
   });
   viewer.render();
-  load.hidden=true;
+  load.hidden = true;
 }
 
 function filter_Region() {
@@ -871,15 +984,13 @@ function sendExpantionValues() {
     z_value: myRangeZ.valueAsNumber,
   };
 
-  console.log(data);
+ 
   load.hidden = false;
   $("#modal-xyz").modal("hide");
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
-  console.log("token", csrfToken);
   axios
     .post("/business-gestion/xyz-expansion/", data)
     .then(function (response) {
-      console.log("mi data:", response.data.pdb_content);
       graficar_string(response.data.pdb_content);
       load.hidden = true;
     })
@@ -896,6 +1007,7 @@ function sendExpantionValues() {
 }
 
 function animation() {
+  viewer.removeAllLabels();
   $(".controlpanel").toast("hide");
   load.hidden = false;
   datos.forEach((element) => {
@@ -912,7 +1024,7 @@ function animation() {
     );
   });
 
-  // console.log("zoomLevel :", zoomLevel);
+
   viewer.render();
   load.hidden = true;
   $(".controlpanel").toast("hide");
@@ -1068,7 +1180,6 @@ function changeSpeed() {
   // Actualizar el texto del botón
   const speedButton = document.getElementById("speedButton");
   speedButton.innerHTML = `${newSpeed.label}`;
-  console.log("✌️newSpeed.value --->", newSpeed.value);
   // Si hay una animación en curso, actualizarla con la nueva velocidad
   // if (/* tu condición para verificar si la animación está en curso */) {
   mostrarElementos(datos, newSpeed.value);
