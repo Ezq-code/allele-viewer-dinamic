@@ -400,7 +400,7 @@ function showInfo(atom) {
       });
 
       initializeWorldMap("#world-map3");
-      getCountriesByRegion2(elemento.region);
+      //getCountriesByRegion2(elemento.region);
     })
     .catch((error) => {
       Toast.fire({
