@@ -1,7 +1,7 @@
 import io
 import logging
 
-from networkx import Graph
+from networkx import Graph, difference
 import pandas as pd
 
 from apps.business_app.models.pdb_files import PdbFiles
@@ -35,7 +35,10 @@ def extract_tree(G: Graph, to_return: list, node: int, graph_function):
         return []
     to_return.append(node)
     for element in graph_function(node):
-        to_return.extend(extract_tree(G, to_return, element, graph_function))
+        subtree = extract_tree(G, to_return, element, graph_function)
+        new_elements = set(subtree)-set(to_return)
+        if new_elements:
+            to_return.extend(new_elements)
     return to_return
 
 
