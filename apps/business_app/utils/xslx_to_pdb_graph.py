@@ -36,16 +36,20 @@ def extract_tree(G: Graph, to_return: list, node: int, graph_function):
     to_return.append(node)
     for element in graph_function(node):
         to_return.extend(extract_tree(G, to_return, element, graph_function))
+    print(to_return)
     return to_return
 
 
 def extract_parents_tree(G: Graph, to_return: list, node: int):
+    logger.warning(f"parents for {node}", )
     return extract_tree(
         G=G, to_return=to_return, node=node, graph_function=G.predecessors
     )
 
 
 def extract_children_tree(G: Graph, to_return: list, node: int):
+    logger.warning(f"children for {node}", )
+
     return extract_tree(
         G=G, to_return=to_return, node=node, graph_function=G.successors
     )
@@ -71,7 +75,7 @@ class XslxToPdbGraph(ExcelReader):
         self.G = nx.DiGraph()
 
     def proccess_initial_file_data(self, *args):
-        print("Proccessing initial file data...")
+        print("Proccessing initial file data for generate graph...")
         """
         Esta función recibe como parámetro el ide del fichero
         (uploaded_file_id) y almacena los datos del dataframe
@@ -86,6 +90,8 @@ class XslxToPdbGraph(ExcelReader):
                 allele_name = row[
                     ExcelNomenclators.output_allele_column_name
                 ]  # Solo modifique esta línea
+                if self.ilu_search_criteria in allele_name:
+                    continue
                 allele_number = row[ExcelNomenclators.output_number_column_name]
                 if pd.isna(allele_name) or pd.isna(
                     row[ExcelNomenclators.output_number_column_name]
@@ -111,7 +117,7 @@ class XslxToPdbGraph(ExcelReader):
                     int_parent = int(parent)
                     int_allele_number = int(allele_number)
                     if int_parent == int_allele_number:
-                        continue
+                       continue
                     # self.G.add_edge(int(parent), allele_number)#Adiciona la conexion
                     if (int_parent, int_allele_number) not in edges_list:
                         edges_list.append((int_parent, int_allele_number))
