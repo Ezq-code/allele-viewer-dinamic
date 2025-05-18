@@ -1,4 +1,4 @@
-async function initializeWorldMap(mapId) {
+async function initializeWorldMap(mapId, selectRegion) {
   jQuery(mapId).vectorMap({
     map: "world_en",
     backgroundColor: "#a5bfdd",
@@ -13,7 +13,7 @@ async function initializeWorldMap(mapId) {
     selectedColor: "#c9dfaf",
     showTooltip: true,
     multiSelectRegion: false,
-    pins: { "pk" : '<i class="fas fa-map-marker text-success"></i>', "ru" : '<i class="fas fa-map-marker text-danger"></i>'},
+    pins: mypins,
     series: {
       regions: [{ values: {}, attribute: "fill" }],
     },
@@ -30,28 +30,9 @@ async function initializeWorldMap(mapId) {
     },
   });
   await getRegion();
-  await paintCountriesByRegion();
-  
+  await paintCountriesByRegion(selectRegion);
 }
-
-
-function addPinToUSA() {
-  // Coordenadas aproximadas para Estados Unidos (latitud y longitud)
-  const usaCoordinates = { lat: 37.0902, lng: -95.7129 };
-
-  // Agregar el pin al mapa
-  jQuery("#world-map3").vectorMap("placeMarkers", {
-    markers: [
-      {
-        latLng: [usaCoordinates.lat, usaCoordinates.lng],
-        name: "Estados Unidos",
-      },
-    ],
-  });
-}
-
-
-
+let mypins = {};
 
 jQuery("#world-map3").on("drag", function (event) {});
 let countriesByRegion = {}; // Cambiado a null para evitar errores de referencia
@@ -74,7 +55,6 @@ function getRegionByCountry(countryCode) {
   }
   for (const regionName in countriesByRegion) {
     const region = countriesByRegion[regionName];
-    console.log("✌️region ciclo --->", region);
     if (region.countries && Array.isArray(region.countries)) {
       if (
         region.countries.includes(countryCode.toLowerCase()) ||
@@ -88,22 +68,51 @@ function getRegionByCountry(countryCode) {
   return countryCode;
 }
 
-async function paintCountriesByRegion() {
+async function paintCountriesByRegion(selectRegion) {
   // Verificar si countriesByRegion es un objeto y convertirlo en un array
   const regionsArray = Array.isArray(countriesByRegion)
     ? countriesByRegion
     : Object.values(countriesByRegion);
-  const countryColorArray = [];
   regionsArray.forEach((region) => {
+    console.log("✌️region --->", region);
     if (region.countries && Array.isArray(region.countries)) {
       region.countries.forEach((country) => {
-        countryColors[country.toLowerCase()] = region.color; // Color para cada país
+        if (selectRegion == region.symbol) {
+          // mypins = {
+          //   [country.toLowerCase()]:
+          //     '<i class="fas fa-map-marker">gfsfdgdfg</i>',
+          // };
+          countryColors[country.toLowerCase()] = "#666666"; // Color para cada país
+          //countryColorsWhite[country.toLowerCase()] = "#ffffff"; // Color blanco por default
+        } else {
+          countryColors[country.toLowerCase()] = region.color; // Color para cada país
+          countryColorsWhite[country.toLowerCase()] = "#ffffff"; // Color blanco por default
+        }
+      });
+    }
+  });
+  // jQuery("#world-map3").vectorMap("removePins");
+  jQuery("#world-map3").vectorMap("set", "colors", countryColors);
+  // jQuery("#world-map3").vectorMap("placePins", mypins, "content");
+}
+
+async function paintRegionEspecific(especificRegion) {
+  // Verificar si countriesByRegion es un objeto y convertirlo en un array
+  const regionsArray = Array.isArray(countriesByRegion)
+    ? countriesByRegion
+    : Object.values(countriesByRegion);
+  regionsArray.forEach((region) => {
+    if (
+      especificRegion == region.symbol &&
+      region.countries &&
+      Array.isArray(region.countries)
+    ) {
+      region.countries.forEach((country) => {
+        countryColors[country.toLowerCase()] = rgb(102, 102, 102); // Color para cada país
         countryColorsWhite[country.toLowerCase()] = "#ffffff"; // Color blanco por default
       });
     }
   });
-  console.log("✌️countryColors --->", countryColors);
-  console.log("✌️countryColorsWhite --->", countryColorsWhite);
   jQuery("#world-map3").vectorMap("set", "colors", countryColors);
 }
 
@@ -127,29 +136,29 @@ let countryColors = {};
 let countryColorsWhite = {};
 
 async function getCountriesByRegion2(region) {
-  //   const storedData = localStorage.getItem("countriesByRegion");
-  // console.log('✌️storedData --->', storedData);
-  //   if (storedData) {
-  //     Object.assign(countriesByRegion, JSON.parse(storedData));
-  //   } else {
-  //     await fillAllRegions();
-  //   }
-  //   countryColors = {};
-  //   countryColorsWhite = {};
-  //   resetMap();
-  //   const countries = countriesByRegion[region];
-  //   if (countries) {
-  //     countries.forEach((pais) => {
-  //       countryColors[pais] = "#0000ff"; // Azul
-  //       countryColorsWhite[pais] = "#ffffff"; // Blanco
-  //     });
-  //jQuery("#world-map3").vectorMap("set", "colors", countryColors);
-  //   }
+  const storedData = localStorage.getItem("countriesByRegion");
+  console.log("✌️storedData --->", storedData);
+  if (storedData) {
+    Object.assign(countriesByRegion, JSON.parse(storedData));
+  } else {
+    await fillAllRegions();
+  }
+  countryColors = {};
+  countryColorsWhite = {};
+  resetMap();
+  const countries = countriesByRegion[region];
+  if (countries) {
+    countries.forEach((pais) => {
+      countryColors[pais] = rgb(102, 102, 102); // Azul
+      countryColorsWhite[pais] = "#ffffff"; // Blanco
+    });
+    //jQuery("#world-map3").vectorMap("set", "colors", countryColors);
+  }
 }
 
 function resetMap() {
   jQuery("#world-map3").vectorMap("set", "colors", countryColorsWhite);
 }
 
-// documentacion 
+// documentacion
 // https://github.com/10bestdesign/jqvmap
