@@ -1,7 +1,7 @@
 import io
 import logging
 
-from networkx import Graph, difference
+from networkx import Graph
 import pandas as pd
 
 from apps.business_app.models.pdb_files import PdbFiles
@@ -32,13 +32,13 @@ def find_root_nodes(G):
 
 def extract_tree(G: Graph, to_return: list, node: int, graph_function):
     if node in to_return:
-        return []
+        return to_return
+
     to_return.append(node)
     for element in graph_function(node):
-        subtree = extract_tree(G, to_return, element, graph_function)
-        new_elements = set(subtree)-set(to_return)
-        if new_elements:
-            to_return.extend(new_elements)
+        if element not in to_return:
+            extract_tree(G, to_return, element, graph_function)
+
     return to_return
 
 
@@ -116,7 +116,7 @@ class XslxToPdbGraph(ExcelReader):
                     int_parent = int(parent)
                     int_allele_number = int(allele_number)
                     if int_parent == int_allele_number:
-                       continue
+                        continue
                     # self.G.add_edge(int(parent), allele_number)#Adiciona la conexion
                     if (int_parent, int_allele_number) not in edges_list:
                         edges_list.append((int_parent, int_allele_number))

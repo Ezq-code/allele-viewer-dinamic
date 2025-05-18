@@ -26,4 +26,4 @@ class RegionViewSet(viewsets.ModelViewSet, GenericAPIView):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    permission_classes =  [permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
