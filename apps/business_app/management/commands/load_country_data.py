@@ -3,6 +3,10 @@ from django.core.management.base import BaseCommand
 from apps.business_app.models.region import Region
 from apps.business_app.models.region_county import RegionCountry
 from apps.users_app.models.country import Country
+from django.core.management import call_command
+from termcolor import colored
+
+
 
 
 class Command(BaseCommand):
@@ -12,6 +16,16 @@ class Command(BaseCommand):
         self.fill_regions()
 
     def fill_regions(self):
+        call_command("loaddata", "countries.json")
+        print(
+            colored(
+                "Successfully added countries",
+                "green",
+                attrs=["blink"],
+            )
+        )
+
+
         """
         This is a dict with a symbol as a key, and a tuple as a value with 3 elements in this order:
         name, color, [list_of_countries]
@@ -57,6 +71,7 @@ class Command(BaseCommand):
                     "np",
                     "pk",
                     "lk",  # From South-Asia
+                    "ru"
                 ],
             ],
             "EAS": [  # East Asian
@@ -245,3 +260,11 @@ class Command(BaseCommand):
                         RegionCountry(region=region, country=db_country)
                     )
         RegionCountry.objects.bulk_create(region_countries)
+        print(
+            colored(
+                f"Successfully added {len(countries_by_region)} regions with their countries",
+                "green",
+                attrs=["blink"],
+            )
+        )
+
