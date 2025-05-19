@@ -329,7 +329,7 @@ function findPosition(data, id) {
   return -1;
 }
 
-function showInfo(atom) {
+async function showInfo(atom) {
   $(".showalleleinfo").toast("hide");
 
   const atomNumber = atom.serial;
@@ -342,6 +342,7 @@ function showInfo(atom) {
     .get(url)
     .then((response) => {
       const elemento = response.data;
+console.log('✌️elemento --->', elemento);
       // const imageHtml = `
       //   <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
       // `;
@@ -371,7 +372,7 @@ function showInfo(atom) {
         ${
           elemento.region != "nan"
             ? `<button type="button" class="btn  btn-primary" data-toggle="tooltip" title="Region ${elemento.region}" onclick="getCountriesByRegion('${elemento.region}')">
-                <i class="fas fa-globe"></i>
+                <i class="fas fa-globe"> ${elemento.region}</i>
               </button>`
             : ""
         }
@@ -399,8 +400,9 @@ function showInfo(atom) {
         position: "bottomRight",
       });
 
-      initializeWorldMap("#world-map3");
-      getCountriesByRegion2(elemento.region);
+      initializeWorldMap("#world-map3", elemento.region);
+console.log('✌️elemento.region --->', elemento);
+      // paintRegionEspecific(elemento.region);
     })
     .catch((error) => {
       Toast.fire({
