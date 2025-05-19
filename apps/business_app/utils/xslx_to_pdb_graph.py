@@ -90,18 +90,18 @@ class XslxToPdbGraph(ExcelReader):
                 allele_name = row[
                     ExcelNomenclators.output_allele_column_name
                 ]  # Solo modifique esta línea
-                if self.ilu_search_criteria in allele_name:
-                    continue
                 allele_number = row[ExcelNomenclators.output_number_column_name]
 
-                if pd.isna(allele_name) or pd.isna(
-                    allele_number
-                ):
+                if self.ilu_search_criteria in allele_name:
+                    self.ilu_list.append(allele_number)
+                    continue
+
+                if pd.isna(allele_name) or pd.isna(allele_number):
                     break
                 if self.ilu_search_criteria in allele_name:
                     self.ilu_list.append(allele_number)
                     continue
-                
+
                 self.G.add_node(
                     allele_number,
                     name=allele_name,
