@@ -32,10 +32,13 @@ def find_root_nodes(G):
 
 def extract_tree(G: Graph, to_return: list, node: int, graph_function):
     if node in to_return:
-        return []
+        return to_return
+
     to_return.append(node)
     for element in graph_function(node):
-        to_return.extend(extract_tree(G, to_return, element, graph_function))
+        if element not in to_return:
+            extract_tree(G, to_return, element, graph_function)
+
     return to_return
 
 
@@ -71,7 +74,7 @@ class XslxToPdbGraph(ExcelReader):
         self.G = nx.DiGraph()
 
     def proccess_initial_file_data(self, *args):
-        print("Proccessing initial file data...")
+        print("Proccessing initial file data for generate graph...")
         """
         Esta función recibe como parámetro el ide del fichero
         (uploaded_file_id) y almacena los datos del dataframe
@@ -86,6 +89,8 @@ class XslxToPdbGraph(ExcelReader):
                 allele_name = row[
                     ExcelNomenclators.output_allele_column_name
                 ]  # Solo modifique esta línea
+                if self.ilu_search_criteria in allele_name:
+                    continue
                 allele_number = row[ExcelNomenclators.output_number_column_name]
                 if pd.isna(allele_name) or pd.isna(
                     row[ExcelNomenclators.output_number_column_name]
@@ -97,7 +102,7 @@ class XslxToPdbGraph(ExcelReader):
                     name=allele_name,
                     rs=row[ExcelNomenclators.output_rs_column_name],
                     parent=row[ExcelNomenclators.output_number_column_name],
-                    regions=row[ExcelNomenclators.output_region_column_name],
+                    region=row[ExcelNomenclators.output_region_column_name],
                     # SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
                     # date=row[ExcelNomenclators.output_date_column_name],
                 )
@@ -151,9 +156,15 @@ class XslxToPdbGraph(ExcelReader):
             # Iterar sobre la lista de nodos
             for node in nodes_list:
                 # Write the atom record in the PDB file format
-                element = next(
-                    self.elements_symbol_iterator
-                )  # "AL" #Averiguar que es esto
+                # element = next(
+                #     self.elements_symbol_iterator
+                # )
+                region = self.G.nodes[node]["region"]
+                if isinstance(region, str):
+                    region = region.lower()
+                element = self.region_color_maping.get(
+                    region, self.default_value_if_no_region
+                )
                 node_coordinates = pos[node]
                 # print(f"Nodo i: {int(node)}")
                 # print(f"Coordenadas: {int(node_coordinates[0] * 100)}")

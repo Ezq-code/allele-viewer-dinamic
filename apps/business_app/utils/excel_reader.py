@@ -14,15 +14,37 @@ class ExcelReader:
     def __init__(self, origin_file) -> None:
         self.origin_file = origin_file
         _elements_symbol_pool = (
-            "LI",
-            "BE",
-            "B",
-            "N",
-            "F",
-            "NA",
-            "TA",
-            "Au",
+            "C",  # Gris
+            "LI",  # Rojo
+            "S",  # Amarillo
+            "N",  # Azul
+            "Ca",  # Gris oscuro
+            "BE",  # Rosado
+            "Mg",  # Verde brillante
+            "NA",  # Azul fuerte
+            "Au",  # Amarillo mostaza
+            "Fe",  # Naranja
+            "TA",  # Rosado
+            "I"  # Violeta
+            "B",  # Verde claro brillante
         )
+        self.region_color_maping = {
+            "AFR-EAS": "B",  # East-African
+            "AFR-SWE": "Mg",  # South-West-African
+            "AFR-NOR": "Mg",  # North-African
+            "AFR-AMR": "Fe",  # African American/Afro-Caribbean
+            "SSA": "B",  # Sub-Saharan African
+            "CSA": "Au",  # Central/South-Asian
+            "CA": "Fe",  # Central-Asian
+            "SA": "S",  # South-Asian
+            "EUR": "N",  # European
+            "EAS": "Na",  # East Asian
+            "NEA": "TA",  # Near Eastern
+            "OCE": "I",  # Oceanian
+            "AMR": "BE",  # American
+            "LAT": "LI",  # Latino
+        }
+        self.default_value_if_no_region = "C"
         self.elements_symbol_iterator = itertools.cycle(_elements_symbol_pool)
 
         self._output_mandatory_columns_for_validation = (
@@ -37,7 +59,7 @@ class ExcelReader:
         )
         self.coordinates_sets = 0
 
-        self.son_label = "I-L-U?"  # ? UNUSED
+        self.ilu_search_criteria = "ILU"  # ? UNUSED
         # dataframes = pd.read_excel(self.origin_file, sheet_name=None, engine="openpyxl")
 
         self.output_df = pd.read_excel(

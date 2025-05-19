@@ -46,13 +46,13 @@ class AlleleNodeViewSet(
         "rs": ["exact"],
         "number": ["exact"],
         "timeline_appearence": ["exact", "gte", "lte"],
-        "origin_1": ["exact", "gte", "lte"],
-        "origin_2": ["exact", "gte", "lte"],
-        "frec_eas": ["exact", "gte", "lte"],
-        "frec_ame": ["exact", "gte", "lte"],
-        "frec_eur": ["exact", "gte", "lte"],
-        "frec_sas": ["exact", "gte", "lte"],
-        "frec_afr": ["exact", "gte", "lte"],
+        "age_1": ["exact", "gte", "lte"],
+        "age_2": ["exact", "gte", "lte"],
+        # "frec_eas": ["exact", "gte", "lte"], # TODO poner las frecuencias de los fields
+        # "frec_ame": ["exact", "gte", "lte"],
+        # "frec_eur": ["exact", "gte", "lte"],
+        # "frec_sas": ["exact", "gte", "lte"],
+        # "frec_afr": ["exact", "gte", "lte"],
     }
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = "unique_number"
