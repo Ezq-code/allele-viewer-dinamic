@@ -7,8 +7,6 @@ from django.core.management import call_command
 from termcolor import colored
 
 
-
-
 class Command(BaseCommand):
     help = "Loads regional info"
 
@@ -24,7 +22,6 @@ class Command(BaseCommand):
                 attrs=["blink"],
             )
         )
-
 
         """
         This is a dict with a symbol as a key, and a tuple as a value with 3 elements in this order:
@@ -47,12 +44,19 @@ class Command(BaseCommand):
                     "jm",
                     "sr",
                     "tt",
+                    "lc",
+                    "dm",
+                    "kn",
                 ],
             ],
             "AMR": [  # American
                 "American",
                 "#d628c2",
-                ["ca", "us", "gl"],
+                [
+                    "ca",
+                    "us",
+                    "gl",
+                ],
             ],
             "CSA": [  # Central/South-Asian
                 "Central/South-Asian",
@@ -78,12 +82,14 @@ class Command(BaseCommand):
                     "am",
                     "vn",
                     "la",
+                    "by",
+                    "md",
                 ],
             ],
             "EAS": [  # East Asian
                 "East Asian",
                 "#0000A0",
-                ["cn", "jp", "kr", "mn", "tw", "hk"],
+                ["cn", "jp", "kr", "mn", "tw", "hk", "kp"],
             ],
             "EUR": [  # European
                 "European",
@@ -120,6 +126,9 @@ class Command(BaseCommand):
                     "is",
                     "no",
                     "ch",
+                    "rs",
+                    "mk",
+                    "ba",
                 ],
             ],
             "LAT": [  # Latino
@@ -152,6 +161,7 @@ class Command(BaseCommand):
                     "uy",
                     "ve",
                     "gf",
+                    "fk",
                 ],
             ],
             "NEA": [  # Near Eastern
@@ -178,7 +188,22 @@ class Command(BaseCommand):
             "OCE": [  # Oceanian
                 "Oceanian",
                 "#8A2BE2",
-                ["au", "nz", "my", "id", "ph", "mm", "th", "pg"],
+                [
+                    "au",
+                    "nz",
+                    "my",
+                    "id",
+                    "ph",
+                    "mm",
+                    "th",
+                    "pg",
+                    "bn",
+                    "tl",
+                    "sb",
+                    "bu",
+                    "nc",
+                    "fj",
+                ],
             ],
             "SSA": [  # Sub-Saharan African
                 "Sub-Saharan African",
@@ -274,4 +299,3 @@ class Command(BaseCommand):
                 attrs=["blink"],
             )
         )
-
