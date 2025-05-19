@@ -52,7 +52,7 @@ class Command(BaseCommand):
             "AMR": [  # American
                 "American",
                 "#d628c2",
-                ["ca", "us"],
+                ["ca", "us", "gl"],
             ],
             "CSA": [  # Central/South-Asian
                 "Central/South-Asian",
@@ -71,7 +71,13 @@ class Command(BaseCommand):
                     "np",
                     "pk",
                     "lk",  # From South-Asia
-                    "ru"
+                    "ru",
+                    "ua",
+                    "ge",
+                    "kh",
+                    "am",
+                    "vn",
+                    "la",
                 ],
             ],
             "EAS": [  # East Asian
@@ -166,12 +172,13 @@ class Command(BaseCommand):
                     "sy",
                     "tr",
                     "ye",
+                    "az",
                 ],
             ],
             "OCE": [  # Oceanian
                 "Oceanian",
                 "#8A2BE2",
-                ["au", "nz"],
+                ["au", "nz", "my", "id", "ph", "mm", "th", "pg"],
             ],
             "SSA": [  # Sub-Saharan African
                 "Sub-Saharan African",
