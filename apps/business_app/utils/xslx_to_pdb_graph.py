@@ -83,20 +83,23 @@ class XslxToPdbGraph(ExcelReader):
         """
         # Construyendo el grafo con una instancia de NetworkX
         edges_list = []
+        self.ilu_list = []
         try:
             # Loop over each row in the Excel file
             for _, row in self.output_df.iterrows():
                 allele_name = row[
                     ExcelNomenclators.output_allele_column_name
                 ]  # Solo modifique esta línea
-                if self.ilu_search_criteria in allele_name:
-                    continue
                 allele_number = row[ExcelNomenclators.output_number_column_name]
+
                 if pd.isna(allele_name) or pd.isna(
-                    row[ExcelNomenclators.output_number_column_name]
+                    allele_number
                 ):
                     break
-
+                if self.ilu_search_criteria in allele_name:
+                    self.ilu_list.append(allele_number)
+                    continue
+                
                 self.G.add_node(
                     allele_number,
                     name=allele_name,
@@ -113,11 +116,10 @@ class XslxToPdbGraph(ExcelReader):
                         (parent.strip()) for parent in str(parents_info).split(",")
                     )
                 for parent in parents:
+                    if parent == allele_number or allele_number in self.ilu_list:
+                        continue
                     int_parent = int(parent)
                     int_allele_number = int(allele_number)
-                    if int_parent == int_allele_number:
-                        continue
-                    # self.G.add_edge(int(parent), allele_number)#Adiciona la conexion
                     if (int_parent, int_allele_number) not in edges_list:
                         edges_list.append((int_parent, int_allele_number))
 
@@ -136,7 +138,7 @@ class XslxToPdbGraph(ExcelReader):
     def proccess_pdb_file(
         self, uploaded_file_id, pdb_filename_base, existing_pdb_file=None
     ):
-        print("Proccessing PDB file...")
+        print("Proccessing PDB file into a Graph...")
         # Obtener el grafo desde el fichero excel almacenado en un Dataframe
         nodes_list = list(self.G.nodes)
         edges_list = list(self.G.edges)
@@ -146,7 +148,6 @@ class XslxToPdbGraph(ExcelReader):
         pos = nx.spring_layout(
             self.G, dim=self.dim, k=self.k, scale=self.scale, iterations=self.iterations
         )
-        print("Proccessing PDB file...")
         graph_x_index = 0
         graph_y_index = 1
         graph_z_index = 2
@@ -155,10 +156,8 @@ class XslxToPdbGraph(ExcelReader):
             # Open the PDB file for writing
             # Iterar sobre la lista de nodos
             for node in nodes_list:
-                # Write the atom record in the PDB file format
-                # element = next(
-                #     self.elements_symbol_iterator
-                # )
+                if node in self.ilu_list:
+                    continue
                 region = self.G.nodes[node]["region"]
                 if isinstance(region, str):
                     region = region.lower()
@@ -191,7 +190,6 @@ class XslxToPdbGraph(ExcelReader):
                             f"An error writing the ATOMs lines: {ew}."
                         ) from ew
             # If no changes are made, means that it is the first time upload
-
             # CONECT
             for edge in edges_list:
                 try:
