@@ -59,6 +59,48 @@ checkboxAxes.addEventListener("change", function () {
   }
 });
 
+
+// Dibuja un anillo discontinuo en el viewer de $3Dmol
+function mostrarAnillo(viewer, config) {
+  // config: { radio, color, grosor, guion, espacio, densidad }
+  const radio = config.radio || 5;
+  const color = config.color || "#ff922b";
+  const grosor = config.grosor || 0.1;
+  const guion = config.guion || 5;
+  const espacio = config.espacio || 3;
+  const densidad = config.densidad || 4;
+
+  const segmentos = Math.floor(2 * Math.PI * radio * densidad);
+  for (let i = 0; i < segmentos; i++) {
+    if (i % (guion + espacio) < guion) {
+      const angulo1 = (i * 2 * Math.PI) / segmentos;
+      const angulo2 = ((i + 1) * 2 * Math.PI) / segmentos;
+      viewer.addLine({
+        start: {
+          x: radio * Math.cos(angulo1),
+          y: radio * Math.sin(angulo1),
+          z: 0
+        },
+        end: {
+          x: radio * Math.cos(angulo2),
+          y: radio * Math.sin(angulo2),
+          z: 0
+        },
+        color: color,
+        radius: grosor
+      });
+    }
+  }
+  viewer.render();
+}
+
+// Ejemplo de uso (puedes llamar varias veces para varios anillos):
+// mostrarAnillo(viewer, {radio: 3, color: "#ff922b", grosor: 0.12, guion: 5, espacio: 3, densidad: 4});
+ 
+
+
+
+
 var checkboxPlane = document.getElementById("show_plane");
 checkboxPlane.addEventListener("change", function () {
   plane_hidden = checkboxPlane.checked ? checkboxPlane.value : null;
@@ -79,8 +121,12 @@ $(function () {
   coordenadas();
   crearMatriz();
   poblarListasAllele();
-  fillAllRegions();
   viewer.removeAllLabels();
+ mostrarAnillo(viewer, {radio: 50, color: "#94d82d", grosor: 1, guion: 1, espacio: 1, densidad: 1});
+ mostrarAnillo(viewer, {radio: 100, color: "#af0112", grosor: 1, guion: 1, espacio: 1, densidad: 1});
+ mostrarAnillo(viewer, {radio: 150, color: "#af0112", grosor: 1, guion: 1, espacio: 1, densidad: 1});
+ mostrarAnillo(viewer, {radio: 300, color: "#af0112", grosor: 1, guion: 1, espacio: 1, densidad: 1});
+
 });
 
 // Función para poblar la lista desplegable del documento
