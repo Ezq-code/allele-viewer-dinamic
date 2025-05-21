@@ -3,6 +3,8 @@ from django.core.management.base import BaseCommand
 from apps.business_app.models.region import Region
 from apps.business_app.models.region_county import RegionCountry
 from apps.users_app.models.country import Country
+from django.core.management import call_command
+from termcolor import colored
 
 
 class Command(BaseCommand):
@@ -12,6 +14,15 @@ class Command(BaseCommand):
         self.fill_regions()
 
     def fill_regions(self):
+        call_command("loaddata", "countries.json")
+        print(
+            colored(
+                "Successfully added countries",
+                "green",
+                attrs=["blink"],
+            )
+        )
+
         """
         This is a dict with a symbol as a key, and a tuple as a value with 3 elements in this order:
         name, color, [list_of_countries]
@@ -33,12 +44,19 @@ class Command(BaseCommand):
                     "jm",
                     "sr",
                     "tt",
+                    "lc",
+                    "dm",
+                    "kn",
                 ],
             ],
             "AMR": [  # American
                 "American",
                 "#d628c2",
-                ["ca", "us"],
+                [
+                    "ca",
+                    "us",
+                    "gl",
+                ],
             ],
             "CSA": [  # Central/South-Asian
                 "Central/South-Asian",
@@ -57,12 +75,21 @@ class Command(BaseCommand):
                     "np",
                     "pk",
                     "lk",  # From South-Asia
+                    "ru",
+                    "ua",
+                    "ge",
+                    "kh",
+                    "am",
+                    "vn",
+                    "la",
+                    "by",
+                    "md",
                 ],
             ],
             "EAS": [  # East Asian
                 "East Asian",
                 "#0000A0",
-                ["cn", "jp", "kr", "mn", "tw", "hk"],
+                ["cn", "jp", "kr", "mn", "tw", "hk", "kp"],
             ],
             "EUR": [  # European
                 "European",
@@ -99,6 +126,9 @@ class Command(BaseCommand):
                     "is",
                     "no",
                     "ch",
+                    "rs",
+                    "mk",
+                    "ba",
                 ],
             ],
             "LAT": [  # Latino
@@ -131,6 +161,7 @@ class Command(BaseCommand):
                     "uy",
                     "ve",
                     "gf",
+                    "fk",
                 ],
             ],
             "NEA": [  # Near Eastern
@@ -151,12 +182,28 @@ class Command(BaseCommand):
                     "sy",
                     "tr",
                     "ye",
+                    "az",
                 ],
             ],
             "OCE": [  # Oceanian
                 "Oceanian",
                 "#8A2BE2",
-                ["au", "nz"],
+                [
+                    "au",
+                    "nz",
+                    "my",
+                    "id",
+                    "ph",
+                    "mm",
+                    "th",
+                    "pg",
+                    "bn",
+                    "tl",
+                    "sb",
+                    "bu",
+                    "nc",
+                    "fj",
+                ],
             ],
             "SSA": [  # Sub-Saharan African
                 "Sub-Saharan African",
@@ -245,3 +292,10 @@ class Command(BaseCommand):
                         RegionCountry(region=region, country=db_country)
                     )
         RegionCountry.objects.bulk_create(region_countries)
+        print(
+            colored(
+                f"Successfully added {len(countries_by_region)} regions with their countries",
+                "green",
+                attrs=["blink"],
+            )
+        )

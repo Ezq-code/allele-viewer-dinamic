@@ -59,6 +59,48 @@ checkboxAxes.addEventListener("change", function () {
   }
 });
 
+
+// Dibuja un anillo discontinuo en el viewer de $3Dmol
+function mostrarAnillo(viewer, config) {
+  // config: { radio, color, grosor, guion, espacio, densidad }
+  const radio = config.radio || 5;
+  const color = config.color || "#ff922b";
+  const grosor = config.grosor || 0.1;
+  const guion = config.guion || 5;
+  const espacio = config.espacio || 3;
+  const densidad = config.densidad || 4;
+
+  const segmentos = Math.floor(2 * Math.PI * radio * densidad);
+  for (let i = 0; i < segmentos; i++) {
+    if (i % (guion + espacio) < guion) {
+      const angulo1 = (i * 2 * Math.PI) / segmentos;
+      const angulo2 = ((i + 1) * 2 * Math.PI) / segmentos;
+      viewer.addLine({
+        start: {
+          x: radio * Math.cos(angulo1),
+          y: radio * Math.sin(angulo1),
+          z: 0
+        },
+        end: {
+          x: radio * Math.cos(angulo2),
+          y: radio * Math.sin(angulo2),
+          z: 0
+        },
+        color: color,
+        radius: grosor
+      });
+    }
+  }
+  viewer.render();
+}
+
+// Ejemplo de uso (puedes llamar varias veces para varios anillos):
+// mostrarAnillo(viewer, {radio: 3, color: "#ff922b", grosor: 0.12, guion: 5, espacio: 3, densidad: 4});
+ 
+
+
+
+
 var checkboxPlane = document.getElementById("show_plane");
 checkboxPlane.addEventListener("change", function () {
   plane_hidden = checkboxPlane.checked ? checkboxPlane.value : null;
@@ -79,8 +121,12 @@ $(function () {
   coordenadas();
   crearMatriz();
   poblarListasAllele();
-  fillAllRegions();
   viewer.removeAllLabels();
+ mostrarAnillo(viewer, {radio: 50, color: "#94d82d", grosor: 1, guion: 1, espacio: 1, densidad: 1});
+ mostrarAnillo(viewer, {radio: 100, color: "#af0112", grosor: 1, guion: 1, espacio: 1, densidad: 1});
+ mostrarAnillo(viewer, {radio: 150, color: "#af0112", grosor: 1, guion: 1, espacio: 1, densidad: 1});
+ mostrarAnillo(viewer, {radio: 300, color: "#af0112", grosor: 1, guion: 1, espacio: 1, densidad: 1});
+
 });
 
 // Función para poblar la lista desplegable del documento
@@ -329,7 +375,7 @@ function findPosition(data, id) {
   return -1;
 }
 
-function showInfo(atom) {
+async function showInfo(atom) {
   $(".showalleleinfo").toast("hide");
 
   const atomNumber = atom.serial;
@@ -345,9 +391,15 @@ function showInfo(atom) {
       // const imageHtml = `
       //   <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
       // `;
+
       const map = `<div id="world-map3" style="width: 320px; height: 200px; margin: 0 auto; background-color: #fff;"></div>
         <!-- Map card -->
-      </div>`;
+            </div><div class="location-label" style="background-color: #a5bfdd; color: #666666; padding-left: 2px;">
+  <i class="fas fa-circle"></i>
+  <span class="ml-2">Selected Region: ${elemento.region}</span>
+</div>`;
+
+
       children = elemento.children;
       predecessors = elemento.predecessors;
       sucessors = elemento.sucessors;
@@ -370,7 +422,7 @@ function showInfo(atom) {
         </button>
         ${
           elemento.region != "nan"
-            ? `<button type="button" class="btn  btn-primary" data-toggle="tooltip" title="Region ${elemento.region}" onclick="getCountriesByRegion('${elemento.region}')">
+            ? `<button type="button" class="btn  btn-primary" data-toggle="tooltip" title="Stand Out ${elemento.region}" onclick="standOutRegionEspecific('${elemento.region}')">
                 <i class="fas fa-globe"></i>
               </button>`
             : ""
@@ -399,8 +451,8 @@ function showInfo(atom) {
         position: "bottomRight",
       });
 
-      initializeWorldMap("#world-map3");
-      getCountriesByRegion2(elemento.region);
+      initializeWorldMap("#world-map3", elemento.region);
+      // paintRegionEspecific(elemento.region);
     })
     .catch((error) => {
       Toast.fire({
