@@ -342,13 +342,18 @@ async function showInfo(atom) {
     .get(url)
     .then((response) => {
       const elemento = response.data;
-console.log('✌️elemento --->', elemento);
       // const imageHtml = `
       //   <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
       // `;
+
       const map = `<div id="world-map3" style="width: 320px; height: 200px; margin: 0 auto; background-color: #fff;"></div>
         <!-- Map card -->
-      </div>`;
+            </div><div class="location-label" style="background-color: #a5bfdd; color: #666666; padding-left: 2px;">
+  <i class="fas fa-circle"></i>
+  <span class="ml-2">Selected Region: ${elemento.region}</span>
+</div>`;
+
+
       children = elemento.children;
       predecessors = elemento.predecessors;
       sucessors = elemento.sucessors;
@@ -371,8 +376,8 @@ console.log('✌️elemento --->', elemento);
         </button>
         ${
           elemento.region != "nan"
-            ? `<button type="button" class="btn  btn-primary" data-toggle="tooltip" title="Region ${elemento.region}" onclick="getCountriesByRegion('${elemento.region}')">
-                <i class="fas fa-globe"> ${elemento.region}</i>
+            ? `<button type="button" class="btn  btn-primary" data-toggle="tooltip" title="Stand Out ${elemento.region}" onclick="standOutRegionEspecific('${elemento.region}')">
+                <i class="fas fa-globe"></i>
               </button>`
             : ""
         }
@@ -401,7 +406,6 @@ console.log('✌️elemento --->', elemento);
       });
 
       initializeWorldMap("#world-map3", elemento.region);
-console.log('✌️elemento.region --->', elemento);
       // paintRegionEspecific(elemento.region);
     })
     .catch((error) => {

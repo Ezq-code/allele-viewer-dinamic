@@ -13,7 +13,6 @@ async function initializeWorldMap(mapId, selectRegion) {
     selectedColor: "#c9dfaf",
     showTooltip: true,
     multiSelectRegion: false,
-    pins: mypins,
     series: {
       regions: [{ values: {}, attribute: "fill" }],
     },
@@ -42,7 +41,6 @@ async function getRegion() {
   try {
     const response = await axios.get(urlRegions);
     countriesByRegion = response.data.results;
-    console.log("✌️countriesByRegion --->", countriesByRegion);
   } catch (error) {
     console.error(`Error fetching data:`, error);
   }
@@ -74,16 +72,10 @@ async function paintCountriesByRegion(selectRegion) {
     ? countriesByRegion
     : Object.values(countriesByRegion);
   regionsArray.forEach((region) => {
-    console.log("✌️region --->", region);
     if (region.countries && Array.isArray(region.countries)) {
       region.countries.forEach((country) => {
         if (selectRegion == region.symbol) {
-          // mypins = {
-          //   [country.toLowerCase()]:
-          //     '<i class="fas fa-map-marker">gfsfdgdfg</i>',
-          // };
           countryColors[country.toLowerCase()] = "#666666"; // Color para cada país
-          //countryColorsWhite[country.toLowerCase()] = "#ffffff"; // Color blanco por default
         } else {
           countryColors[country.toLowerCase()] = region.color; // Color para cada país
           countryColorsWhite[country.toLowerCase()] = "#ffffff"; // Color blanco por default
@@ -91,9 +83,8 @@ async function paintCountriesByRegion(selectRegion) {
       });
     }
   });
-  // jQuery("#world-map3").vectorMap("removePins");
+
   jQuery("#world-map3").vectorMap("set", "colors", countryColors);
-  // jQuery("#world-map3").vectorMap("placePins", mypins, "content");
 }
 
 async function paintRegionEspecific(especificRegion) {
@@ -108,7 +99,7 @@ async function paintRegionEspecific(especificRegion) {
       Array.isArray(region.countries)
     ) {
       region.countries.forEach((country) => {
-        countryColors[country.toLowerCase()] = rgb(102, 102, 102); // Color para cada país
+        countryColors[country.toLowerCase()] = "#696969"; // Color para cada país
         countryColorsWhite[country.toLowerCase()] = "#ffffff"; // Color blanco por default
       });
     }
@@ -116,45 +107,38 @@ async function paintRegionEspecific(especificRegion) {
   jQuery("#world-map3").vectorMap("set", "colors", countryColors);
 }
 
-const url = "../user-gestion/countries/get-codes/";
-async function fillCountriesByRegion(region) {
-  try {
-    const response = await axios.get(url, { params: { search: region } });
-    countriesByRegion[region] = response.data;
-  } catch (error) {
-    console.error(`Error fetching data for ${region}:`, error);
-  }
-}
+async function standOutRegionEspecific(especificRegion) {
+  // Obtener todas las regiones como array
+  const regionsArray = Array.isArray(countriesByRegion)
+    ? countriesByRegion
+    : Object.values(countriesByRegion);
 
-async function fillAllRegions() {
-  const promises = Object.keys(countriesByRegion).map(fillCountriesByRegion);
-  await Promise.all(promises);
-  localStorage.setItem("countriesByRegion", JSON.stringify(countriesByRegion));
+  // Primero, poner todos los países en blanco
+  regionsArray.forEach((region) => {
+    if (region.countries && Array.isArray(region.countries)) {
+      region.countries.forEach((country) => {
+        countryColors[country.toLowerCase()] = "#ffffff";
+      });
+    }
+  });
+  // Luego, colorear los países de la región seleccionada con su color
+  regionsArray.forEach((region) => {
+    if (
+      especificRegion == region.symbol &&
+      region.countries &&
+      Array.isArray(region.countries)
+    ) {
+      region.countries.forEach((country) => {
+        countryColors[country.toLowerCase()] = region.color;
+      });
+    }
+  });
+
+  jQuery("#world-map3").vectorMap("set", "colors", countryColors);
 }
 
 let countryColors = {};
 let countryColorsWhite = {};
-
-async function getCountriesByRegion2(region) {
-  const storedData = localStorage.getItem("countriesByRegion");
-  console.log("✌️storedData --->", storedData);
-  if (storedData) {
-    Object.assign(countriesByRegion, JSON.parse(storedData));
-  } else {
-    await fillAllRegions();
-  }
-  countryColors = {};
-  countryColorsWhite = {};
-  resetMap();
-  const countries = countriesByRegion[region];
-  if (countries) {
-    countries.forEach((pais) => {
-      countryColors[pais] = rgb(102, 102, 102); // Azul
-      countryColorsWhite[pais] = "#ffffff"; // Blanco
-    });
-    //jQuery("#world-map3").vectorMap("set", "colors", countryColors);
-  }
-}
 
 function resetMap() {
   jQuery("#world-map3").vectorMap("set", "colors", countryColorsWhite);
