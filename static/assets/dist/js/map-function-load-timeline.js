@@ -1,5 +1,206 @@
+var pathLayer;
+
+   // Función modificada para sincronización
+function addGeoJSONLayer(map, data) {
+
+// 1. Función de conversión de años a fechas
+const BASE_YEAR = 2025; // Año de referencia (actual)
+const yearToDate = (yearsBP) => {
+    const date = new Date(`${BASE_YEAR}-01-01T00:00:00Z`);
+    date.setFullYear(date.getFullYear() - yearsBP);
+    return date;
+};
+
+// 2. Configurar TimeDimension con todos los tiempos
+const allTimes = data.features
+    .flatMap(f => f.properties.times)
+    .sort((a,b) => a - b)
+    .map(yearBP => yearToDate(yearBP));
+
+var timeDimension = L.timeDimension({
+    times: allTimes, // Usar array de fechas
+    period: "PT1S",
+    currentTime: yearToDate(Math.max(...allTimes.map(t => t))),
+    timeInterval: [yearToDate(-68950), yearToDate(-42586)] // Rango completo
+});
+
+    
+    // 1. Capa de línea con ajuste de interpolación
+    var lineLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
+        filter: f => f.geometry.type === 'LineString',
+        style: {color: '#f6500c', weight: 6}
+    }), {
+        updateTimeDimensionMode: 'accumulate',
+        addlastPoint: false,
+        duration: "PT406S",//"PT76M", 
+        timeInterval: "PT1S",//"PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z", // Rango exacto//timeInterval: "PT1S",
+        getLineId: f => f.properties.name
+    });
+    
+
+    // 2. Capa de punto con temporizador exacto
+    var pointLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
+        filter: f => f.geometry.type === 'Point',
+        pointToLayer: (f, latlng) => L.marker(latlng, {
+            icon:
+                L.icon({
+                    iconUrl: iconUrlpathDestinationMigration,
+                    iconSize: [45, 45],
+                    shadowSize: [45, 45],
+                    shadowAnchor: [17, 23]
+                })
+        })
+    }), {
+       // updateTimeDimensionMode: 'intersect',
+      //  duration: "PT76M", 
+      //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z" //"PT1S"
+      updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
+      duration: "PT11S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+      timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
+      addlastPoint: false                  // Evita saltos al final
+    });
+
+
+
+    // 1. Capa de área glaciar
+  /*  var areaLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
+      filter: f => f.geometry.type === 'MultiPolygon',
+        style: {
+            fillColor: "#FFFFFF",
+            fillOpacity: 0.6,
+            color: "#FFFFFF",
+            weight: 2
+        }
+        }), {
+            // updateTimeDimensionMode: 'intersect',
+           //  duration: "PT76M",
+           //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
+           updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
+           duration: "PT11S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+           timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
+           addlastPoint: false                  // Evita saltos al final
+    }); */
+    
+
+        // 1. Capa de área glaciar
+        var areaLayerHielo = L.timeDimension.layer.geoJson(L.geoJSON(data, {
+            filter: f => f.properties.id === 100,
+              style: function(feature) {
+                return {
+                fillColor: feature.properties.mag,
+                fillOpacity: 0.9,
+                color: feature.properties.mag,
+                weight: 2
+                };
+                }
+              }), {
+                  // updateTimeDimensionMode: 'intersect',
+                 //  duration: "PT76M",
+                 //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
+                 updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
+                 duration: "PT11S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+                 timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
+                 addlastPoint: false                  // Evita saltos al final
+          });
+
+                  // 1. Capa de área glaciar
+        var areaLayerTierra = L.timeDimension.layer.geoJson(L.geoJSON(data, {
+            filter: f => f.properties.id > 999,
+              style: function(feature) {
+                return {
+                fillColor: feature.properties.mag,
+                fillOpacity: 1,
+                color: feature.properties.mag,
+                //weight: 2
+                };
+                }
+              }), {
+                  // updateTimeDimensionMode: 'intersect',
+                 //  duration: "PT76M",
+                 //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
+                 updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
+                 duration: "PT11S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+                 timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
+                 addlastPoint: false                  // Evita saltos al final
+          });
+
+   
+/*
+    timeDimension.on('timeload', function(e) {
+        const currentYearBP = BASE_YEAR - e.time.getFullYear();
+        
+        // Actualizar todas las capas
+        [pointLayer, lineLayer, areaLayer].forEach(layer => {
+            layer.eachLayer(l => {
+                const times = l.feature.properties.times;
+                const isVisible = times.includes(currentYearBP);
+                
+                if (l.setStyle) 
+                    l.setStyle({opacity: isVisible ? 1 : 0});
+                else if (l.getElement())
+                    l.getElement().style.display = isVisible ? '' : 'none';
+            });
+        });
+    });
+    */
+  
+   pointLayer.addTo(map);
+   lineLayer.addTo(map);
+   areaLayerHielo.addTo(map);
+   areaLayerTierra.addTo(map);
+
+ // creación de las capas bases y adición al control de capas del mapa
+const baseLayers = {
+    'Countries': satelitalLayer//,
+    //'Satelital': satelitalLayer,
+    //'Ocean': oceanLayer
+};
+
+const overlays = {
+    'Trayectoria': lineLayer,
+    'Destinos': pointLayer,
+    'Hielo': areaLayerHielo,
+    'Tierra': areaLayerTierra   
+};
+
+var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
+
+}
+
+var oReq = new XMLHttpRequest();
+oReq.addEventListener("load", function(xhr) {
+    const data = JSON.parse(xhr.currentTarget.response);
+    
+    // Validar tiempos y geometrías
+    data.features.forEach(feature => {
+      
+        feature.properties.times = feature.properties.times.map(t => 
+            parseInt(t) // Convertir a números
+        );
+
+        if(!feature.properties.times || feature.properties.times.length < 2){
+            console.error(`Feature ${feature.properties.name} tiene tiempos inválidos`);
+        }
+        if(feature.geometry.type === 'MultiPolygon' && !feature.geometry.coordinates[0][0].length){
+            console.error("Estructura MultiPolygon inválida");
+        }
+    });
+
+data.features.sort((a,b) => 
+Math.min(...a.properties.times) - Math.min(...b.properties.times));
+    addGeoJSONLayer(map, data);
+
+});
+oReq.open('GET', timelinetimedimension);
+oReq.send();
+
+                        
+                    
+                    
                     // función para actualizar el panel derecho a medida que corre la línea del tiempo.
                     // también se modifica el zoom y posición del mapa según los diferentes años de la línea del tiempo.
+
+                   /*
                     const date = new Date();
                     var year = date.getFullYear();
                     var timeMarkerArray = [];
@@ -48,14 +249,6 @@
                                           
 					function updateList(timeline) {
                                           
-                                          /*  if (timeline.time < -130000) {
-                                                map.setView(new L.LatLng(10, 120), 2);
-                                            }
-                                            else if ((timeline.time >= -130000) && (timeline.time <= -61051)) {
-                                                map.setView(new L.LatLng(-3, 20), 3);
-                                            } else if (timeline.time > -61051) {
-                                                map.setView(new L.LatLng(10, 120), 2);
-                                            } */
                                            
                                             if (timeline.time == year) {
                                                 markerLayer.addTo(map);
@@ -779,6 +972,5 @@
                                             }, 500);
 
                                         });
-
-
-                                    
+                                      
+                                        */
