@@ -2,68 +2,98 @@
 {% load static %}
 {% load i18n %}
 {% block head-extra %}
-    <script src="{% static 'assets/dist/Leaflet/libs/leaflet-src.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'assets/dist/Leaflet/libs/leaflet.css' %}"/>
-    <script src="{% static 'assets/dist/Leaflet/src/Leaflet.draw.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/Leaflet.Draw.Event.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'assets/dist/Leaflet/src/leaflet.draw.css' %}"/>
-    <script src="{% static 'assets/dist/Leaflet/src/Toolbar.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/Tooltip.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/ext/GeometryUtil.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/ext/LatLngUtil.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/ext/LineUtil.Intersect.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/ext/Polygon.Intersect.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/ext/Polyline.Intersect.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/ext/TouchEvents.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/DrawToolbar.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Feature.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.SimpleShape.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Polyline.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Marker.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Circle.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.CircleMarker.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Polygon.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Rectangle.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/EditToolbar.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/EditToolbar.Edit.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/EditToolbar.Delete.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/Control.Draw.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Poly.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.SimpleShape.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Rectangle.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Marker.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.CircleMarker.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Circle.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/DrawToolbar.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Feature.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.SimpleShape.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Polyline.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Marker.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Circle.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.CircleMarker.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Polygon.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Rectangle.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/EditToolbar.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/EditToolbar.Edit.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/EditToolbar.Delete.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/Control.Draw.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Poly.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.SimpleShape.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Rectangle.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Marker.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.CircleMarker.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Circle.js' %}"></script>
-    <!--End Draw Ref-->
-    <link rel="stylesheet" href="{% static 'assets/dist/Leaflet/lib/MarkerCluster.css' %}"/>
-    <link rel="stylesheet" href="{% static 'assets/dist/Leaflet/lib/MarkerCluster.Default.css' %}"/>
-    <script src="{% static 'assets/dist/Leaflet/lib/leaflet.markercluster-src.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/lib/jquery.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/gh-pages.css' %}"/>
-    <script src="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/catiline.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/leaflet.timeline.js' %}"></script>
-    <script src="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/leaflet.shpfile.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'assets/dist/css/map-style.css' %}"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/style.css' %}"/>
+<link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/leaflet.css' %}"/>
+<script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.js' %}"></script>
+
+
+<link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/default.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/Control.FullScreen.min.css' %}"/>
+
+<link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/leaflet.timedimension.control.css' %}"/>
+
+
+<script src="{% static 'assets/dist/js/timeline-timedimension/Control.FullScreen.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/timeline-timedimension/NonTiledLayer.js' %}"></script>
+<script src="{% static 'assets/dist/js/timeline-timedimension/iso8601.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/timeline-timedimension/leaflet-omnivore.min.js' %}"></script>
+
+
+<script src="{% static 'assets/dist/js/timeline-timedimension/highlight.min.js' %}"></script>
+
+<script src="{% static 'assets/dist/Leaflet/libs/leaflet-src.js' %}"></script>
+<link rel="stylesheet" href="{% static 'assets/dist/Leaflet/libs/leaflet.css' %}"/>
+<script src="{% static 'assets/dist/Leaflet/src/Leaflet.draw.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/Leaflet.Draw.Event.js' %}"></script>
+<link rel="stylesheet" href="{% static 'assets/dist/Leaflet/src/leaflet.draw.css' %}"/>
+<script src="{% static 'assets/dist/Leaflet/src/Toolbar.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/Tooltip.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/ext/GeometryUtil.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/ext/LatLngUtil.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/ext/LineUtil.Intersect.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/ext/Polygon.Intersect.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/ext/Polyline.Intersect.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/ext/TouchEvents.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/DrawToolbar.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Feature.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.SimpleShape.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Polyline.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Marker.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Circle.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.CircleMarker.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Polygon.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Rectangle.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/EditToolbar.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/EditToolbar.Edit.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/EditToolbar.Delete.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/Control.Draw.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Poly.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.SimpleShape.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Rectangle.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Marker.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.CircleMarker.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Circle.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/DrawToolbar.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Feature.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.SimpleShape.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Polyline.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Marker.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Circle.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.CircleMarker.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Polygon.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/draw/handler/Draw.Rectangle.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/EditToolbar.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/EditToolbar.Edit.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/EditToolbar.Delete.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/Control.Draw.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Poly.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.SimpleShape.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Rectangle.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Marker.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.CircleMarker.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/src/edit/handler/Edit.Circle.js' %}"></script>
+<!--End Draw Ref-->
+<link rel="stylesheet" href="{% static 'assets/dist/Leaflet/lib/MarkerCluster.css' %}"/>
+<link rel="stylesheet" href="{% static 'assets/dist/Leaflet/lib/MarkerCluster.Default.css' %}"/>
+<script src="{% static 'assets/dist/Leaflet/lib/leaflet.markercluster-src.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/lib/jquery.js' %}"></script>
+<link rel="stylesheet" href="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/gh-pages.css' %}"/>
+<script src="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/catiline.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/leaflet.timeline.js' %}"></script>
+<script src="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/leaflet.shpfile.js' %}"></script>
+<link rel="stylesheet" href="{% static 'assets/dist/css/map-style.css' %}"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+
+
+<script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.js' %}"></script>
+<script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.util.js' %}"></script>
+<script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.layer.js' %}"></script>
+<script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.layer.wms.js' %}"></script>
+<script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.layer.geojson.js' %}"></script>
+<script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.player.js' %}"></script>
+<script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.control.js' %}"></script>
 
 {% endblock %}
 
@@ -264,12 +294,15 @@
                                       </select></div>
                                 </div>
 
+                                <!--
                                 <script>
                                     var importUrlPath = "{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/shp.js' %}";
                                 </script>
-
+                                -->
                                 <!-- codigo javascript para cargar archivos de tipo shape -->
-                                <script src="{% static 'assets/dist/js/map-load-shape.js' %}"></script>
+                                <!--
+                                    <script src="{% static 'assets/dist/js/map-load-shape.js' %}"></script>
+                                -->
 
                                 <script>
           
@@ -317,6 +350,7 @@
                                     });
 
                                     // Capa Base con mapa del último glacial máximo
+                                    /*
                                     var LandLGMShapefile = new L.Shapefile("{% static 'assets/dist/Leaflet/Last-Glacial-Maximum/landmassLGMPolygon2.zip' %}", {
                                         style: function (feature) {
                                             return {
@@ -328,9 +362,40 @@
                                             };
                                         }
                                     });
+                                    */
+
+                                    // Configuración centralizada del control de tiempo
+
+/*
+var timeDimension = L.timeDimension({
+    period: "PT1S", // Resolución de 1 segundo
+    timeInterval: "2019-11-23T12:01:06Z/2019-11-23T13:17:05Z" // Rango exacto
+});
+*/
+
+    var map = L.map('map', {
+    layers: [satelitalLayer], //[osmcountriesLayers],
+    zoom: 2,//14,],
+    fullscreenControl: true,
+    timeDimensionControl: true,
+    timeDimensionControlOptions: {
+        timeSliderDragUpdate: true,
+        loopButton: true,
+        maxSpeed: 60,
+        autoPlay: false,
+        playerOptions: {
+            transitionTime: 1000,
+            loop: false
+        }
+    },
+    timeDimension: true,
+    center: new L.LatLng(45, 120) //[36.72, -4.43]
+});  
+
 
                                     // Creación de la variable del Mapa
-                                    var map = L.map("map", {
+                                  /* 
+                                   var map = L.map("map", {
                                         layers: [satelitalLayer],
                                         center: new L.LatLng(10, 120),//new L.LatLng(-3, 20),
                                         zoom: 2,//4,
@@ -339,12 +404,17 @@
                                             [-90, 335],
                                         ],
                                     });
+                                    */
 
+                                    /*
                                       map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
                                     // Capa de las marcas
                                     markerLayer = new L.featureGroup().addTo(map);
                                     var markerMigrationPointLayer = new L.featureGroup().addTo(map);
                                     var labeled = false;
+                                    */
+
+                                    var timelinetimedimension = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homosapiens.geojson' %}";     
 
                                     var iconUrlpath = "{% static 'assets/dist/Leaflet/marker_black.png' %}";
                                     var iconUrlpathDestinationMigration = "{% static 'assets/dist/Leaflet/primitive-man4.png' %}";
@@ -355,26 +425,29 @@
                                 <script>
                                     var authenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
                                 </script>
+
                                 <!-- código javascript para cargar el color dada la cantidad de habitantes -->
-                                <script src="{% static 'assets/dist/js/map-function-colors.js' %}"></script>                                
+                             <!--   <script src="{% static 'assets/dist/js/map-function-colors.js' %}"></script>  -->                              
                                 <!-- código javascript para cargar la linea del tiempo -->
-                                <script src="{% static 'assets/dist/js/map-function-load-timeline.js' %}"></script>
+                                <script src="{% static 'assets/dist/js/map-function-load-timeline.js' %}"></script> 
                                 <!-- código javascript para gestionar la creacion de los marcadores y sus modales -->
-                                <script src="{% static 'assets/dist/js/map-marker-crud-map.js' %}"></script>
+                             <!--   <script src="{% static 'assets/dist/js/map-marker-crud-map.js' %}"></script> -->
                                 <!-- código javascript para manejar los eventos en la creacion de los marcadores -->
-                                <script src="{% static 'assets/dist/js/map-marker-event-map.js' %}"></script>
+                             <!--   <script src="{% static 'assets/dist/js/map-marker-event-map.js' %}"></script> -->
                                 <!-- código javascript para mejorar la visualizacion de las etiquetas -->
-                                <script src="{% static 'assets/dist/js/map-label-improve.js' %}"></script>
+                             <!--   <script src="{% static 'assets/dist/js/map-label-improve.js' %}"></script> -->
 
                                 <!-- Capa de marcadores por defecto apagada -->
+                                <!--
                                 <script>
                                     markerLayer.remove();
                                 </script>
+                                -->
 
                                 <!-- Este es el archivo que tiene la llamada a la función eqfeed_callback -->
                                 <!-- y tiene como parámetro varios de los vectores que conforman la línea del tiempo -->
                                 <!-- los cuáles son: el hielo, la tierra que emerge y las trayectorias de las migraciones-->
-                                <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/migration-timeline.geojsonp' %}"></script>
+                            <!--    <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/migration-timeline.geojsonp' %}"></script> -->
                             </div>
                             <!-- /.card-body -->
                         </div>
@@ -449,3 +522,12 @@
     <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 {% endblock %}
+
+
+
+
+
+
+
+
+
