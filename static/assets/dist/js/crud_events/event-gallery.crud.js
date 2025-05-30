@@ -60,7 +60,7 @@ function submitGalleryForm() {
         var errorMessage = 'Please complete all required fields.';
         var invalidFields = form.querySelectorAll(':invalid');
         if (invalidFields.length > 0) {
-            errorMessage += '\nCampos faltantes:';
+            errorMessage += '\nEmpty Field:';
             invalidFields.forEach(function (field) {
                 errorMessage += '\n- ' + field.name;
             });
@@ -199,5 +199,116 @@ $(document).ready(function () {
     // Llama a la función deleteMark al hacer clic en el botón de eliminar
     $('#confirm-delete-gallery').on('click', function () {
         deleteGallery(galleryId);
+    });
+});
+
+
+// static/js/event_gallery.js
+
+document.addEventListener('DOMContentLoaded', function() {
+    const API_BASE_URL = '/business-gestion/event-gallery';
+    let selectedFiles = {}; // Almacenar archivos por evento
+
+    // Mostrar nombres y previsualización de archivos seleccionados
+    $(document).on('change', '.custom-file-input', function() {
+        const input = $(this)[0];
+        const eventId = $(this).attr('id').split('-')[2];
+        selectedFiles[eventId] = Array.from(input.files);
+
+        updateFileLabel(this);
+        updatePreview(eventId);
+    });
+
+    // Actualizar la etiqueta del input de archivos
+    function updateFileLabel(inputElement) {
+        const eventId = $(inputElement).attr('id').split('-')[2];
+        const fileNames = selectedFiles[eventId].map(file => file.name);
+        $(inputElement).next('.custom-file-label').html(fileNames.join(', '));
+    }
+
+    // Actualizar la previsualización con botones de eliminar
+    function updatePreview(eventId) {
+        const previewArea = $('#preview-' + eventId);
+        previewArea.empty();
+
+        if (selectedFiles[eventId] && selectedFiles[eventId].length > 0) {
+            selectedFiles[eventId].forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewItem = $(`
+                        <div class="preview-item" style="position: relative; display: inline-block; margin: 5px;">
+                            <img src="${e.target.result}" style="max-height: 100px; max-width: 100px;">
+                            <button type="button" class="btn btn-danger btn-xs remove-image" 
+                                style="position: absolute; top: 0; right: 0; padding: 2px 5px;"
+                                data-event-id="${eventId}" data-file-index="${index}">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    `);
+                    previewArea.append(previewItem);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+
+    // Eliminar imagen de la previsualización
+    $(document).on('click', '.remove-image', function() {
+        const eventId = $(this).data('event-id');
+        const fileIndex = $(this).data('file-index');
+
+        // Eliminar el archivo del array
+        selectedFiles[eventId].splice(fileIndex, 1);
+
+        // Reconstruir el input de archivos
+        const dataTransfer = new DataTransfer();
+        selectedFiles[eventId].forEach(file => dataTransfer.items.add(file));
+        $('#event-images-' + eventId)[0].files = dataTransfer.files;
+
+        // Actualizar vistas
+        updatePreview(eventId);
+        updateFileLabel($('#event-images-' + eventId));
+    });
+
+    // Manejar el envío del formulario via AJAX
+    $(document).on('submit', '[id^="add-images-form-"]', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const eventId = form.attr('id').split('-')[3];
+        const formData = new FormData();
+
+        // Agregar solo los archivos que quedaron seleccionados
+        if (selectedFiles[eventId]) {
+            selectedFiles[eventId].forEach(file => {
+                formData.append('images', file);
+            });
+        }
+
+        // Agregar CSRF token
+        formData.append('csrfmiddlewaretoken', $('input[name=csrfmiddlewaretoken]').val());
+
+        $.ajax({
+            url: `${API_BASE_URL}/bulk-upload/${eventId}/`,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(response) {
+                if (typeof toastr !== 'undefined') {
+                    toastr.success(response.message || 'Images uploaded successfully');
+                }
+                $('#modal-add-images-' + eventId).modal('hide');
+                location.reload();
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseJSON?.error || 'Error uploading images';
+                if (typeof toastr !== 'undefined') {
+                    toastr.error(errorMsg);
+                }
+            }
+        });
     });
 });
