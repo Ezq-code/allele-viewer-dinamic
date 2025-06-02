@@ -2,6 +2,23 @@
 {% load static %}
 {% load i18n %}
 {% block head-extra %}
+
+    <link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/leaflet.css' %}"/>
+    <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/default.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/Control.FullScreen.min.css' %}"/>
+
+    <link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/leaflet.timedimension.control.css' %}"/>
+
+    <script src="{% static 'assets/dist/js/timeline-timedimension/Control.FullScreen.min.js' %}"></script>
+    <script src="{% static 'assets/dist/js/timeline-timedimension/NonTiledLayer.js' %}"></script>
+    <script src="{% static 'assets/dist/js/timeline-timedimension/iso8601.min.js' %}"></script>
+    <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet-omnivore.min.js' %}"></script>
+
+    <script src="{% static 'assets/dist/js/timeline-timedimension/highlight.min.js' %}"></script>
+
     <script src="{% static 'assets/dist/Leaflet/libs/leaflet-src.js' %}"></script>
     <link rel="stylesheet" href="{% static 'assets/dist/Leaflet/libs/leaflet.css' %}"/>
     <script src="{% static 'assets/dist/Leaflet/src/Leaflet.draw.js' %}"></script>
@@ -64,6 +81,15 @@
     <script src="{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/leaflet.shpfile.js' %}"></script>
     <link rel="stylesheet" href="{% static 'assets/dist/css/map-style.css' %}"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+
+    <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.js' %}"></script>
+    <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.util.js' %}"></script>
+    <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.layer.js' %}"></script>
+    <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.layer.wms.js' %}"></script>
+    <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.layer.geojson.js' %}"></script>
+    <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.player.js' %}"></script>
+    <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.control.js' %}"></script>
+
 
 {% endblock %}
 
@@ -329,6 +355,10 @@
                                         }
                                     });
 
+
+if (timeRange != "-75000/-12000")
+{
+
                                     // Creación de la variable del Mapa
                                     var map = L.map("map", {
                                         layers: [satelitalLayer],
@@ -340,11 +370,46 @@
                                         ],
                                     });
 
-                                      map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
+                                    map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
                                     // Capa de las marcas
                                     markerLayer = new L.featureGroup().addTo(map);
                                     var markerMigrationPointLayer = new L.featureGroup().addTo(map);
                                     var labeled = false;
+}
+else
+{
+
+    var map = L.map('map', {
+    layers: [satelitalLayer], //[osmcountriesLayers],
+    zoom: 2,//14,],
+    fullscreenControl: true,
+    timeDimensionControl: true,
+    timeDimensionControlOptions: {
+        displayTime: false,
+        timeSliderDragUpdate: true,
+        loopButton: true,
+        speed: 60,
+        minSpeed: 20,
+        maxSpeed: 60,
+        speedStep: 20,
+        speedSlider: true,
+        autoPlay: false,
+        playerOptions: {
+            transitionTime: 50, // Velocidad INICIAL (ms entre pasos)
+            minTransitionTime: 16, // 60 FPS (1000ms/60 ≈ 16ms)
+            maxTransitionTime: 50, // 20 FPS (1000ms/20 = 50ms)
+            loop: false
+        }
+    },
+    timeDimension: true,
+    center: new L.LatLng(45, 120) //[36.72, -4.43]
+});  
+
+
+}
+
+                                    var timelinetimedimension = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homosapiens.geojson' %}";     
+
 
                                     var iconUrlpath = "{% static 'assets/dist/Leaflet/marker_black.png' %}";
                                     var iconUrlpathDestinationMigration = "{% static 'assets/dist/Leaflet/primitive-man4.png' %}";
@@ -368,7 +433,10 @@
 
                                 <!-- Capa de marcadores por defecto apagada -->
                                 <script>
-                                    markerLayer.remove();
+                                if (timeRange != "-75000/-12000")
+                                {
+                                 markerLayer.remove();   
+                                }
                                 </script>
 
                                 <!-- Este es el archivo que tiene la llamada a la función eqfeed_callback -->
