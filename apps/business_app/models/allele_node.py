@@ -41,6 +41,13 @@ class AlleleNode(models.Model):
     sphere_radius = models.FloatField(verbose_name=_("Sphere Radius"), null=True)
     stick_radius = models.FloatField(verbose_name=_("Stick Radius"), null=True)
 
+    x_cartesian_coord = models.IntegerField(
+        null=True, verbose_name=_("X cartesian coordinates")
+    )
+    y_cartesian_coord = models.IntegerField(
+        null=True, verbose_name=_("Y cartesian coordinates")
+    )
+
     frec_afr_amr = models.FloatField(
         verbose_name=_("Frequency African American/Afro-Caribbean"),
         null=True,

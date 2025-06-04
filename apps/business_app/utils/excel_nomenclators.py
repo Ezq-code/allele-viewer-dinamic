@@ -39,6 +39,10 @@ class ExcelNomenclators:
     input_marker_column_name = "Marker"
     input_column_to_change_value_column_name = "Test1"
 
+    input_x_column_name = "X"
+    input_y_column_name = "Y"
+    input_z_column_name = "Z"
+
     input_sheet = "InValues"
     output_sheet = "For3D"
     tmp_sheet = "Temp"

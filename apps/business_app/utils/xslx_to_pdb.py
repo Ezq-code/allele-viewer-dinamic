@@ -9,6 +9,7 @@ from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.initial_xyz_expansion_data import InitialXyzExpansionData
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.site_configurations import SiteConfiguration
+from apps.business_app.utils import excel_nomenclators
 from apps.business_app.utils.excel_reader import ExcelNomenclators, ExcelReader
 from django.db import transaction
 
@@ -114,6 +115,8 @@ class XslxToPdb(ExcelReader):
                 age_2 = row.get(ExcelNomenclators.age_2)
                 loss = row.get(ExcelNomenclators.loss)
                 increment = row.get(ExcelNomenclators.increment)
+                x_cartesian_coord = row.get(ExcelNomenclators.x_expansion_column_name)
+                y_cartesian_coord = row.get(ExcelNomenclators.y_expansion_column_name)
 
                 frec_afr_amr = row.get(ExcelNomenclators.frec_afr_amr)
                 frec_amr = row.get(ExcelNomenclators.frec_amr)
@@ -162,9 +165,15 @@ class XslxToPdb(ExcelReader):
                 current_coordinate_index = 0
 
                 for memory_file in pdb_files:
-                    x_value = row[f"X{current_coordinate_index}"]
-                    y_value = row[f"Y{current_coordinate_index}"]
-                    z_value = row[f"Z{current_coordinate_index}"]
+                    x_value = row[
+                        f"{ExcelNomenclators.input_x_column_name}{current_coordinate_index}"
+                    ]
+                    y_value = row[
+                        f"{ExcelNomenclators.input_y_column_name}{current_coordinate_index}"
+                    ]
+                    z_value = row[
+                        f"{ExcelNomenclators.input_z_column_name}{current_coordinate_index}"
+                    ]
                     if pd.isna(x_value) or pd.isna(y_value) or pd.isna(z_value):
                         raise ValueError(
                             f"Faltan elementos relacionados con las coordenadas. Revisar el alelo {allele_number}"
@@ -193,6 +202,8 @@ class XslxToPdb(ExcelReader):
                     timeline_appearence=None if pd.isna(age_1) else age_1,
                     age_1=None if pd.isna(age_1) else age_1,
                     age_2=None if pd.isna(age_2) else age_2,
+                    x_cartesian_coord = x_cartesian_coord,
+                    y_cartesian_coord = y_cartesian_coord
                     frec_afr_amr=None if pd.isna(frec_afr_amr) else frec_afr_amr,
                     frec_amr=None if pd.isna(frec_amr) else frec_amr,
                     frec_csa=None if pd.isna(frec_csa) else frec_csa,
