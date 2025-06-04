@@ -74,6 +74,8 @@ class AlleleNodeAdmin(admin.ModelAdmin):
         "rs",
         "uploaded_file",
         "timeline_appearence",
+        "x_cartesian_coord",
+        "y_cartesian_coord",
         "frec_afr_amr",
         "frec_amr",
         "frec_csa",
