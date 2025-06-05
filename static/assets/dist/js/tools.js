@@ -1,24 +1,4 @@
-// Función para graficar
-// function graficar(url) {
-//   load.hidden = false;
-//   let pdbUri = url;
 
-//   fetch(pdbUri)
-//     .then((response) => {
-//       if (!response.ok) {
-//         throw new Error(
-//           "Failed to load PDB " + pdbUri + ": " + response.statusText
-//         );
-//       }
-//       return response.text();
-//     })
-//     .then((data) => {
-//       graficar_string(data);
-//     })
-//     .catch((error) => {
-//       console.error(error);
-//     });
-// }
 function graficar_string(pdb_content) {
   load.hidden = false;
   viewer.removeAllModels();
@@ -29,14 +9,11 @@ function graficar_string(pdb_content) {
   viewer.setClickable({}, true, function (atom, viewer, event, container) {
     showInfo(atom);
   });
-  //viewer.setZoomLimits(100,200);
+ 
   // Crear los objetos de línea para los ejes de coordenadas
-  viewer.setCameraParameters({ fov: 2 });
-  // Ajustar automáticamente la separación entre los ojos
+  viewer.setCameraParameters({ fov: 2, z: 300 }); 
   child();
-  // viewer.render();
-  // viewer.zoomTo();
-   viewer.spin(new $3Dmol.Vector3(1, 0, 0), 0.02); // Girar alrededor del eje X a una velocidad de 0.01 radianes por cuadro
+  viewer.spin(new $3Dmol.Vector3(1, 0, 0), 0.02); // Girar alrededor del eje X a una velocidad de 0.01 radianes por cuadro
    viewer.spin(false);
 }
 

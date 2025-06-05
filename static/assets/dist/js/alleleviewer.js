@@ -2,8 +2,10 @@ var zoomLevel = 4;
 var stick_hidden = false;
 var sphere_hidden = false;
 var axes_hidden = false;
+var label_hidden = false;
 var plane_hidden = false;
 let viewer;
+let viewer2;
 let spinState = false;
 var children;
 var predecessors;
@@ -26,6 +28,14 @@ const csrfToken = document.cookie
   .split(";")
   .find((c) => c.trim().startsWith("csrftoken="))
   ?.split("=")[1];
+
+// creación e inicialización del objeto view
+viewer = $3Dmol.createViewer(element, {
+  defaultcolors: $3Dmol.rasmolElementColors,
+  controls: "trackball orbit fps scroll dnd",
+});
+
+
 
 // Inicio del menú de configuracion
 // Bloque para mostrar las esferas
@@ -58,6 +68,7 @@ checkboxAxes.addEventListener("change", function () {
     viewer.render();
   }
 });
+
 
 
 // Dibuja un anillo discontinuo en el viewer de $3Dmol
@@ -94,10 +105,114 @@ function mostrarAnillo(viewer, config) {
   viewer.render();
 }
 
+
+// Dibuja un anillo discontinuo usando cilindros en el viewer de $3Dmol
+function mostrarAnilloCilindros(viewer, config) {
+  // config: { radio, color, grosor, guion, espacio, densidad, label, desplazamiento, labelAngle }
+  const radio = config.radio || 5;
+  const color = config.color || "#ff922b";
+  const grosor = config.grosor || 0.1;
+  const guion = config.guion || 5;
+  const espacio = config.espacio || 3;
+  const densidad = config.densidad || 4;
+  const label = config.label || "";
+  const labelAngle = config.labelAngle !== undefined ? config.labelAngle : Math.random() * 2 * Math.PI;
+
+  const segmentos = Math.floor(2 * Math.PI * radio * densidad);
+  for (let i = 0; i < segmentos; i++) {
+    if (i % (guion + espacio) < guion) {
+      const angulo1 = (i * 2 * Math.PI) / segmentos;
+      const angulo2 = ((i + 1) * 2 * Math.PI) / segmentos;
+      viewer.addCylinder({
+        start: {
+          x: radio * Math.cos(angulo1),
+          y: radio * Math.sin(angulo1),
+          z: 0
+        },
+        end: {
+          x: radio * Math.cos(angulo2),
+          y: radio * Math.sin(angulo2),
+          z: 0
+        },
+        radius: grosor,
+        color: color,
+        fromCap: 1,
+        toCap: 1
+      });
+    }
+  }
+
+  // Agregar el label si se especifica
+  if (label) {
+    // El ángulo para el label se puede pasar por parámetro o se elige aleatorio
+    const angle = labelAngle;
+    viewer.addLabel(label, {
+      position: {
+        x: radio * Math.cos(angle),
+        y: radio * Math.sin(angle),
+        z: 0
+      },
+      fontSize: 14,
+      fontColor: color,
+      backgroundColor: "rgba(255,255,255,0.7)",
+      borderThickness: 1,
+      borderColor: color
+    });
+  }
+
+  viewer.render();
+}
+
+
+
+function mostrarLabelsAnillos() {
+  // Lista de textos de los labels de los anillos (ajusta si tus textos cambian)
+  const textosAnillos = [
+    "18.000.000",
+    "6.000.000",
+    "2.000.000",
+    "700.000",
+    "300.000",
+    "100.000",
+    "20.000",
+    "2.000"
+  ];
+
+  // Radios y colores asociados a cada label (ajusta si cambian)
+  const anillos = [
+    { radio: 50, color: "#94d82d", label: "18.000.000" },
+    { radio: 100, color: "#1e90ff", label: "6.000.000" },
+    { radio: 200, color: "#ff922b", label: "2.000.000" },
+    { radio: 350, color: "#f72585", label: "700.000" },
+    { radio: 500, color: "#4361ee", label: "300.000" },
+    { radio: 700, color: "#b5179e", label: "100.000" },
+    { radio: 900, color: "#ffbe0b", label: "20.000" },
+    { radio: 1000, color: "#00b4d8", label: "2.000" }
+  ];
+
+  // Para evitar superposición, asigna un ángulo diferente a cada label
+  anillos.forEach((anillo, i) => {
+    const angle = (i / anillos.length) * 2 * Math.PI;
+    viewer.addLabel(anillo.label, {
+      position: {
+        x: anillo.radio * Math.cos(angle),
+        y: anillo.radio * Math.sin(angle),
+        z: 0
+      },
+      fontSize: 14,
+      fontColor: anillo.color,
+      backgroundColor: "rgba(255,255,255,0.7)",
+      borderThickness: 1,
+      borderColor: anillo.color
+    });
+  });
+
+  viewer.render();
+}
+
 // Ejemplo de uso (puedes llamar varias veces para varios anillos):
 // mostrarAnillo(viewer, {radio: 3, color: "#ff922b", grosor: 0.12, guion: 5, espacio: 3, densidad: 4});
  
-
 
 
 
@@ -122,11 +237,6 @@ $(function () {
   crearMatriz();
   poblarListasAllele();
   viewer.removeAllLabels();
- mostrarAnillo(viewer, {radio: 50, color: "#94d82d", grosor: 1, guion: 1, espacio: 1, densidad: 1});
- mostrarAnillo(viewer, {radio: 100, color: "#af0112", grosor: 1, guion: 1, espacio: 1, densidad: 1});
- mostrarAnillo(viewer, {radio: 150, color: "#af0112", grosor: 1, guion: 1, espacio: 1, densidad: 1});
- mostrarAnillo(viewer, {radio: 300, color: "#af0112", grosor: 1, guion: 1, espacio: 1, densidad: 1});
-
 });
 
 // Función para poblar la lista desplegable del documento
@@ -196,11 +306,8 @@ function poblarListasCopy(uploadFileId) {
   }
 }
 
-// creación e inicialización del objeto view
-viewer = $3Dmol.createViewer(element, {
-  defaultcolors: $3Dmol.rasmolElementColors,
-  controls: "trackball orbit fps scroll dnd",
-});
+
+
 
 var data1;
 function displaySNPData() {
@@ -624,8 +731,21 @@ function child() {
           }
         );
       });
+
+// Llama a mostrarAnilloCilindros con un color diferente para cada anillo
+mostrarAnilloCilindros(viewer, {radio: 50, color: "#94d82d", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.2, label: "18.000.000"});
+mostrarAnilloCilindros(viewer, {radio: 100, color: "#1e90ff", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.2, label: "6.000.000"});
+mostrarAnilloCilindros(viewer, {radio: 200, color: "#ff922b", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.2, label: "2.000.000"});
+mostrarAnilloCilindros(viewer, {radio: 350, color: "#f72585", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.2, label: "700.000"});
+mostrarAnilloCilindros(viewer, {radio: 500, color: "#4361ee", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.2, label: "300.000"});
+mostrarAnilloCilindros(viewer, {radio: 700, color: "#b5179e", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.2, label: "100.000"});
+mostrarAnilloCilindros(viewer, {radio: 900, color: "#ffbe0b", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.2, label: "20.000"});
+mostrarAnilloCilindros(viewer, {radio: 1000, color: "#00b4d8", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.2, label: "2.000"});
+
+
       viewer.zoomTo();
-      viewer.zoom(15, 1000);
+      //  viewer.setZoomLimits(10,100);
+      viewer.zoom(5, 1000);
       viewer.render();
     })
     .catch((error) => {
@@ -736,6 +856,7 @@ function obtenerAtomoDesdeViewer(viewer, serial) {
 function genealogicalTree(id) {
   // Eliminar TODAS las etiquetas del viewer
   viewer.removeAllLabels();
+  mostrarLabelsAnillos();
   let sucesorLabel,
     predecesorLabel = false;
 
@@ -764,7 +885,7 @@ function genealogicalTree(id) {
       );
       let atomoEncontrado = obtenerAtomoDesdeViewer(viewer, element.number);
       // Agregar un label al nodo original
-      viewer.addLabel("Selected allele", {
+      var labelfamily=viewer.addLabel("Selected allele", {
         position: {
           x: atomoEncontrado.x,
           y: atomoEncontrado.y,
