@@ -2542,7 +2542,7 @@
 }},
   
 
- { "type": "Feature", "properties": { "id": 3.8, "mag": null, "place": null, "time": -1, "title": null, "timefinal": -68950, "name": "70000 years ago, South África ",
+ { "type": "Feature", "properties": { "id": 3.8, "mag": "#f6500c", "place": null, "time": -1, "title": null, "timefinal": -68950, "name": "70000 years ago, South África ",
 "times": [ 
 -68950,-68922,-68894,-68866,-68838,-68810,-68782,-68754,-68726,-68698,-68670,-68642,-68614,-68586,-68558,-68530,-68502,-68474,-68446,-68418,-68390,-68362,-68334,-68306,-68278,-68250,-68222,-68194,-68166,-68138,-68110,-68082,-68054,-68026,-67998,-67970,-67942,-67914,-67886,-67858,-67830,-67802,-67774,-67746,-67718,-67690,-67662,-67634,-67606,
 -67578,-67550,-67522,-67494,-67466,-67438,-67410,-67382,-67354,-67326,-67298,-67270,-67242,-67214,-67186,-67158,-67130,-67102,-67074,-67046,-67018,-66990,-66962,-66934,-66906,-66878,-66850,-66822
@@ -2630,7 +2630,7 @@
 }},
  
  
- { "type": "Feature", "properties": { "id": 3.1, "mag": null, "place": null, "time": -1, "title": null, "timefinal": -67210, "name": "70000 years ago, West Africa ",
+ { "type": "Feature", "properties": { "id": 3.1, "mag": "#f6500c", "place": null, "time": -1, "title": null, "timefinal": -67210, "name": "70000 years ago, West Africa ",
 "times": [ 
 -66794,-66766,-66738,-66710,-66682,-66654,-66626,-66598,-66570,-66542,-66514,-66486,-66458,-66430,-66402,-66374,-66346,-66318,-66290,-66262,-66234,
 -66206,-66178,-66150,-66122,-66094,-66066,-66038,-66010,-65982,-65954,-65926,-65898,-65870,-65842,-65814,-65786,-65758,-65730,-65702,-65674,-65646,-65618,-65590,-65562,-65534,-65506,-65478,-65450,-65422,-65394,-65366,-65338,-65310
@@ -2717,7 +2717,7 @@
  
  
  
-  { "type": "Feature", "properties": { "id": 3.2, "mag": null, "place": null, "time": -1, "title": null, "timefinal": -64100, "name": "70000 years ago, West and Central Africa ",
+  { "type": "Feature", "properties": { "id": 3.2, "mag": "#f6500c", "place": null, "time": -1, "title": null, "timefinal": -64100, "name": "70000 years ago, West and Central Africa ",
 "times": [ 
 -65282,-65254,-65226,-65198,-65170,-65142,-65114,-65086,-65058,-65030,-65002,-64974,-64946,-64918,-64890,-64862,
 -64834,-64806,-64778,-64750,-64722,-64694,-64666,-64638,-64610,-64582,-64554,-64526,-64498,-64470,-64442,-64414,-64386,-64358,-64330,-64302,-64274,-64246,-64218,-64190,-64162,-64134,-64106,-64078,-64050,-64022,-63994,-63966,-63938,-63910,-63882,-63854,-63826,-63798,-63770,-63742
@@ -2803,7 +2803,7 @@
     
     
     
-  { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": null, "time": null, "title": "50000 years ago, Australia ", "timefinal": null, "name": "50000 years ago, Australia ",
+  { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": null, "time": null, "title": "50000 years ago, Australia ", "timefinal": null, "name": "50000 years ago, Australia ",
 "times": [ 
 -63714,-63642,-63570,-63498,-63426,-63354,-63282,-63210,-63138,-63066,-62994,-62922,-62850,-62778,-62706,-62634,-62562,-62490,-62418,-62346,-62274,-62202,-62130,-62058,-61986,-61914,
 -61842,-61770,-61698,-61626,-61554,-61482,-61410,-61338,-61266,-61194,-61122,-61050,-60978,-60906,-60834,-60762,-60690,-60618,-60546,-60474,-60402,-60330,-60258,-60186,-60114,-60042,
@@ -2875,7 +2875,7 @@
   
   
   
-  { "type": "Feature", "properties": { "id": 3.7, "mag": null, "place": null, "time": null, "title": "East Southeast Asia", "timefinal": null, "name": "East Southeast Asia",
+  { "type": "Feature", "properties": { "id": 3.7, "mag": "#f6500c", "place": null, "time": null, "title": "East Southeast Asia", "timefinal": null, "name": "East Southeast Asia",
 "times": [    
 -49611,-49560,-49509,-49458,-49407,-49356,-49305,-49254,-49203,-49152,-49101,-49050,-48999,-48948,-48897,-48846,-48795,-48744,-48693,-48642,-48591,-48540,-48489,-48438,-48387,-48336,
 -48285,-48234,-48183,-48132,-48081,-48030,-47979,-47928,-47877,-47826,-47775,-47724,-47673,-47622,-47571,-47520,-47469,-47418,-47367,-47316,-47265,-47214,-47163,-47112,-47061,-47010,
@@ -2937,7 +2937,7 @@
  
 
   
-  { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": null, "time": null, "title": "45000 years ago, India", "timefinal": null, "name": "45000 years ago, India",
+  { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": null, "time": null, "title": "45000 years ago, India", "timefinal": null, "name": "45000 years ago, India",
 "times": [ 
 -41706,-41655,-41604,-41553,-41502,-41451,-41400,-41349,-41298,-41247,-41196,-41145,-41094,-41043,-40992,-40941,-40890,-40839,-40788,-40737,-40686,-40635,-40584,-40533,-40482,-40431,-40380,
 -40329,-40278,-40227,-40176,-40125,
@@ -2990,7 +2990,7 @@
 
  
  
-  { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": null, "time": null, "title": "45000 years ago, Southeast Asia", "timefinal": null, "name": "45000 years ago, Southeast Asia",
+  { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": null, "time": null, "title": "45000 years ago, Southeast Asia", "timefinal": null, "name": "45000 years ago, Southeast Asia",
 "times": [ 
 -40533,-40482,-40431,-40380,-40329,-40278,-40227,-40176,-40125,-40074,-40023,-39972,-39921,-39870,-39819,-39768,-39717,-39666,
 -39615,-39564,-39513,-39462,
@@ -3042,7 +3042,7 @@
   
   
   
-  { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": null, "time": null, "title": "45000 years ago, Central East Asia", "timefinal": null, "name": "45000 years ago, Central East Asia",
+  { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": null, "time": null, "title": "45000 years ago, Central East Asia", "timefinal": null, "name": "45000 years ago, Central East Asia",
 "times": [ 
 -40533,-40482,-40431,-40380,-40329,-40278,-40227,-40176,-40125,-40074,-40023,-39972,-39921,-39870,-39819,-39768,-39717,-39666,
 -39615,-39564,-39513,-39462,
@@ -3093,7 +3093,7 @@
 
  
  
-  { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": "Northern Europe", "time": null, "title": "40000 years ago, Northern Europe ", "timefinal": null, "name": "40000 years ago, Northern Europe ",
+  { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": "Northern Europe", "time": null, "title": "40000 years ago, Northern Europe ", "timefinal": null, "name": "40000 years ago, Northern Europe ",
 "times": [ 
 -37422,-37371,-37320,-37269,-37218,-37167,-37116,-37065,-37014,-36963,-36912,-36861,-36810,-36759,-36708,-36657,-36606,-36555,-36504,-36453,-36402,-36351,-36300,-36249,-36198,
 -36147,-36096,-36045,-35994,-35943,-35892,-35841,-35790,-35739,-35688,-35637,-35586,-35535,-35484,-35433,-35382,-35331,-35280,-35229,-35178,-35127,-35076,-35025,-34974,-34923,-34872,
@@ -3137,7 +3137,7 @@
 
   
   
-  { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": "Southwestern Europe", "time": null, "title": "40000 years ago, Southwestern Europe", "timefinal": null, "name": "40000 years ago, Southwestern Europe",
+  { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": "Southwestern Europe", "time": null, "title": "40000 years ago, Southwestern Europe", "timefinal": null, "name": "40000 years ago, Southwestern Europe",
 "times": [ 
 
 -35433,-35382,-35331,-35280,-35229,-35178,-35127,-35076,-35025,-34974,-34923,-34872,
@@ -3182,7 +3182,7 @@
 
 
 
-  { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": "Northwest Ãfrica", "time": null, "title": "40000 years ago, Northwest Ãfrica", "timefinal": null, "name": "40000 years ago, Northwest Ãfrica",
+  { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": "Northwest Ãfrica", "time": null, "title": "40000 years ago, Northwest Ãfrica", "timefinal": null, "name": "40000 years ago, Northwest Ãfrica",
 "times": [ 
 -32577,-32526,-32475,-32424,-32373,-32322,-32271,-32220,-32169,-32118,-32067,-32016,-31965,-31914,-31863,-31812,-31761,-31710,-31659,-31608,-31557,-31506,-31455,-31404,-31353,-31302,
 -31251,-31200,-31149,-31098,-31047,-30996,-30945,-30894,-30843,-30792,-30741,-30690,-30639
@@ -3224,7 +3224,7 @@
 
 
 
-  { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": "Western and Central Europe", "time": null, "title": "40000 years ago, Western and Central Europe", "timefinal": null, "name": "40000 years ago, Western and Central Europe",
+  { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": "Western and Central Europe", "time": null, "title": "40000 years ago, Western and Central Europe", "timefinal": null, "name": "40000 years ago, Western and Central Europe",
 "times": [ 
 -32526,-32475,-32424,-32373,-32322,-32271,-32220,-32169,-32118,-32067,-32016,-31965,-31914,-31863,-31812,-31761,-31710,-31659,-31608,-31557,-31506,-31455,-31404,-31353,-31302,
 -31251,-31200,-31149,-31098,-31047,-30996,-30945,-30894,-30843,-30792,-30741,-30690,-30639,-30588,-30537,-30486,-30435,-30384,-30333,-30282,-30231,-30180,-30129,-30078
@@ -3263,7 +3263,7 @@
   
   
   
-  { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": "Central Europe", "time": null, "title": "40000 years ago, Central Europe ", "timefinal": null, "name": "40000 years ago, Central Europe ",
+  { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": "Central Europe", "time": null, "title": "40000 years ago, Central Europe ", "timefinal": null, "name": "40000 years ago, Central Europe ",
 "times": [ 
 
 -29109,-29058,-29007,-28956,-28905,-28854,-28803,-28752,-28701,-28650,-28599,-28548,-28497,-28446,-28395,-28344,-28293,-28242,-28191,-28140,-28089,-28038,-27987,-27936,-27885,-27834,
@@ -3301,7 +3301,7 @@
  
 
 
-  { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": "North-western Europe", "time": null, "title": "40000 years ago, North-western Europe", "timefinal": null, "name": "40000 years ago, North-western Europe",
+  { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": "North-western Europe", "time": null, "title": "40000 years ago, North-western Europe", "timefinal": null, "name": "40000 years ago, North-western Europe",
 "times": [ 
 -29109,-29058,-29007,-28956,-28905,-28854,-28803,-28752,-28701,-28650,-28599,-28548,-28497,-28446,-28395,-28344,-28293,-28242,-28191,-28140,-28089,-28038,-27987,-27936,-27885,-27834,
 -27783,-27732,-27681,-27630,-27579,-27528,-27477,-27426,-27375,-27324,-27273,-27222,-27171
@@ -3340,7 +3340,7 @@
 
   
   
-    { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": "Alaska", "time": null, "title": "15000 years ago, Alaska", "timefinal": null, "name": "15000 years ago, Alaska",
+    { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": "Alaska", "time": null, "title": "15000 years ago, Alaska", "timefinal": null, "name": "15000 years ago, Alaska",
 "times": [ 
 -26253,-26202,-26151,-26100,-26049,-25998,-25947,-25896,-25845,-25794,-25743,-25692,-25641,-25590,-25539,-25488,-25437,-25386,-25335,-25284,-25233,-25182,-25131,-25080,-25029,-24978,
 -24927,-24876,-24825,-24774,-24723,-24672,-24621,-24570,-24519,-24468,-24417,-24366,-24315,-24264,-24213,-24162,-24111,-24060,-24009,-23958,-23907,-23856,-23805,-23754,-23703,-23652,-23601,-23550,
@@ -3373,7 +3373,7 @@
   
   
   
-    { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": "South America", "time": null, "title": "15000 years ago, South America", "timefinal": null, "name": "15000 years ago, South America",
+    { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": "South America", "time": null, "title": "15000 years ago, South America", "timefinal": null, "name": "15000 years ago, South America",
 "times": [ 
 -26253,-26202,-26151,-26100,-26049,-25998,-25947,-25896,-25845,-25794,-25743,-25692,-25641,-25590,-25539,-25488,-25437,-25386,-25335,-25284,-25233,-25182,-25131,-25080,-25029,-24978,
 -24927,-24876,-24825,-24774,-24723,-24672,-24621,-24570,-24519,-24468,-24417,-24366,-24315,-24264,-24213,-24162,-24111,-24060,-24009,-23958,-23907,-23856,-23805,-23754,-23703,-23652,-23601,-23550,
@@ -3406,7 +3406,7 @@
   
   
   
-      { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": "North-central Asia", "time": null, "title": "25000 years ago, North-central Asia", "timefinal": null, "name": "25000 years ago, North-central Asia",
+      { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": "North-central Asia", "time": null, "title": "25000 years ago, North-central Asia", "timefinal": null, "name": "25000 years ago, North-central Asia",
 "times": [ 
 -20031,-19980,-19929,-19878,-19827,-19776,-19725,-19674,-19623,-19572,-19521,-19470,-19419,-19368,-19317,-19266,-19215,-19164,-19113,-19062,-19011,
 -18960,-18909,-18858,-18807,-18756
@@ -3427,7 +3427,7 @@
   
   
   
-        { "type": "Feature", "properties": { "id": 3.3, "mag": null, "place": "North-central Asia", "time": null, "title": "25000 years ago, North-central Asia", "timefinal": null, "name": "25000 years ago, North-central Asia",
+        { "type": "Feature", "properties": { "id": 3.3, "mag": "#f6500c", "place": "North-central Asia", "time": null, "title": "25000 years ago, North-central Asia", "timefinal": null, "name": "25000 years ago, North-central Asia",
 "times": [ 
 -18042,-17991,-17940,-17889,-17838,-17787,-17736,-17685,
 -17634,-17583,
