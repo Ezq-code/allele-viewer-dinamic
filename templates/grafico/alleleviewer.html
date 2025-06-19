@@ -170,23 +170,23 @@
                   </div>
                 </div>
 
-                <div class="col-md-2">
-                <div class="card card-primary mb-2">
-                  <div class="card-header p-2">
-                    <h3 class="card-title" style="font-size:1rem;">Ver anillos desde</h3>
-                  </div>
-                  <div class="card-body p-2 d-flex flex-column gap-1">
-                    <button type="button" class="btn btn-outline-primary mb-1" onclick="viewRingsFrom('x')">
-                      Eje X
+                <div class="col-md-2 col-12 col-lg-2 border-right"
+                  style="padding-top: 5px">
+                  <div class="btn-group btn-group-toggle d-flex" data-toggle="buttons">
+                     <button type="button" class="btn btn-outline-primary flex-fill" onclick="viewRingsFrom('x')">
+                      X
                     </button>
-                    <button type="button" class="btn btn-outline-success mb-1" onclick="viewRingsFrom('y')">
-                      Eje Y
+                    <button type="button" class="btn btn-outline-success flex-fill" onclick="viewRingsFrom('y')">
+                      Y
                     </button>
-                    <button type="button" class="btn btn-outline-danger" onclick="viewRingsFrom('z')">
-                      Eje Z
-                    </button>
-                  </div>
-                </div>
+                      <button type="button" class="btn btn-outline-danger flex-fill" onclick="viewRingsFrom('z')">
+                        Z
+                      </button>
+                       <button type="button" class="btn btn-outline-warning flex-fill" onclick="ocultarAnillos()">
+                        <i class="nav-icon fas fa-brush"></i>
+                      </button>
+                    </div>
+              
                 
                   <!-- /.card -->
                 </div>

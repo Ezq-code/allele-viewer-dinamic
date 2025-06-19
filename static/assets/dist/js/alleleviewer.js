@@ -11,6 +11,7 @@ var children;
 var predecessors;
 var sucessors;
 var selectActual;
+let labelOn = false;
 // variables para el graficador
 let element = $("#container")[0];
 let load = document.getElementById("load");
@@ -34,8 +35,6 @@ viewer = $3Dmol.createViewer(element, {
   defaultcolors: $3Dmol.rasmolElementColors,
   controls: "trackball orbit fps scroll dnd",
 });
-
-
 
 // Inicio del menú de configuracion
 // Bloque para mostrar las esferas
@@ -69,7 +68,6 @@ checkboxAxes.addEventListener("change", function () {
   }
 });
 
-
 // Dibuja un anillo discontinuo usando cilindros en el viewer de $3Dmol
 function mostrarAnilloCilindros(viewer, config) {
   // config: { radio, color, grosor, guion, espacio, densidad, label, desplazamiento, labelAngle }
@@ -81,107 +79,116 @@ function mostrarAnilloCilindros(viewer, config) {
   const densidad = config.densidad || 4;
   const label = config.label || "";
   const eje = config.eje || "x";
-  const labelAngle = config.labelAngle !== undefined ? config.labelAngle : Math.random() * 2 * Math.PI;
-
+  const labelAngle =
+    config.labelAngle !== undefined
+      ? config.labelAngle
+      : Math.random() * 2 * Math.PI;
   const segmentos = Math.floor(2 * Math.PI * radio * densidad);
   for (let i = 0; i < segmentos; i++) {
     if (i % (guion + espacio) < guion) {
       const angulo1 = (i * 2 * Math.PI) / segmentos;
       const angulo2 = ((i + 1) * 2 * Math.PI) / segmentos;
-      if (eje=="x") {
+      if (eje == "x") {
         viewer.addCylinder({
-        start: {
-          x: 0,
-          y: radio * Math.cos(angulo1),
-          z: radio * Math.sin(angulo1)
-        },
-        end: {
-          x: 0,
-          y: radio * Math.cos(angulo2),
-          z: radio * Math.sin(angulo2)
-        },
-        radius: grosor,
-        color: color,
-        fromCap: 1,
-        toCap: 1
-      });
-      }else{
-        if (eje=="y") {
+          start: {
+            x: 0,
+            y: radio * Math.cos(angulo1),
+            z: radio * Math.sin(angulo1),
+          },
+          end: {
+            x: 0,
+            y: radio * Math.cos(angulo2),
+            z: radio * Math.sin(angulo2),
+          },
+          radius: grosor,
+          color: color,
+          fromCap: 1,
+          toCap: 1,
+        });
+      } else {
+        if (eje == "y") {
           viewer.addCylinder({
-        start: {
-          x: radio * Math.cos(angulo1),
-          y: 0,
-          z: radio * Math.sin(angulo1)
-        },
-        end: {
-          x: radio * Math.cos(angulo2),
-          y: 0,
-          z: radio * Math.sin(angulo2)
-        },
-        radius: grosor,
-        color: color,
-        fromCap: 1,
-        toCap: 1
-      });
+            start: {
+              x: radio * Math.cos(angulo1),
+              y: 0,
+              z: radio * Math.sin(angulo1),
+            },
+            end: {
+              x: radio * Math.cos(angulo2),
+              y: 0,
+              z: radio * Math.sin(angulo2),
+            },
+            radius: grosor,
+            color: color,
+            fromCap: 1,
+            toCap: 1,
+          });
         } else {
           viewer.addCylinder({
-        start: {
-          x: radio * Math.cos(angulo1),
-          y: radio * Math.sin(angulo1),
-          z:0
-        },
-        end: {
-          x: radio * Math.cos(angulo2),
-          y: radio * Math.sin(angulo2),
-          z: 0
-        },
-        radius: grosor,
-        color: color,
-        fromCap: 1,
-        toCap: 1
-      });
+            start: {
+              x: radio * Math.cos(angulo1),
+              y: radio * Math.sin(angulo1),
+              z: 0,
+            },
+            end: {
+              x: radio * Math.cos(angulo2),
+              y: radio * Math.sin(angulo2),
+              z: 0,
+            },
+            radius: grosor,
+            color: color,
+            fromCap: 1,
+            toCap: 1,
+          });
         }
       }
     }
   }
 
-  // Agregar el label si se especifica (solo una vez)
-  if (label) {
-    const angle = labelAngle;
-    let position;
-    if (eje == "x") {
-      position = {
-        x: 0,
-        y: radio * Math.sin(angle),
-        z: radio * Math.cos(angle)
-      };
-    } else if (eje == "y") {
-      position = {
-        x: radio * Math.cos(angle),
-        y: 0,
-        z: radio * Math.sin(angle)
-      };
-    } else {
-      position = {
-        x: radio * Math.cos(angle),
-        y: radio * Math.sin(angle),
-        z: 0
-      };
+  if (!labelOn) {
+    // Agregar el label si se especifica (solo una vez)
+    if (label) {
+      const angle = labelAngle;
+      let position;
+      if (eje == "x") {
+        position = {
+          x: 0,
+          y: radio * Math.sin(angle),
+          z: radio * Math.cos(angle),
+        };
+      } else if (eje == "y") {
+        position = {
+          x: radio * Math.cos(angle),
+          y: 0,
+          z: radio * Math.sin(angle),
+        };
+      } else {
+        position = {
+          x: radio * Math.cos(angle),
+          y: radio * Math.sin(angle),
+          z: 0,
+        };
+      }
+      viewer.addLabel(label, {
+        position: position,
+        fontSize: 14,
+        fontColor: color,
+        backgroundColor: "rgba(255,255,255,0.7)",
+        borderThickness: 1,
+        borderColor: color,
+      });
     }
-    viewer.addLabel(label, {
-      position: position,
-      fontSize: 14,
-      fontColor: color,
-      backgroundColor: "rgba(255,255,255,0.7)",
-      borderThickness: 1,
-      borderColor: color
-    });
   }
-
   viewer.render();
+  
 }
 
-
+// Elimina todos los anillos y sus labels del viewer
+function ocultarAnillos() {
+  viewer.clear();
+  labelOn = false;
+  selectUrl();
+}
 
 function mostrarLabelsAnillos() {
   // Lista de textos de los labels de los anillos (ajusta si tus textos cambian)
@@ -193,7 +200,7 @@ function mostrarLabelsAnillos() {
     "300.000",
     "100.000",
     "20.000",
-    "2.000"
+    "2.000",
   ];
 
   // Radios y colores asociados a cada label (ajusta si cambian)
@@ -205,7 +212,7 @@ function mostrarLabelsAnillos() {
     { radio: 500, color: "#4361ee", label: "300.000" },
     { radio: 700, color: "#b5179e", label: "100.000" },
     { radio: 900, color: "#ffbe0b", label: "20.000" },
-    { radio: 1000, color: "#00b4d8", label: "2.000" }
+    { radio: 1000, color: "#00b4d8", label: "2.000" },
   ];
 
   // Para evitar superposición, asigna un ángulo diferente a cada label
@@ -215,13 +222,13 @@ function mostrarLabelsAnillos() {
       position: {
         x: anillo.radio * Math.cos(angle),
         y: anillo.radio * Math.sin(angle),
-        z: 0
+        z: 0,
       },
       fontSize: 14,
       fontColor: anillo.color,
       backgroundColor: "rgba(255,255,255,0.7)",
       borderThickness: 1,
-      borderColor: anillo.color
+      borderColor: anillo.color,
     });
   });
 
@@ -230,45 +237,212 @@ function mostrarLabelsAnillos() {
 
 function viewRingsFrom(axis) {
   // Permite visualizar el gráfico desde el eje seleccionado usando 3Dmol.js
-   load.hidden = false;
-console.log('✌️load.hidden --->', load.hidden);
 
-  if (axis === "x") {
-      mostrarAnilloCilindros(viewer, {radio: 50, color: "#94d82d", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "18,000,000", eje:"x"});
-      mostrarAnilloCilindros(viewer, {radio: 100, color: "#1e90ff", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "6,000,000", eje:"x"});
-      mostrarAnilloCilindros(viewer, {radio: 200, color: "#ff922b", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "2,000.000", eje:"x"});
-      mostrarAnilloCilindros(viewer, {radio: 350, color: "#f72585", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "700,000", eje:"x"});
-      mostrarAnilloCilindros(viewer, {radio: 500, color: "#4361ee", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "300,000", eje:"x"});
-      mostrarAnilloCilindros(viewer, {radio: 700, color: "#b5179e", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "100,000", eje:"x"});
-      mostrarAnilloCilindros(viewer, {radio: 900, color: "#ffbe0b", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "20,000", eje:"x"});
-      mostrarAnilloCilindros(viewer, {radio: 1000, color: "#00b4d8", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "2,000", eje:"x"});
-  } else if (axis === "y") {
-       mostrarAnilloCilindros(viewer, {radio: 50, color: "#94d82d", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "18,000,000", eje:"y"});
-       mostrarAnilloCilindros(viewer, {radio: 100, color: "#1e90ff", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "6,000,000", eje:"y"});
-       mostrarAnilloCilindros(viewer, {radio: 200, color: "#ff922b", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "2,000.000", eje:"y"});
-       mostrarAnilloCilindros(viewer, {radio: 350, color: "#f72585", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "700,000", eje:"y"});
-       mostrarAnilloCilindros(viewer, {radio: 500, color: "#4361ee", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "300,000", eje:"y"});
-       mostrarAnilloCilindros(viewer, {radio: 700, color: "#b5179e", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "100,000", eje:"y"});
-       mostrarAnilloCilindros(viewer, {radio: 900, color: "#ffbe0b", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "20,000", eje:"y"});
-       mostrarAnilloCilindros(viewer, {radio: 1000, color: "#00b4d8", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "2,000", eje:"y"});
-  } else if (axis === "z") {
-       mostrarAnilloCilindros(viewer, {radio: 50, color: "#94d82d", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "18,000,000", eje:"z"});
-       mostrarAnilloCilindros(viewer, {radio: 100, color: "#1e90ff", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "6,000,000", eje:"z"});
-       mostrarAnilloCilindros(viewer, {radio: 200, color: "#ff922b", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "2,000.000", eje:"z"});
-       mostrarAnilloCilindros(viewer, {radio: 350, color: "#f72585", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "700,000", eje:"z"});
-       mostrarAnilloCilindros(viewer, {radio: 500, color: "#4361ee", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "300,000", eje:"z"});
-       mostrarAnilloCilindros(viewer, {radio: 700, color: "#b5179e", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "100,000", eje:"z"});
-       mostrarAnilloCilindros(viewer, {radio: 900, color: "#ffbe0b", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "20,000", eje:"z"});
-       mostrarAnilloCilindros(viewer, {radio: 1000, color: "#00b4d8", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "2,000", eje:"z"});
-
-  } else {
+  const validAxes = ["x", "y", "z"];
+  if (!validAxes.includes(axis)) {
     console.error("Eje no válido. Debe ser 'x', 'y' o 'z'.");
-
+    return;
   }
 
+  const rings = [
+    { radio: 50, color: "#94d82d", label: "18,000,000" },
+    { radio: 100, color: "#1e90ff", label: "6,000,000" },
+    { radio: 200, color: "#ff922b", label: "2,000.000" },
+    { radio: 350, color: "#f72585", label: "700,000" },
+    { radio: 500, color: "#4361ee", label: "300,000" },
+    { radio: 700, color: "#b5179e", label: "100,000" },
+    { radio: 900, color: "#ffbe0b", label: "20,000" },
+    { radio: 1000, color: "#00b4d8", label: "2,000" },
+  ];
+
+  rings.forEach(ring => {
+    mostrarAnilloCilindros(viewer, {
+      radio: ring.radio,
+      color: ring.color,
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: ring.label,
+      eje: axis,
+    });
+  });
+labelOn = true;
+ viewer.render();
+
+}
+
+
+function viewRingsFrom2(axis) {
+  // Permite visualizar el gráfico desde el eje seleccionado usando 3Dmol.js
+
+  if (axis === "y") {
+    mostrarAnilloCilindros(viewer, {
+      radio: 50,
+      color: "#94d82d",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "18,000,000",
+      eje: "y",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 100,
+      color: "#1e90ff",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "6,000,000",
+      eje: "y",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 200,
+      color: "#ff922b",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "2,000.000",
+      eje: "y",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 350,
+      color: "#f72585",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "700,000",
+      eje: "y",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 500,
+      color: "#4361ee",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "300,000",
+      eje: "y",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 700,
+      color: "#b5179e",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "100,000",
+      eje: "y",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 900,
+      color: "#ffbe0b",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "20,000",
+      eje: "y",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 1000,
+      color: "#00b4d8",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "2,000",
+      eje: "y",
+    });
+  } else if (axis === "z") {
+    mostrarAnilloCilindros(viewer, {
+      radio: 50,
+      color: "#94d82d",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "18,000,000",
+      eje: "z",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 100,
+      color: "#1e90ff",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "6,000,000",
+      eje: "z",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 200,
+      color: "#ff922b",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "2,000.000",
+      eje: "z",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 350,
+      color: "#f72585",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "700,000",
+      eje: "z",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 500,
+      color: "#4361ee",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "300,000",
+      eje: "z",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 700,
+      color: "#b5179e",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "100,000",
+      eje: "z",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 900,
+      color: "#ffbe0b",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "20,000",
+      eje: "z",
+    });
+    mostrarAnilloCilindros(viewer, {
+      radio: 1000,
+      color: "#00b4d8",
+      grosor: 0.5,
+      guion: 1,
+      espacio: 1,
+      densidad: 0.08,
+      label: "2,000",
+      eje: "z",
+    });
+  } else {
+    console.error("Eje no válido. Debe ser 'x', 'y' o 'z'.");
+  }
 
   viewer.render();
-   load.hidden = true;
 }
 
 var checkboxPlane = document.getElementById("show_plane");
@@ -360,9 +534,6 @@ function poblarListasCopy(uploadFileId) {
       });
   }
 }
-
-
-
 
 var data1;
 function displaySNPData() {
@@ -526,6 +697,7 @@ function selectUrl() {
         title: `${error.response}`,
       });
     });
+    selectUrl();
 }
 
 function findPosition(data, id) {
@@ -560,7 +732,6 @@ async function showInfo(atom) {
   <i class="fas fa-circle"></i>
   <span class="ml-2">Selected Region: ${elemento.region}</span>
 </div>`;
-
 
       children = elemento.children;
       predecessors = elemento.predecessors;
@@ -786,22 +957,7 @@ function child() {
           }
         );
       });
-
-// Llama a mostrarAnilloCilindros con un color diferente para cada anillo
-
-
-// mostrarAnilloCilindros(viewer, {radio: 50, color: "#94d82d", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "18,000,000", eje:"z"});
-// mostrarAnilloCilindros(viewer, {radio: 100, color: "#1e90ff", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "6,000,000", eje:"z"});
-// mostrarAnilloCilindros(viewer, {radio: 200, color: "#ff922b", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "2,000.000", eje:"z"});
-// mostrarAnilloCilindros(viewer, {radio: 350, color: "#f72585", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "700,000", eje:"z"});
-// mostrarAnilloCilindros(viewer, {radio: 500, color: "#4361ee", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "300,000", eje:"z"});
-// mostrarAnilloCilindros(viewer, {radio: 700, color: "#b5179e", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "100,000", eje:"z"});
-// mostrarAnilloCilindros(viewer, {radio: 900, color: "#ffbe0b", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "20,000", eje:"z"});
-// mostrarAnilloCilindros(viewer, {radio: 1000, color: "#00b4d8", grosor: 0.5, guion: 1, espacio: 1, densidad: 0.08, label: "2,000", eje:"z"});
-
-
-      viewer.zoomTo();
-      //  viewer.setZoomLimits(10,100);
+       viewer.zoomTo();
       viewer.zoom(5, 1000);
       viewer.render();
     })
@@ -827,7 +983,6 @@ function childFull(id) {
     .post("/business-gestion/extract-allele-full-family-tree/", data)
     .then(function (response) {
       let atomData = response.data;
-
       datos.forEach((element) => {
         const isVisible =
           atomData.some((item) => item === element.number) ||
@@ -942,7 +1097,7 @@ function genealogicalTree(id) {
       );
       let atomoEncontrado = obtenerAtomoDesdeViewer(viewer, element.number);
       // Agregar un label al nodo original
-      var labelfamily=viewer.addLabel("Selected allele", {
+      var labelfamily = viewer.addLabel("Selected allele", {
         position: {
           x: atomoEncontrado.x,
           y: atomoEncontrado.y,
@@ -954,7 +1109,6 @@ function genealogicalTree(id) {
         borderThickness: 1,
         borderColor: "#ff0000",
       });
-      
     } else if (predecessors.some((item) => item === element.number)) {
       // Pintar predecesores de verde
       viewer.setStyle(
@@ -1007,7 +1161,10 @@ function genealogicalTree(id) {
         }
       );
       if (!sucesorLabel) {
-        let atomoSucessorsEncontrado = obtenerAtomoDesdeViewer(viewer, element.number);
+        let atomoSucessorsEncontrado = obtenerAtomoDesdeViewer(
+          viewer,
+          element.number
+        );
         // Agregar un label al nodo original
         viewer.addLabel("Successor alleles", {
           position: {
@@ -1214,7 +1371,6 @@ function sendExpantionValues() {
     z_value: myRangeZ.valueAsNumber,
   };
 
- 
   load.hidden = false;
   $("#modal-xyz").modal("hide");
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
@@ -1253,7 +1409,6 @@ function animation() {
       }
     );
   });
-
 
   viewer.render();
   load.hidden = true;
