@@ -1,6 +1,6 @@
 
 
-if (timeRange != "-75000/-12000")
+if (timeRange == "-12000/2025")
 {
 
                     // función para actualizar el panel derecho a medida que corre la línea del tiempo.
@@ -820,14 +820,22 @@ var timeDimension = L.timeDimension({
     // 1. Capa de línea con ajuste de interpolación
     var lineLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
         filter: f => f.geometry.type === 'LineString',
-        style: {color: '#f6500c', weight: 6}  //#f6500c
+        style: function(feature) {
+            return {
+            fillColor: feature.properties.mag,
+            color: feature.properties.mag,
+            weight: 6
+            };
+            }
     }), {
         updateTimeDimensionMode: 'accumulate',
         addlastPoint: false,
-        duration: "PT406S",//"PT76M", 
+        duration: "PT30M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+        //duration: "PT406S",//"PT76M", 
         timeInterval: "PT1S",//"PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z", // Rango exacto//timeInterval: "PT1S",
         getLineId: f => f.properties.name
     });
+    
     
 
     // 2. Capa de punto con temporizador exacto
@@ -836,7 +844,7 @@ var timeDimension = L.timeDimension({
         pointToLayer: (f, latlng) => L.marker(latlng, {
             icon:
                 L.icon({
-                    iconUrl: iconUrlpathDestinationMigration,
+                    iconUrl: iconUrlpathDestinationMigrationHomoHeidel,
                     iconSize: [45, 45],
                     shadowSize: [45, 45],
                     shadowAnchor: [17, 23]
@@ -847,31 +855,15 @@ var timeDimension = L.timeDimension({
       //  duration: "PT76M", 
       //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z" //"PT1S"
       updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
-      duration: "PT11S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+      duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
       timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
-      addlastPoint: false                  // Evita saltos al final
+      addlastPoint: false,                  // Evita saltos al final
+      timeField: function(feature) {
+        // Convert each time from seconds to milliseconds
+        return feature.properties.times.map(t => t * 1000);
+      }
     });
 
-
-
-    // 1. Capa de área glaciar
-  /*  var areaLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
-      filter: f => f.geometry.type === 'MultiPolygon',
-        style: {
-            fillColor: "#FFFFFF",
-            fillOpacity: 0.6,
-            color: "#FFFFFF",
-            weight: 2
-        }
-        }), {
-            // updateTimeDimensionMode: 'intersect',
-           //  duration: "PT76M",
-           //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
-           updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
-           duration: "PT11S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
-           timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
-           addlastPoint: false                  // Evita saltos al final
-    }); */
     
 
         // 1. Capa de área glaciar
@@ -890,10 +882,13 @@ var timeDimension = L.timeDimension({
                  //  duration: "PT76M",
                  //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
                  updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
-                 duration: "PT11S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+                 duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
                  timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
                  addlastPoint: false                  // Evita saltos al final
           });
+          
+
+
 
                   // 1. Capa de área glaciar
         var areaLayerTierra = L.timeDimension.layer.geoJson(L.geoJSON(data, {
@@ -911,7 +906,7 @@ var timeDimension = L.timeDimension({
                  //  duration: "PT76M",
                  //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
                  updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
-                 duration: "PT11S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+                 duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
                  timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
                  addlastPoint: false                  // Evita saltos al final
           });
@@ -936,17 +931,16 @@ var timeDimension = L.timeDimension({
     });
     */
   
-  
-   pointLayer.addTo(map);
-   lineLayer.addTo(map);
-   areaLayerHielo.addTo(map);
    areaLayerTierra.addTo(map);
+   areaLayerHielo.addTo(map);
+   lineLayer.addTo(map);
+   pointLayer.addTo(map);
 
  // creación de las capas bases y adición al control de capas del mapa
 const baseLayers = {
-    'Countries': satelitalLayer//,
-    //'Satelital': satelitalLayer,
-    //'Ocean': oceanLayer
+    'Countries': satelitalLayer,
+    'Satelital': satelitalLayer,
+    'Ocean': oceanLayer
 };
 
 const overlays = {
@@ -960,8 +954,6 @@ var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
 
 }
 
-
- 
                                         document.getElementById('timeRangeMigraions').addEventListener('click', function(e) {
 
                                             const opcionClick = e.target;
@@ -1113,137 +1105,30 @@ Math.min(...a.properties.times) - Math.min(...b.properties.times));
     addGeoJSONLayer(map, data);
 
 });
-oReq.open('GET', timelinetimedimension);
+
+
+if (timeRange == "-15000/2025"){
+    oReq.open('GET', timelinetimedimensiontimeline_15000_2025);
+    }
+    else
+    if (timeRange == "-1800000/-804400"){
+        oReq.open('GET', timelinetimedimensionHomoHerectus);
+    }
+    else
+    if (timeRange == "-700000/-190539"){
+        oReq.open('GET', timelinetimedimensionHomoHeidelBergensis);
+    }
+    else
+    if (timeRange == "-75000/-15000"){
+        oReq.open('GET', timelinetimedimensionHomoSapiens);
+    }
+    else
+    if (timeRange == "-130000/-115000"){
+        oReq.open('GET', timelinetimedimensiontimeline_130000_115000_HighTemperature);
+   }
+
+//oReq.open('GET', timelinetimedimension);
 oReq.send();
 
 
 }
-
-
-/*
-                                        document.getElementById('timeRangeMigraions').addEventListener('click', function(e) {
-
-                                            const opcionClick = e.target;
-                                            if (opcionClick.tagName === 'OPTION') {
-                                              const estaSeleccionada = opcionClick.selected;
-                                              var selectedValue = opcionClick.value;
-                                            }
-
-                                            sessionStorage.setItem('timeRange', selectedValue); 
-
-                                            timeRange = selectedValue;
-                                            //document.getElementById("timeRange").value  =  selectedValue;
-
-                                            var aPosition = selectedValue.indexOf("/");
-                                            var aBegin = selectedValue.substring(0,aPosition);
-                                            var anEnd = selectedValue.substring(aPosition+1);
-    
-                                            sessionStorage.setItem('beginIntervalsesion', parseInt(aBegin));
-                                            sessionStorage.setItem('endIntervalsesion', parseInt(anEnd));  
-                                            sessionStorage.setItem('durationSesion', parseInt(anEnd)-parseInt(aBegin));
-
-                                            // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
-                                            Swal.fire({
-                                                title: 'Updating TimeLine...',
-                                                showConfirmButton: false,
-                                                willOpen: () => {
-                                                    Swal.showLoading();
-                                                }
-                                            });
-                                            // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
-                                            setTimeout(function () {
-                                                location.reload()
-                                            }, 500);
-
-                                          });
-
-
-
-                                        document.getElementById('btreload').addEventListener('click', function() {
-                                            
-                                          
-                                            var aTimeRange = document.getElementById("timeRange");
-                                            aTimeRange.value = timeRange;
-                                            var aRegionTimeLine = document.getElementById("regionTimeLine");
-                                            sessionStorage.setItem('timeRange', aTimeRange.value);
-                                            sessionStorage.setItem('region', aRegionTimeLine.value);
-                                            
-                                            var aPosition = aTimeRange.value.indexOf("/");
-                                            var aBegin = aTimeRange.value.substring(0,aPosition);
-                                            var anEnd = aTimeRange.value.substring(aPosition+1);
-    
-                                            sessionStorage.setItem('beginIntervalsesion', parseInt(aBegin));
-                                            sessionStorage.setItem('endIntervalsesion', parseInt(anEnd));  
-                                            sessionStorage.setItem('durationSesion', parseInt(anEnd)-parseInt(aBegin));
-                                         
-
-
-                                        if (aRegionTimeLine.value == "All the World"){ 
-                                          sessionStorage.setItem('lat', '10');
-                                          sessionStorage.setItem('long', '120');  
-                                          sessionStorage.setItem('zoom', '2');    
-                                        }
-                                        else
-                                        if (aRegionTimeLine.value == "Africa"){
-                                          sessionStorage.setItem('lat', '-3');
-                                          sessionStorage.setItem('long', '15');  
-                                          sessionStorage.setItem('zoom', '4');   
-                                        }                             
-                                        else
-                                        if (aRegionTimeLine.value == "Western Asia"){
-                                          sessionStorage.setItem('lat', '47');
-                                          sessionStorage.setItem('long', '60');  
-                                          sessionStorage.setItem('zoom', '4');    
-                                        }
-                                        else
-                                        if (aRegionTimeLine.value == "Eastern Asia"){
-                                            sessionStorage.setItem('lat', '47');
-                                            sessionStorage.setItem('long', '130');  
-                                            sessionStorage.setItem('zoom', '4');      
-                                        }
-                                        else
-                                        if (aRegionTimeLine.value == "Europe"){   
-                                            sessionStorage.setItem('lat', '49');
-                                            sessionStorage.setItem('long', '15');  
-                                            sessionStorage.setItem('zoom', '4');    
-                                        }
-                                        else
-                                        if (aRegionTimeLine.value == "Oceania"){
-                                            sessionStorage.setItem('lat', '-20');
-                                            sessionStorage.setItem('long', '140');  
-                                            sessionStorage.setItem('zoom', '4');                                               
-                                        }
-                                        else
-                                        if (aRegionTimeLine.value == "North America"){
-                                            sessionStorage.setItem('lat', '50');
-                                            sessionStorage.setItem('long', '265');  
-                                            sessionStorage.setItem('zoom', '4');   
-                                        }
-                                        else
-                                        if (aRegionTimeLine.value == "Latin America & Carib"){
-                                            sessionStorage.setItem('lat', '-20');
-                                            sessionStorage.setItem('long', '360');  
-                                            sessionStorage.setItem('zoom', '4');                                                
-                                        }
-                                        else{
-                                            sessionStorage.setItem('lat', '10');
-                                            sessionStorage.setItem('long', '120');  
-                                            sessionStorage.setItem('zoom', '2');                                             
-                                        }                                        
-
-                                            // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
-                                            Swal.fire({
-                                                title: 'Updating TimeLine...',
-                                                showConfirmButton: false,
-                                                willOpen: () => {
-                                                    Swal.showLoading();
-                                                }
-                                            });
-                                            // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
-                                            setTimeout(function () {
-                                                location.reload()
-                                            }, 500);
-
-                                        });
-
-                                        */
