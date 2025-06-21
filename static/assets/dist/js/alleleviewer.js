@@ -183,12 +183,7 @@ function mostrarAnilloCilindros(viewer, config) {
   
 }
 
-// Elimina todos los anillos y sus labels del viewer
-function ocultarAnillos() {
-  viewer.clear();
-  labelOn = false;
-  selectUrl();
-}
+
 
 function mostrarLabelsAnillos() {
   // Lista de textos de los labels de los anillos (ajusta si tus textos cambian)
@@ -237,7 +232,6 @@ function mostrarLabelsAnillos() {
 
 function viewRingsFrom(axis) {
   // Permite visualizar el gráfico desde el eje seleccionado usando 3Dmol.js
-
   const validAxes = ["x", "y", "z"];
   if (!validAxes.includes(axis)) {
     console.error("Eje no válido. Debe ser 'x', 'y' o 'z'.");
@@ -671,6 +665,8 @@ function selectPdbContainer() {
 }
 
 function selectUrl() {
+   viewer.clear();
+  labelOn = false;
   zoom.value = 0;
   var $selectfile = document.getElementById("selectfile");
   var $selectPdb = document.getElementById("selectPdb");
@@ -697,7 +693,7 @@ function selectUrl() {
         title: `${error.response}`,
       });
     });
-    selectUrl();
+    
 }
 
 function findPosition(data, id) {
@@ -1068,7 +1064,10 @@ function obtenerAtomoDesdeViewer(viewer, serial) {
 function genealogicalTree(id) {
   // Eliminar TODAS las etiquetas del viewer
   viewer.removeAllLabels();
-  mostrarLabelsAnillos();
+  if (labelOn) {
+    mostrarLabelsAnillos();
+  }
+  
   let sucesorLabel,
     predecesorLabel = false;
 
