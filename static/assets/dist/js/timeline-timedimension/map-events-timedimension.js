@@ -156,7 +156,7 @@ class EventTimeFilter {
                     name: event.event_name,
                     times: this.parseEventTimeRange(event),
                     eventData: event,
-                    popupContent: this.createPopupContent(event)
+                    // popupContent: this.createPopupContent(event)
                 },
                 geometry: {
                     type: 'Point',
@@ -255,7 +255,7 @@ class EventTimeFilter {
             })
         });
 
-        marker.bindPopup(feature.properties.popupContent);
+        // marker.bindPopup(feature.properties.popupContent);
         marker.on('click', () => this.showEventModal(event));
 
         return marker;
@@ -297,7 +297,7 @@ class EventTimeFilter {
                 riseOnHover: true
             });
 
-            eventMarker.bindPopup(this.createPopupContent(event));
+            // eventMarker.bindPopup(this.createPopupContent(event));
             eventMarker.on('click', () => this.showEventModal(event));
 
             this.eventLayer.addLayer(eventMarker);
