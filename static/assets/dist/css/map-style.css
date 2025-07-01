@@ -117,7 +117,7 @@
     font-weight: bold; /* Negrita */
 }
 
-.modal-footer .btn {
+.modal-footer .btnok {
     border: none; /* Sin borde */
     border-radius: 5px; /* Bordes redondeados */
     padding: 10px 20px; /* Espaciado del botón */
@@ -126,7 +126,7 @@
 
 .modal-footer .btn-primary {
     background-color: #0056b3; /* Color del botón guardar */
-    color: white; /* Color del texto */
+      color: white;  /* Color del texto */
 }
 
 .modal-footer .btn-secondary {

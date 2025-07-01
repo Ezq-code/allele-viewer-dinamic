@@ -791,6 +791,57 @@ if (timeRange == "-12000/2025")
 }
 else
 {
+/*
+    function addGeoJSONLayer(map, data) {
+ 
+        // Paso 1: Preprocesar los datos para asegurar formato correcto
+data.features.forEach(feature => {
+    // Convertir a objetos Date si son strings
+    if (typeof feature.properties.start === 'string') {
+        feature.properties.start = new Date(feature.properties.start);
+    }
+    if (typeof feature.properties.end === 'string') {
+        feature.properties.end = new Date(feature.properties.end);
+    }
+});
+
+// Paso 2: Configurar la capa con manejo temporal personalizado
+var areaLayerHielo = L.timeDimension.layer.geoJson(L.geoJSON(data, {
+    filter: f => f.properties.id === 100,
+    style: function(feature) {
+        return feature.properties.mag === "-1" ? {
+            fillColor: "#FFFFFF",
+            fillOpacity: 0.1,
+            color: "#FFFFFF",
+            weight: 2,
+            opacity: 0.1
+        } : {
+            fillColor: feature.properties.mag,
+            fillOpacity: 0.9,
+            color: feature.properties.mag,
+            weight: 2
+        };
+    },
+
+}), {
+    updateTimeDimensionMode: 'replace',
+    waitForReady: true,
+    addlastPoint: false,
+    duration: "PT5S",
+    // Función crítica para duraciones variables ⚡
+    getFeatureDuration: function(feature) {
+        const start = new Date(feature.properties.start);
+        const end = new Date(feature.properties.end);
+        const durationMs = end - start;
+        
+        // Convertir a formato ISO 8601 (PT#S)
+        return `PT${durationMs / 1000}S`;
+    }
+});
+*/
+
+
+
 
    // Función modificada para sincronización
 function addGeoJSONLayer(map, data) {
@@ -806,17 +857,17 @@ const yearToDate = (yearsBP) => {
 // 2. Configurar TimeDimension con todos los tiempos
 const allTimes = data.features
     .flatMap(f => f.properties.times)
-    .sort((a,b) => a - b)
-    .map(yearBP => yearToDate(yearBP));
+    .sort((a,b) => a - b);
+    //.map(yearBP => yearToDate(yearBP));
 
-var timeDimension = L.timeDimension({
-    //times: allTimes, // Usar array de fechas
+
+    var timeDimension = L.timeDimension({
+    times: allTimes, // Usar array de fechas
     period: "PT1S",
     //currentTime: yearToDate(Math.max(...allTimes.map(t => t))),
     //timeInterval: [yearToDate(-68950), yearToDate(-42586)] // Rango completo
 });
-
-    
+ 
     // 1. Capa de línea con ajuste de interpolación
     var lineLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
         filter: f => f.geometry.type === 'LineString',
@@ -828,7 +879,7 @@ var timeDimension = L.timeDimension({
             };
             }
     }), {
-        updateTimeDimensionMode: 'accumulate',
+        updateTimeDimensionMode: 'intersect',
         addlastPoint: false,
         duration: "PT30M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
         //duration: "PT406S",//"PT76M", 
@@ -854,7 +905,7 @@ var timeDimension = L.timeDimension({
        // updateTimeDimensionMode: 'intersect',
       //  duration: "PT76M", 
       //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z" //"PT1S"
-      updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
+      updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
       duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
       timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
       addlastPoint: false,                  // Evita saltos al final
@@ -864,91 +915,230 @@ var timeDimension = L.timeDimension({
       }
     });
 
-    
 
         // 1. Capa de área glaciar
         var areaLayerHielo = L.timeDimension.layer.geoJson(L.geoJSON(data, {
             filter: f => f.properties.id === 100,
               style: function(feature) {
-                return {
-                fillColor: feature.properties.mag,
-                fillOpacity: 0.9,
-                color: feature.properties.mag,
-                weight: 2
-                };
-                }
+                if (feature.properties.mag === "-1")
+                {
+                    return {
+                        fillColor: "#FFFFFF",
+                        fillOpacity: 0.0,
+                        color: "#FFFFFF",
+                        weight: 2,
+                        opacity: 0.0,
+                        };
+               }
+               else
+                {
+                    return {
+                        fillColor: feature.properties.mag,
+                        fillOpacity: 0.9,
+                        color: feature.properties.mag,
+                        weight: 2
+                        }
+               }
+               }
               }), {
-                  // updateTimeDimensionMode: 'intersect',
-                 //  duration: "PT76M",
-                 //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
-                 updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
-                 duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
-                 timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
-                 addlastPoint: false                  // Evita saltos al final
+                 updateTimeDimensionMode: 'replace',  // Mantiene el objeto visible durante todo el rango
+                 duration: "PT5S",//"PT16M", // Duración total = Fin - Inicio (76 minutos)
+                 //timeInterval: "PT11S",//"PT16M", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S" // Mismo que duration para rango continuo
+                 addlastPoint: false   // Evita saltos al final
           });
-          
 
-
-
-                  // 1. Capa de área glaciar
+        // 1. Capa de área glaciar
         var areaLayerTierra = L.timeDimension.layer.geoJson(L.geoJSON(data, {
             filter: f => f.properties.id > 999,
               style: function(feature) {
-                return {
-                fillColor: feature.properties.mag,
-                fillOpacity: 1,
-                color: feature.properties.mag,
-                //weight: 2
-                };
+                if (feature.properties.mag === "-1")
+                {
+                    return {
+                        fillColor: "#00FF00",
+                        fillOpacity: 0.0,
+                        color: "#00FF00",
+                        weight: 2,
+                        opacity: 0.0,
+                        };
+               }
+               else
+                {
+                    return {
+                        fillColor: feature.properties.mag,
+                        fillOpacity: 1,
+                        color: feature.properties.mag,
+                        //weight: 2
+                        }
+               }
                 }
               }), {
                   // updateTimeDimensionMode: 'intersect',
                  //  duration: "PT76M",
                  //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
-                 updateTimeDimensionMode: 'accumulate',  // Mantiene el objeto visible durante todo el rango
+                 updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
                  duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
                  timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
                  addlastPoint: false                  // Evita saltos al final
           });
 
-   
-/*
-    timeDimension.on('timeload', function(e) {
-        const currentYearBP = BASE_YEAR - e.time.getFullYear();
-        
-        // Actualizar todas las capas
-        [pointLayer, lineLayer, areaLayer].forEach(layer => {
-            layer.eachLayer(l => {
-                const times = l.feature.properties.times;
-                const isVisible = times.includes(currentYearBP);
-                
-                if (l.setStyle) 
-                    l.setStyle({opacity: isVisible ? 1 : 0});
-                else if (l.getElement())
-                    l.getElement().style.display = isVisible ? '' : 'none';
-            });
+
+          var areaLayerPoblacion = L.timeDimension.layer.geoJson(L.geoJSON(data, {
+            filter: f => f.properties.id === 20,
+              style: function(feature) {
+                if (feature.properties.mag === "-1")
+                {
+                    return {
+                        fillColor: GetColorByPopulation(feature.properties.mag),
+                        fillOpacity: 0.0,
+                        color: GetColorByPopulation(feature.properties.mag),
+                        weight: 2,
+                        opacity: 0.0,
+                        };
+               }
+               else
+                {
+                   return {
+                       color: GetColorByPopulation(feature.properties.mag),
+                       fillOpacity: 0.5,
+                       fillColor: GetColorByPopulation(feature.properties.mag),
+                       weight: 2,
+                       opacity: 0.5,
+                   }
+               }                
+             }
+              }), {
+                  // updateTimeDimensionMode: 'intersect',  //'accumulate'
+                 //  duration: "PT76M",
+                 //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
+                 updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
+                 duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+                 timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
+                 addlastPoint: false                  // Evita saltos al final
+          });
+
+
+        // 1. Configuración inicial de la capa de eventos (como en tu ejemplo que funciona)
+        var eventLayer = L.layerGroup();
+
+// 2. Llamada AJAX modificada para TimeDimension
+        $.ajax({
+            type: 'GET',
+            url: '/business-gestion/events/',
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    title: "No se pudieron cargar los datos.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            },
+            dataType: 'json',
+            success: function (response) {
+                var data = response.results;
+
+                // Limpiar la capa antes de añadir nuevos eventos
+                eventLayer.clearLayers();
+
+                data.forEach(function (event) {
+                    var nameLoad = event.event_name;
+                    var descriptionLoad = event.description;
+                    var referenceLoad = event.reference;
+                    var iconUrlCurrentMarkerLoad = event.event_icon || event.event_type_info.icon;
+                    var galleryLoad = event.event_gallery;
+
+                    // Procesar cada marcador del evento
+                    event.markers.forEach(function (marker) {
+                        var latitudeLoad = marker.latitude;
+                        var longitudeLoad = marker.longitude;
+
+                        // Crear el marcador
+                        var markerObj = L.marker([latitudeLoad, longitudeLoad], {
+                            icon: L.icon({
+                                iconUrl: iconUrlCurrentMarkerLoad,
+                                iconSize: [25, 41],
+                                shadowSize: [41, 41],
+                                shadowAnchor: [13, 20]
+                            }),
+                            riseOnHover: true
+                        });
+
+                        // Configurar el evento click para el modal
+                        markerObj.on('click', function () {
+                            document.getElementById('eventName').innerHTML = nameLoad;
+                            document.getElementById('eventDescription').innerHTML = descriptionLoad;
+                            document.getElementById('eventReference').innerHTML = referenceLoad;
+
+                            var eventImagesDiv = document.getElementById('eventImages');
+                            eventImagesDiv.innerHTML = '';
+
+                            if (galleryLoad && galleryLoad.length > 0) {
+                                galleryLoad.forEach(function (image) {
+                                    var cardHtml = `
+                                <div class="card m-2" style="width: 100px;">
+                                    <a href="${image.image}" data-lightbox="event-gallery" data-title="${image.name}">
+                                        <img src="${image.image}" class="card-img-top" alt="${image.name}" style="width: 100%; height: auto;">
+                                    </a>
+                                </div>
+                            `;
+                                    eventImagesDiv.innerHTML += cardHtml;
+                                });
+                            } else {
+                                eventImagesDiv.innerHTML = '<p>There are no images available for this event.</p>';
+                            }
+
+                            $('#eventModal').modal('show');
+                        });
+
+                        // Añadir el marcador a la capa
+                        eventLayer.addLayer(markerObj);
+                    });
+                });
+
+                // Si necesitas manejar el tiempo, puedes usar esto:
+                if (data.length > 0 && data[0].start_date) {
+                    // Configurar el control de tiempo si es necesario
+                    // timeDimension.setCurrentTime(new Date(data[0].start_date));
+                }
+            }
         });
-    });
-    */
+     
+          
   
    areaLayerTierra.addTo(map);
+   areaLayerPoblacion.addTo(map);
    areaLayerHielo.addTo(map);
    lineLayer.addTo(map);
    pointLayer.addTo(map);
 
  // creación de las capas bases y adición al control de capas del mapa
 const baseLayers = {
-    'Countries': satelitalLayer,
+    'Countries': osmcountriesLayers,
     'Satelital': satelitalLayer,
     'Ocean': oceanLayer
 };
 
 const overlays = {
-    'Trayectoria': lineLayer,
-    'Destinos': pointLayer,
-    'Hielo': areaLayerHielo,
-    'Tierra': areaLayerTierra   
+    'Migration Trace Route': lineLayer,
+    'Migration Points': pointLayer,
+    'Glacials': areaLayerHielo,
+    'Population by Region': areaLayerPoblacion,
+    'Land Emerge': areaLayerTierra,
+    'Marker Layer': markerLayer
+   
 };
+
+/*
+const overlays = {
+    //'Land Last Glacial Maximum': LandLGMShapefile,
+    'Glacials': timelineIce,
+    'Land Emerge': timelineLandEmerge,
+    'Migration Trace Route': migrationTraceRoute,
+    'Migration Points': migrationPoints,
+    'Marker Layer': markerLayer,
+    'Population by Region': migrationPoblationRegion,
+    'Allele Geographic Zones': AlleleGeographicZonesLayer
+};
+*/
 
 var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
 
@@ -1086,6 +1276,7 @@ oReq.addEventListener("load", function(xhr) {
     const data = JSON.parse(xhr.currentTarget.response);
     
     // Validar tiempos y geometrías
+ 
     data.features.forEach(feature => {
       
         feature.properties.times = feature.properties.times.map(t => 
@@ -1099,10 +1290,13 @@ oReq.addEventListener("load", function(xhr) {
             console.error("Estructura MultiPolygon inválida");
         }
     });
+    
+
 
 data.features.sort((a,b) => 
 Math.min(...a.properties.times) - Math.min(...b.properties.times));
     addGeoJSONLayer(map, data);
+    
 
 });
 
