@@ -12,6 +12,8 @@
 
     <link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/leaflet.timedimension.control.css' %}"/>
 
+    <link rel="stylesheet" href="{% static 'assets/dist/css/map-style.css' %}"/>
+
     <script src="{% static 'assets/dist/js/timeline-timedimension/Control.FullScreen.min.js' %}"></script>
     <script src="{% static 'assets/dist/js/timeline-timedimension/NonTiledLayer.js' %}"></script>
     <script src="{% static 'assets/dist/js/timeline-timedimension/iso8601.min.js' %}"></script>
@@ -109,7 +111,7 @@
                     <form id="event-type-form">
                         <div class="form-group">
                             <label for="eventoModal">Event:</label>
-                            <select required class="form-group" id="eventoModal">
+                            <select required class="form-control" id="eventoModal">
                             </select>
                         </div>
                        <!-- <div class="form-group">
@@ -120,7 +122,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="save-event-type">OK</button>
+                    <button type="button" class="btnok btn-primary" id="save-event-type">OK</button>
                 </div>
 
             </div>
@@ -216,8 +218,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button id="BtnSaveMarker" type="submit" class="btn btn-primary">Save</button>
-                    <button id="BtnClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="BtnSaveMarker" type="submit" class="btnok btn-primary">Save</button>
+                    <button id="BtnClose" type="button" class="btnok btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -259,11 +261,11 @@
                                         </select>  
                                             </div>
                                         <div class="d-inline-block">
-                                        <button class="btn btn-primary btn-sm border-right" id="btreload">Load</button>
+                                        <button class="btnok btn-primary btn-sm border-right" id="btreload">Load</button>
                                             </div>
                                         <div class="d-inline-block">
     
-                                    <button type="button" class="btn btn-tool" title="CYP2D6 Alleles-Expansions"
+                                    <button type="button" class="btnok btn-tool" title="CYP2D6 Alleles-Expansions"
                                             data-widget="control-sidebar"
                                             data-controlsidebar-slide="true">
                                         <i class="fas fa-walking"></i>
@@ -292,7 +294,10 @@
 
                                 <!-- codigo javascript para cargar archivos de tipo shape -->
                                 <script src="{% static 'assets/dist/js/map-load-shape.js' %}"></script>
-
+                                <!-- código javascript para cargar los eventos -->
+                                <script src="{% static 'assets/dist/js/timeline-timedimension/map-events-timedimension.js' %}"></script>
+                               
+ 
                                 <script>
           
                                     if (!sessionStorage.getItem('inicializado')) {
@@ -367,10 +372,12 @@ if (timeRange === "-12000/2025")
                                     });
 
                                     map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
+                                    // Inicializar el filtro de eventos                                    
                                     // Capa de las marcas
                                     markerLayer = new L.featureGroup().addTo(map);
                                     var markerMigrationPointLayer = new L.featureGroup().addTo(map);
                                     var labeled = false;
+                                    var eventFilter = new EventTimeFilter(map, null, timeRange);
 }
 else
 {
@@ -406,8 +413,40 @@ var timeDimensionControl = new L.Control.TimeDimensionCustom({
        // buffer: 1,
        // minBufferReady: -1
     }
+    
 });
-map.addControl(this.timeDimensionControl);
+
+map.addControl(timeDimensionControl);
+
+
+// Inicializar el filtro de eventos                                    
+// Capa de las marcas
+markerLayer = new L.featureGroup().addTo(map);
+var markerMigrationPointLayer = new L.featureGroup().addTo(map);
+var labeled = false;
+//var eventFilter = new EventTimeFilter(map, null, timeRange);
+                            
+
+// Get the TimeDimension instance from the map
+var timeDimension = map.timeDimension;
+// Initialize EventTimeFilter with both map and timeDimension
+
+var eventFilter = new EventTimeFilter(map, timeDimension, timeRange);
+
+// Configurar el selector de rangos
+    var timeRangeSelect = document.getElementById('timeRangeMigraions');
+    if (timeRangeSelect) {
+        timeRangeSelect.value = timeRange;
+        
+        timeRangeSelect.addEventListener('change', function(e) {
+            var newRange = e.target.value;
+            sessionStorage.setItem('timeRange', newRange);
+            location.reload();
+        });
+    }
+
+    //Capa de marcadores por defecto apagada
+    markerLayer.remove();   
 
 }
 
@@ -438,12 +477,10 @@ map.addControl(this.timeDimensionControl);
                                 <!-- código javascript para mejorar la visualizacion de las etiquetas -->
                                 <script src="{% static 'assets/dist/js/map-label-improve.js' %}"></script>
 
+
                                 <!-- Capa de marcadores por defecto apagada -->
                                 <script>
-                                if (timeRange == "-12000/2025")
-                                {
                                  markerLayer.remove();   
-                                }
                                 </script>
 
                                 <!-- Este es el archivo que tiene la llamada a la función eqfeed_callback -->
@@ -494,7 +531,7 @@ map.addControl(this.timeDimensionControl);
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btnok btn-secondary" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
