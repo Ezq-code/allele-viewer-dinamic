@@ -170,24 +170,21 @@
                   </div>
                 </div>
 
-                <div class="col-md-2 col-6 col-lg-1 border-right"
-                  style="padding-top: 5px">
-                  <div class="btn-group btn-group-toggle d-flex" data-toggle="buttons">
-                     <button type="button" class="btn btn-secondary" onclick="viewRingsFrom('x')">
-                      X
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="viewRingsFrom('y')">
-                      Y
-                    </button>
-                      <button type="button" class="btn btn-secondary" onclick="viewRingsFrom('z')">
-                        Z
-                      </button>
-                     
-                    </div>
-              
-                
-                  <!-- /.card -->
+                <div class="col-md-2 col-6 col-lg-1 border-right"  style="padding-top: 5px">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label class="btn bg-olive active">
+                    <input type="radio" name="options" id="option_b1" autocomplete="off" checked="" onclick="viewRingsFrom('x')"> X
+                  </label>
+                  <label class="btn bg-olive">
+                    <input type="radio" name="options" id="option_b2" autocomplete="off" onclick="viewRingsFrom('y')"> Y
+                  </label>
+                  <label class="btn bg-olive">
+                    <input type="radio" name="options" id="option_b3" autocomplete="off" onclick="viewRingsFrom('z')"> Z
+                  </label>
                 </div>
+                </div>
+
+
                 <div class="col-md-2 col-12 col-lg-2">
                   <div class="card card-primary collapsed-card">
                     <div class="card-header">
@@ -611,224 +608,7 @@
 
  <div class="overlay" id="load" hidden  >
               <!-- <i class="fas fa-2x fa-sync fa-spin"></i> -->
-{% comment %} 
-              <div class="card card-widget widget-user">
-                <!-- Add the bg color to the header using any of the bg-* classes -->
-                <div class="widget-user-header bg-info">
-                  <h3 class="widget-user-username">Generating graphic</h3>
-                  <h5 class="widget-user-desc">This may take a moment</h5>
-                </div>
-                <div class="widget-user-image">                
-                  <img
-                    class="img-circle elevation-2"
-                    src="{% static 'assets/dist/img/adn36.gif' %}"
-                    alt="User Avatar"
-                  />
-                </div>
-                <div class="card-footer bg-warning">
-                  <div class="row">
-                   <small class="text-muted"> The creation of 3D graphics is extremely computationally
-                    expensive,<br />
-                    this action may take some time, apologies for the
-                    inconvenience</small>
-                    
-                  </div>
-                  <!-- /.row -->
-                </div>
-              </div> {% endcomment %}
 
-<!-- From Uiverse.io by csemszepp --> 
-
-	<!-- From Uiverse.io by PhyoTP --> 
-<div class="socket">
-  <div class="gel center-gel">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c1 r1">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c2 r1">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c3 r1">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c4 r1">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c5 r1">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c6 r1">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-
-  <div class="gel c7 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-
-  <div class="gel c8 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c9 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c10 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c11 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c12 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c13 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c14 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c15 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c16 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c17 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c18 r2">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c19 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c20 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c21 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c22 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c23 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c24 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c25 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c26 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c28 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c29 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c30 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c31 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c32 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c33 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c34 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c35 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c36 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-  <div class="gel c37 r3">
-    <div class="hex-brick h1"></div>
-    <div class="hex-brick h2"></div>
-    <div class="hex-brick h3"></div>
-  </div>
-</div>
 
 	
 
