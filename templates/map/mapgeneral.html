@@ -225,6 +225,21 @@
         </div>
     </div>
 
+        <!-- Sidebar con el panel derecho que muestra el listado de las migraciones cronológicamente -->
+        <aside id="info" class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+            <div class="p-3 d-flex flex-column">
+                <div class="d-flex align-items-center">
+                    <h6 class="mr-3">CYP2D6 Alleles-Expansions</h6>
+                    <a class="nav-link ml-auto" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#"
+                       role="button">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+                <ul id="displayed-list" style="font-size:11px;"></ul>
+            </div>
+        </aside>
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -244,7 +259,7 @@
                                             <option value="-15000/2025" selected>From 15000 YBP to year 2025</option>
                                             <option value="-1800000/-800000">Homo Erectus Migrations</option>
                                             <option value="-700000/-160000">Heidelbergensis Migrations </option>
-                                            <option value="-75000/-15000">Homo Sapiens Migrations</option>
+                                            <option value="-69000/-15000">Homo Sapiens Migrations</option>
                                             <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
                                         </select> 
                                             </div> 
@@ -282,7 +297,7 @@
                                             <option value="-15000/2025" selected>From 15000 YBP to year 2025</option>
                                             <option value="-1800000/-804400">Homo Erectus Migrations</option>
                                             <option value="-700000/-190539">Heidelbergensis Migrations </option>
-                                            <option value="-75000/-15000">Homo Sapiens Migrations</option>
+                                            <option value="-69000/-15000">Homo Sapiens Migrations</option>
                                             <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
                                       </select>
                                     </div>
@@ -312,6 +327,8 @@
                                      sessionStorage.setItem('timeRangeMigraions', '-15000/2025'); 
                                      sessionStorage.setItem('region', 'All the World'); 
                                      sessionStorage.setItem('inicializado', 'true');
+                                     sessionStorage.setItem('timedelayice', 'PT5S');
+                                     sessionStorage.setItem('timedelayland', 'PT5S');
                                     }
 
                                     var timeRange = sessionStorage.getItem('timeRange');
@@ -319,9 +336,17 @@
                                     var timeRangeIni = document.getElementById("timeRange");
                                     var regionTimeLineIni = document.getElementById("regionTimeLine");
                                     var timeRangeMigraionsIni = document.getElementById("timeRangeMigraions");
+                                    var timeLineTimeDelayIce = sessionStorage.getItem('timedelayice');
+                                    var timeLineTimeDelayLand = sessionStorage.getItem('timedelayland');
                                     timeRangeIni.value = sessionStorage.getItem('timeRange');
                                     regionTimeLineIni.value = sessionStorage.getItem('region');
                                     timeRangeMigraionsIni.value = sessionStorage.getItem('timeRange');
+                                    var timeOld = sessionStorage.getItem('beginIntervalsesion');
+                                    //var timeAnt = sessionStorage.getItem('beginIntervalsesion')-10000;
+                                    var currentTimeAnt = -1810000;
+                                    var migrationlist = new Array();
+
+            
  
                                     // Capa Base con mapa político
                                     var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";  //"http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
@@ -538,20 +563,7 @@ var eventFilter = new EventTimeFilter(map, timeDimension, timeRange);
     </div>
        <!-- End modal -->
 
-    <!-- Sidebar con el panel derecho que muestra el listado de las migraciones cronológicamente -->
-    <aside id="info" class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-        <div class="p-3 d-flex flex-column">
-            <div class="d-flex align-items-center">
-                <h6 class="mr-3">CYP2D6 Alleles-Expansions</h6>
-                <a class="nav-link ml-auto" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#"
-                   role="button">
-                    <i class="fas fa-times"></i>
-                </a>
-            </div>
-            <ul id="displayed-list" style="font-size:11px;"></ul>
-        </div>
-    </aside>
+
 
 {% endblock %}
 

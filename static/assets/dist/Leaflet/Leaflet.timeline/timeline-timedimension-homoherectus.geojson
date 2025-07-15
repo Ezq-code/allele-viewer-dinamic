@@ -40,7 +40,7 @@
 }},
 
  { "type": "Feature",
-    "properties": { "id": 13.0, "mag": 1500000.0, "place": "Ileret", "time": -890000, "title": "Ileret 1.5 million years ago, Kenya, Africa.", "timefinal": -1500000,
+    "properties": { "id": 13.0, "mag": 1500000.0, "place": "Ileret", "time": -890000, "title": "Ileret 1.5 million years ago, Kenya, Africa.", "timefinal": -1500800,
         "name": "Ileret",
         "times": [
 	-1500800,-1499200,-1497600,-1496000,
@@ -125,7 +125,7 @@
 ] } },
 
  { "type": "Feature",
-    "properties": {"id": 13.0, "mag": 1700000.0, "place": "Ubeidiya", "time": -860000, "title": "Ubeidiya 1.7 million years ago, State of Palestine, West Asia.", "timefinal": -1700000,
+    "properties": {"id": 13.0, "mag": 1700000.0, "place": "Ubeidiya", "time": -860000, "title": "Ubeidiya 1.7 million years ago, State of Palestine, West Asia.", "timefinal": -1696000,
         "name": "Ubeidiya",
         "times": [
 -1696000,-1694400,-1692800,-1691200,-1689600,-1688000,-1686400,-1684800,-1683200,-1681600,-1680000,-1678400,-1676800,-1675200,-1673600,-1672000,-1670400,-1668800,-1667200,
@@ -168,7 +168,7 @@
 ] } },
 
  { "type": "Feature",
-    "properties": { "id": 13.0, "mag": 1600000.0, "place": "Dmanisi", "time": -860000, "title": "Dmanisi 1.6 million years ago, Georgia, Eastern Europe and West Asia.", "timefinal": -1600000 ,
+    "properties": { "id": 13.0, "mag": 1600000.0, "place": "Dmanisi", "time": -860000, "title": "Dmanisi 1.6 million years ago, Georgia, Eastern Europe and West Asia.", "timefinal": -1592000 ,
         "name": "Dmanisi",
         "times": [
 -1592000,
@@ -211,7 +211,7 @@
 ] } },
 
 { "type": "Feature",
-    "properties": { "id": 13.0, "mag": 1490000.0, "place": "Mojokerto, Java", "time": -840000, "title": "Mojokerto, Java 1.49 and 1.43 million years ago, Republic of Indonesia, Asia.", "timefinal": -1460000,
+    "properties": { "id": 13.0, "mag": 1490000.0, "place": "Mojokerto, Java", "time": -840000, "title": "Mojokerto, Java 1.49 and 1.43 million years ago, Republic of Indonesia, Asia.", "timefinal": -1408000,
         "name": "Mojokerto, Java",
         "times": [
 -1408000,
@@ -246,7 +246,7 @@
 ] } },
 
 { "type": "Feature",
-    "properties": {  "id": 13.0, "mag": 800000.0, "place": "Mauer", "time": -795000, "title": "Mauer 800000 years ago, Germany, Europe.", "timefinal": -850000,
+    "properties": {  "id": 13.0, "mag": 800000.0, "place": "Mauer", "time": -795000, "title": "Mauer 800000 years ago, Germany, Europe.", "timefinal": -804400,
         "name": "Mojokerto, Java",
         "times": [
 -804400
@@ -272,7 +272,7 @@
 ] } },
 
 { "type": "Feature",
-    "properties": {"id": 13.0, "mag": 800000.0, "place": "Yunxian", "time": -785000, "title": "Yunxian 850000-580000 years ago, China, Asia.", "timefinal": -800000,
+    "properties": {"id": 13.0, "mag": 800000.0, "place": "Yunxian", "time": -785000, "title": "Yunxian 850000-580000 years ago, China, Asia.", "timefinal": -851700,
         "name": "Yunxian",
         "times": [
 -851700,-847400,-843100,-838800,-834500,-830200,-825900,-821600,-817300,-813000,-808700,-804400
@@ -283,7 +283,7 @@
 }},
 
 { "type": "Feature",
-    "properties": { "id": 13.0, "mag": 800000.0, "place": "Peking", "time": -785000, "title": "Peking 800000-400000 years ago, China, East Asia.", "timefinal": -800000,
+    "properties": { "id": 13.0, "mag": 800000.0, "place": "Peking", "time": -785000, "title": "Peking 800000-400000 years ago, China, East Asia.", "timefinal": -804400,
         "name": "Peking",
         "times": [
 -804400
@@ -294,7 +294,7 @@
 }},
 
 { "type": "Feature",
-    "properties": { "id": 13.0, "mag": 800000.0, "place": "Lantian, Shaanxi", "time": -785000, "title": "Lantian, Shaanxi 530000-1 000 000 years ago, China, Asia.", "timefinal": -800000,
+    "properties": { "id": 13.0, "mag": 800000.0, "place": "Lantian, Shaanxi", "time": -785000, "title": "Lantian, Shaanxi 530000-1 000 000 years ago, China, Asia.", "timefinal": -804400,
         "name": "Lantian, Shaanxi",
         "times": [
 -804400
@@ -332,7 +332,7 @@
 ] } },
 
 { "type": "Feature",
-    "properties": { "id": 13.0, "mag": 800000.0, "place": "Ternifine", "time": -785000, "title": "Ternifine 800000 years ago, Algeria, North Africa.", "timefinal": -800000,
+    "properties": { "id": 13.0, "mag": 800000.0, "place": "Ternifine", "time": -785000, "title": "Ternifine 800000 years ago, Algeria, North Africa.", "timefinal": -804400,
         "name": "Ternifine",
         "times": [
 -804400
