@@ -942,7 +942,7 @@ const allTimes = data.features
                }
               }), {
                  updateTimeDimensionMode: 'replace',  // Mantiene el objeto visible durante todo el rango
-                 duration: "PT5S",//"PT16M", // Duración total = Fin - Inicio (76 minutos)
+                 duration: timeLineTimeDelayIce,//"PT16M", // Duración total = Fin - Inicio (76 minutos)
                  //timeInterval: "PT11S",//"PT16M", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S" // Mismo que duration para rango continuo
                  addlastPoint: false   // Evita saltos al final
           });
@@ -976,7 +976,7 @@ const allTimes = data.features
                  //  duration: "PT76M",
                  //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
                  updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
-                 duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+                 duration: timeLineTimeDelayLand,//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
                  timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
                  addlastPoint: false                  // Evita saltos al final
           });
@@ -1127,19 +1127,6 @@ const overlays = {
    
 };
 
-/*
-const overlays = {
-    //'Land Last Glacial Maximum': LandLGMShapefile,
-    'Glacials': timelineIce,
-    'Land Emerge': timelineLandEmerge,
-    'Migration Trace Route': migrationTraceRoute,
-    'Migration Points': migrationPoints,
-    'Marker Layer': markerLayer,
-    'Population by Region': migrationPoblationRegion,
-    'Allele Geographic Zones': AlleleGeographicZonesLayer
-};
-*/
-
 var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
 
 }
@@ -1154,16 +1141,39 @@ var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
 
                                             sessionStorage.setItem('timeRange', selectedValue); 
 
+
                                             timeRange = selectedValue;
                                             //document.getElementById("timeRange").value  =  selectedValue;
 
                                             var aPosition = selectedValue.indexOf("/");
                                             var aBegin = selectedValue.substring(0,aPosition);
                                             var anEnd = selectedValue.substring(aPosition+1);
+                                            timeOld = aBegin;
+                                            timeAnt = aBegin - 10000;
     
                                             sessionStorage.setItem('beginIntervalsesion', parseInt(aBegin));
                                             sessionStorage.setItem('endIntervalsesion', parseInt(anEnd));  
                                             sessionStorage.setItem('durationSesion', parseInt(anEnd)-parseInt(aBegin));
+
+                                            if (selectedValue == "-15000/2025"){
+                                                sessionStorage.setItem('timedelayice', 'PT5S');
+                                                sessionStorage.setItem('timedelayland', 'PT5S');
+                                            }
+                                            else
+                                            if (selectedValue == "-69000/-15000"){
+                                                sessionStorage.setItem('timedelayice', 'PT9S');
+                                                sessionStorage.setItem('timedelayland', 'PT9S');
+                                            } 
+                                            else
+                                            if (selectedValue == "-130000/-115000"){
+                                                sessionStorage.setItem('timedelayice', 'PT2S');
+                                                sessionStorage.setItem('timedelayland', 'PT4S');
+                                            }                                             
+                                            else
+                                            {
+                                                sessionStorage.setItem('timedelayice', 'PT5S');
+                                                sessionStorage.setItem('timedelayland', 'PT5S');
+                                            } 
 
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
                                             Swal.fire({
@@ -1195,12 +1205,13 @@ var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
                                             var aPosition = aTimeRange.value.indexOf("/");
                                             var aBegin = aTimeRange.value.substring(0,aPosition);
                                             var anEnd = aTimeRange.value.substring(aPosition+1);
+                                            timeOld = aBegin;
+                                            timeAnt = aBegin - 10000;
     
                                             sessionStorage.setItem('beginIntervalsesion', parseInt(aBegin));
                                             sessionStorage.setItem('endIntervalsesion', parseInt(anEnd));  
                                             sessionStorage.setItem('durationSesion', parseInt(anEnd)-parseInt(aBegin));
                                          
-
 
                                         if (aRegionTimeLine.value == "All the World"){ 
                                           sessionStorage.setItem('lat', '10');
@@ -1271,11 +1282,15 @@ var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
                                         });
 
 
+
 var oReq = new XMLHttpRequest();
 oReq.addEventListener("load", function(xhr) {
     const data = JSON.parse(xhr.currentTarget.response);
     
     // Validar tiempos y geometrías
+
+    migrationlist = [];
+    migrationlist.length = 0;
  
     data.features.forEach(feature => {
       
@@ -1283,12 +1298,23 @@ oReq.addEventListener("load", function(xhr) {
             parseInt(t) // Convertir a números
         );
 
+       if (feature.properties.id === 10 || feature.properties.id === 12 || feature.properties.id === 13.0)
+       {  
+        let amigration =    
+          {
+            "atime": feature.properties.timefinal,
+            "atitle": feature.properties.title
+          }
+         migrationlist.push(amigration)
+       }
+/*
         if(!feature.properties.times || feature.properties.times.length < 2){
             console.error(`Feature ${feature.properties.name} tiene tiempos inválidos`);
         }
         if(feature.geometry.type === 'MultiPolygon' && !feature.geometry.coordinates[0][0].length){
             console.error("Estructura MultiPolygon inválida");
         }
+*/
     });
     
 
@@ -1296,8 +1322,58 @@ oReq.addEventListener("load", function(xhr) {
 data.features.sort((a,b) => 
 Math.min(...a.properties.times) - Math.min(...b.properties.times));
     addGeoJSONLayer(map, data);
-    
 
+    var lista = document.getElementById("displayed-list");
+    lista.innerHTML = "";
+    var aMarkAnt = "";
+    var aChangeMark = false; 
+// Escuchar el evento 'timeloading'
+map.timeDimension.on('timeloading', function (e) {
+    const currentTime = map.timeDimension.getCurrentTime();
+    //const currentDate = new Date(currentTime).toISOString();
+   
+  if ((currentTime != currentTimeAnt) && (currentTime != -26508) && (currentTime != -890400)){  
+    
+    // Buscar la feature correspondiente al tiempo actual
+    const currentFeature = data.features.find
+    (feature => (feature.properties.timefinal === currentTime) && (feature.properties.id === 10 || feature.properties.id === 12 || feature.properties.id === 13.0)); //currentDate
+
+    var li = document.createElement("li");
+  
+    if (currentFeature) {
+      if (aMarkAnt != currentFeature.properties.title)
+      {
+       li.innerHTML = currentFeature.properties.title;
+       lista.appendChild(li);
+       aMarkAnt = currentFeature.properties.title;
+      }      
+    }
+    else
+    if (Math.abs(timeOld - currentTime) > 4500)
+    {
+        var enc = false;
+        var i = 0;
+        lista.innerHTML = "";
+        li.innerHTML = "";
+        //timeAnt = migrationlist[0].atime;
+        while ((!enc) && (i < migrationlist.length )) {
+            var li = document.createElement("li");
+            li.innerHTML = migrationlist[i].atitle;
+            lista.appendChild(li); 
+            //if (((Math.abs(migrationlist[i].atime - currentTime)) > (Math.abs(timeAnt - currentTime))) && (Math.abs(migrationlist[i].atime - currentTime) < 300))
+            if (migrationlist[i].atime > currentTime) 
+            {
+             enc = true;
+            }
+            //timeAnt = migrationlist[i].atime;
+            i++;
+        }   
+    };
+};
+    currentTimeAnt = currentTime;
+    timeOld = currentTime;
+  });
+    
 });
 
 
@@ -1313,7 +1389,7 @@ if (timeRange == "-15000/2025"){
         oReq.open('GET', timelinetimedimensionHomoHeidelBergensis);
     }
     else
-    if (timeRange == "-75000/-15000"){
+    if (timeRange == "-69000/-15000"){
         oReq.open('GET', timelinetimedimensionHomoSapiens);
     }
     else

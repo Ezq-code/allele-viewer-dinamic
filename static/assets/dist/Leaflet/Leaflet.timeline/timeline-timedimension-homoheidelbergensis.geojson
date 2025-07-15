@@ -213,7 +213,7 @@
  } },
  
   { "type": "Feature",
-    "properties": { "id": 12, "mag": 12.0, "place": "Mauer", "time": -160001, "title": "Mauer 600000 years ago, Germany, Europe", "timefinal": -600000,
+    "properties": { "id": 12, "mag": 12.0, "place": "Mauer", "time": -160001, "title": "Mauer 600000 years ago, Germany, Europe", "timefinal": -600076,
         "name": "Mauer",
         "times": [
 -600076,
@@ -276,7 +276,7 @@
  } },
 
  { "type": "Feature",
-    "properties": { "id": 12, "mag": 12.0, "place": "Ndutu", "time": -160001, "title": "Ndutu 600000 years ago, Tanzania, Africa", "timefinal": -600000,
+    "properties": { "id": 12, "mag": 12.0, "place": "Ndutu", "time": -160001, "title": "Ndutu 600000 years ago, Tanzania, Africa", "timefinal": -617487,
         "name": "Kabwe",
         "times": [
 -617487,-616730,-615973,-615216,-614459,-613702,-612945,-612188,-611431,-610674,-609917,-609160,-608403,-607646,-606889,-606132,-605375,-604618,-603861,-603104,-602347,
@@ -339,7 +339,7 @@
  } },
  
   { "type": "Feature",
-    "properties": { "id": 12, "mag": 12.0, "place": "Kabwe", "time": -160001, "title": "Kabwe 600000 years ago, Zambia, Africa", "timefinal": -600000,
+    "properties": { "id": 12, "mag": 12.0, "place": "Kabwe", "time": -160001, "title": "Kabwe 600000 years ago, Zambia, Africa", "timefinal": -600076,
         "name": "Kabwe",
         "times": [
 -600076,
@@ -406,7 +406,7 @@
  } },
  
    { "type": "Feature",
-    "properties": { "id": 12, "mag": 12.0, "place": "Solo", "time": -160001, "title": "Solo 500000 years ago, Indonesia, Asia", "timefinal": -500000,
+    "properties": { "id": 12, "mag": 12.0, "place": "Solo", "time": -160001, "title": "Solo 500000 years ago, Indonesia, Asia", "timefinal": -515292,
         "name": "Solo",
         "times": [
 -515292,
@@ -460,7 +460,7 @@
  } },
 
     { "type": "Feature",
-    "properties": { "id": 12, "mag": 12.0, "place": "Swanscombe", "time": -160001, "title": "Swanscombe 400000 years ago, England, Europe", "timefinal": -400000,
+    "properties": { "id": 12, "mag": 12.0, "place": "Swanscombe", "time": -160001, "title": "Swanscombe 400000 years ago, England, Europe", "timefinal": -523619,
         "name": "Swanscombe",
         "times": [
 -523619,
@@ -516,7 +516,7 @@
  } },
 
    { "type": "Feature",
-    "properties": {"id": 12, "mag": 12.0, "place": "Petranola", "time": -160001, "title": "Petralona 550 000 years ago, Grecia, Europe", "timefinal": -550000,
+    "properties": {"id": 12, "mag": 12.0, "place": "Petranola", "time": -160001, "title": "Petralona 550 000 years ago, Grecia, Europe", "timefinal": -515292,
         "name": "Petralona",
         "times": [
 -515292,
@@ -573,7 +573,7 @@
  } },
  
      { "type": "Feature",
-    "properties": { "id": 12, "mag": 12.0, "place": "Ceprano", "time": -160001, "title": "Ceprano Italia 450000 years ago, Italy, Europe", "timefinal": -450000,
+    "properties": { "id": 12, "mag": 12.0, "place": "Ceprano", "time": -160001, "title": "Ceprano Italia 450000 years ago, Italy, Europe", "timefinal": -451704,
         "name": "Ceprano",
         "times": [
 -451704,
@@ -624,7 +624,7 @@
  } },
  
      { "type": "Feature",
-    "properties": {  "id": 12, "mag": 12.0, "place": "Tautavel", "time": -160001, "title": "Tautavel 450000 years ago, Spain, Europe", "timefinal": -450000,
+    "properties": {  "id": 12, "mag": 12.0, "place": "Tautavel", "time": -160001, "title": "Tautavel 450000 years ago, Spain, Europe", "timefinal": -400228,
         "name": "Ceprano",
         "times": [
 -400228,
@@ -682,7 +682,7 @@
  
  
       { "type": "Feature",
-    "properties": {   "id": 12, "mag": 12.0, "place": "Atapuerca", "time": -160001, "title": "Atapuerca 350000 years ago, Spain, Europe", "timefinal": -350000,
+    "properties": {   "id": 12, "mag": 12.0, "place": "Atapuerca", "time": -160001, "title": "Atapuerca 350000 years ago, Spain, Europe", "timefinal": -350266,
         "name": "Atapuerca",
         "times": [
 -350266,
@@ -722,7 +722,7 @@
  } },
  
        { "type": "Feature",
-    "properties": {"id": 12, "mag": 12.0, "place": "Dali", "time": -160001, "title": "Dali 280000 years ago, China, Asia", "timefinal": -280000,
+    "properties": {"id": 12, "mag": 12.0, "place": "Dali", "time": -160001, "title": "Dali 280000 years ago, China, Asia", "timefinal": -301061,
         "name": "Dali",
         "times": [
 -301061,
@@ -748,7 +748,7 @@
 }},
 
        { "type": "Feature",
-    "properties": {"id": 12, "mag": 12.0, "place": "Galilea", "time": -160001, "title": "Galilea 300 000 years ago, Islarel, West Asia", "timefinal": -300000,
+    "properties": {"id": 12, "mag": 12.0, "place": "Galilea", "time": -160001, "title": "Galilea 300 000 years ago, Islarel, West Asia", "timefinal": -300304,
         "name": "Galilea",
         "times": [
 
@@ -782,7 +782,7 @@
  } },
  
        { "type": "Feature",
-    "properties": {"id": 12, "mag": 15000.0, "place": "Jinniushan", "time": -160001, "title": "Jinniushan 280000 years ago, China, Asia", "timefinal": -280000,
+    "properties": {"id": 12, "mag": 15000.0, "place": "Jinniushan", "time": -160001, "title": "Jinniushan 280000 years ago, China, Asia", "timefinal": -270781,
         "name": "Jinniushan",
         "times": [
 -270781,
@@ -816,7 +816,7 @@
  } },
  
         { "type": "Feature",
-    "properties": {"id": 12, "mag": 12.0, "place": "Alaska", "time": -160001, "title": "Florisbad 259000 years ago, South Africa, Africa", "timefinal": -259000,
+    "properties": {"id": 12, "mag": 12.0, "place": "Alaska", "time": -160001, "title": "Florisbad 259000 years ago, South Africa, Africa", "timefinal": -260183,
         "name": "Florisbad",
         "times": [
 -260183,-259426,-258669,-257912,-257155,-256398,-255641,-254884,-254127,
@@ -853,7 +853,7 @@
  } },
  
         { "type": "Feature",
-    "properties": {"id": 12, "mag": 12.0, "place": "Denisova", "time": -160001, "title": "Denisova 160000 years ago, Rusia, Asia", "timefinal": -160000,
+    "properties": {"id": 12, "mag": 12.0, "place": "Denisova", "time": -160001, "title": "Denisova 160000 years ago, Rusia, Asia", "timefinal": -169343,
         "name": "Denisova",
         "times": [
 -169343,
@@ -879,7 +879,7 @@
  } },
  
         { "type": "Feature",
-    "properties": { "id": 12, "mag": 12.0, "place": "Penghu", "time": -160001, "title": "Penghu 190000 years ago, Taiwan, Asia", "timefinal": -190000,
+    "properties": { "id": 12, "mag": 12.0, "place": "Penghu", "time": -160001, "title": "Penghu 190000 years ago, Taiwan, Asia", "timefinal": -190539,
         "name": "Penghu",
         "times": [
 -190539
