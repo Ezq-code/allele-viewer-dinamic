@@ -21,6 +21,12 @@ class AlleleSNPInfo(models.Model):
     increment_location_snp = models.TextField(
         null=True, blank=True, verbose_name=_("SNP increment (Location)")
     )
+    uploaded_file = models.ForeignKey(
+        to="UploadedSNPFiles",
+        on_delete=models.CASCADE,
+        related_name="allele_snp_info",
+        verbose_name=_("Uploaded SNP File"),
+    )
 
     class Meta:
         verbose_name = _("Allele SNP Information")

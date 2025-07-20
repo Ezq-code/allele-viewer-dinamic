@@ -3,6 +3,7 @@ import logging
 
 
 from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
+from apps.allele_formation.models.uploaded_snp_files import UploadedSNPFiles
 
 logger = logging.getLogger(__name__)
 
@@ -28,4 +29,22 @@ class AlleleSNPInfoAdmin(admin.ModelAdmin):
         "increment_ancesters_snp",
         "loss_location_snp",
         "increment_location_snp",
+    ]
+
+
+@admin.register(UploadedSNPFiles)
+class UploadedSNPFilesAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "custom_name",
+        "description",
+        "snp_file",
+        "system_user",
+    ]
+    fields = [
+        "custom_name",
+        "description",
+        "snp_file",
+        "system_user",
     ]

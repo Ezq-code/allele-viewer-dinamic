@@ -1,109 +1,139 @@
 import logging
-import sys
 import pandas as pd
 
-import itertools
+from django.db import IntegrityError, transaction
 
-from apps.business_app.models.pdb_files import PdbFiles
-from apps.business_app.utils.excel_nomenclators import ExcelNomenclators
+from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
+from apps.allele_formation.utils.excel_snp_nomenclators import ExcelSNPNomenclators
 
 logger = logging.getLogger(__name__)
 
 
-class ExcelReader:
+class ExcelSNPReader:
     def __init__(self, origin_file) -> None:
         self.origin_file = origin_file
-        _elements_symbol_pool = (
-            "C",  # Gris
-            "LI",  # Rojo
-            "S",  # Amarillo
-            "N",  # Azul
-            "Ca",  # Gris oscuro
-            "BE",  # Rosado
-            "Mg",  # Verde brillante
-            "NA",  # Azul fuerte
-            "Au",  # Amarillo mostaza
-            "Fe",  # Naranja
-            "TA",  # Rosado
-            "I"  # Violeta
-            "B",  # Verde claro brillante
+
+        self._output_mandatory_columns_for_sheet_allele_validation = (
+            ExcelSNPNomenclators.sheet_allele_column_allele,
+            ExcelSNPNomenclators.sheet_allele_column_parent,
+            ExcelSNPNomenclators.sheet_allele_column_increment_ancesters_snp,
+            ExcelSNPNomenclators.sheet_allele_column_increment_location_snp,
+            ExcelSNPNomenclators.sheet_allele_column_loss_ancesters_snp,
+            ExcelSNPNomenclators.sheet_allele_column_loss_location_snp,
         )
-        self.region_color_maping = {
-            "AFR-EAS": "B",  # East-African
-            "AFR-SWE": "Mg",  # South-West-African
-            "AFR-NOR": "Mg",  # North-African
-            "AFR-AMR": "Fe",  # African American/Afro-Caribbean
-            "SSA": "B",  # Sub-Saharan African
-            "CSA": "Au",  # Central/South-Asian
-            "CA": "Fe",  # Central-Asian
-            "SA": "S",  # South-Asian
-            "EUR": "N",  # European
-            "EAS": "Na",  # East Asian
-            "NEA": "TA",  # Near Eastern
-            "OCE": "I",  # Oceanian
-            "AMR": "BE",  # American
-            "LAT": "LI",  # Latino
-        }
-        self.default_value_if_no_region = "C"
-        self.elements_symbol_iterator = itertools.cycle(_elements_symbol_pool)
 
-        self._output_mandatory_columns_for_validation = (
-            ExcelNomenclators.output_allele_column_name,
-            ExcelNomenclators.output_number_column_name,
-            ExcelNomenclators.output_region_column_name,
-            ExcelNomenclators.output_rs_column_name,
-            ExcelNomenclators.output_parent_column_name,
-            "X0",
-            "Y0",
-            "Z0",
-        )
-        self.coordinates_sets = 0
-
-        self.ilu_search_criteria = "ILU"  # ? UNUSED
-        # dataframes = pd.read_excel(self.origin_file, sheet_name=None, engine="openpyxl")
-
-        self.output_df = pd.read_excel(
+        self.sheet_allele_df = pd.read_excel(
             self.origin_file,
-            sheet_name=ExcelNomenclators.output_sheet,
+            sheet_name=ExcelSNPNomenclators.sheet_allele,
             engine="openpyxl",
         )
-        # self.temp_df = pd.read_excel(
-        #     self.origin_file, sheet_name=ExcelNomenclators.tmp_sheet, engine="openpyxl"
-        # )
 
-        self._validate_output_sheet_file_structure()
+        self._validate_sheet_structure(
+            self.sheet_allele_df,
+            self._output_mandatory_columns_for_sheet_allele_validation,
+            ExcelSNPNomenclators.sheet_allele,
+        )
+        self._output_mandatory_columns_for_sheet_bd_location_validation = (
+            self._output_mandatory_columns_for_sheet_bd_ancesters_validation
+        ) = (
+            ExcelSNPNomenclators.sheet_bd_column_allele,
+            ExcelSNPNomenclators.sheet_bd_column_color,
+            ExcelSNPNomenclators.sheet_bd_column_formation,
+            ExcelSNPNomenclators.sheet_bd_column_order,
+        )
 
-    def _validate_output_sheet_file_structure(self):
-        first_row_output = self.output_df.iloc[0]
-        for column in self._output_mandatory_columns_for_validation:
+        self.sheet_bd_location_df = pd.read_excel(
+            self.origin_file,
+            sheet_name=ExcelSNPNomenclators.sheet_bd_location,
+            engine="openpyxl",
+        )
+
+        self._validate_sheet_structure(
+            self.sheet_bd_location_df,
+            self._output_mandatory_columns_for_sheet_bd_location_validation,
+            ExcelSNPNomenclators.sheet_bd_location,
+        )
+
+        self.sheet_bd_ancesters_df = pd.read_excel(
+            self.origin_file,
+            sheet_name=ExcelSNPNomenclators.sheet_bd_ancesters,
+            engine="openpyxl",
+        )
+
+        self._validate_sheet_structure(
+            self.sheet_bd_ancesters_df,
+            self._output_mandatory_columns_for_sheet_bd_ancesters_validation,
+            ExcelSNPNomenclators.sheet_bd_ancesters,
+        )
+
+    def _validate_sheet_structure(self, sheet_dataframe, mandatory_columns, sheet):
+        first_row_output = sheet_dataframe.iloc[0]
+        for column in mandatory_columns:
             try:
                 first_row_output[column]
             except KeyError as e:
                 logger.error(f"{str(e)}")
                 raise ValueError(
-                    f"Invalid file structure, the table on the sheet '{ExcelNomenclators.output_sheet}' "
+                    f"Invalid file structure, the table on the sheet '{sheet}' "
                     f"has at least the next column missing: {column}."
                 ) from None
-        else:
-            for index in range(sys.maxsize):
-                try:
-                    _, _, _ = (
-                        first_row_output[f"X{index}"],
-                        first_row_output[f"Y{index}"],
-                        first_row_output[f"Z{index}"],
-                    )
-                    self.coordinates_sets += 1
-                except KeyError:
-                    break
 
-    def create_pdb_and_persist_on_db(
-        self, file_content, pdb_filename_base, suffix, uploaded_file_id, kind
-    ):
-        custom_name = f"{pdb_filename_base}-{suffix}.pdb"
-        PdbFiles.objects.create(
-            custom_name=custom_name,
-            description="",
-            original_file_id=uploaded_file_id,
-            pdb_content=file_content,
-            kind=kind,
-        )
+    def proccess_sheet_allele(self, file_id):
+        print("Proccessing sheet_allele file data...")
+        data = []
+        for index, row in self.sheet_allele_df.iterrows():
+            allele = row[ExcelSNPNomenclators.sheet_allele_column_allele]
+            if pd.isna(allele):
+                break
+            parents_info = row[ExcelSNPNomenclators.sheet_allele_column_parent]
+            loss_ancesters_snp = row[
+                ExcelSNPNomenclators.sheet_allele_column_loss_ancesters_snp
+            ]
+            increment_ancesters_snp = row[
+                ExcelSNPNomenclators.sheet_allele_column_increment_ancesters_snp
+            ]
+            loss_location_snp = row[
+                ExcelSNPNomenclators.sheet_allele_column_loss_location_snp
+            ]
+            increment_location_snp = row[
+                ExcelSNPNomenclators.sheet_allele_column_increment_location_snp
+            ]
+            data.append(
+                AlleleSNPInfo(
+                    allele=allele,
+                    parents_info=parents_info if not pd.isna(parents_info) else None,
+                    loss_ancesters_snp=loss_ancesters_snp
+                    if not pd.isna(loss_ancesters_snp)
+                    else None,
+                    increment_ancesters_snp=increment_ancesters_snp
+                    if not pd.isna(increment_ancesters_snp)
+                    else None,
+                    loss_location_snp=loss_location_snp
+                    if not pd.isna(loss_location_snp)
+                    else None,
+                    increment_location_snp=increment_location_snp
+                    if not pd.isna(increment_location_snp)
+                    else None,
+                    uploaded_file_id=file_id,
+                )
+            )
+        try:
+            with transaction.atomic():
+                if not data:
+                    logger.error("No data to proccess")
+                    raise Exception(
+                        "Check the excel file, remove any blank line at the first rows"
+                    )
+                AlleleSNPInfo.objects.bulk_create(data)
+        except IntegrityError as e:
+            logger.error(f"Integrity error while creating AlleleSNPInfo: {e}")
+            raise ValueError(
+                "Integrity error while processing allele data. "
+                "Please check for duplicate entries."
+            )
+        except Exception as e:
+            logger.error(f"Unexpected error processing allele data: {e}")
+            raise ValueError(
+                "An unexpected error occurred while processing allele data. "
+                "Please check the file format and try again."
+            )
