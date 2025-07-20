@@ -81,7 +81,7 @@ class ExcelSNPReader:
     def proccess_sheet_allele(self, file_id):
         print("Proccessing sheet_allele file data...")
         data = []
-        for index, row in self.sheet_allele_df.iterrows():
+        for _, row in self.sheet_allele_df.iterrows():
             allele = row[ExcelSNPNomenclators.sheet_allele_column_allele]
             if pd.isna(allele):
                 break
