@@ -1,4 +1,5 @@
 import os
+from venv import logger
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -61,10 +62,10 @@ class UploadedSNPFiles(models.Model):
 
         try:
             processor_object = ExcelSNPReader(snp_file)
-            processor_object.proccess_sheet_allele(self.id)
+            processor_object.proccess_sheets(self.id)
 
         except Exception as e:
-            print(e)
+            logger.error(e)
             self.delete()
             raise e
 

@@ -6,7 +6,7 @@ class AlleleSNPInfo(models.Model):
     parents_info = models.CharField(
         verbose_name=_("Parents Info"), null=True, max_length=256
     )
-    allele = models.CharField(verbose_name=_("Allele"), unique=True, max_length=100)
+    allele = models.CharField(verbose_name=_("Allele"), max_length=100)
 
     loss_ancesters_snp = models.TextField(
         null=True, blank=True, verbose_name=_("SNP lost (Ancesters)")
@@ -31,6 +31,12 @@ class AlleleSNPInfo(models.Model):
     class Meta:
         verbose_name = _("Allele SNP Information")
         verbose_name_plural = _("Alleles SNP Information")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["allele", "uploaded_file"],
+                name="unique_allele_uploaded_file",
+            )
+        ]
 
     def __str__(self):
         return self.allele

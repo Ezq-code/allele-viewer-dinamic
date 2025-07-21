@@ -4,6 +4,12 @@ import pandas as pd
 from django.db import IntegrityError, transaction
 
 from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
+from apps.allele_formation.models.snp_allele_location_formation import (
+    SNPAlleleLocationFormation,
+)
+from apps.allele_formation.models.snp_allele_parents_formation import (
+    SNPAlleleParentsFormation,
+)
 from apps.allele_formation.utils.excel_snp_nomenclators import ExcelSNPNomenclators
 
 logger = logging.getLogger(__name__)
@@ -12,7 +18,7 @@ logger = logging.getLogger(__name__)
 class ExcelSNPReader:
     def __init__(self, origin_file) -> None:
         self.origin_file = origin_file
-
+        self.max_allowed_empty_rows = 1
         self._output_mandatory_columns_for_sheet_allele_validation = (
             ExcelSNPNomenclators.sheet_allele_column_allele,
             ExcelSNPNomenclators.sheet_allele_column_parent,
@@ -67,6 +73,8 @@ class ExcelSNPReader:
         )
 
     def _validate_sheet_structure(self, sheet_dataframe, mandatory_columns, sheet):
+        logger.info(f"Validating {sheet} necesary headers structures..")
+
         first_row_output = sheet_dataframe.iloc[0]
         for column in mandatory_columns:
             try:
@@ -78,13 +86,36 @@ class ExcelSNPReader:
                     f"has at least the next column missing: {column}."
                 ) from None
 
-    def proccess_sheet_allele(self, file_id):
-        print("Proccessing sheet_allele file data...")
+    def proccess_sheets(self, file_id):
+        self._proccess_sheet_allele(
+            file_id=file_id, sheet=ExcelSNPNomenclators.sheet_allele
+        )
+        self._proccess_sheet_bd(
+            file_id=file_id,
+            dataframe=self.sheet_bd_location_df,
+            model=SNPAlleleLocationFormation,
+            sheet=ExcelSNPNomenclators.sheet_bd_location,
+        )
+        self._proccess_sheet_bd(
+            file_id=file_id,
+            dataframe=self.sheet_bd_ancesters_df,
+            model=SNPAlleleParentsFormation,
+            sheet=ExcelSNPNomenclators.sheet_bd_ancesters,
+        )
+
+    def _proccess_sheet_allele(self, file_id, sheet):
+        logger.info(f"Proccessing {sheet} file data...")
         data = []
+        empty_rows = 0
         for _, row in self.sheet_allele_df.iterrows():
             allele = row[ExcelSNPNomenclators.sheet_allele_column_allele]
             if pd.isna(allele):
-                break
+                if empty_rows <= self.max_allowed_empty_rows:
+                    empty_rows += 1
+                    continue
+                else:
+                    break
+            empty_rows = 0
             parents_info = row[ExcelSNPNomenclators.sheet_allele_column_parent]
             loss_ancesters_snp = row[
                 ExcelSNPNomenclators.sheet_allele_column_loss_ancesters_snp
@@ -131,6 +162,54 @@ class ExcelSNPReader:
                 "Integrity error while processing allele data. "
                 "Please check for duplicate entries."
             )
+        except Exception as e:
+            logger.error(f"Unexpected error processing allele data: {e}")
+            raise ValueError(
+                "An unexpected error occurred while processing allele data. "
+                "Please check the file format and try again."
+            )
+
+    def _proccess_sheet_bd(self, file_id, dataframe, model, sheet):
+        logger.info(f"Proccessing {sheet} file data...")
+        data = []
+        last_allele = None
+        empty_rows = 0
+        for _, row in dataframe.iterrows():
+            allele = row[ExcelSNPNomenclators.sheet_bd_column_allele]
+            if allele is not last_allele:
+                if pd.isna(allele):
+                    if empty_rows <= self.max_allowed_empty_rows:
+                        empty_rows += 1
+                        continue
+                    else:
+                        break
+                empty_rows = 0
+                last_allele = allele
+                try:
+                    allele_id = AlleleSNPInfo.objects.get(
+                        uploaded_file_id=file_id, allele=allele
+                    ).id
+                except AlleleSNPInfo.DoesNotExist:
+                    continue
+            order = row[ExcelSNPNomenclators.sheet_bd_column_order]
+            formation = row[ExcelSNPNomenclators.sheet_bd_column_formation]
+            color = row[ExcelSNPNomenclators.sheet_bd_column_color]
+            data.append(
+                model(
+                    allele_id=allele_id,
+                    order=order,
+                    formation=formation if not pd.isna(formation) else "",
+                    color=color,
+                )
+            )
+        try:
+            with transaction.atomic():
+                if not data:
+                    logger.error("No data to proccess")
+                    raise Exception(
+                        "Check the excel file, remove any blank line at the first rows"
+                    )
+                model.objects.bulk_create(data)
         except Exception as e:
             logger.error(f"Unexpected error processing allele data: {e}")
             raise ValueError(

@@ -281,7 +281,7 @@ LOGGING = {
             "formatter": "verbose",
         },
         "console": {
-            "level": "ERROR",
+            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
