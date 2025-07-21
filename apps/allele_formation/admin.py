@@ -3,11 +3,9 @@ import logging
 
 
 from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
+from apps.allele_formation.models.snp_allele_ancester_formation import SNPAlleleAncesterFormation
 from apps.allele_formation.models.snp_allele_location_formation import (
     SNPAlleleLocationFormation,
-)
-from apps.allele_formation.models.snp_allele_parents_formation import (
-    SNPAlleleParentsFormation,
 )
 from apps.allele_formation.models.uploaded_snp_files import UploadedSNPFiles
 
@@ -56,8 +54,8 @@ class UploadedSNPFilesAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(SNPAlleleParentsFormation)
-class SNPAlleleParentsFormationAdmin(admin.ModelAdmin):
+@admin.register(SNPAlleleAncesterFormation)
+class SNPAlleleAncesterFormationAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
     list_display = [
         "id",

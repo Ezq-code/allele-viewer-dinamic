@@ -7,8 +7,8 @@ from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
 from apps.allele_formation.models.snp_allele_location_formation import (
     SNPAlleleLocationFormation,
 )
-from apps.allele_formation.models.snp_allele_parents_formation import (
-    SNPAlleleParentsFormation,
+from apps.allele_formation.models.snp_allele_ancester_formation import (
+    SNPAlleleAncesterFormation,
 )
 from apps.allele_formation.utils.excel_snp_nomenclators import ExcelSNPNomenclators
 
@@ -99,7 +99,7 @@ class ExcelSNPReader:
         self._proccess_sheet_bd(
             file_id=file_id,
             dataframe=self.sheet_bd_ancesters_df,
-            model=SNPAlleleParentsFormation,
+            model=SNPAlleleAncesterFormation,
             sheet=ExcelSNPNomenclators.sheet_bd_ancesters,
         )
 

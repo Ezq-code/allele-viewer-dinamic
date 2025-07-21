@@ -7,11 +7,11 @@ from apps.allele_formation.models.snp_formation_information import (
 from django.db import models
 
 
-class SNPAlleleLocationFormation(VirtualAlleleFormationInfo):
+class SNPAlleleAncesterFormation(VirtualAlleleFormationInfo):
     allele = models.ForeignKey(
-        AlleleSNPInfo, on_delete=models.CASCADE, related_name="location_formation"
+        AlleleSNPInfo, on_delete=models.CASCADE, related_name="ancester_formation"
     )
 
     class Meta:
-        verbose_name = _("SNP Allele Location Formation")
-        verbose_name_plural = _("SNP Alleles Location Formation")
+        verbose_name = _("SNP Allele Ancester Formation")
+        verbose_name_plural = _("SNP Alleles Ancester Formation")
