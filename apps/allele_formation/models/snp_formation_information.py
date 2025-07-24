@@ -8,7 +8,7 @@ from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
 class VirtualAlleleFormationInfo(models.Model):
     allele = models.ForeignKey(AlleleSNPInfo, on_delete=models.CASCADE)
     order = models.PositiveSmallIntegerField(verbose_name=_("Order"))
-    formation = models.CharField(verbose_name="Formation")
+    formation = models.TextField(verbose_name="Formation")
     color = ColorField(_("Color"), default="#808080")  # gris
 
     class Meta:
