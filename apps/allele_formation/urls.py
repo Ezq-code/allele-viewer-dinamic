@@ -8,6 +8,9 @@ from apps.allele_formation.views.snp_allele_location_formation_viewset import (
 from apps.allele_formation.views.snp_allele_ancester_formation_viewset import (
     SNPAlleleAncesterFormationViewSet,
 )
+from apps.allele_formation.views.uploaded_snp_files_viewset import (
+    UploadedSNPFilesViewSet,
+)
 
 
 router = ExtendedSimpleRouter()
@@ -26,6 +29,12 @@ router.register(
     "snp-allele-ancester-formation",
     SNPAlleleAncesterFormationViewSet,
     basename="snp-allele-ancester-formation",
+)
+
+router.register(
+    "uploaded-snp-files",
+    UploadedSNPFilesViewSet,
+    basename="uploaded-snp-files",
 )
 
 urlpatterns = []

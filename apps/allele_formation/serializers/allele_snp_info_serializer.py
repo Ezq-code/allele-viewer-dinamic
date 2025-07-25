@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
-from apps.allele_formation.serializers.snp_allele_ancester_formation_serializer import SNPAlleleAncesterFormationSerializer
+from apps.allele_formation.serializers.snp_allele_ancester_formation_serializer import (
+    SNPAlleleAncesterFormationSerializer,
+)
 from apps.allele_formation.serializers.snp_allele_location_formation_serializer import (
     SNPAlleleLocationFormationSerializer,
 )
-
 
 
 class AlleleSNPInfoSerializer(serializers.ModelSerializer):

@@ -1,26 +1,26 @@
 from rest_framework import viewsets, filters
-from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
 
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-from apps.allele_formation.serializers.allele_snp_info_serializer import (
-    AlleleSNPInfoSerializer,
+from apps.allele_formation.models.uploaded_snp_files import UploadedSNPFiles
+from apps.allele_formation.serializers.uploaded_snp_files_serializer import (
+    UploadedSNPFileSerializer,
 )
 from apps.common.views import CommonOrderingFilter
 
 
-class AlleleSNPInfoViewSet(viewsets.ModelViewSet):
-    queryset = AlleleSNPInfo.objects.all().prefetch_related(
+class UploadedSNPFilesViewSet(viewsets.ModelViewSet):
+    queryset = UploadedSNPFiles.objects.all().prefetch_related(
         "ancester_formation", "location_formation"
     )
-    serializer_class = AlleleSNPInfoSerializer
+    serializer_class = UploadedSNPFileSerializer
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
     filterset_fields = [
-        "allele",
+        "system_user",
     ]
     ordering_fields = "__all__"

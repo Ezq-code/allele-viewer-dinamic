@@ -3,7 +3,9 @@ import logging
 
 
 from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
-from apps.allele_formation.models.snp_allele_ancester_formation import SNPAlleleAncesterFormation
+from apps.allele_formation.models.snp_allele_ancester_formation import (
+    SNPAlleleAncesterFormation,
+)
 from apps.allele_formation.models.snp_allele_location_formation import (
     SNPAlleleLocationFormation,
 )

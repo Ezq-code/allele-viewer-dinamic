@@ -154,7 +154,7 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
             uploaded_file=self.working_files.uploaded_file
         ).count()
         output_range = (
-            f"{ExcelNomenclators.output_sheet}!A2:J{existing_allele_nodes_qty +1}"
+            f"{ExcelNomenclators.output_sheet}!A2:J{existing_allele_nodes_qty + 1}"
         )
         try:
             updated_lines = []
