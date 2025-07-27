@@ -1,6 +1,5 @@
-from rest_framework import viewsets, filters
-
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, permissions, viewsets
 
 
 from apps.allele_formation.models.uploaded_snp_files import UploadedSNPFiles
@@ -11,9 +10,9 @@ from apps.common.views import CommonOrderingFilter
 
 
 class UploadedSNPFilesViewSet(viewsets.ModelViewSet):
-    queryset = UploadedSNPFiles.objects.all().prefetch_related(
-        "ancester_formation", "location_formation"
-    )
+    queryset = UploadedSNPFiles.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
     serializer_class = UploadedSNPFileSerializer
     filter_backends = [
         DjangoFilterBackend,

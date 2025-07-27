@@ -35,6 +35,7 @@ def alleleviewer(request):
 def uploadfile(request):
     return render(request, "grafico/uploadfile.html")
 
+
 @cache_page(60 * 15)
 def uploadfileconformation(request):
     return render(request, "grafico/uploadfileconformation.html")

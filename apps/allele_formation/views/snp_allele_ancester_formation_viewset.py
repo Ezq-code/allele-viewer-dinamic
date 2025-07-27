@@ -7,6 +7,6 @@ from apps.allele_formation.serializers.snp_allele_ancester_formation_serializer 
 )
 
 
-class SNPAlleleAncesterFormationViewSet(viewsets.ModelViewSet):
+class SNPAlleleAncesterFormationViewSet(viewsets.ModelViewSet):  # ! NOT USED FOR NOW
     queryset = SNPAlleleAncesterFormation.objects.all()
     serializer_class = SNPAlleleAncesterFormationSerializer
