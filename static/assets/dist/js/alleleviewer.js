@@ -1663,7 +1663,7 @@ console.log('✌️data[type] --->', data[type]);
         items.forEach(item => {
             timelineContent.innerHTML += `
             <li class="timeline-item">
-              <div class="timeline-badge" style="background:${item.color};"><i class="nav-icon fas fa-dna"></i></div>
+              <div class="timeline-badge" style="background:${item.color};-webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);"><i class="nav-icon fas fa-dna"></i></div>
               <div class="timeline-panel">
               <div class="timeline-heading">
                 <h4 class="timeline-title" style="word-break:break-word;white-space:normal;color:${item.color};">Order ${item.order}</h4>
