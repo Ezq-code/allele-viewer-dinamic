@@ -1638,7 +1638,7 @@ let location_formation = document.getElementById("formationTypeSelect");
       }
       Toast.fire({
         icon: "error",
-        title: error.response?.data?.detail || "Error loading formation info"
+        title: error.response?.data?.detail || "No allele SNP formation data available"
       });
     });
 }

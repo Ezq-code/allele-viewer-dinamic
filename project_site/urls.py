@@ -56,7 +56,7 @@ urlpatterns = [
     path(
         "uploadfileconformation/",
         login_required(pages.uploadfileconformation, login_url="/login/"),
-        name="uploadfile",
+        name="uploadfileconformation",
     ),
     path("alleleviewer", pages.alleleviewer, name="alleleviewer"),
     path("login/", pages.first_login, name="first_login"),
