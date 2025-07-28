@@ -46,12 +46,14 @@ class UploadedSNPFilesAdmin(admin.ModelAdmin):
         "custom_name",
         "description",
         "snp_file",
+        "predefined",
         "system_user",
     ]
     fields = [
         "custom_name",
         "description",
         "snp_file",
+        "predefined",
         "system_user",
     ]
 

@@ -13,7 +13,7 @@ from apps.common.views import CommonOrderingFilter
 class AlleleSNPInfoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AlleleSNPInfo.objects.prefetch_related(
         "ancester_formation", "location_formation"
-    )
+    ).filter(uploaded_file__predefined=True)
     serializer_class = AlleleSNPInfoSerializer
     filter_backends = [
         DjangoFilterBackend,

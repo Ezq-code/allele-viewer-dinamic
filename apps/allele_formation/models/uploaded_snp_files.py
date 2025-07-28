@@ -48,6 +48,10 @@ class UploadedSNPFiles(models.Model):
         verbose_name=_("created at"),
         auto_now_add=True,  # Set the field to now every time the object is first created
     )
+    predefined = models.BooleanField(
+        verbose_name=_("predefined"),
+        default=False,
+    )
 
     class Meta:
         verbose_name = _("SNP File")
