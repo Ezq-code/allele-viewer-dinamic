@@ -62,16 +62,18 @@ class UploadedSNPFiles(models.Model):
 
     def save(self, *args, **kwargs):
         snp_file = self.snp_file
+        is_new = self.pk is None
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
-        try:
-            processor_object = ExcelSNPReader(snp_file)
-            processor_object.proccess_sheets(self.id)
+        if is_new and snp_file:
+            try:
+                processor_object = ExcelSNPReader(snp_file)
+                processor_object.proccess_sheets(self.id)
 
-        except Exception as e:
-            logger.error(e)
-            self.delete()
-            raise e
+            except Exception as e:
+                logger.error(e)
+                self.delete()
+                raise e
 
     def delete(self, *args, **kwargs):
         # Delete the physical file before deleting the record
