@@ -37,6 +37,11 @@ def uploadfile(request):
 
 
 @cache_page(60 * 15)
+def uploadfileconformation(request):
+    return render(request, "grafico/uploadfileconformation.html")
+
+
+@cache_page(60 * 15)
 def register(request):
     return render(request, "login/register.html")
 
