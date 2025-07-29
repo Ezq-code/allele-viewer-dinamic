@@ -292,6 +292,7 @@
                             <div class="card-body">
                                 <div class="right-sidebar col-xl-12">
                                     <div id="map" class="col-10"></div>
+                                    <!--
                                     <div id="timeRangeMigraions" class="col-2">
                                         <select multiple="" class="custom-multiselect">
                                             <option value="-15000/2025" selected>From 15000 YBP to year 2025</option>
@@ -301,6 +302,17 @@
                                             <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
                                       </select>
                                     </div>
+                                    -->
+                                    <div id="timeRangeMigraions" class="col-2">
+                                        <select class="custom-multiselect" size="5">
+                                            <option value="-15000/2025" selected>From 15000 YBP to year 2025</option>
+                                            <option value="-1800000/-804400">Homo Erectus Migrations</option>
+                                            <option value="-700000/-190539">Heidelbergensis Migrations </option>
+                                            <option value="-69000/-15000">Homo Sapiens Migrations</option>
+                                            <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
+                                      </select>
+                                    </div>
+
                                 </div>
 
                                 <script>
@@ -449,7 +461,7 @@ map.addControl(timeDimensionControl);
 markerLayer = new L.featureGroup().addTo(map);
 var markerMigrationPointLayer = new L.featureGroup().addTo(map);
 var labeled = false;
-//var eventFilter = new EventTimeFilter(map, null, timeRange);
+var eventFilter = new EventTimeFilter(map, null, timeRange);
                             
 
 // Get the TimeDimension instance from the map
@@ -459,6 +471,29 @@ var timeDimension = map.timeDimension;
 var eventFilter = new EventTimeFilter(map, timeDimension, timeRange);
 
 // Configurar el selector de rangos
+// Configurar el selector de rangos// LOS CAMBIOS FUERON AQUI
+var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelector('select');
+    if (timeRangeSelect) {
+        // Si no hay valor en sessionStorage, usar el valor de la primera opción por defecto
+        if (!sessionStorage.getItem('timeRange')) {
+            timeRange = timeRangeSelect.options[0].value;
+            sessionStorage.setItem('timeRange', timeRange);
+        }
+        // Remover selected de todas las opciones primero
+        Array.from(timeRangeSelect.options).forEach(option => {
+            option.removeAttribute('selected');
+        });
+        // Establecer la opción correcta como selected
+        timeRangeSelect.value = timeRange;
+        timeRangeSelect.options[timeRangeSelect.selectedIndex].setAttribute('selected', 'selected');
+        
+        timeRangeSelect.addEventListener('change', function(e) {
+            var newRange = e.target.value;
+            sessionStorage.setItem('timeRange', newRange);
+            location.reload();
+        });
+    }
+  /*
     var timeRangeSelect = document.getElementById('timeRangeMigraions');
     if (timeRangeSelect) {
         timeRangeSelect.value = timeRange;
@@ -469,6 +504,7 @@ var eventFilter = new EventTimeFilter(map, timeDimension, timeRange);
             location.reload();
         });
     }
+    */
 
     //Capa de marcadores por defecto apagada
     markerLayer.remove();   
@@ -491,6 +527,8 @@ var eventFilter = new EventTimeFilter(map, timeDimension, timeRange);
                                 <script>
                                     var authenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
                                 </script>
+                                <!-- código javasript para almacenar time stamp -->
+                                <!-- <script src="{% static 'assets/dist/js/map-array-time-stamp.js' %}"></script> -->                                 
                                 <!-- código javascript para cargar el color dada la cantidad de habitantes -->
                                 <script src="{% static 'assets/dist/js/map-function-colors.js' %}"></script>                                
                                 <!-- código javascript para cargar la linea del tiempo -->
@@ -505,7 +543,10 @@ var eventFilter = new EventTimeFilter(map, timeDimension, timeRange);
 
                                 <!-- Capa de marcadores por defecto apagada -->
                                 <script>
-                                 markerLayer.remove();   
+                                 markerLayer.remove(); 
+                                 
+                                     // Carga los eventos del Api
+                                     fetchEventsFromAPI();
                                 </script>
 
                                 <!-- Este es el archivo que tiene la llamada a la función eqfeed_callback -->
