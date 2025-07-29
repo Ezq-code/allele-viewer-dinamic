@@ -264,9 +264,9 @@
                 </button>
                 <button
                   type="button"
-                  class="btn btn-tool"   
-                  title="Filter by Region"  
-                  id="filter_region"  
+                  class="btn btn-tool"
+                  title="Filter by Region"
+                  id="filter_region"
                   onclick="filter_Region()" disabled>
                   <i class="nav-icon fas fa-globe-africa text-success "></i>
                 </button>
@@ -295,109 +295,7 @@
               ></div>
             </div>
             <!-- /.card-body -->
-{% comment %} timeLine {% endcomment %}
-<div class="container col-md-12" hidden>
-    		<div class="row">
-				<div class="col-md-12">
-					<div class="page-header">
-					  <h1>Horizontal timeline</h1>
-					</div>
-					<div style="display:inline-block;width:100%;overflow-y:auto;">
-					<ul class="timeline timeline-horizontal">
-						<li class="timeline-item">
-							<div class="timeline-badge primary"><i class="glyphicon glyphicon-check"></i></div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h4 class="timeline-title">Mussum ipsum cacilds 1</h4>
-									<p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago via Twitter</small></p>
-								</div>
-								<div class="timeline-body">
-									<p>Mussum ipsum cacilds, vidis litro abertis. Consetis faiz elementum girarzis, nisi eros gostis.</p>
-								</div>
-							</div>
-						</li>
-						<li class="timeline-item">
-							<div class="timeline-badge success"><i class="glyphicon glyphicon-check"></i></div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h4 class="timeline-title">Mussum ipsum cacilds 2</h4>
-									<p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago via Twitter</small></p>
-								</div>
-								<div class="timeline-body">
-									<p>Mussum ipsum cacilds, vidis faiz elementum girarzis, nisi eros gostis.</p>
-								</div>
-							</div>
-						</li>
-						<li class="timeline-item">
-							<div class="timeline-badge info"><i class="glyphicon glyphicon-check"></i></div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h4 class="timeline-title">Mussum ipsum cacilds 3</h4>
-									<p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago via Twitter</small></p>
-								</div>
-								<div class="timeline-body">
-									<p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipisci. Mé faiz elementum girarzis, nisi eros gostis.</p>
-								</div>
-							</div>
-						</li>
-						<li class="timeline-item">
-							<div class="timeline-badge danger"><i class="glyphicon glyphicon-check"></i></div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h4 class="timeline-title">Mussum ipsum cacilds 4</h4>
-									<p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago via Twitter</small></p>
-								</div>
-								<div class="timeline-body">
-									<p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis.</p>
-								</div>
-							</div>
-						</li>
-						<li class="timeline-item">
-							<div class="timeline-badge warning"><i class="glyphicon glyphicon-check"></i></div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h4 class="timeline-title">Mussum ipsum cacilds 5</h4>
-									<p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago via Twitter</small></p>
-								</div>
-								<div class="timeline-body">
-									<p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis.</p>
-								</div>
-							</div>
-						</li>
-						<li class="timeline-item">
-							<div class="timeline-badge"><i class="glyphicon glyphicon-check"></i></div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h4 class="timeline-title">Mussum ipsum cacilds 6</h4>
-									<p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago via Twitter</small></p>
-								</div>
-								<div class="timeline-body">
-									<p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis.</p>
-								</div>
-							</div>
-						</li>
-					</ul>
-				</div>
-				</div>
-			</div>
-			
-		</div>
 
-
-
-
-
-          </div>
-          <!-- /.card -->
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
-</div>
 <!-- /.content-wrapper -->
 <aside class="control-sidebar control-sidebar-dark">
   <!-- Control sidebar content goes here -->
@@ -606,10 +504,224 @@
 </div>
 
 
+<div class="modal fade" id="timelineModal" tabindex="-1" role="dialog" aria-labelledby="timelineModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title" id="timelineModalLabel">Timeline</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="timelineModalBody">
+        <!-- Aquí va el timeline -->
+        <ul class="timeline timeline-vertical" id="timelineContent">
+          <!-- El contenido se puede llenar dinámicamente con JS o dejar estático -->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
  <div class="overlay" id="load" hidden  >
-              <!-- <i class="fas fa-2x fa-sync fa-spin"></i> -->
+               {% comment %} <i class="fas fa-2x fa-sync fa-spin"></i>  {% endcomment %}
 
+<!-- From Uiverse.io by PhyoTP --> 
+<div class="socket">
+  <div class="gel center-gel">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c1 r1">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c2 r1">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c3 r1">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c4 r1">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c5 r1">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c6 r1">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
 
+  <div class="gel c7 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+
+  <div class="gel c8 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c9 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c10 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c11 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c12 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c13 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c14 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c15 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c16 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c17 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c18 r2">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c19 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c20 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c21 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c22 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c23 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c24 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c25 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c26 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c28 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c29 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c30 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c31 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c32 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c33 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c34 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c35 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c36 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+  <div class="gel c37 r3">
+    <div class="hex-brick h1"></div>
+    <div class="hex-brick h2"></div>
+    <div class="hex-brick h3"></div>
+  </div>
+</div>
 	
 
 
