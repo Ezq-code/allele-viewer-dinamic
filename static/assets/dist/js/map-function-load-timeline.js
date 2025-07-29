@@ -1,5 +1,4 @@
 
-
 if (timeRange == "-12000/2025")
 {
 
@@ -791,61 +790,131 @@ if (timeRange == "-12000/2025")
 }
 else
 {
-/*
-    function addGeoJSONLayer(map, data) {
- 
-        // Paso 1: Preprocesar los datos para asegurar formato correcto
-data.features.forEach(feature => {
-    // Convertir a objetos Date si son strings
-    if (typeof feature.properties.start === 'string') {
-        feature.properties.start = new Date(feature.properties.start);
-    }
-    if (typeof feature.properties.end === 'string') {
-        feature.properties.end = new Date(feature.properties.end);
-    }
-});
 
-// Paso 2: Configurar la capa con manejo temporal personalizado
-var areaLayerHielo = L.timeDimension.layer.geoJson(L.geoJSON(data, {
-    filter: f => f.properties.id === 100,
-    style: function(feature) {
-        return feature.properties.mag === "-1" ? {
-            fillColor: "#FFFFFF",
-            fillOpacity: 0.1,
-            color: "#FFFFFF",
-            weight: 2,
-            opacity: 0.1
-        } : {
-            fillColor: feature.properties.mag,
-            fillOpacity: 0.9,
-            color: feature.properties.mag,
-            weight: 2
-        };
-    },
+var allEvents = [];
 
-}), {
-    updateTimeDimensionMode: 'replace',
-    waitForReady: true,
-    addlastPoint: false,
-    duration: "PT5S",
-    // Función crítica para duraciones variables ⚡
-    getFeatureDuration: function(feature) {
-        const start = new Date(feature.properties.start);
-        const end = new Date(feature.properties.end);
-        const durationMs = end - start;
-        
-        // Convertir a formato ISO 8601 (PT#S)
-        return `PT${durationMs / 1000}S`;
-    }
-});
-*/
+function fetchEventsFromAPI()
+{
+   $.ajax({
+       url: '/business-gestion/events/',
+       type: 'GET',
+       dataType: 'json',
+       success: (response) => {
+           if (response && response.results) {
+               allEvents = response.results;
+               //console.log("Events loaded:", allEvents.length);
+               //this.updateEventsDisplay();
+           } else {
+               console.error("Invalid response format");
+           }
+       },
+       error: (xhr, status, error) => {
+           console.error("Error loading events:", error);
+           Swal.fire('Error', 'Could not load events', 'error');
+       }
+   });
+}
 
+function parseEventTimeRange(event) 
+{
+const start = parseInt(event.start_date);
+const end = event.end_date ? parseInt(event.end_date) : start;
+return [start, end];
+}
+
+
+function validateEvents(events) {
+    return events.filter(event => {
+        const valid = event.markers && event.markers.length > 0 &&
+            event.markers[0].latitude && event.markers[0].longitude &&
+            !isNaN(parseInt(event.start_date));
+
+        if (!valid) {
+            console.warn("Invalid event:", event.event_name);
+        }
+        return valid;
+    });
+}
+
+function showEventModal(event) {
+    document.getElementById('eventName').textContent = event.event_name;
+    document.getElementById('eventDescription').textContent = event.description;
+    document.getElementById('eventReference').textContent = event.reference;
+
+    const galleryContainer = document.getElementById('eventImages');
+    galleryContainer.innerHTML = event.event_gallery?.length > 0
+        ? event.event_gallery.map(image => `
+            <div class="col-md-3 mb-3">
+                <img src="${image.image}" class="img-fluid" alt="${image.name}">
+            </div>`).join('')
+        : '<p>No hay imágenes disponibles</p>';
+
+    $('#eventModal').modal('show');
+}
+
+function createEventMarker(feature, latlng) {
+    const event = feature.properties.eventData;
+    const iconUrl = event.event_icon || event.event_type_info.icon;
+    const marker = L.marker(latlng, {
+        icon: L.icon({
+            iconUrl: iconUrl,
+            iconSize: [25, 41],
+            shadowSize: [41, 41],
+            shadowAnchor: [13, 20]
+        })
+    });
+
+    // marker.bindPopup(feature.properties.popupContent);
+    marker.on('click', () => this.showEventModal(event));
+
+    return marker;
+}
+
+var listEventsJoin = [];
+let eventa = {};
+let eventb = {};
+let eventc = {};
+
+
+ function  createGeoJsonData4(events) 
+   {
+       if (events.length > 0) {
+             
+            events.forEach(event => {
+                    eventb = { 
+                        type: 'Feature',
+                        properties: {
+                            name: event.event_name,
+                            //times: this.parseEventTimeRange(event),
+                            times: this.parseEventTimeRange(event),
+                            //times: [-452,-401,-350,-299,-248, -197,-146],
+                            eventData: event,
+                            // popupContent: this.createPopupContent(event)
+                        },
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [
+                                parseFloat(event.markers[0].longitude),
+                                parseFloat(event.markers[0].latitude)
+                            ]
+                        }
+                    
+                    }  
+                    listEventsJoin.push(eventb);     
+                })
+        } 
+            return {
+                type: 'FeatureCollection',
+                features: listEventsJoin 
+                } 
+   }
 
 
 
    // Función modificada para sincronización
 function addGeoJSONLayer(map, data) {
 
+var geoJsonData;
 // 1. Función de conversión de años a fechas
 const BASE_YEAR = 2025; // Año de referencia (actual)
 const yearToDate = (yearsBP) => {
@@ -902,9 +971,6 @@ const allTimes = data.features
                 })
         })
     }), {
-       // updateTimeDimensionMode: 'intersect',
-      //  duration: "PT76M", 
-      //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z" //"PT1S"
       updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
       duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
       timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
@@ -913,6 +979,20 @@ const allTimes = data.features
         // Convert each time from seconds to milliseconds
         return feature.properties.times.map(t => t * 1000);
       }
+    });
+
+    const validEvents = this.validateEvents(allEvents);
+    
+    geoJsonData = this.createGeoJsonData4(validEvents);
+
+    // Capa de marcadores
+    var pointMarkerLayer = L.timeDimension.layer.geoJson(L.geoJSON(geoJsonData, {
+        pointToLayer:  this.createEventMarker.bind(this)
+    }), {
+      updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
+      duration: "PT1S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+      timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
+      addlastPoint: false                  // Evita saltos al final
     });
 
 
@@ -972,9 +1052,6 @@ const allTimes = data.features
                }
                 }
               }), {
-                  // updateTimeDimensionMode: 'intersect',
-                 //  duration: "PT76M",
-                 //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
                  updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
                  duration: timeLineTimeDelayLand,//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
                  timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
@@ -1015,6 +1092,7 @@ const allTimes = data.features
                  timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
                  addlastPoint: false                  // Evita saltos al final
           });
+
 
 
         // 1. Configuración inicial de la capa de eventos (como en tu ejemplo que funciona)
@@ -1102,34 +1180,39 @@ const allTimes = data.features
             }
         });
      
-          
-  
-   areaLayerTierra.addTo(map);
-   areaLayerPoblacion.addTo(map);
-   areaLayerHielo.addTo(map);
-   lineLayer.addTo(map);
-   pointLayer.addTo(map);
 
- // creación de las capas bases y adición al control de capas del mapa
-const baseLayers = {
-    'Countries': osmcountriesLayers,
-    'Satelital': satelitalLayer,
-    'Ocean': oceanLayer
-};
 
-const overlays = {
-    'Migration Trace Route': lineLayer,
-    'Migration Points': pointLayer,
-    'Glacials': areaLayerHielo,
-    'Population by Region': areaLayerPoblacion,
-    'Land Emerge': areaLayerTierra,
-    'Marker Layer': markerLayer
-   
-};
 
-var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
 
+       
+       areaLayerTierra.addTo(map);
+       areaLayerPoblacion.addTo(map);
+       areaLayerHielo.addTo(map);
+       lineLayer.addTo(map);
+       pointLayer.addTo(map);
+       pointMarkerLayer.addTo(map);
+    
+     // creación de las capas bases y adición al control de capas del mapa
+    const baseLayers = {
+        'Countries': osmcountriesLayers,
+        'Satelital': satelitalLayer,
+        'Ocean': oceanLayer
+    };
+    
+    const overlays = {
+        'Migration Trace Route': lineLayer,
+        'Migration Points': pointLayer,
+        'Glacials': areaLayerHielo,
+        'Population by Region': areaLayerPoblacion,
+        'Land Emerge': areaLayerTierra,
+        'Marker Layer': markerLayer
+       
+    };
+    
+    var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
+     
 }
+
 
                                         document.getElementById('timeRangeMigraions').addEventListener('click', function(e) {
 
@@ -1190,9 +1273,6 @@ var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
 
                                           });
                                         
-
-                                       
-
                                         document.getElementById('btreload').addEventListener('click', function() {
                                             
                                           
@@ -1282,7 +1362,6 @@ var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
                                         });
 
 
-
 var oReq = new XMLHttpRequest();
 oReq.addEventListener("load", function(xhr) {
     const data = JSON.parse(xhr.currentTarget.response);
@@ -1317,11 +1396,14 @@ oReq.addEventListener("load", function(xhr) {
 */
     });
     
-
-
 data.features.sort((a,b) => 
 Math.min(...a.properties.times) - Math.min(...b.properties.times));
+
+
+setTimeout(function () {
     addGeoJSONLayer(map, data);
+}, 1000);
+    //addGeoJSONLayer(map, data);
 
     var lista = document.getElementById("displayed-list");
     lista.innerHTML = "";
