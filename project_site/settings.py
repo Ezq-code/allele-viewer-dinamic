@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     "apps.users_app",
     "apps.common",
     "apps.business_app",
+    "apps.allele_formation",
     "debug_toolbar",
     "django_extensions",
     "solo",
@@ -279,6 +280,11 @@ LOGGING = {
             "level": "WARNING",
             "formatter": "verbose",
         },
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
         "mail_admins": {
             "level": "ERROR",
             "class": "django.utils.log.AdminEmailHandler",
@@ -288,7 +294,10 @@ LOGGING = {
     "loggers": {
         "": {
             "level": "DEBUG",
-            "handlers": ["file"],
+            "handlers": [
+                "file",
+                "console",
+            ],
         },
     },
     "formatters": {

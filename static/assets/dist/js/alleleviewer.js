@@ -738,6 +738,9 @@ async function showInfo(atom) {
         }')">
           <i class="fas fa-eye"></i>
         </button>
+        <button type="button" class="btn btn-info"   data-target="#timelineModal" data-toggle="tooltip" title="Formation" onclick="showFormation('${elemento.custom_element_name}')">
+          <i class="fas fa-stream"></i>
+        </button>
         <button type="button" class="btn  btn-warning" data-toggle="tooltip" title="Bookmark" onclick="marcar(${
           atom.x
         }, ${atom.y}, ${atom.z})">
@@ -1586,3 +1589,111 @@ function centerGrafig() {
   viewer.zoom(2, 1000);
   viewer.render();
 }
+
+function showFormation(custom_element_name) {
+
+  // // Mostrar la modal del timeline
+   $('#timelineModal').modal('show');
+  // // Actualizar el título de la modal con el nombre del elemento
+  document.getElementById('timelineModalLabel').innerText ="Allele: "+ custom_element_name;
+  
+  const modalBody = document.getElementById("timelineModalBody");
+  modalBody.innerHTML = `<div class="form-group"><label for="formationTypeSelect">Formation type:</label>
+      <select id="formationTypeSelect" class="form-control">
+        <option value="ancester_formation">Ancester Formation</option>
+        <option value="location_formation">Location Formation</option>
+      </select>
+    </div>
+    <blockquote>
+    <p id="alleleRs" style="word-wrap: break-word;overflow: hidden;" ></p>
+    <small>Structure <cite title="Source Title">Allele RS</cite></small>
+    </blockquote>
+    <hr>
+    <ul id="timelineContent" class="timeline"></ul>
+  `;
+let location_formation = document.getElementById("formationTypeSelect");
+  // Llama al endpoint para obtener la información de formación
+  axios
+    .get("/allele-formation/allele-snp-info/", {
+      params: { allele: custom_element_name }
+    })
+    .then(response => {
+      const data = response.data.results[0];
+      let formationType = location_formation.value;
+
+      let formationData = data[formationType] || [];     
+
+      // Renderiza inicialmente con Ancester Formation
+      renderDynamicTimeline(formationType,data);
+
+      // Maneja el cambio de tipo de formación
+      document.getElementById("formationTypeSelect").addEventListener("change", function () {
+        renderDynamicTimeline(this.value,data);
+      });
+    })
+    .catch(error => {
+      const timelineContent = document.getElementById("timelineContent");
+      if (timelineContent) {
+        timelineContent.innerHTML = "<li>Error loading data.</li>";
+      }
+      Toast.fire({
+        icon: "error",
+        title: error.response?.data?.detail || "No allele SNP formation data available"
+      });
+    });
+}
+
+// Función para renderizar el timeline según el tipo seleccionado
+      function renderDynamicTimeline(type,data) {
+console.log('✌️data --->', data);
+console.log('✌️type --->', type);
+        
+        const timelineContent = document.getElementById("timelineContent");
+        const alleleRs = document.getElementById("alleleRs");
+        timelineContent.innerHTML = "";
+        alleleRs.innerHTML = "";
+        // Verifica si hay datos para el tipo seleccionado
+        const items = data[type] || [];
+console.log('✌️data[type] --->', data[type]);
+        console.log("Items:", items);
+        if (items.length === 0) {
+          timelineContent.innerHTML = "<li>No data available.</li>";
+          return;
+        }
+        items.forEach(item => {
+            timelineContent.innerHTML += `
+            <li class="timeline-item">
+              <div class="timeline-badge" style="background:${item.color};-webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);"><i class="nav-icon fas fa-dna"></i></div>
+              <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h4 class="timeline-title" style="word-break:break-word;white-space:normal;color:${item.color};">Order ${item.order}</h4>
+              </div>
+              <div class="timeline-body">
+                <p style="word-wrap:break-word;overflow:hidden;color:${item.color};">${item.formation}</p>
+              </div>
+              </div>
+            </li>
+            `;
+            alleleRs.innerHTML +=`<span style="color:${item.color};">${item.formation}</span>`;
+        });
+        // Si es el último elemento, agrega el evento para volver al principio
+      
+            timelineContent.innerHTML += `
+            <li class="timeline-item">
+              <div class="timeline-badge" style="cursor:pointer;" onclick="scrollToFirstTimelineItem()">
+            <i class="nav-icon fas fa-dot-circle"></i>
+              </div>
+            </li>
+            `;     
+       
+      }
+
+// Función para hacer scroll al primer elemento del timeline
+      function scrollToFirstTimelineItem() {
+        const timeline = document.getElementById("timelineContent");
+        const firstItem = timeline.querySelector(".timeline-item");
+        if (firstItem) {
+        firstItem.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+
