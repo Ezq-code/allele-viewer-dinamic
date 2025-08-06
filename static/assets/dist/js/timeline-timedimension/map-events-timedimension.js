@@ -111,34 +111,8 @@ class EventTimeFilter {
     // ========== MANEJO DE EVENTOS ==========
     loadEvents() {
         console.log("Loading events...");
-
-        // Primero prueba con datos estáticos
-        this.loadStaticEvents();
-
         // Luego carga los eventos reales
         this.fetchEventsFromAPI();
-    }
-
-    loadStaticEvents() {
-        const staticEvents = [
-            {
-                event_name: "Test Event 1",
-                start_date: "-10000",
-                end_date: "-9000",
-                markers: [{latitude: 40, longitude: 0}],
-                event_icon: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png"
-            },
-            {
-                event_name: "Test Event 2",
-                start_date: "1800",
-                end_date: "1900",
-                markers: [{latitude: 0, longitude: 0}],
-                event_icon: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png"
-            }
-        ];
-
-        this.allEvents = staticEvents;
-        this.updateEventsDisplay();
     }
 
     fetchEventsFromAPI() {
@@ -560,10 +534,12 @@ class EventTimeFilter {
         const galleryContainer = document.getElementById('eventImages');
         galleryContainer.innerHTML = event.event_gallery?.length > 0
             ? event.event_gallery.map(image => `
-                <div class="col-md-3 mb-3">
-                    <img src="${image.image}" class="img-fluid" alt="${image.name}">
+                <div class="card m-2" style="width: 100px;">
+                    <a href="${image.image}" data-lightbox="event-gallery" data-title="${image.name}">
+                        <img src="${image.image}" class="card-img-top" alt="${image.name}" loading="lazy">
+                    </a>
                 </div>`).join('')
-            : '<p>No hay imágenes disponibles</p>';
+            : '<p>There are no images available for this event.</p>';
 
         $('#eventModal').modal('show');
     }
