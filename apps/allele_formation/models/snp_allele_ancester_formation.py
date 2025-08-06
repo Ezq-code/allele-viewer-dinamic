@@ -13,5 +13,5 @@ class SNPAlleleAncesterFormation(VirtualAlleleFormationInfo):
     )
 
     class Meta:
-        verbose_name = _("SNP Allele Ancester Formation")
-        verbose_name_plural = _("SNP Alleles Ancester Formation")
+        verbose_name = _("SNP Allele Ancestral Formation")
+        verbose_name_plural = _("SNP Alleles Ancestral Formation")

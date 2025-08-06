@@ -97,8 +97,8 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "verbose_name": "SNP Allele Ancester Formation",
-                "verbose_name_plural": "SNP Alleles Ancester Formation",
+                "verbose_name": "SNP Allele Ancestral Formation",
+                "verbose_name_plural": "SNP Alleles Ancestral Formation",
             },
         ),
         migrations.CreateModel(
