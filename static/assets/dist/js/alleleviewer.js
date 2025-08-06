@@ -1645,7 +1645,6 @@ function showFormation(custom_element_name) {
 
 // Función para renderizar el timeline según el tipo seleccionado
 function renderDynamicTimeline(type, data) {
-
   const timelineContent = document.getElementById("timelineContent");
   const alleleRs = document.getElementById("alleleRs");
   timelineContent.innerHTML = "";
@@ -1674,6 +1673,7 @@ function renderDynamicTimeline(type, data) {
           </div>
         </li>
         `;
+
     alleleRs.innerHTML += `<span style="color:${item.color};">${item.formation}</span>`;
   });
   // Si es el último elemento, agrega el evento para volver al principio
