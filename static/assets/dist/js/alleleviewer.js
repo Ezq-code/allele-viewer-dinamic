@@ -1645,9 +1645,6 @@ function showFormation(custom_element_name) {
 
 // Función para renderizar el timeline según el tipo seleccionado
 function renderDynamicTimeline(type, data) {
-  console.log("✌️data --->", data);
-  console.log("✌️type --->", type);
-
   const timelineContent = document.getElementById("timelineContent");
   const alleleRs = document.getElementById("alleleRs");
   timelineContent.innerHTML = "";
@@ -1661,19 +1658,22 @@ function renderDynamicTimeline(type, data) {
     return;
   }
   items.forEach((item) => {
+    // Parsear por la coma y sustituir por salto de línea en item.formation
+    const formationLines = item.formation.split(',').join(',<br>');
     timelineContent.innerHTML += `
-            <li class="timeline-item">
-              <div class="timeline-badge" style="background:${item.color};-webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);"><i class="nav-icon fas fa-dna"></i></div>
-              <div class="timeline-panel">
-              <div class="timeline-heading">
-                <h4 class="timeline-title" style="word-break:break-word;white-space:normal;color:${item.color};">Order ${item.order}</h4>
-              </div>
-              <div class="timeline-body">
-                <p style="word-wrap:break-word;overflow:hidden;color:${item.color};">${item.formation}</p>
-              </div>
-              </div>
-            </li>
-            `;
+        <li class="timeline-item">
+          <div class="timeline-badge" style="background:${item.color};-webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);"><i class="nav-icon fas fa-dna"></i></div>
+          <div class="timeline-panel">
+          <div class="timeline-heading">
+          <h4 class="timeline-title" style="word-break:break-word;white-space:normal;color:${item.color};">Order ${item.order}</h4>
+          </div>
+          <div class="timeline-body">
+          <p style="word-wrap:break-word;overflow:hidden;color:${item.color};">${formationLines}</p>
+          </div>
+          </div>
+        </li>
+        `;
+
     alleleRs.innerHTML += `<span style="color:${item.color};">${item.formation}</span>`;
   });
   // Si es el último elemento, agrega el evento para volver al principio
