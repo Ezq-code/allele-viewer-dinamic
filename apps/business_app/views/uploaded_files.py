@@ -27,6 +27,9 @@ class UploadedFilesViewSet(viewsets.ModelViewSet, GenericAPIView):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
+    filterset_fields = [
+        "gene",
+    ]
 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
