@@ -19,6 +19,7 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
             "description",
             "original_file",
             "system_user",
+            "gene",
             "pdb_files",
         ]
         read_only_fields = [
