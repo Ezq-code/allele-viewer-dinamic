@@ -80,6 +80,7 @@ class UploadedFiles(models.Model):
 
     def save(self, *args, **kwargs):
         original_file = self.original_file
+        is_new = self.pk is None
         file_name, extension = os.path.splitext(original_file.name)
         super().save(*args, **kwargs)  # Call the "real" save() method.
         if (
@@ -88,7 +89,7 @@ class UploadedFiles(models.Model):
         ):
             return
 
-        else:
+        elif is_new and original_file:
             try:
                 global_configuration = SiteConfiguration.get_solo()
 
