@@ -290,29 +290,17 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <div class="right-sidebar col-xl-12">
+                                <div class="right-sidebar d-flex">
                                     <div id="map" class="col-10"></div>
-                                    <!--
-                                    <div id="timeRangeMigraions" class="col-2">
-                                        <select multiple="" class="custom-multiselect">
-                                            <option value="-15000/2025" selected>From 15000 YBP to year 2025</option>
-                                            <option value="-1800000/-804400">Homo Erectus Migrations</option>
-                                            <option value="-700000/-190539">Heidelbergensis Migrations </option>
-                                            <option value="-69000/-15000">Homo Sapiens Migrations</option>
-                                            <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
-                                      </select>
-                                    </div>
-                                    -->
-                                    <div id="timeRangeMigraions" class="col-2">
+                                    <div id="timeRangeMigraions" class="time-range-container">
                                         <select class="custom-multiselect" size="5">
                                             <option value="-15000/2025" selected>From 15000 YBP to year 2025</option>
                                             <option value="-1800000/-804400">Homo Erectus Migrations</option>
-                                            <option value="-700000/-190539">Heidelbergensis Migrations </option>
+                                            <option value="-700000/-190539">Heidelbergensis Migrations</option>
                                             <option value="-69000/-15000">Homo Sapiens Migrations</option>
                                             <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
-                                      </select>
+                                        </select>
                                     </div>
-
                                 </div>
 
                                 <script>
@@ -436,10 +424,10 @@ var timeDimensionControl = new L.Control.TimeDimensionCustom({
         displayTime: false,
         timeSliderDragUpdate: true,
         loopButton: true,
-        speed: 60,
-        minSpeed: 20,
+        //speed: 60,
+        minSpeed: 0,
         maxSpeed: 60,
-        speedStep: 20,
+        speedStep: 1,
         speedSlider: true,
         autoPlay: false,
     playerOptions: {
