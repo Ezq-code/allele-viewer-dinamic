@@ -42,7 +42,10 @@
 }
 
 #map {
-    height: 580px;
+    flex: 1;
+    min-width: 0;
+    height: 100% !important; /* Forzar altura */
+    min-height: 500px; /* Altura mínima */
     border-radius: 5px;
 }
 
@@ -126,7 +129,7 @@
 
 .modal-footer .btn-primary {
     background-color: #0056b3; /* Color del botón guardar */
-      color: white;  /* Color del texto */
+    color: white; /* Color del texto */
 }
 
 .modal-footer .btn-secondary {
@@ -160,23 +163,26 @@
     border-radius: 5px; /* Opcional: bordes redondeados */
 }
 
+.right-sidebar {
+    display: flex; /* Activa flexbox */
+    width: 100%;
+    height: 600px; /* Altura fija para el contenedor */
+    gap: 15px; /* Espacio entre elementos */
+}
+
+
 .custom-multiselect {
+    width: 100%;
+    height: 100%;
     cursor: pointer;
-    height: 558px;
     font-size: 12px;
-    overflow-y: hidden; /* Cambiado de hidden a auto para permitir scroll cuando sea necesario */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
     border: 1px solid #ced4da;
     border-radius: 4px;
     padding: 1px 2px;
     background-color: white;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 
-.custom-multiselect::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-}
 
 .custom-multiselect option {
     padding: 8px 3px;
@@ -195,3 +201,35 @@
     color: white;
 }
 
+.time-range-container {
+    width: 200px; /* Ancho fijo */
+    height: 100%;
+}
+
+
+/* Estilos para móviles */
+@media (max-width: 768px) {
+    .right-sidebar {
+        flex-direction: column;
+        height: auto;
+    }
+    
+
+    #map {
+        height: 400px !important; /* Altura fija para móviles */
+        min-height: 400px !important; /* Doble protección */
+        width: 100%;
+        flex: none; /* Anula el flex:1 en móviles */
+    }
+
+    .time-range-container {
+        width: 100%;
+        height: auto;
+        padding-left: 0;
+        margin-top: 15px;
+    }
+
+    .custom-multiselect {
+        height: 200px; /* Altura reducida para móviles */
+    }
+}
