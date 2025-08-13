@@ -1,0 +1,454 @@
+{% extends "index.html" %}
+{% load static %}
+{% block head-extra %}
+<link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/orgchart/jquery.orgchart.css' %}">
+<style>
+        .orgchart {
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: block !important;
+        }
+        #orgChart > div{
+         overflow-x: auto;
+         
+        }
+        .orgchart .nodes{
+          justify-content: flex-start;
+        }
+        
+        .orgchart .node {
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 10px;
+            margin: 5px;
+            min-width: 150px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .orgchart .node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .orgchart .node.selected {
+            border-color: #ff9800;
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.5);
+        }
+        
+        .orgchart .node .title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        
+        .orgchart .node .content {
+            font-size: 12px;
+            opacity: 0.9;
+            overflow-wrap: break-word;
+        }
+        
+        .orgchart .node .btn {
+            margin: 2px;
+            padding: 2px 6px;
+            font-size: 10px;
+        }
+        
+        .orgchart .lines .topLine {
+            border-top: 2px rgb(175, 172, 76);
+        }
+        
+        .orgchart .lines .rightLine {
+            border-right: 2px rgb(175, 172, 76);
+        }
+        
+        .orgchart .lines .bottomLine {
+            border-bottom: 2px rgb(175, 172, 76);
+        }
+        
+        .orgchart .lines .leftLine {
+            border-left: 2px rgb(175, 172, 76);
+        }
+        
+        .search-highlight {
+            background: #fff3cd !important;
+            border-color: #ffc107 !important;
+            color: #856404 !important;
+        }
+        
+        .controls-panel {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .notifications-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+        }
+        
+        .node-info-panel {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .custom-node {
+            position: relative;
+        }
+        
+        .custom-node .btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        
+        .custom-node:hover .btn {
+            opacity: 1;
+        }
+        
+        .expand-btn {
+            top: 5px !important;
+            right: 5px !important;
+        }
+        
+        .edit-btn {
+            top: 5px !important;
+            right: 35px !important;
+        }
+        
+        .delete-btn {
+            top: 5px !important;
+            right: 65px !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1> Formación de Alelos CYP2D6 </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Alelos CYP2D6</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="overlay" id="load" hidden>
+              <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="card-header">
+              <h3 class="card-title">Formación de Alelos CYP2D6</h3>
+            </div>
+            <div class="modal-body">
+
+  <div class="container-fluid">
+        <!-- Header -->
+        <div class="row bg-primary text-white p-3 mb-4">
+            <div class="col">
+                <h1><i class="fas fa-dna"></i> Formación de Alelos CYP2D6</h1>
+                <p class="mb-0">Organigrama genético mostrando la formación y variantes del gen CYP2D6</p>
+            </div>
+        </div>
+        
+        <!-- Panel de Controles para Alelos -->
+        <div class="row">
+            <div class="col-12">
+                <div class="controls-panel">
+                    <h5 class="mb-3"><i class="fas fa-dna"></i> Controles para Gestión de Alelos CYP2D6</h5>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="searchInput">Buscar Alelos:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Buscar por nombre o descripción...">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="searchNodes($('#searchInput').val())">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="parentIdInput">ID Alelo Padre:</label>
+                                <input type="text" class="form-control" id="parentIdInput" placeholder="ID del alelo padre">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="newNodeTitle">Nombre del Nuevo Alelo:</label>
+                                <input type="text" class="form-control" id="newNodeTitle" placeholder="Nombre del alelo">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="newNodeContent">Descripción del Alelo:</label>
+                                <input type="text" class="form-control" id="newNodeContent" placeholder="Descripción del alelo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <button class="btn btn-success me-2" onclick="addNewNodeFromForm()">
+                                <i class="fas fa-plus"></i> Agregar Alelo
+                            </button>
+                            <button class="btn btn-info me-2" onclick="exportOrgChart()">
+                                <i class="fas fa-download"></i> Exportar
+                            </button>
+                            <button class="btn btn-warning" onclick="resetOrgChart()">
+                                <i class="fas fa-redo"></i> Resetear
+                            </button>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <span class="badge bg-primary" id="nodeCount">Total Alelos: 0</span>
+                            <span class="badge bg-success" id="selectedNode">Seleccionado: Ninguno</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel de Notificaciones para Alelos -->
+        <div id="notifications" class="notifications-panel"></div>
+        
+        <!-- Organigrama de Alelos -->
+        <div class="row">
+            <div class="col-12">
+                <div id="orgChart" class="orgchart"></div>
+            </div>
+        </div>
+        
+        <!-- Panel de Información del Alelo -->
+        <div class="row">
+            <div class="col-12">
+                <div id="nodeInfo"></div>
+            </div>
+        </div>
+        
+        <!-- Panel de Estadísticas de Alelos -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-chart-pie"></i> Estadísticas de Alelos CYP2D6</h6>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Nivel Máximo:</strong> <span id="maxLevel">0</span></p>
+                        <p><strong>Total de Alelos:</strong> <span id="totalNodes">0</span></p>
+                        <p><strong>Alelos con Variantes:</strong> <span id="nodesWithChildren">0</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-info-circle"></i> Información del Organigrama Genético</h6>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Tipo:</strong> Organigrama Genético</p>
+                        <p><strong>Gen:</strong> CYP2D6</p>
+                        <p><strong>Funcionalidad:</strong> Metabolismo de Fármacos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-cogs"></i> Acciones Rápidas para Alelos</h6>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-sm btn-outline-primary w-100 mb-2" onclick="expandAll()">
+                            <i class="fas fa-expand"></i> Expandir Todo
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary w-100 mb-2" onclick="collapseAll()">
+                            <i class="fas fa-compress"></i> Colapsar Todo
+                        </button>
+                        <button class="btn btn-sm btn-outline-info w-100" onclick="centerOrgChart()">
+                            <i class="fas fa-crosshairs"></i> Centrar Vista
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+
+              
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- Modal Eliminar Gen -->
+
+{% endblock %}
+{% block script %}
+<script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'assets/plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'assets/plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
+<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/ancestral.js' %}"></script>
+<script src="{% static 'assets/plugins/orgchart/jquery.orgchart.js' %}"></script>
+<script>
+        // Función para agregar nodo desde el formulario
+        function addNewNodeFromForm() {
+            var parentId = $('#parentIdInput').val();
+            var title = $('#newNodeTitle').val();
+            var content = $('#newNodeContent').val();
+            
+            if (!parentId || !title || !content) {
+                showNotification('Por favor completa todos los campos', 'error');
+                return;
+            }
+            
+            addNewNode(parentId, title, content);
+            
+            // Limpiar formulario
+            $('#parentIdInput').val('');
+            $('#newNodeTitle').val('');
+            $('#newNodeContent').val('');
+        }
+        
+        // Función para resetear el organigrama
+        function resetOrgChart() {
+            if (confirm('¿Estás seguro de que quieres resetear el organigrama?')) {
+                location.reload();
+            }
+        }
+        
+        // Función para expandir todos los nodos
+        function expandAll() {
+            $('.expand-btn').each(function() {
+                var $btn = $(this);
+                var $node = $btn.closest('.node');
+                var $children = $node.siblings('.nodes').children();
+                
+                if (!$children.is(':visible')) {
+                    $children.show();
+                    $btn.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                }
+            });
+            showNotification('Todos los nodos han sido expandidos', 'success');
+        }
+        
+        // Función para colapsar todos los nodos
+        function collapseAll() {
+            $('.expand-btn').each(function() {
+                var $btn = $(this);
+                var $node = $btn.closest('.node');
+                var $children = $node.siblings('.nodes').children();
+                
+                if ($children.is(':visible')) {
+                    $children.hide();
+                    $btn.find('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                }
+            });
+            showNotification('Todos los nodos han sido colapsados', 'success');
+        }
+        
+        // Función para centrar la vista del organigrama
+        function centerOrgChart() {
+            var $orgchart = $('.orgchart');
+            $orgchart.scrollTop($orgchart.height() / 2);
+            $orgchart.scrollLeft($orgchart.width() / 2);
+            showNotification('Vista centrada', 'info');
+        }
+        
+        // Función para actualizar estadísticas
+        function updateStats() {
+            var totalNodes = $('.node').length;
+            var nodesWithChildren = $('.node').filter(function() {
+                return $(this).siblings('.nodes').children().length > 0;
+            }).length;
+            
+            var maxLevel = 0;
+            $('.node').each(function() {
+                var level = $(this).parents('.nodes').length;
+                if (level > maxLevel) maxLevel = level;
+            });
+            
+            $('#totalNodes').text(totalNodes);
+            $('#nodesWithChildren').text(nodesWithChildren);
+            $('#maxLevel').text(maxLevel);
+            $('#nodeCount').text('Total Alelos: ' + totalNodes);
+        }
+        
+        // Actualizar estadísticas cuando se carga la página
+        $(document).ready(function() {
+            setTimeout(updateStats, 1000);
+            
+            // Actualizar estadísticas cada 5 segundos
+            setInterval(updateStats, 5000);
+        });
+        
+        // Función para mostrar información del nodo seleccionado
+        function showSelectedNodeInfo() {
+            var $selectedNode = $('.node.selected');
+            if ($selectedNode.length > 0) {
+                var nodeId = $selectedNode.attr('id') || 'Sin ID';
+                $('#selectedNode').text('Seleccionado: ' + nodeId);
+            } else {
+                $('#selectedNode').text('Seleccionado: Ninguno');
+            }
+        }
+        
+        // Actualizar información del nodo seleccionado
+        $(document).on('click', '.node', function() {
+            setTimeout(showSelectedNodeInfo, 100);
+        });
+    </script>
+{% endblock %}
