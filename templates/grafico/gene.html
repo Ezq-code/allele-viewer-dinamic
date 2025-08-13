@@ -1,0 +1,126 @@
+{% extends "index.html" %}
+{% load static %}
+{% block head-extra %}
+<link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1> Genes </h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Genes</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="overlay" id="load" hidden>
+              <i class="fas fa-2x fa-sync fa-spin"></i>
+            </div>
+            <div class="card-header">
+              <h3 class="card-title">Gestionar Genes</h3>
+            </div>
+            <div class="modal-body">
+              <table id="tabla-de-Datos" class="table table-bordered table-striped" style="width: 100%;">
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- Modal Eliminar Gen -->
+<div class="modal fade" id="modal-eliminar-elemento">
+  <div class="modal-dialog">
+    <div class="modal-content bg-danger">
+      <div class="modal-header">
+        <h4 class="modal-title">Eliminar Gen</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Desea eliminar este gen?</p>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-outline-light" data-dismiss="modal"
+          onclick="function_delete(selected_id)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Crear/Editar Gen -->
+<div class="modal fade" id="modal-crear-elemento" data-backdrop="static" tabindex="-1" role="dialog"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Crear Gen</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="form-create-elemento">
+        <div class="card-body">
+          <div class="form-group col-md-12">
+            <label for="name">Nombre</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Entre el nombre" required>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="description">Descripción</label>
+            <textarea type="text" class="form-control" id="description" name="description" placeholder="Entre la descripción"></textarea>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="status">Estatus</label>
+            <select class="form-control" id="status" name="status" required>
+              <option value="C">Completado</option>
+              <option value="I">En proceso</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'assets/plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'assets/plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
+<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/gene.js' %}"></script>
+{% endblock %}

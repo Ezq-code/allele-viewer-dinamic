@@ -58,6 +58,12 @@ urlpatterns = [
         login_required(pages.uploadfileconformation, login_url="/login/"),
         name="uploadfileconformation",
     ),
+    path(
+        "gene/",
+        login_required(pages.gene, login_url="/login/"),
+        name="gene",
+    ),
+    path("ancestral", pages.ancestral, name="ancestral"),
     path("alleleviewer", pages.alleleviewer, name="alleleviewer"),
     path("login/", pages.first_login, name="first_login"),
     path("", pages.introduction, name="introducction"),

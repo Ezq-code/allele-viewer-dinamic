@@ -7,7 +7,7 @@ class Gene(models.Model):
         COMPLETED = "C", _("Completed")
         INCOMPLETED = "I", _("Not completed")
 
-    name = models.CharField(unique=True)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(null=True, blank=True)
     status = models.CharField(
         max_length=1,

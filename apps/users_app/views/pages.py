@@ -30,6 +30,9 @@ def first_login(request):
 def alleleviewer(request):
     return render(request, "grafico/alleleviewer.html")
 
+def ancestral(request):
+    return render(request, "grafico/ancestral.html")
+
 
 @cache_page(60 * 15)
 def uploadfile(request):
@@ -39,6 +42,10 @@ def uploadfile(request):
 @cache_page(60 * 15)
 def uploadfileconformation(request):
     return render(request, "grafico/uploadfileconformation.html")
+
+@cache_page(60 * 15)
+def gene(request):
+    return render(request, "grafico/gene.html")
 
 
 @cache_page(60 * 15)
