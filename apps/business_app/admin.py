@@ -211,6 +211,7 @@ class UploadedFilesAdmin(admin.ModelAdmin):
         "description",
         "original_file",
         "gene",
+        "predefined",
         "system_user",
         "google_sheet_id",
     ]
@@ -219,6 +220,7 @@ class UploadedFilesAdmin(admin.ModelAdmin):
         "description",
         "original_file",
         "gene",
+        "predefined",
         "system_user",
         "google_sheet_id",
     ]

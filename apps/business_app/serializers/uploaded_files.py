@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class UploadedFilesSerializer(serializers.ModelSerializer):
     pdb_files = PdbFilesSerializer(many=True, read_only=True)
-    gene_name = serializers.SerializerMethodField(read_only=True)
+    gene_name = serializers.CharField(source="gene.name", read_only=True, default=None)
 
     class Meta:
         model = UploadedFiles
@@ -34,6 +34,3 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
         except Exception as e:
             logger.error(f"{str(e)}")
             raise serializers.ValidationError(e) from e
-
-    def get_gene_name(self, obj):
-        return obj.gene.name if obj.gene else None

@@ -15,12 +15,13 @@ var load = document.getElementById("load");
 
 // Función para cargar la lista de genes
 function loadGenes() {
-  axios.get(geneUrl)
+  axios
+    .get(geneUrl)
     .then((response) => {
       const geneSelect = document.getElementById("gene");
       geneSelect.innerHTML = '<option value="">Seleccione un gen</option>';
-      
-      response.data.results.forEach(gene => {
+
+      response.data.results.forEach((gene) => {
         const option = document.createElement("option");
         option.value = gene.id;
         option.textContent = gene.name;
@@ -35,7 +36,7 @@ function loadGenes() {
 $(document).ready(function () {
   // Cargar la lista de genes
   loadGenes();
-  
+
   $("table")
     .addClass("table table-hover")
     .DataTable({
@@ -178,9 +179,10 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
   const elements = [...form.elements];
   // A forEach loop is used to iterate through each element in the array.
   elements.forEach((elem) => elem.classList.remove("is-invalid"));
-  
+
   // Resetear el campo gene a la opción por defecto
-  document.getElementById("gene").innerHTML = '<option value="">Seleccione un gen</option>';
+  document.getElementById("gene").innerHTML =
+    '<option value="">Seleccione un gen</option>';
   // Recargar la lista de genes
   loadGenes();
 });
@@ -204,7 +206,7 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
         // Llenar el formulario con los datos del usuario
         form.elements.name.value = elemento.custom_name;
         form.elements.description.value = elemento.description;
-        
+
         // Asegurar que los genes estén cargados antes de establecer el valor
         if (document.getElementById("gene").options.length > 1) {
           form.elements.gene.value = elemento.gene;
@@ -241,7 +243,7 @@ $(function () {
         required: true,
       },
       customFile: {
-        required: function() {
+        required: function () {
           return !edit_elemento; // Solo requerido si no se está editando
         },
       },
@@ -319,14 +321,14 @@ form.addEventListener("submit", function (event) {
         .catch((error) => {
           load.hidden = true;
           let dict = error.response.data;
-          let textError = "Detalles: ";
+          let textError = "Details: ";
           for (const key in dict) {
             textError += key + ": " + dict[key];
           }
 
           Swal.fire({
             icon: "error",
-            title: "Error al crear Elemento",
+            title: "Error creating element",
             text: textError,
             showConfirmButton: false,
             timer: 5000,
@@ -353,7 +355,7 @@ form.addEventListener("submit", function (event) {
           load.hidden = true;
           let dict = error.response.data;
 
-          let textError = "Revise los siguientes campos: ";
+          let textError = "An error occurred while saving the file: ";
           for (const key in dict) {
             if (key === "0") {
               textError += dict[key];

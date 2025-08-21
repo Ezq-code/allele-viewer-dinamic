@@ -47,6 +47,7 @@ class UploadedSNPFilesAdmin(admin.ModelAdmin):
         "description",
         "snp_file",
         "predefined",
+        "gene",
         "system_user",
     ]
     fields = [
@@ -54,6 +55,7 @@ class UploadedSNPFilesAdmin(admin.ModelAdmin):
         "description",
         "snp_file",
         "predefined",
+        "gene",
         "system_user",
     ]
 

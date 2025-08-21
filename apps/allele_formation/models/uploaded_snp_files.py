@@ -7,6 +7,7 @@ from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 from apps.allele_formation.utils.excel_snp_reader import ExcelSNPReader
 from apps.business_app.models import AllowedExtensions
+from apps.business_app.models.gene import Gene
 
 
 def user_directory_path(instance, filename):
@@ -52,6 +53,12 @@ class UploadedSNPFiles(models.Model):
         verbose_name=_("predefined"),
         default=False,
     )
+    gene = models.ForeignKey(
+        Gene,
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="uploaded_formation_files",
+    )
 
     class Meta:
         verbose_name = _("SNP File")
@@ -71,6 +78,7 @@ class UploadedSNPFiles(models.Model):
                 processor_object.proccess_sheets(self.id)
 
             except Exception as e:
+                print("Lo capturé aquí:")
                 logger.error(e)
                 self.delete()
                 raise e

@@ -53,6 +53,10 @@ class UploadedFiles(models.Model):
         on_delete=models.CASCADE,
         related_name="uploaded_files",
     )
+    predefined = models.BooleanField(
+        verbose_name=_("predefined"),
+        default=False,
+    )
     gene = models.ForeignKey(
         Gene,
         on_delete=models.CASCADE,
