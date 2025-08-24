@@ -36,7 +36,12 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
 
     def save(self):
         try:
-            return super().save()
+            instance = super().save()
+            if instance.predefined:
+                self.Meta.model.objects.filter(gene=instance.gene).exclude(
+                    id=instance.id
+                ).update(predefined=False)
+            return instance
         except Exception as e:
             logger.error(f"{str(e)}")
             raise serializers.ValidationError(e) from e

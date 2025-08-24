@@ -34,7 +34,7 @@ class UploadedFilesViewSet(viewsets.ModelViewSet, GenericAPIView):
     filterset_fields = [
         "gene",
     ]
-    ordering=("-predefined",)
+    ordering = ("-predefined",)
 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
