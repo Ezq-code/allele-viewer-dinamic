@@ -69,16 +69,19 @@ class UploadedSNPFiles(models.Model):
 
     def save(self, *args, **kwargs):
         snp_file = self.snp_file
+        committed = snp_file._committed
         is_new = self.pk is None
+        if committed is False and not is_new:
+            self.delete()
+
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
-        if is_new and snp_file:
+        if not committed:
             try:
                 processor_object = ExcelSNPReader(snp_file)
                 processor_object.proccess_sheets(self.id)
 
             except Exception as e:
-                print("Lo capturé aquí:")
                 logger.error(e)
                 self.delete()
                 raise e

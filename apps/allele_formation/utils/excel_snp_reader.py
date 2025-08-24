@@ -127,9 +127,7 @@ class ExcelSNPReader:
             increment_location_snp = row[
                 ExcelSNPNomenclators.sheet_allele_column_increment_location_snp
             ]
-            transition = row[
-                ExcelSNPNomenclators.sheet_allele_column_transition
-            ]
+            transition = row[ExcelSNPNomenclators.sheet_allele_column_transition]
             data.append(
                 AlleleSNPInfo(
                     allele=allele,

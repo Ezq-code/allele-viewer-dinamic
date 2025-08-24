@@ -99,7 +99,9 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
         ]
 
     def _get_graph_info(self, obj, function_to_call):
-        graph_key = f"graph_for_{obj.uploaded_file_id}"
+        graph_key = AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
+            uploaded_file_id=obj.uploaded_file_id
+        )
         if not cache.get(graph_key):
             processor_object = XslxToPdbGraph(
                 origin_file=obj.uploaded_file.original_file,
@@ -110,16 +112,20 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
         return set(function_to_call(cache.get(graph_key), [], obj.number))
 
     def get_predecessors(self, obj):
-        cache_key = f"descendants_for_{obj.uploaded_file_id}-{obj.number}"
-        if not cache.get(cache_key):
+        cache_key = AlleleNode.CACHE_KEY_DESCENDANTS.format(
+            uploaded_file_id=obj.uploaded_file_id, number=obj.number
+        )
+        if not cache.has_key(cache_key):
             cache.set(
                 cache_key, self._get_graph_info(obj, extract_parents_tree), timeout=None
             )
         return cache.get(cache_key)
 
     def get_sucessors(self, obj):
-        cache_key = f"sucessors_for_{obj.uploaded_file_id}-{obj.number}"
-        if not cache.get(cache_key):
+        cache_key = AlleleNode.CACHE_KEY_SUCESSORS.format(
+            uploaded_file_id=obj.uploaded_file_id, number=obj.number
+        )
+        if not cache.has_key(cache_key):
             cache.set(
                 cache_key,
                 self._get_graph_info(obj, extract_children_tree),

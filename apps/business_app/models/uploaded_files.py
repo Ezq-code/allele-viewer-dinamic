@@ -11,6 +11,7 @@ from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDri
 from apps.business_app.utils.xslx_to_pdb import XslxToPdb
 from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
 from apps.business_app.models.site_configurations import SiteConfiguration
+from django.core.cache import cache
 
 
 def user_directory_path(instance, filename):
@@ -33,6 +34,7 @@ class FileExtensionValidator:
 
 
 class UploadedFiles(models.Model):
+    CACHE_KEY_RELATED_ALLELE_NODES = "allele_nodes_for_{uploaded_file_id}"
     custom_name = models.CharField(
         verbose_name=_("custom name"),
         max_length=150,
@@ -125,13 +127,18 @@ class UploadedFiles(models.Model):
 
     def delete(self, *args, **kwargs):
         # Delete the physical file before deleting the record
-        self.delete_phisical_file(self.original_file)
+        self.delete_physical_file(self.original_file)
         if self.google_sheet_id:
             processor = UploadToGoogleDriveApi()
             processor.delete_file_from_google_drive(self.google_sheet_id)
+        cache.delete(
+            UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
+                uploaded_file_id=self.id
+            )
+        )
         super().delete(*args, **kwargs)
 
-    def delete_phisical_file(self, file_field):
+    def delete_physical_file(self, file_field):
         if file_field:
             file_path = file_field.path
             if os.path.exists(file_path):
