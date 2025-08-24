@@ -26,6 +26,7 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
             "system_user",
             "gene",
             "gene_name",
+            "predefined",
             "pdb_files",
             "allele_nodes",
         ]
@@ -44,7 +45,6 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
         allele_nodes_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
             uploaded_file_id=obj.id
         )
-        info = None
         if not cache.has_key(allele_nodes_key):
             info = AlleleNodeSerializer(obj.allele_nodes, many=True).data
             cache.set(allele_nodes_key, info)
