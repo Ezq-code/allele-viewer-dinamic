@@ -124,6 +124,10 @@ class UploadedFiles(models.Model):
                 print(e)
                 self.delete()
                 raise e
+        if self.predefined:
+            UploadedFiles.objects.filter(gene=self.gene).exclude(id=self.id).update(
+                predefined=False
+            )
 
     def delete(self, *args, **kwargs):
         # Delete the physical file before deleting the record

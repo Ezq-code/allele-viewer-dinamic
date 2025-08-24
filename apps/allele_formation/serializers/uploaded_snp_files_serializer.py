@@ -20,10 +20,6 @@ class UploadedSNPFileSerializer(serializers.ModelSerializer):
 
     def save(self, **kwargs):
         try:
-            instance = super().save(**kwargs)
-            self.Meta.model.objects.filter(gene=instance.gene).exclude(
-                id=instance.id
-            ).update(predefined=False)
-            return instance
+            return super().save(**kwargs)
         except Exception as e:
             raise serializers.ValidationError(e) from e

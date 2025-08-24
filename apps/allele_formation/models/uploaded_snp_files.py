@@ -85,6 +85,10 @@ class UploadedSNPFiles(models.Model):
                 logger.error(e)
                 self.delete()
                 raise e
+        if self.predefined:
+            UploadedSNPFiles.objects.filter(gene=self.gene).exclude(id=self.id).update(
+                predefined=False
+            )
 
     def delete(self, *args, **kwargs):
         # Delete the physical file before deleting the record
