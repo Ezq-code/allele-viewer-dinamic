@@ -18,7 +18,9 @@ class UploadedFilesViewSet(viewsets.ModelViewSet, GenericAPIView):
     API endpoint that allows file upload extensions added or edited.
     """
 
-    queryset = UploadedFiles.objects.all().prefetch_related("pdb_files")
+    queryset = UploadedFiles.objects.select_related("gene").prefetch_related(
+        "pdb_files", "allele_nodes"
+    )
     serializer_class = UploadedFilesSerializer
     search_fields = ["custom_name", "description"]
     ordering_fields = "__all__"
@@ -27,6 +29,10 @@ class UploadedFilesViewSet(viewsets.ModelViewSet, GenericAPIView):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
+    filterset_fields = [
+        "gene",
+    ]
+    ordering = ("-predefined",)
 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 

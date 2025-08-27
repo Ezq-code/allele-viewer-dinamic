@@ -4,9 +4,6 @@ import pandas as pd
 from django.db import IntegrityError, transaction
 
 from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
-from apps.allele_formation.models.snp_allele_location_formation import (
-    SNPAlleleLocationFormation,
-)
 from apps.allele_formation.models.snp_allele_ancester_formation import (
     SNPAlleleAncesterFormation,
 )
@@ -26,6 +23,7 @@ class ExcelSNPReader:
             ExcelSNPNomenclators.sheet_allele_column_increment_location_snp,
             ExcelSNPNomenclators.sheet_allele_column_loss_ancesters_snp,
             ExcelSNPNomenclators.sheet_allele_column_loss_location_snp,
+            ExcelSNPNomenclators.sheet_allele_column_transition,
         )
 
         self.sheet_allele_df = pd.read_excel(
@@ -48,17 +46,17 @@ class ExcelSNPReader:
             ExcelSNPNomenclators.sheet_bd_column_order,
         )
 
-        self.sheet_bd_location_df = pd.read_excel(
-            self.origin_file,
-            sheet_name=ExcelSNPNomenclators.sheet_bd_location,
-            engine="openpyxl",
-        )
+        # self.sheet_bd_location_df = pd.read_excel(
+        #     self.origin_file,
+        #     sheet_name=ExcelSNPNomenclators.sheet_bd_location,
+        #     engine="openpyxl",
+        # )
 
-        self._validate_sheet_structure(
-            self.sheet_bd_location_df,
-            self._output_mandatory_columns_for_sheet_bd_location_validation,
-            ExcelSNPNomenclators.sheet_bd_location,
-        )
+        # self._validate_sheet_structure(
+        #     self.sheet_bd_location_df,
+        #     self._output_mandatory_columns_for_sheet_bd_location_validation,
+        #     ExcelSNPNomenclators.sheet_bd_location,
+        # )
 
         self.sheet_bd_ancesters_df = pd.read_excel(
             self.origin_file,
@@ -90,12 +88,12 @@ class ExcelSNPReader:
         self._proccess_sheet_allele(
             file_id=file_id, sheet=ExcelSNPNomenclators.sheet_allele
         )
-        self._proccess_sheet_bd(
-            file_id=file_id,
-            dataframe=self.sheet_bd_location_df,
-            model=SNPAlleleLocationFormation,
-            sheet=ExcelSNPNomenclators.sheet_bd_location,
-        )
+        # self._proccess_sheet_bd(
+        #     file_id=file_id,
+        #     dataframe=self.sheet_bd_location_df,
+        #     model=SNPAlleleLocationFormation,
+        #     sheet=ExcelSNPNomenclators.sheet_bd_location,
+        # )
         self._proccess_sheet_bd(
             file_id=file_id,
             dataframe=self.sheet_bd_ancesters_df,
@@ -129,9 +127,11 @@ class ExcelSNPReader:
             increment_location_snp = row[
                 ExcelSNPNomenclators.sheet_allele_column_increment_location_snp
             ]
+            transition = row[ExcelSNPNomenclators.sheet_allele_column_transition]
             data.append(
                 AlleleSNPInfo(
                     allele=allele,
+                    transition=transition,
                     parents_info=parents_info if not pd.isna(parents_info) else None,
                     loss_ancesters_snp=loss_ancesters_snp
                     if not pd.isna(loss_ancesters_snp)

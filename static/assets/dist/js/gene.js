@@ -1,42 +1,13 @@
 // variable para gestionar los elementos seleccionados
 let selected_id;
-
-// Variable con el token
 const csrfToken = document.cookie
   .split(";")
   .find((c) => c.trim().startsWith("csrftoken="))
   ?.split("=")[1];
-// url del endpoint principal
-const url = "/allele-formation/uploaded-snp-files/";
-
-// url para obtener genes
-const geneUrl = "/business-gestion/gene/";
-
+const url = "/business-gestion/gene/";
 var load = document.getElementById("load");
 
-// Función para cargar la lista de genes
-function loadGenes() {
-  axios
-    .get(geneUrl)
-    .then((response) => {
-      const geneSelect = document.getElementById("gene");
-      geneSelect.innerHTML = '<option value="">Seleccione un gen</option>';
-
-      response.data.results.forEach((gene) => {
-        const option = document.createElement("option");
-        option.value = gene.id;
-        option.textContent = gene.name;
-        geneSelect.appendChild(option);
-      });
-    })
-    .catch((error) => {
-      console.error("Error cargando genes:", error);
-    });
-}
-
 $(document).ready(function () {
-  // Cargar la lista de genes
-  loadGenes();
   $("table")
     .addClass("table table-hover")
     .DataTable({
@@ -69,11 +40,10 @@ $(document).ready(function () {
       },
       processing: true,
       ajax: function (data, callback, settings) {
-        dir = "";
+        let dir = "";
         if (data.order[0].dir == "desc") {
           dir = "-";
         }
-
         axios
           .get(url, {
             params: {
@@ -95,18 +65,27 @@ $(document).ready(function () {
           });
       },
       columns: [
-        { data: "custom_name", title: "Nombre" },
+        { data: "name", title: "Nombre" },
         { data: "description", title: "Descripción" },
-        { data: "gene_name", title: "Gen" },
-        { data: "predefined", title: "Predefinido" },
+        {
+          data: "status",
+          title: "Estatus",
+          render: function (data, type, row) {
+            if (data === "C")
+              return '<span class="badge badge-success">Completado</span>';
+            if (data === "I")
+              return '<span class="badge badge-warning">En proceso</span>';
+            return data;
+          },
+        },
         {
           data: "",
           title: "Acciones",
           render: (data, type, row) => {
             return `<div class="btn-group">
-                        <button type="button" title="Edit" class="btn bg-info" data-toggle="modal" data-target="#modal-crear-elemento" data-id="${row.id}" data-type="edit" data-name="${row.custom_name}" id="${row.id}"  >
+                        <button type="button" title="Edit" class="btn bg-info" data-toggle="modal" data-target="#modal-crear-elemento" data-id="${row.id}" data-type="edit" data-name="${row.name}" data-description="${row.description}" data-status="${row.status}" id="${row.id}"  >
                           <i class="fas fa-edit"></i></button>                    
-                        <button type="button" title="Delete" class="btn bg-olive" data-toggle="modal" data-target="#modal-eliminar-elemento" data-name="${row.custom_name}" data-id="${row.id}">
+                        <button type="button" title="Delete" class="btn bg-olive" data-toggle="modal" data-target="#modal-eliminar-elemento" data-name="${row.name}" data-id="${row.id}">
                           <i class="fas fa-trash"></i>
                         </button>
                       </div>`;
@@ -119,7 +98,7 @@ $(document).ready(function () {
           targets: 1,
           render: function (data, type, row) {
             if (data == null || data == "") {
-              return (data = "Sin Datos");
+              return "Sin Datos";
             } else {
               return type === "display" && data.length > 80
                 ? data.substr(0, 80) + "…"
@@ -136,7 +115,7 @@ $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
   var dataName = button.data("name"); // Extract info from data-* attributes
   selected_id = button.data("id"); // Extract info from data-* attributes
   var modal = $(this);
-  modal.find(".modal-body").text("Do you want to delete " + dataName + "?");
+  modal.find(".modal-body").text("¿Desea eliminar el gen " + dataName + "?");
 });
 
 // funcion para eliminar usuario
@@ -148,14 +127,14 @@ function function_delete(selected_id) {
     .then((response) => {
       Toast.fire({
         icon: "success",
-        title: "The element was successfully deleted",
+        title: "El gen fue eliminado correctamente",
       });
       table.row(`#${selected_id}`).remove().draw(); // use id selector to remove the row
     })
     .catch((error) => {
       Toast.fire({
         icon: "error",
-        title: "The element was not deleted",
+        title: "El gen no fue eliminado",
       });
     });
 }
@@ -176,35 +155,21 @@ let edit_elemento = false;
 $("#modal-crear-elemento").on("show.bs.modal", function (event) {
   var button = $(event.relatedTarget); // Button that triggered the modal
   var modal = $(this);
+  var form = modal.find("form")[0];
   if (button.data("type") == "edit") {
     var dataName = button.data("name"); // Extract info from data-* attributes
     var dataId = button.data("id"); // Extract info from data-* attributes
-    selected_id = button.data("id"); // Extract info from data-* attributes
+    var dataDescription = button.data("description"); // Extract info from data-* attributes
+    var dataStatus = button.data("status"); // Extract info from data-* attributes
+    selected_id = dataId; // Extract info from data-* attributes
     edit_elemento = true;
     modal.find(".modal-title").text("Editar " + dataName);
-    // Realizar la petición con Axios
-    axios
-      .get(`${url}${selected_id}/`)
-      .then(function (response) {
-        // Recibir la respuesta
-        const elemento = response.data;
-        // Llenar el formulario con los datos del usuario
-        form.elements.name.value = elemento.custom_name;
-        form.elements.description.value = elemento.description;
-        // Asegurar que los genes estén cargados antes de establecer el valor
-        if (document.getElementById("gene").options.length > 1) {
-          form.elements.gene.value = elemento.gene;
-        } else {
-          // Si los genes no están cargados, esperar y luego establecer el valor
-          loadGenes();
-          setTimeout(() => {
-            form.elements.gene.value = elemento.gene;
-          }, 100);
-        }
-      })
-      .catch(function (error) {});
+    form.elements.name.value = dataName;
+    form.elements.description.value = dataDescription;
+    form.elements.status.value = dataStatus;
   } else {
-    modal.find(".modal-title").text("Subir Fichero");
+    modal.find(".modal-title").text("Crear Gen");
+    form.reset();
   }
 });
 
@@ -226,18 +191,16 @@ $(function () {
       name: {
         required: true,
       },
-      customFile: {
+      status: {
         required: true,
       },
     },
-    submitHandler: function (form) {},
-
     messages: {
       name: {
         required: "El nombre es requerido",
       },
-      customFile: {
-        required: "El fichero es obligatorio",
+      status: {
+        required: "El estatus es obligatorio",
       },
     },
     errorElement: "span",
@@ -262,16 +225,11 @@ form.addEventListener("submit", function (event) {
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
 
   if (form.checkValidity()) {
-    let data = new FormData();
-    data.append("system_user", localStorage.getItem("id"));
-    data.append("custom_name", document.getElementById("name").value);
-    data.append("description", document.getElementById("description").value);
-    data.append("gene", document.getElementById("gene").value);
-
-    if (document.getElementById("customFile").files[0] != null) {
-      data.append("snp_file", document.getElementById("customFile").files[0]);
-    }
-    const url = "/allele-formation/uploaded-snp-files/";
+    let data = {
+      name: form.elements.name.value,
+      description: form.elements.description.value,
+      status: form.elements.status.value,
+    };
 
     if (edit_elemento) {
       $("#modal-crear-elemento").modal("hide");
@@ -284,7 +242,7 @@ form.addEventListener("submit", function (event) {
             table.ajax.reload();
             Swal.fire({
               icon: "success",
-              title: "Elemento creado con éxito",
+              title: "Gen editado con éxito",
               showConfirmButton: false,
               timer: 1500,
             });
@@ -295,14 +253,14 @@ form.addEventListener("submit", function (event) {
         .catch((error) => {
           load.hidden = true;
           let dict = error.response.data;
-          let textError = "Details: ";
+          let textError = "Detalles: ";
           for (const key in dict) {
             textError += key + ": " + dict[key];
           }
 
           Swal.fire({
             icon: "error",
-            title: "Error creating element",
+            title: "Error al editar Gen",
             text: textError,
             showConfirmButton: false,
             timer: 5000,
@@ -319,7 +277,7 @@ form.addEventListener("submit", function (event) {
             table.ajax.reload();
             Swal.fire({
               icon: "success",
-              title: "Elemento creado con éxito",
+              title: "Gen creado con éxito",
               showConfirmButton: false,
               timer: 1500,
             });
@@ -329,18 +287,14 @@ form.addEventListener("submit", function (event) {
           load.hidden = true;
           let dict = error.response.data;
 
-          let textError = "An error occurred while saving the file: ";
+          let textError = "Revise los siguientes campos: ";
           for (const key in dict) {
-            if (key === "0") {
-              textError += dict[key];
-            } else {
-              textError += " " + key + ": " + dict[key];
-            }
+            textError += " " + key + ": " + dict[key];
           }
 
           Swal.fire({
             icon: "error",
-            title: "Error al crear elemento",
+            title: "Error al crear Gen",
             text: textError,
             showConfirmButton: true,
             // timer: 3000

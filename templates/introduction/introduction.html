@@ -2,246 +2,268 @@
 {% load i18n %}
 
 <!DOCTYPE HTML>
-<!--
-	Ethereal by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
-	<head>
-		 <link rel="icon" type="image/png" href="{% static 'assets/dist/img/AdminLTELogo.png' %}">
-    <title>PGxSoftware Allele View</title>
+<head>
+    <link rel="icon" type="image/png" href="{% static 'assets/dist/img/AdminLTELogo.png' %}">
+    <title>PGxSoftware - Tracing Genetic Ancestry</title>
 
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="{% static 'assets/ethereal-master/assets/css/main.css' %}" />
-		<noscript><link rel="stylesheet" href="{% static 'assets/ethereal-master/assets/css/noscript.css' %}" /></noscript>
-	</head>
-	<body>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{% static 'assets/ethereal-master/assets/css/main.css' %}" />
+    <noscript><link rel="stylesheet" href="{% static 'assets/ethereal-master/assets/css/noscript.css' %}" /></noscript>
+</head>
+<body>
 
-		<!-- Page Wrapper -->
-			<div id="page-wrapper">
+<!-- Page Wrapper -->
+<div id="page-wrapper">
 
-				<!-- Wrapper -->
-					<div id="wrapper">
+    <!-- Wrapper -->
+    <div id="wrapper">
 
-						<!-- Panel (Banner) - Introduction -->
-							<section class="panel banner right">
-								<div class="content color0 span-3-75">
-									<h1 class="major">CYP2D6 Allele Formation</h1>
-									<h2>"When, where, why, and how" </h2>
-									<p>This page delves into the genetic history of the CYP2D6 gene, one of the most polymorphic genes in humans. With over 177 alleles identified, we explore their origins, the role of ancestral DNA, and the tools that facilitate this research, such as <strong>alleleviewer.pgxsoftware.com</strong>.</p>
-									<ul class="actions">
-										<li><a href="#alleleviewer" class="button special color1 circle icon fa-angle-right">Next</a></li>
-									</ul>
-								</div>
-								<div class="image filtered span-1-75" data-position="25% 25%">
-									<img src="{% static 'assets/ethereal-master/images/pic01.jpg' %}" alt="" />
-								</div>
-							</section>
+        <!-- Panel (Banner) - Introduction -->
+        <section class="panel banner right">
+            <div class="content color0 span-3-75">
+                <h1 class="major">Unveiling Genetic Formation Through Ancestral Tracing</h1>
+                <h2>"From Ancient Migrations to Modern Insights"</h2>
+                <p>Explore the *developmental* journey of genes, tracing their *formation* through human migrations and ancestral events. Discover how our mapping tools and 3D visualizations provide a unique perspective on genetic history.</p>
+                <ul class="actions">
+                    <li><a href="#migration-mapping" class="button special color1 circle icon fa-angle-right">Explore</a></li>
+                </ul>
+            </div>
+            <div class="image filtered span-1-75" data-position="25% 25%">
+                <img src="{% static 'assets/ethereal-master/images/pic01.jpg' %}" alt="" />
+            </div>
+        </section>
 
-								<section class="panel color4-alt">
-								<div class="intro ">
-									<h2 class="major">The Significance of CYP2D6 Research</h2>
-									<p>As a cornerstone of pharmacogenomics, the CYP2D6 gene plays a pivotal role in the metabolism of numerous medications. Understanding its genetic variations is crucial for personalized medicine, allowing for tailored drug therapies that maximize efficacy and minimize adverse effects.</p>
-									
-								</div>
-							</section>
+        <section class="panel color4-alt">
+            <div class="intro ">
+                <h2 class="major">The Power of Ancestral Genetic Insights</h2>
+                <p>By studying the genetic legacy of our ancestors, we gain critical insights into the *progression* of human traits, disease susceptibility, and the impact of migration on genetic diversity.</p>
 
-						<!-- Panel (Spotlight) - AlleleViewer -->
-							<section class="panel spotlight medium right" id="alleleviewer">
-							
-								<div class="content span-7">
-									<h2 class="major">AlleleViewer.pgxsoftware.com</h2>
-									<p><strong>AlleleViewer</strong> is a powerful tool for studying the CYP2D6 gene. It provides a detailed view of allele formation, including SNPs, recombination events, and gene duplications. The updated version incorporates ancestral DNA data, offering insights into the genetic timeline of CYP2D6 alleles.</p>
-									<ul>
-										<strong>Advantages:</strong>
-										<li>Integration of ancestral DNA from primates, Neanderthals, and Denisovans.</li>
-										<li>Visualization of allele formation through intuitive maps.</li>
-										<li>Comparison of genetic data across species for accurate time-stamping of SNPs.</li>
-									</ul>
-									<ul class="actions">
-										<li><a href="{% url 'alleleviewer' %}" class="button special color2 icon fa-cube">3D Grapher</a></li>
-										<li><a href="{% url 'mapgeneral' %}" class="button special color3 icon fa-map">Migration Map</a></li>
-									</ul>
-								</div>
-								<div class="image filtered tinted" data-position="top left">
-									<img src="{% static 'assets/ethereal-master/images/pic02.jpg' %}" alt="" />
-								</div>
-							</section>
-
-						<!-- Panel (Gallery) - Image 1: SNP Visualization -->
-							<section class="panel color2">
-								
-								<div class="gallery">
-									<a href="{% static 'assets/ethereal-master/images/prehumans.webp' %}" class="image filtered span-2-5" data-position="top"><img src="{% static 'assets/ethereal-master/images/prehumans.webp' %}" alt="" /></a>
-								</div>
-							</section>
-
-						<!-- Panel (Color1) - Key SNPs Inherited from Primates -->
-							<section class="panel color1">
-								<div class="intro joined">
-									<h2 class="major">Key SNPs Inherited from Primates</h2>
-									<p>From a common ancestor of orangutans and chimpanzees, humans inherited the following SNPs:</p>
-									<ul>
-										<li>180+130G>T (rs28371699)</li>
-										<li>181-41T>G (rs28371702)</li>
-										<li>1173+40A>C (rs1985842)</li>
-										<li>1457G>C (rs1135840) S486T</li>
-										<li>408G>C (rs1058164)</li>
-									</ul>
-									<p>These SNPs are present in 78% to 67% of African individuals.</p>
-								</div>
-								<div class="inner">
-									<ul class="grid-icons three connected">
-										<li><span class="imgcircle rotate"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-hélice-de-adn-60.png' %}" alt="SNPs"/><span class="label"></span></span></li>
-										<li><span class="imgcircle rotate"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-orangután-60.png' %}" alt="Primates" /><span class="label"></span></span></li>
-										<li><span class="imgcircle rotate"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-evolución-48.png' %}" alt="Genetic Development" /><span class="label"></span></span></li>
-									</ul>
-								</div>
-							</section>
+            </div>
+        </section>
+        <!-- Panel (Gene) -->
+        <section class="panel color4">
+            <div class="intro span-4">
+                <h2 class="major">Genes</h2>
+                <div class="span-3">
+                    <!-- Contenedor para la tabla de genes -->
+                    <div id="genes-table-container">
+                        <!-- Estilos para la tabla de 2 columnas -->
 
 
-						<!-- Panel (Spotlight) - AlleleViewer -->
-							<section class="panel spotlight medium right" id="alleleviewer">					
-								<div class="image filtered tinted" data-position="top left">
-									<img src="{% static 'assets/ethereal-master/images/v5.jpeg' %}" alt="" />
-								</div>
-							</section>
+                        <!-- Tabla de genes -->
+                        <div class="table-wrapper">
+                            <table id="genes-table" class="genes-table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="genes-table-body">
+                                    <!-- Los genes se cargarán aquí dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
 
-						<!-- Panel (Gallery) - Image 3: Denisovans and Neanderthals Contributions -->
-							
-							<section class="panel color4">
-								<div class="intro color3-alt span-3">
-									<h2 class="major">Common ancestral of Orangutan + Chimpanzee Primates:</h2>
-									<p>From this ancestor, humans inherited the following SNPs:</p>
-									
-									<ul>
-										<li>180+130G>T (rs28371699)
-										+ 181-41T>G (rs28371702)
-										+ 1173+40A>C (rs1985842)
-										+ 1457G>C (rs1135840) S486T
-										+ 408G>C (rs1058164)</li>
-									</ul>
-								</div>
-								<div class="gallery ">
-									<a href="{% static 'assets/ethereal-master/images/v6.jpeg' %}" class="image filtered span-3-75" data-position="center"><img src="{% static 'assets/ethereal-master/images/v6.jpeg' %}" alt="" /></a>
-								</div>
-								<div class="inner columns divided">
-									<div class="span-3-25">
-									<h3 class="major">From the Orangutan split we additionally inherited a stretch of DNA to later form the *2/*17 and *73 including:</h3>
-									<ul>
-										<li>+180+65A>G (rs1081000)
-										+180+52G>C (rs29001518)
-										+180+47T>C (rs1080998)
-										+180+43C>G (rs1080997)
-										+180+41C>A (rs1080996)
-										+180+34G>C (rs1080995)
-										+180+53A>C (rs28695233)</li>
-									</ul>
-									<h3 class="mayor">From the Chimpanzee split we additionally inherited:</h3>
-									<ul>
-										<li>271C>A (rs28371703) L91M
-										+281A>G (rs28371704)
-										+294C>G (rs28371705) H94R
-										+311T>C (rs76187628) V104A
-										+319A>T (rs74802369) T107S
-										+320C>A (rs28371706) T107N
-										+325A>G (rs78459009) I109V
-										+333T>C (rs1135821)</li>
-									</ul>
-									<marquee><p> <strong>This stretch of DNA of around 70 bp will contribute to *82 and *4.012.</strong></p></marquee>
-									</div>
-								</div>
-							</section>
-						
-						<!-- Panel (Gallery) - Image 2: Allele Formation in Homo Heidelbergensis -->
-							<section class="panel color2">
-								<div class="intro">
-									<h2 class="major">Allele Formation in Homo Heidelbergensis</h2>
-									<p>Around 700,000 years ago, <em>Homo heidelbergensis</em> emerged, leading to the diversification of CYP2D6 alleles. Key allele conversions include:</p>
-									<ul>
-										<li>*39ILU-Ergaster/Erectus/Ora → *2 Heidelbergensis</li>
-										<li>*39ILU-Ergaster/Erectus → *10 Heidelbergensis</li>
-										<li>*82ILU-Ergaster/Erectus/Chimp → *4.012</li>
-									</ul>
-								</div>
-								<div class="gallery">
-									<a href="{% static 'assets/ethereal-master/images/Homo_heidelbergensis.jpg' %}" class="image filtered" data-position="center"><img src="{% static 'assets/ethereal-master/images/Homo_heidelbergensis.jpg' %}" alt="Homo heidelbergensis" /></a>
-								</div>
-							</section>
+
+                    </div>
+                    <!-- Controles de paginación -->
+                    <div class="pagination-controls span-4">
+                        <ul class="actions">
+                            <li><span id="page-info">page 1</span></li>
+                            <li><button id="prev-page" class="button small icon fa-backward" disabled>Back</button></li>
+                            <li><div id="page-numbers" style="text-align: center; margin-top: 15px;"></div></li>
+                            <li><button id="next-page" class="button small icon fa-forward">Next</button></li>
+                            <li><span id="genes-count">Total genes: 0</span></li>
+                        </ul>
+                    </div>
+
+                </div>
+
+        </section>
+
+        <!-- Panel (Spotlight) - AlleleViewer -->
+        <section class="panel spotlight medium right" id="migration-mapping">
+
+            <div class="content span-7">
+                <h2 class="major">Mapping Genetic Migrations</h2>
+                <p>Visualize the impact of human migration on genetic diversity. Our tools allow you to explore the geographical distribution of genetic traits and trace their origins back through time.</p>
+                <ul>
+                    <strong>Key Features:</strong>
+                    <li>Interactive maps showing the spread of genetic markers.</li>
+                    <li>3D visualizations of gene structures and their ancestral connections.</li>
+                    <li>Tools for analyzing the impact of migration on genetic variation.</li>
+                </ul>
+                <ul class="actions">
+                    <li><a href="{% url 'alleleviewer' %}" class="button special color2 icon fa-cube">3D Grapher</a></li>
+                    <li><a href="{% url 'mapgeneral' %}" class="button special color3 icon fa-map">Migration Map</a></li>
+                </ul>
+            </div>
+            <div class="image filtered tinted" data-position="top left">
+                <img src="{% static 'assets/ethereal-master/images/pic02.jpg' %}" alt="" />
+            </div>
+        </section>
+
+        <!-- Panel (Gallery) - Image 1: SNP Visualization -->
+        <section class="panel color2">
+
+            <div class="gallery">
+                <a href="{% static 'assets/ethereal-master/images/prehumans.webp' %}" class="image filtered span-2-5" data-position="top"><img src="{% static 'assets/ethereal-master/images/prehumans.webp' %}" alt="" /></a>
+            </div>
+        </section>
+
+        <!-- Panel (Color1) - Key SNPs Inherited from Primates -->
+        <section class="panel color1">
+            <div class="intro joined">
+                <h2 class="major">Key Genetic Contributions from Ancestral Lineages</h2>
+                <p>Discover the genetic legacy passed down from our primate ancestors, including key SNPs that continue to shape human diversity.</p>
+                <ul>
+                    <li>[Example SNP 1]</li>
+                    <li>[Example SNP 2]</li>
+                    <li>[Example SNP 3]</li>
+                </ul>
+                <p>These genetic markers are found in varying frequencies across different populations.</p>
+            </div>
+            <div class="inner">
+                <ul class="grid-icons three connected">
+                    <li><span class="imgcircle rotate"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-hélice-de-adn-60.png' %}" alt="SNPs"/><span class="label"></span></span></li>
+                    <li><span class="imgcircle rotate"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-orangután-60.png' %}" alt="Primates" /><span class="label"></span></span></li>
+                    <li><span class="imgcircle rotate"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-evolución-48.png' %}" alt="Genetic Development" /><span class="label"></span></span></li>
+                </ul>
+            </div>
+        </section>
+        <!-- Panel (Color1) - Key SNPs Inherited from Primates -->
 
 
 
-						<!-- Panel (Color3) - Migration and Allele Expansion -->
-							<section class="panel color2">
-								<div class="intro joined">
-									<h2 class="major">Migration and Allele Expansion</h2>
-									<p>Between 74,000 and 11,700 years ago, human populations expanded 50-fold, leading to the spread of CYP2D6 alleles. Key events include:</p>
-									<ul>
-										<li>Migration out of Africa by a small group carrying limited alleles.</li>
-										<li>Admixture with Neanderthals in the Middle East and Denisovans in Southeast Asia.</li>
-									</ul>
-								</div>
-								<div class="inner">
-									<ul class="grid-icons three connected">
-									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-diaspora-64.png' %}" alt="Migration"/><span class="label"></span></span></li>
-									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-expansion-64.png' %}" alt="Expansion"/><span class="label"></span></span></li>
-									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-el-embarazo-64.png' %}" alt="Admixture"/><span class="label"></span></span></li>
-									</ul>
-								</div>
-							</section>
+        <!-- Panel (Spotlight) - AlleleViewer -->
+        <section class="panel spotlight medium right" id="alleleviewer">
+            <div class="image filtered tinted" data-position="top left">
+                <img src="{% static 'assets/ethereal-master/images/v5.jpeg' %}" alt="" />
+            </div>
+        </section>
 
-						<!-- Panel (Color2-alt) - Challenges in CYP2D6 Research -->
-							<section class="panel color2">
-								
-								<div class="inner">
-									<ul class="grid-icons three connected">
-									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-biology-64.png' %}" alt="Challenges"/><span class="label"></span></span></li>
-									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-big-data-64.png' %}" alt="Data Issues"/><span class="label"></span></span></li>
-									<li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-futuro-64.png' %}" alt="Future Work"/><span class="label"></span></span></li>
-									</ul>
-								</div>
-								<div class="intro span-4">
-								<h4>Pharmacogenetic Impact:</h4>
-								<blockquote>Variants of CYP2D6 influence the metabolic rate of drugs, affecting therapeutic outcomes and safety.</blockquote>
-								<h4>Global Health Relevance:</h4>
-								<blockquote>Studying CYP2D6 across diverse populations helps identify genetic predispositions to drug responses, enhancing global healthcare strategies.</blockquote>
-								<h4>Innovative Research:</h4>
-								<blockquote> Advances in CYP2D6 research drive the development of novel diagnostic tools and treatment protocols, paving the way for the future of precision medicine.</blockquote>
-									{% comment %} <ul>
-										<li><strong>Pharmacogenetic Impact:</strong> Variants of CYP2D6 influence the metabolic rate of drugs, affecting therapeutic outcomes and safety.</li> 
-										<li><strong>Global Health Relevance:</strong> Studying CYP2D6 across diverse populations helps identify genetic predispositions to drug responses, enhancing global healthcare strategies.</li>
-										<li><strong>Innovative Research:</strong> Advances in CYP2D6 research drive the development of novel diagnostic tools and treatment protocols, paving the way for the future of precision medicine.</li>
-									</ul> {% endcomment %}
-								</div>
-							</section>
+        <!-- Panel (Gallery) - Image 3: Denisovans and Neanderthals Contributions -->
 
-						<!-- Panel (Color4) - Contact -->
-							<section class="panel color4-alt">
-								<div class="intro color4">
-									<h2 class="major">Contact Us</h2>
-									<p>For collaborations or inquiries, please reach out. We welcome contributions to advance pharmacogenomics research.</p>
-								
-								<ul class="contact-icons color1">
-										<li class="icon fa-google"><a href="#">info@pgxsoftware.com</a></li>
-										<li class="icon fa-linkedin"><a href="https://www.linkedin.com/in/oreste-ezequiel-salavaggione-ba059b22/">linkedin</a></li>
-										</ul>
-										</div>
-							</section>
+        <section class="panel color4">
+            <div class="intro color3-alt span-3">
+                <h2 class="major">Genetic Intermingling with Ancient Hominids</h2>
+                <p>Explore the genetic contributions from Neanderthals and Denisovans, revealing how interbreeding shaped the genetic makeup of modern humans.</p>
 
-						<!-- Copyright -->
-							<div class="copyright">&copy; CYP2D6 Evolution. Designed by <strong>PGxSoftware.com</strong></div>
+                <ul>
+                    <li>[Example Genetic Contribution 1]</li>
+                    <li>[Example Genetic Contribution 2]</li>
+                </ul>
+            </div>
+            <div class="gallery ">
+                <a href="{% static 'assets/ethereal-master/images/v6.jpeg' %}" class="image filtered span-3-75" data-position="center"><img src="{% static 'assets/ethereal-master/images/v6.jpeg' %}" alt="" /></a>
+            </div>
+            <div class="inner columns divided">
+                <div class="span-3-25">
+                    <h3 class="major">Key Genetic Markers from Early Ancestors:</h3>
+                    <ul>
+                        <li>[Example Genetic Marker 1]</li>
+                        <li>[Example Genetic Marker 2]</li>
+                    </ul>
+                    <h3 class="mayor">Further Genetic Contributions:</h3>
+                    <ul>
+                        <li>[Example Genetic Contribution 1]</li>
+                        <li>[Example Genetic Contribution 2]</li>
+                    </ul>
+                    <marquee><p> <strong>[Important Note about a Specific Genetic Region]</strong></p></marquee>
+                </div>
+            </div>
 
-					</div>
+        </section>
 
-			</div>
 
-		<!-- Scripts -->
-			<script src="{% static 'assets/ethereal-master/assets/js/jquery.min.js' %}"></script>
-			<script src="{% static 'assets/ethereal-master/assets/js/skel.min.js' %}"></script>
-			<script src="{% static 'assets/ethereal-master/assets/js/main.js' %}"></script>
-			
+        <!-- Panel (Gallery) - Image 2: Allele Formation in Homo Heidelbergensis -->
+        <section class="panel color2">
+            <div class="intro">
+                <h2 class="major">Key *Developmental* Milestones</h2>
+                <p>Discover pivotal moments in human *development* that led to the diversification of genetic traits.</p>
+                <ul>
+                    <li>[Example Milestone 1]</li>
+                    <li>[Example Milestone 2]</li>
+                </ul>
+            </div>
+            <div class="gallery">
+                <a href="{% static 'assets/ethereal-master/images/Homo_heidelbergensis.jpg' %}" class="image filtered" data-position="center"><img src="{% static 'assets/ethereal-master/images/Homo_heidelbergensis.jpg' %}" alt="Homo heidelbergensis" /></a>
+            </div>
+        </section>
 
-	</body>
+
+
+        <!-- Panel (Color3) - Migration and Allele Expansion -->
+        <section class="panel color2">
+            <div class="intro joined">
+                <h2 class="major">The Spread of Genes Through Migration</h2>
+                <p>Understand how human migrations have shaped the distribution of genetic traits across the globe.</p>
+                <ul>
+                    <li>[Example Migration Event 1]</li>
+                    <li>[Example Migration Event 2]</li>
+                </ul>
+            </div>
+            <div class="inner">
+                <ul class="grid-icons three connected">
+                    <li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-diaspora-64.png' %}" alt="Migration"/><span class="label"></span></span></li>
+                    <li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-expansion-64.png' %}" alt="Expansion"/><span class="label"></span></span></li>
+                    <li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-el-embarazo-64.png' %}" alt="Admixture"/><span class="label"></span></span></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Panel (Color2-alt) - Challenges in CYP2D6 Research -->
+        <section class="panel color2">
+
+            <div class="inner">
+                <ul class="grid-icons three connected">
+                    <li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-biology-64.png' %}" alt="Challenges"/><span class="label"></span></span></li>
+                    <li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-big-data-64.png' %}" alt="Data Issues"/><span class="label"></span></span></li>
+                    <li><span class="imgcircle"><img src="{% static 'assets/ethereal-master/images/iconos/icons8-futuro-64.png' %}" alt="Future Work"/><span class="label"></span></span></li>
+                </ul>
+            </div>
+            <div class="intro span-4">
+                <h4>Advancing Genetic Understanding:</h4>
+                <blockquote>Explore the complexities of genetic *formation* and its impact on human health.</blockquote>
+                <h4>Global Impact:</h4>
+                <blockquote>Understand how genetic diversity influences health outcomes across different populations.</blockquote>
+                <h4>The Future of Genetic Research:</h4>
+                <blockquote>Discover innovative tools and approaches for tracing genetic ancestry and understanding human *development*.</blockquote>
+
+            </div>
+        </section>
+
+        <!-- Panel (Color4) - Contact -->
+        <section class="panel color4-alt">
+            <div class="intro color4">
+                <h2 class="major">Contact Us</h2>
+                <p>For collaborations or inquiries, please reach out. We welcome contributions to advance pharmacogenomics research.</p>
+
+                <ul class="contact-icons color1">
+                    <li class="icon fa-google"><a href="#">info@pgxsoftware.com</a></li>
+                    <li class="icon fa-linkedin"><a href="https://www.linkedin.com/in/oreste-ezequiel-salavaggione-ba059b22/">linkedin</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Copyright -->
+        <div class="copyright">&copy; Genetic Ancestry Project. Designed by <strong>PGxSoftware.com</strong></div>
+
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'assets/ethereal-master/assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'assets/ethereal-master/assets/js/skel.min.js' %}"></script>
+<script src="{% static 'assets/ethereal-master/assets/js/main.js' %}"></script>
+<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/introduction.js' %}"></script>
+
+
+</body>
 </html>

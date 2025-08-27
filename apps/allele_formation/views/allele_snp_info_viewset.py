@@ -20,8 +20,6 @@ class AlleleSNPInfoViewSet(viewsets.ReadOnlyModelViewSet):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    filterset_fields = [
-        "allele",
-    ]
+    filterset_fields = ["allele", "uploaded_file__gene"]
     ordering_fields = "__all__"
     permission_classes = [permissions.AllowAny]

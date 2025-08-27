@@ -19,6 +19,7 @@ from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 
 
 from apps.business_app.views.event_type import EventTypeViewSet
+from apps.business_app.views.gene_view import GeneViewSet
 from apps.business_app.views.initial_xyz_expansion_data import (
     InitialXyzExpansionDataViewSet,
 )
@@ -38,24 +39,25 @@ router.register(
     SiteConfigurationViewSet,
     basename="event-configurations",
 )
-
 router.register(
+    "gene",
+    GeneViewSet,
+    basename="gene",
+)
+
+uploaded_files_router = router.register(
     "uploaded-files",
     UploadedFilesViewSet,
-    basename="uploaded-files-nodes",
-).register(
+    basename="uploaded-files",
+)
+uploaded_files_router.register(
     "allele-node-by-uploaded-file",
     AlleleNodeViewSet,
     basename="allele-node-by-uploaded-file",
     parents_query_lookups=["uploaded_file"],
 )
 
-
-router.register(
-    "uploaded-files",
-    UploadedFilesViewSet,
-    basename="uploaded-files-data",
-).register(
+uploaded_files_router.register(
     "initial-file-data",
     InitialFileDataViewSet,
     basename="initial-file-data",

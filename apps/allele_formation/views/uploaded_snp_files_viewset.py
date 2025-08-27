@@ -10,7 +10,7 @@ from apps.common.views import CommonOrderingFilter
 
 
 class UploadedSNPFilesViewSet(viewsets.ModelViewSet):
-    queryset = UploadedSNPFiles.objects.all()
+    queryset = UploadedSNPFiles.objects.select_related("gene").all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     serializer_class = UploadedSNPFileSerializer
@@ -19,7 +19,5 @@ class UploadedSNPFilesViewSet(viewsets.ModelViewSet):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    filterset_fields = [
-        "system_user",
-    ]
+    filterset_fields = ["system_user", "gene"]
     ordering_fields = "__all__"

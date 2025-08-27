@@ -16,6 +16,7 @@ from apps.business_app.models import (
     WorkingCopyOfOriginalFile,
 )
 from apps.business_app.models.event_type import EventType
+from apps.business_app.models.gene import Gene
 from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.region import Region
@@ -185,6 +186,22 @@ class AllowedExtensionsAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Gene)
+class GeneAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "description",
+        "status",
+    ]
+    fields = [
+        "name",
+        "description",
+        "status",
+    ]
+
+
 @admin.register(UploadedFiles)
 class UploadedFilesAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
@@ -193,6 +210,8 @@ class UploadedFilesAdmin(admin.ModelAdmin):
         "custom_name",
         "description",
         "original_file",
+        "gene",
+        "predefined",
         "system_user",
         "google_sheet_id",
     ]
@@ -200,6 +219,8 @@ class UploadedFilesAdmin(admin.ModelAdmin):
         "custom_name",
         "description",
         "original_file",
+        "gene",
+        "predefined",
         "system_user",
         "google_sheet_id",
     ]
