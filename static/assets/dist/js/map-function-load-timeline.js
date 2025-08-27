@@ -682,6 +682,7 @@ if (timeRange == "-12000/2025")
                                             sessionStorage.setItem('durationSesion', parseInt(anEnd)-parseInt(aBegin));
 
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
+                                            /*
                                             Swal.fire({
                                                 title: 'Updating TimeLine...',
                                                 showConfirmButton: false,
@@ -689,6 +690,7 @@ if (timeRange == "-12000/2025")
                                                     Swal.showLoading();
                                                 }
                                             });
+                                            */
                                             // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
                                             setTimeout(function () {
                                                 location.reload()
@@ -769,6 +771,7 @@ if (timeRange == "-12000/2025")
                                         }                                        
 
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
+                                            /*
                                             Swal.fire({
                                                 title: 'Updating TimeLine...',
                                                 showConfirmButton: false,
@@ -776,6 +779,7 @@ if (timeRange == "-12000/2025")
                                                     Swal.showLoading();
                                                 }
                                             });
+                                            */
                                             // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
                                             setTimeout(function () {
                                                 location.reload()
@@ -1246,6 +1250,7 @@ const allTimes = data.features
                                             } 
 
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
+                                            /*
                                             Swal.fire({
                                                 title: 'Updating TimeLine...',
                                                 showConfirmButton: false,
@@ -1253,6 +1258,7 @@ const allTimes = data.features
                                                     Swal.showLoading();
                                                 }
                                             });
+                                            */
                                             // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
                                             setTimeout(function () {
                                                 location.reload()
@@ -1334,6 +1340,7 @@ const allTimes = data.features
                                         }                                        
 
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
+                                            /*
                                             Swal.fire({
                                                 title: 'Updating TimeLine...',
                                                 showConfirmButton: false,
@@ -1341,6 +1348,7 @@ const allTimes = data.features
                                                     Swal.showLoading();
                                                 }
                                             });
+                                            */
                                             // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
                                             setTimeout(function () {
                                                 location.reload()
