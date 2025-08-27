@@ -92,15 +92,11 @@ class XslxToPdbGraph(ExcelReader):
                 ]  # Solo modifique esta línea
                 allele_number = row[ExcelNomenclators.output_number_column_name]
 
-                if self.ilu_search_criteria in allele_name:
-                    self.ilu_list.append(allele_number)
-                    continue
-
                 if pd.isna(allele_name) or pd.isna(allele_number):
                     break
-                if self.ilu_search_criteria in allele_name:
-                    self.ilu_list.append(allele_number)
-                    continue
+                # if self.ilu_search_criteria in allele_name:
+                #     self.ilu_list.append(allele_number)
+                #     continue
 
                 self.G.add_node(
                     allele_number,
@@ -118,7 +114,7 @@ class XslxToPdbGraph(ExcelReader):
                         (parent.strip()) for parent in str(parents_info).split(",")
                     )
                 for parent in parents:
-                    if parent == allele_number or allele_number in self.ilu_list:
+                    if parent == allele_number: # or allele_number in self.ilu_list:
                         continue
                     int_parent = int(parent)
                     int_allele_number = int(allele_number)
@@ -158,8 +154,8 @@ class XslxToPdbGraph(ExcelReader):
             # Open the PDB file for writing
             # Iterar sobre la lista de nodos
             for node in nodes_list:
-                if node in self.ilu_list:
-                    continue
+                # if node in self.ilu_list:
+                #     continue
                 region = self.G.nodes[node]["region"]
                 if isinstance(region, str):
                     region = region.lower()

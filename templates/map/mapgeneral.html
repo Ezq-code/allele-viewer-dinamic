@@ -290,30 +290,40 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <div class="right-sidebar col-xl-12">
+                                <div class="right-sidebar d-flex">
                                     <div id="map" class="col-10"></div>
-                                    <!--
-                                    <div id="timeRangeMigraions" class="col-2">
-                                        <select multiple="" class="custom-multiselect">
-                                            <option value="-15000/2025" selected>From 15000 YBP to year 2025</option>
-                                            <option value="-1800000/-804400">Homo Erectus Migrations</option>
-                                            <option value="-700000/-190539">Heidelbergensis Migrations </option>
-                                            <option value="-69000/-15000">Homo Sapiens Migrations</option>
-                                            <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
-                                      </select>
-                                    </div>
-                                    -->
-                                    <div id="timeRangeMigraions" class="col-2">
+                                    <div id="timeRangeMigraions" class="time-range-container">
                                         <select class="custom-multiselect" size="5">
                                             <option value="-15000/2025" selected>From 15000 YBP to year 2025</option>
                                             <option value="-1800000/-804400">Homo Erectus Migrations</option>
-                                            <option value="-700000/-190539">Heidelbergensis Migrations </option>
+                                            <option value="-700000/-190539">Heidelbergensis Migrations</option>
                                             <option value="-69000/-15000">Homo Sapiens Migrations</option>
                                             <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
-                                      </select>
+                                        </select>
                                     </div>
-
                                 </div>
+
+
+                                <script>
+                                    // Duración fija para el loader en milisegundos (10 segundos)
+                                    const LOADER_DURATION = 10000;
+                                    // 1. Mostrar el loader en cuanto el DOM esté listo.
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        Swal.fire({
+                                            title: 'Updating TimeLine Data...',
+                                            html: 'Please wait a few seconds...',
+                                            timer: LOADER_DURATION,
+                                            timerProgressBar: true, // barra de progreso del tiempo
+                                            allowOutsideClick: false,
+                                            allowEscapeKey: false,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                            }
+                                        });
+
+                                    });
+
+                                </script>
 
                                 <script>
                                     var importUrlPath = "{% static 'assets/dist/Leaflet/leaflet.shapefile-gh-pages/shp.js' %}";
@@ -414,11 +424,12 @@ if (timeRange === "-12000/2025")
                                     markerLayer = new L.featureGroup().addTo(map);
                                     var markerMigrationPointLayer = new L.featureGroup().addTo(map);
                                     var labeled = false;
-                                    var eventFilter = new EventTimeFilter(map, null, timeRange);
+                                    //var eventFilter = new EventTimeFilter(map, null, timeRange);
 }
 else
 {
 
+/*    
     var map = L.map('map', {
     layers: [satelitalLayer], //[osmcountriesLayers],
     zoom: 2,//14,],
@@ -426,6 +437,30 @@ else
     timeDimension: true,
     center: new L.LatLng(45, 120) //[36.72, -4.43]
 });  
+*/
+
+    // Función para ajustar el mapa según el tamaño de la pantalla
+    if (window.innerWidth <= 768) 
+    { // Consideramos pantallas pequeñas (por ejemplo, teléfonos)
+     var map = L.map('map', {
+      layers: [satelitalLayer], //[osmcountriesLayers],
+      zoom: 2,//14,],
+      fullscreenControl: true,
+      timeDimension: true,
+      center: new L.LatLng(10, 20) //[36.72, -4.43]
+     });  
+    } 
+    else 
+    {
+     // Centro y zoom para pantallas más grandes
+     var map = L.map('map', {
+      layers: [satelitalLayer], //[osmcountriesLayers],
+      zoom: 2,//14,],
+      fullscreenControl: true,
+      timeDimension: true,
+      center: new L.LatLng(45, 120) //[36.72, -4.43]
+     });  
+    }
 
 L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
     _getDisplayDateFormat: function(date){
@@ -436,10 +471,10 @@ var timeDimensionControl = new L.Control.TimeDimensionCustom({
         displayTime: false,
         timeSliderDragUpdate: true,
         loopButton: true,
-        speed: 60,
-        minSpeed: 20,
+        //speed: 60,
+        minSpeed: 0,
         maxSpeed: 60,
-        speedStep: 20,
+        speedStep: 1,
         speedSlider: true,
         autoPlay: false,
     playerOptions: {
@@ -461,14 +496,14 @@ map.addControl(timeDimensionControl);
 markerLayer = new L.featureGroup().addTo(map);
 var markerMigrationPointLayer = new L.featureGroup().addTo(map);
 var labeled = false;
-var eventFilter = new EventTimeFilter(map, null, timeRange);
+//var eventFilter = new EventTimeFilter(map, null, timeRange);
                             
 
 // Get the TimeDimension instance from the map
 var timeDimension = map.timeDimension;
 // Initialize EventTimeFilter with both map and timeDimension
 
-var eventFilter = new EventTimeFilter(map, timeDimension, timeRange);
+//var eventFilter = new EventTimeFilter(map, timeDimension, timeRange);
 
 // Configurar el selector de rangos
 // Configurar el selector de rangos// LOS CAMBIOS FUERON AQUI

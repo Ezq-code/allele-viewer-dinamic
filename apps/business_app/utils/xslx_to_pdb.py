@@ -107,8 +107,8 @@ class XslxToPdb(ExcelReader):
             # Loop over each row in the Excel file
             for _, row in self.output_df.iterrows():
                 allele = row[ExcelNomenclators.output_allele_column_name]
-                if self.ilu_search_criteria in allele:
-                    continue
+                # if self.ilu_search_criteria in allele:
+                #     continue
                 # age = row.get(ExcelNomenclators.age)
                 age_1 = row.get(ExcelNomenclators.age_1)
                 age_2 = row.get(ExcelNomenclators.age_2)

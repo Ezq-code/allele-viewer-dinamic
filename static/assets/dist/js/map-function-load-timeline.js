@@ -682,6 +682,7 @@ if (timeRange == "-12000/2025")
                                             sessionStorage.setItem('durationSesion', parseInt(anEnd)-parseInt(aBegin));
 
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
+                                            /*
                                             Swal.fire({
                                                 title: 'Updating TimeLine...',
                                                 showConfirmButton: false,
@@ -689,6 +690,7 @@ if (timeRange == "-12000/2025")
                                                     Swal.showLoading();
                                                 }
                                             });
+                                            */
                                             // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
                                             setTimeout(function () {
                                                 location.reload()
@@ -696,9 +698,6 @@ if (timeRange == "-12000/2025")
 
                                           });
                                         
-
-                                       
-
                                         document.getElementById('btreload').addEventListener('click', function() {
                                             
                                           
@@ -772,6 +771,7 @@ if (timeRange == "-12000/2025")
                                         }                                        
 
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
+                                            /*
                                             Swal.fire({
                                                 title: 'Updating TimeLine...',
                                                 showConfirmButton: false,
@@ -779,14 +779,13 @@ if (timeRange == "-12000/2025")
                                                     Swal.showLoading();
                                                 }
                                             });
+                                            */
                                             // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
                                             setTimeout(function () {
                                                 location.reload()
                                             }, 500);
 
                                         });
-                                        
-
 }
 else
 {
@@ -875,7 +874,6 @@ let eventa = {};
 let eventb = {};
 let eventc = {};
 
-
  function  createGeoJsonData4(events) 
    {
        if (events.length > 0) {
@@ -898,7 +896,6 @@ let eventc = {};
                                 parseFloat(event.markers[0].latitude)
                             ]
                         }
-                    
                     }  
                     listEventsJoin.push(eventb);     
                 })
@@ -908,8 +905,6 @@ let eventc = {};
                 features: listEventsJoin 
                 } 
    }
-
-
 
    // Función modificada para sincronización
 function addGeoJSONLayer(map, data) {
@@ -933,11 +928,9 @@ const allTimes = data.features
     var timeDimension = L.timeDimension({
     times: allTimes, // Usar array de fechas
     period: "PT1S",
-    //currentTime: yearToDate(Math.max(...allTimes.map(t => t))),
-    //timeInterval: [yearToDate(-68950), yearToDate(-42586)] // Rango completo
 });
  
-    // 1. Capa de línea con ajuste de interpolación
+    // 1. Capa de trayectorias de las migraciones
     var lineLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
         filter: f => f.geometry.type === 'LineString',
         style: function(feature) {
@@ -956,9 +949,7 @@ const allTimes = data.features
         getLineId: f => f.properties.name
     });
     
-    
-
-    // 2. Capa de punto con temporizador exacto
+    // 2. Capa de destinos de las migraciones
     var pointLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
         filter: f => f.geometry.type === 'Point',
         pointToLayer: (f, latlng) => L.marker(latlng, {
@@ -969,7 +960,7 @@ const allTimes = data.features
                     shadowSize: [45, 45],
                     shadowAnchor: [17, 23]
                 })
-        })
+        }).bindPopup(f.properties.title)
     }), {
       updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
       duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
@@ -990,7 +981,7 @@ const allTimes = data.features
         pointToLayer:  this.createEventMarker.bind(this)
     }), {
       updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
-      duration: "PT1S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+      duration: 10000, //"PT1S", // 3000,//"PT16M",  //"PT1S"                // Duración total = Fin - Inicio (76 minutos)
       timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
       addlastPoint: false                  // Evita saltos al final
     });
@@ -1027,7 +1018,7 @@ const allTimes = data.features
                  addlastPoint: false   // Evita saltos al final
           });
 
-        // 1. Capa de área glaciar
+        // 1. Capa de la tierra que emerge
         var areaLayerTierra = L.timeDimension.layer.geoJson(L.geoJSON(data, {
             filter: f => f.properties.id > 999,
               style: function(feature) {
@@ -1058,7 +1049,7 @@ const allTimes = data.features
                  addlastPoint: false                  // Evita saltos al final
           });
 
-
+         // Capa del crecimiento poblacional
           var areaLayerPoblacion = L.timeDimension.layer.geoJson(L.geoJSON(data, {
             filter: f => f.properties.id === 20,
               style: function(feature) {
@@ -1082,11 +1073,17 @@ const allTimes = data.features
                        opacity: 0.5,
                    }
                }                
-             }
+             },
+             onEachFeature: function (feature, layer) {
+                let nf = new Intl.NumberFormat('en-US');
+                if (feature.properties.id == 20) {
+                    layer.bindPopup(L.popup({
+                        closeOnClick: false,
+                        autoClose: false
+                    }).setContent(feature.properties.place+", "+nf.format(feature.properties.mag)+" people."));
+                }
+            },
               }), {
-                  // updateTimeDimensionMode: 'intersect',  //'accumulate'
-                 //  duration: "PT76M",
-                 //  timeInterval: "PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S"
                  updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
                  duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
                  timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
@@ -1179,11 +1176,6 @@ const allTimes = data.features
                 }
             }
         });
-     
-
-
-
-
        
        areaLayerTierra.addTo(map);
        areaLayerPoblacion.addTo(map);
@@ -1206,7 +1198,6 @@ const allTimes = data.features
         'Population by Region': areaLayerPoblacion,
         'Land Emerge': areaLayerTierra,
         'Marker Layer': markerLayer
-       
     };
     
     var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
@@ -1259,6 +1250,7 @@ const allTimes = data.features
                                             } 
 
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
+                                            /*
                                             Swal.fire({
                                                 title: 'Updating TimeLine...',
                                                 showConfirmButton: false,
@@ -1266,6 +1258,7 @@ const allTimes = data.features
                                                     Swal.showLoading();
                                                 }
                                             });
+                                            */
                                             // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
                                             setTimeout(function () {
                                                 location.reload()
@@ -1347,6 +1340,7 @@ const allTimes = data.features
                                         }                                        
 
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo
+                                            /*
                                             Swal.fire({
                                                 title: 'Updating TimeLine...',
                                                 showConfirmButton: false,
@@ -1354,14 +1348,13 @@ const allTimes = data.features
                                                     Swal.showLoading();
                                                 }
                                             });
+                                            */
                                             // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
                                             setTimeout(function () {
                                                 location.reload()
                                             }, 500);
 
                                         });
-
-
 
 var oReq = new XMLHttpRequest();
 oReq.addEventListener("load", function(xhr) {
@@ -1387,14 +1380,6 @@ oReq.addEventListener("load", function(xhr) {
           }
          migrationlist.push(amigration)
        }
-/*
-        if(!feature.properties.times || feature.properties.times.length < 2){
-            console.error(`Feature ${feature.properties.name} tiene tiempos inválidos`);
-        }
-        if(feature.geometry.type === 'MultiPolygon' && !feature.geometry.coordinates[0][0].length){
-            console.error("Estructura MultiPolygon inválida");
-        }
-*/
     });
     
 data.features.sort((a,b) => 
@@ -1403,8 +1388,7 @@ Math.min(...a.properties.times) - Math.min(...b.properties.times));
 
 setTimeout(function () {
     addGeoJSONLayer(map, data);
-}, 1000);
-    //addGeoJSONLayer(map, data);
+}, 3000);
 
     var lista = document.getElementById("displayed-list");
     lista.innerHTML = "";
@@ -1413,7 +1397,30 @@ setTimeout(function () {
 // Escuchar el evento 'timeloading'
 map.timeDimension.on('timeloading', function (e) {
     const currentTime = map.timeDimension.getCurrentTime();
-    //const currentDate = new Date(currentTime).toISOString();
+
+    if (currentTime == -503)
+    {
+     var player = timeDimensionControl._player || map.timeDimension.getPlayer(); // Acceso al reproductor
+     player.setTransitionTime(334);
+    }
+
+    if (currentTime == 500)
+    {
+     var player = timeDimensionControl._player || map.timeDimension.getPlayer(); // Acceso al reproductor
+     player.setTransitionTime(400);
+    }
+
+    if (currentTime == 1500)
+    {
+     var player = timeDimensionControl._player || map.timeDimension.getPlayer(); // Acceso al reproductor
+     player.setTransitionTime(500);
+    }
+
+    if (currentTime == 1800)
+    {
+     var player = timeDimensionControl._player || map.timeDimension.getPlayer(); // Acceso al reproductor
+     player.setTransitionTime(1000);
+    }
    
   if ((currentTime != currentTimeAnt) && (currentTime != -26508) && (currentTime != -890400)){  
     
@@ -1458,7 +1465,6 @@ map.timeDimension.on('timeloading', function (e) {
   });
     
 });
-
 
 if (timeRange == "-15000/2025"){
     oReq.open('GET', timelinetimedimensiontimeline_15000_2025);
