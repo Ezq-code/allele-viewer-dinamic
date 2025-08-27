@@ -508,7 +508,7 @@ document.getElementById("selectGene").addEventListener("change", function () {
 
 // Función para poblar archivos según el gen seleccionado
 function poblarArchivosPorGen(geneId) {
-console.log('✌️geneId --->', geneId);
+  console.log("✌️geneId --->", geneId);
   load.hidden = false;
   const selectfile = document.getElementById("selectfile");
   selectfile.innerHTML = "";
@@ -520,8 +520,8 @@ console.log('✌️geneId --->', geneId);
     .get("/business-gestion/uploaded-files/?gene=" + geneId)
     .then(function (response) {
       globalData = response.data.results;
-console.log('✌️response.data.results --->', response.data.results);
-console.log('✌️globalData --->', globalData);
+      console.log("✌️response.data.results --->", response.data.results);
+      console.log("✌️globalData --->", globalData);
       response.data.results.forEach(function (file) {
         const option = document.createElement("option");
         option.value = file.id;
@@ -541,7 +541,7 @@ console.log('✌️globalData --->', globalData);
 
 // Función para poblar la lista desplegable de los pdb
 function poblarListasPdb(versionAllele) {
- load.hidden = false;
+  load.hidden = false;
   var $selectPdb = document.getElementById("selectPdb");
 
   $selectPdb.innerHTML = "";
@@ -824,40 +824,26 @@ function getAtomBySerial(serial) {
 function child() {
   viewer.removeAllLabels();
   const uploadFileId = localStorage.getItem("uploadFileId");
-  const url = `/business-gestion/uploaded-files/${uploadFileId}/allele-node-by-uploaded-file/?ordering=timeline_appearence`;
 
-  axios
-    .get(url)
-    .then((response) => {
-      datos = response.data.results;
+  const elemento = globalData[findPosition(globalData, uploadFileId)];
+  let datos = elemento.allele_nodes;
 
-      datos.forEach(({ number, stick_radius, sphere_radius }) => {
-        viewer.setStyle(
-          { serial: number },
-          {
-            sphere: { radius: sphere_radius },
-            stick: {
-              color: "spectrum",
-              radius: stick_radius,
-              showNonBonded: false,
-            },
-          }
-        );
-      });
-      viewer.zoomTo();
-      viewer.zoom(5, 1000);
-      viewer.render();
-    })
-    .catch((error) => {
-      const errorMessage = error.response?.data?.detail || "Error desconocido";
-      Toast.fire({
-        icon: "error",
-        title: errorMessage,
-      });
-    })
-    .finally(() => {
-      load.hidden = true;
-    });
+  datos.forEach(({ number, stick_radius, sphere_radius }) => {
+    viewer.setStyle(
+      { serial: number },
+      {
+        sphere: { radius: sphere_radius },
+        stick: {
+          color: "spectrum",
+          radius: stick_radius,
+          showNonBonded: false,
+        },
+      }
+    );
+  });
+  viewer.zoomTo();
+  viewer.zoom(5, 1000);
+  viewer.render();
 }
 
 function childFull(id) {
