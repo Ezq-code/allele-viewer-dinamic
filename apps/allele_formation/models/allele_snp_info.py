@@ -7,6 +7,7 @@ class AlleleSNPInfo(models.Model):
         verbose_name=_("Parents Info"), null=True, max_length=256
     )
     allele = models.CharField(verbose_name=_("Allele"), max_length=100)
+    transition = models.TextField(verbose_name=_("Transition"), null=True, blank=True)
 
     loss_ancesters_snp = models.TextField(
         null=True, blank=True, verbose_name=_("SNP lost (Ancesters)")

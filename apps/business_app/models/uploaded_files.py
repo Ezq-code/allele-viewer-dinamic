@@ -5,11 +5,13 @@ from django.db import models
 from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 from apps.business_app.models import AllowedExtensions
+from apps.business_app.models.gene import Gene
 from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDriveApi
 from apps.business_app.utils.xslx_to_pdb import XslxToPdb
 from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
 from apps.business_app.models.site_configurations import SiteConfiguration
+from django.core.cache import cache
 
 
 def user_directory_path(instance, filename):
@@ -32,6 +34,7 @@ class FileExtensionValidator:
 
 
 class UploadedFiles(models.Model):
+    CACHE_KEY_RELATED_ALLELE_NODES = "allele_nodes_for_{uploaded_file_id}"
     custom_name = models.CharField(
         verbose_name=_("custom name"),
         max_length=150,
@@ -50,6 +53,16 @@ class UploadedFiles(models.Model):
     system_user = models.ForeignKey(
         "users_app.SystemUser",
         on_delete=models.CASCADE,
+        related_name="uploaded_files",
+    )
+    predefined = models.BooleanField(
+        verbose_name=_("predefined"),
+        default=False,
+    )
+    gene = models.ForeignKey(
+        Gene,
+        on_delete=models.CASCADE,
+        null=True,
         related_name="uploaded_files",
     )
     google_sheet_id = models.CharField(
@@ -73,6 +86,7 @@ class UploadedFiles(models.Model):
 
     def save(self, *args, **kwargs):
         original_file = self.original_file
+        is_new = self.pk is None
         file_name, extension = os.path.splitext(original_file.name)
         super().save(*args, **kwargs)  # Call the "real" save() method.
         if (
@@ -81,7 +95,7 @@ class UploadedFiles(models.Model):
         ):
             return
 
-        else:
+        elif is_new and original_file:
             try:
                 global_configuration = SiteConfiguration.get_solo()
 
@@ -110,16 +124,25 @@ class UploadedFiles(models.Model):
                 print(e)
                 self.delete()
                 raise e
+        if self.predefined:
+            UploadedFiles.objects.filter(gene=self.gene).exclude(id=self.id).update(
+                predefined=False
+            )
 
     def delete(self, *args, **kwargs):
         # Delete the physical file before deleting the record
-        self.delete_phisical_file(self.original_file)
+        self.delete_physical_file(self.original_file)
         if self.google_sheet_id:
             processor = UploadToGoogleDriveApi()
             processor.delete_file_from_google_drive(self.google_sheet_id)
+        cache.delete(
+            UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
+                uploaded_file_id=self.id
+            )
+        )
         super().delete(*args, **kwargs)
 
-    def delete_phisical_file(self, file_field):
+    def delete_physical_file(self, file_field):
         if file_field:
             file_path = file_field.path
             if os.path.exists(file_path):

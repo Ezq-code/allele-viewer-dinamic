@@ -8,10 +8,35 @@ const csrfToken = document.cookie
   ?.split("=")[1];
 // url del endpoint principal
 const url = "/business-gestion/uploaded-files/";
+// url para obtener genes
+const geneUrl = "/business-gestion/gene/";
 
 var load = document.getElementById("load");
 
+// Función para cargar la lista de genes
+function loadGenes() {
+  axios
+    .get(geneUrl)
+    .then((response) => {
+      const geneSelect = document.getElementById("gene");
+      geneSelect.innerHTML = '<option value="">Seleccione un gen</option>';
+
+      response.data.results.forEach((gene) => {
+        const option = document.createElement("option");
+        option.value = gene.id;
+        option.textContent = gene.name;
+        geneSelect.appendChild(option);
+      });
+    })
+    .catch((error) => {
+      console.error("Error cargando genes:", error);
+    });
+}
+
 $(document).ready(function () {
+  // Cargar la lista de genes
+  loadGenes();
+
   $("table")
     .addClass("table table-hover")
     .DataTable({
@@ -72,6 +97,8 @@ $(document).ready(function () {
       columns: [
         { data: "custom_name", title: "Nombre" },
         { data: "description", title: "Descripción" },
+        { data: "gene_name", title: "Gen" },
+        { data: "predefined", title: "Predefinido" },
         {
           data: "",
           title: "Acciones",
@@ -97,6 +124,16 @@ $(document).ready(function () {
               return type === "display" && data.length > 80
                 ? data.substr(0, 80) + "…"
                 : data;
+            }
+          },
+        },
+        {
+          targets: 2,
+          render: function (data, type, row) {
+            if (data == null || data == "") {
+              return "Sin Gen";
+            } else {
+              return data;
             }
           },
         },
@@ -143,6 +180,12 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
   const elements = [...form.elements];
   // A forEach loop is used to iterate through each element in the array.
   elements.forEach((elem) => elem.classList.remove("is-invalid"));
+
+  // Resetear el campo gene a la opción por defecto
+  document.getElementById("gene").innerHTML =
+    '<option value="">Seleccione un gen</option>';
+  // Recargar la lista de genes
+  loadGenes();
 });
 
 let edit_elemento = false;
@@ -164,6 +207,17 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
         // Llenar el formulario con los datos del usuario
         form.elements.name.value = elemento.custom_name;
         form.elements.description.value = elemento.description;
+
+        // Asegurar que los genes estén cargados antes de establecer el valor
+        if (document.getElementById("gene").options.length > 1) {
+          form.elements.gene.value = elemento.gene;
+        } else {
+          // Si los genes no están cargados, esperar y luego establecer el valor
+          loadGenes();
+          setTimeout(() => {
+            form.elements.gene.value = elemento.gene;
+          }, 100);
+        }
       })
       .catch(function (error) {});
   } else {
@@ -190,6 +244,11 @@ $(function () {
         required: true,
       },
       customFile: {
+        required: function () {
+          return !edit_elemento; // Solo requerido si no se está editando
+        },
+      },
+      gene: {
         required: true,
       },
     },
@@ -200,7 +259,10 @@ $(function () {
         required: "El nombre es requerido",
       },
       customFile: {
-        required: "El fichero es obligatorio",
+        required: "El fichero es obligatorio al crear un nuevo elemento",
+      },
+      gene: {
+        required: "El gen es obligatorio",
       },
     },
     errorElement: "span",
@@ -229,6 +291,10 @@ form.addEventListener("submit", function (event) {
     data.append("system_user", localStorage.getItem("id"));
     data.append("custom_name", document.getElementById("name").value);
     data.append("description", document.getElementById("description").value);
+    data.append("gene", document.getElementById("gene").value);
+        // ...dentro del submit del formulario...
+    data.append("predefined", document.getElementById("predefined").checked);
+    // ...resto del código...
     if (document.getElementById("customFile").files[0] != null) {
       data.append(
         "original_file",
@@ -259,14 +325,14 @@ form.addEventListener("submit", function (event) {
         .catch((error) => {
           load.hidden = true;
           let dict = error.response.data;
-          let textError = "Detalles: ";
+          let textError = "Details: ";
           for (const key in dict) {
             textError += key + ": " + dict[key];
           }
 
           Swal.fire({
             icon: "error",
-            title: "Error al crear Elemento",
+            title: "Error creating element",
             text: textError,
             showConfirmButton: false,
             timer: 5000,
@@ -293,7 +359,7 @@ form.addEventListener("submit", function (event) {
           load.hidden = true;
           let dict = error.response.data;
 
-          let textError = "Revise los siguientes campos: ";
+          let textError = "An error occurred while saving the file: ";
           for (const key in dict) {
             if (key === "0") {
               textError += dict[key];

@@ -114,7 +114,7 @@ class XslxToPdbGraph(ExcelReader):
                         (parent.strip()) for parent in str(parents_info).split(",")
                     )
                 for parent in parents:
-                    if parent == allele_number: # or allele_number in self.ilu_list:
+                    if parent == allele_number:  # or allele_number in self.ilu_list:
                         continue
                     int_parent = int(parent)
                     int_allele_number = int(allele_number)

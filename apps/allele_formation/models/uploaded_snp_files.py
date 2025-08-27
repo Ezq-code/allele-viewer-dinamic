@@ -7,6 +7,7 @@ from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 from apps.allele_formation.utils.excel_snp_reader import ExcelSNPReader
 from apps.business_app.models import AllowedExtensions
+from apps.business_app.models.gene import Gene
 
 
 def user_directory_path(instance, filename):
@@ -52,6 +53,12 @@ class UploadedSNPFiles(models.Model):
         verbose_name=_("predefined"),
         default=False,
     )
+    gene = models.ForeignKey(
+        Gene,
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="uploaded_formation_files",
+    )
 
     class Meta:
         verbose_name = _("SNP File")
@@ -62,10 +69,14 @@ class UploadedSNPFiles(models.Model):
 
     def save(self, *args, **kwargs):
         snp_file = self.snp_file
+        committed = snp_file._committed
         is_new = self.pk is None
+        if committed is False and not is_new:
+            self.delete()
+
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
-        if is_new and snp_file:
+        if not committed:
             try:
                 processor_object = ExcelSNPReader(snp_file)
                 processor_object.proccess_sheets(self.id)
@@ -74,6 +85,10 @@ class UploadedSNPFiles(models.Model):
                 logger.error(e)
                 self.delete()
                 raise e
+        if self.predefined:
+            UploadedSNPFiles.objects.filter(gene=self.gene).exclude(id=self.id).update(
+                predefined=False
+            )
 
     def delete(self, *args, **kwargs):
         # Delete the physical file before deleting the record

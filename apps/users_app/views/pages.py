@@ -31,7 +31,11 @@ def alleleviewer(request):
     return render(request, "grafico/alleleviewer.html")
 
 
-@cache_page(60 * 15)
+def ancestral(request):
+    return render(request, "grafico/ancestral.html")
+
+
+# @cache_page(60 * 15)
 def uploadfile(request):
     return render(request, "grafico/uploadfile.html")
 
@@ -39,6 +43,11 @@ def uploadfile(request):
 @cache_page(60 * 15)
 def uploadfileconformation(request):
     return render(request, "grafico/uploadfileconformation.html")
+
+
+@cache_page(60 * 15)
+def gene(request):
+    return render(request, "grafico/gene.html")
 
 
 @cache_page(60 * 15)
@@ -93,6 +102,5 @@ def event_gallery(request):
     )
 
 
-# @cache_page(60 * 15)
 def introduction(request):
     return render(request, "introduction/introduction.html")
