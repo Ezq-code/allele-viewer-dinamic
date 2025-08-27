@@ -520,6 +520,7 @@ function poblarArchivosPorGen(geneId) {
     .get("/business-gestion/uploaded-files/?gene=" + geneId)
     .then(function (response) {
       globalData = response.data.results;
+      localStorage.setItem("globalData", globalData);
       console.log("✌️response.data.results --->", response.data.results);
       console.log("✌️globalData --->", globalData);
       response.data.results.forEach(function (file) {
@@ -826,7 +827,7 @@ function child() {
   const uploadFileId = localStorage.getItem("uploadFileId");
 
   const elemento = globalData[findPosition(globalData, uploadFileId)];
-  let datos = elemento.allele_nodes;
+  datos = elemento.allele_nodes;
 
   datos.forEach(({ number, stick_radius, sphere_radius }) => {
     viewer.setStyle(
@@ -844,6 +845,7 @@ function child() {
   viewer.zoomTo();
   viewer.zoom(5, 1000);
   viewer.render();
+  load.hidden = true;
 }
 
 function childFull(id) {
@@ -1272,6 +1274,7 @@ function animation() {
   viewer.removeAllLabels();
   $(".controlpanel").toast("hide");
   load.hidden = false;
+  console.log("datos", datos);
   datos.forEach((element) => {
     viewer.setStyle(
       { serial: element.number },
@@ -1461,5 +1464,9 @@ function playStopAnimation(button) {
 function centerGrafig() {
   viewer.zoomTo();
   viewer.zoom(2, 1000);
+  viewer.render();
+}
+function selectClear() {
+  viewer.clear();
   viewer.render();
 }

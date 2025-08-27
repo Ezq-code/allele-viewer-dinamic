@@ -1,7 +1,6 @@
-
 function graficar_string(pdb_content) {
   load.hidden = false;
- // viewer.removeAllModels();
+  // viewer.removeAllModels();
   // viewer.render();
   //  models[cont] = viewer.addModel(pdb_content, "pdb", { assignBonds: false });
   //  cont++;
@@ -9,12 +8,12 @@ function graficar_string(pdb_content) {
   viewer.setClickable({}, true, function (atom, viewer, event, container) {
     showInfo(atom);
   });
- 
+
   // Crear los objetos de línea para los ejes de coordenadas
-  viewer.setCameraParameters({ fov: 2, z: 300 }); 
+  viewer.setCameraParameters({ fov: 2, z: 300 });
   child();
   viewer.spin(new $3Dmol.Vector3(1, 0, 0), 0.02); // Girar alrededor del eje X a una velocidad de 0.01 radianes por cuadro
-   viewer.spin(false);
+  viewer.spin(false);
 }
 
 // Función para iniciar la animación del atomo
@@ -196,32 +195,28 @@ function marcar(xcord, ycord, zcord) {
     color: getRandomColor(),
     callback: function () {
       Swal.fire({
-        title: 'Do you want to hide this arrow?',
+        title: "Do you want to hide this arrow?",
         showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
       }).then((result) => {
         if (result.isConfirmed) {
           ocultarFlecha(arrows.indexOf(arrow));
         }
       });
-    }
+    },
   });
   arrows.push(arrow);
   viewer.render();
 }
 
 function ocultarFlecha(index) {
-
   if (index >= 0 && index < arrows.length) {
     arrows[index].hidden = true;
 
     viewer.render();
-    
-
-  
   } else {
-    console.error('Índice de flecha no válido');
+    console.error("Índice de flecha no válido");
   }
 }
 
@@ -257,7 +252,6 @@ function checkInternalStatus() {
     console.log("internal_status no existe en localStorage.");
   }
 }
-
 
 function poblarListasCopy(uploadFileId) {
   if (
@@ -304,7 +298,6 @@ function poblarListasCopy(uploadFileId) {
       });
   }
 }
-
 
 var data1;
 function displaySNPData() {
@@ -428,7 +421,6 @@ function selectPdbContainer() {
   axios
     .get("/business-gestion/uploaded-files/" + idFile + "/")
     .then(function (response) {
-      
       const elemento = response.data;
       let versionAllele = elemento.pdb_files;
       poblarListasPdb(versionAllele);

@@ -19,7 +19,5 @@ class UploadedSNPFilesViewSet(viewsets.ModelViewSet):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    filterset_fields = [
-        "system_user",
-    ]
+    filterset_fields = ["system_user", "gene"]
     ordering_fields = "__all__"

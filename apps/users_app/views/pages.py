@@ -102,6 +102,5 @@ def event_gallery(request):
     )
 
 
-
 def introduction(request):
     return render(request, "introduction/introduction.html")
