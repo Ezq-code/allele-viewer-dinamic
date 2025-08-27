@@ -17,8 +17,10 @@ let element = $("#container")[0];
 let load = document.getElementById("load");
 var models = [];
 var cont = 0;
+var multi_graph = false;
 // en esta variable se guardan los datos despues que se cargan de los hijos
 var datos;
+var globalData;
 var sphereRadiusFactor = 12;
 var stickRadiusFactor = 0.003;
 
@@ -37,6 +39,7 @@ viewer = $3Dmol.createViewer(element, {
 });
 
 // Inicio del menú de configuracion
+
 // Bloque para mostrar las esferas
 var checkboxsphere = document.getElementById("sphere_hidden");
 checkboxsphere.addEventListener("change", function () {
@@ -446,6 +449,18 @@ checkboxPlane.addEventListener("change", function () {
   }
 });
 
+var checkboxMultiGraph = document.getElementById("multi_graph");
+checkboxMultiGraph.addEventListener("change", function () {
+  multi_graph_enabled = checkboxMultiGraph.checked
+    ? checkboxMultiGraph.value
+    : null;
+  if (multi_graph_enabled == 0) {
+    multi_graph = true;
+  } else {
+    multi_graph = false;
+  }
+});
+
 // fin del menú de configuracion
 
 // Inicializar las funciones
@@ -453,24 +468,80 @@ $(function () {
   checkInternalStatus();
   coordenadas();
   crearMatriz();
-  poblarListasAllele();
+  cargarGenes();
+  // poblarListasAllele();
   viewer.removeAllLabels();
 });
 
-// Función para poblar la lista desplegable del documento
-function poblarListasAllele() {
-  var $selectfile = document.getElementById("selectfile");
-  axios.get("/business-gestion/uploaded-files/").then(function (response) {
-    response.data.results.forEach(function (element) {
-      var option = new Option(element.custom_name, element.id);
-      $selectfile.add(option);
+// Función para cargar genes en el select
+function cargarGenes() {
+  load.hidden = false;
+  axios.get("/business-gestion/gene/?page_size=1000").then(function (response) {
+    const selectGene = document.getElementById("selectGene");
+    // selectGene.innerHTML = '<option value="">Selec gen</option>';
+    response.data.results.forEach(function (gene) {
+      const option = document.createElement("option");
+      option.value = gene.id;
+      option.textContent = gene.name;
+      selectGene.appendChild(option);
     });
-    poblarListasPdb(response.data.results[0].pdb_files);
-    poblarListasCopy(response.data.results[0].id);
+
+    // Si existe selectedGenId en localStorage, selecciona ese gen y llama a poblarArchivosPorGen
+    const selectedGenId = localStorage.getItem("selectedGenId");
+    if (selectedGenId) {
+      selectGene.value = selectedGenId;
+      poblarArchivosPorGen(selectedGenId);
+    } else {
+      // Si hay genes, poblar los archivos del primero
+      if (response.data.results.length > 0) {
+        poblarArchivosPorGen(response.data.results[0].id);
+      }
+    }
   });
 }
+
+// Evento: al cambiar el gen, filtra los archivos asociados
+document.getElementById("selectGene").addEventListener("change", function () {
+  const geneId = this.value;
+  poblarArchivosPorGen(geneId);
+});
+
+// Función para poblar archivos según el gen seleccionado
+function poblarArchivosPorGen(geneId) {
+console.log('✌️geneId --->', geneId);
+  load.hidden = false;
+  const selectfile = document.getElementById("selectfile");
+  selectfile.innerHTML = "";
+  if (!geneId) {
+    // Si no hay gen seleccionado, limpiar y salir
+    return;
+  }
+  axios
+    .get("/business-gestion/uploaded-files/?gene=" + geneId)
+    .then(function (response) {
+      globalData = response.data.results;
+console.log('✌️response.data.results --->', response.data.results);
+console.log('✌️globalData --->', globalData);
+      response.data.results.forEach(function (file) {
+        const option = document.createElement("option");
+        option.value = file.id;
+        option.textContent = file.custom_name;
+        selectfile.appendChild(option);
+      });
+      // Si hay archivos, poblar los pdb del primero
+      if (response.data.results.length > 0) {
+        poblarListasPdb(response.data.results[0].pdb_files);
+        poblarListasCopy(response.data.results[0].id);
+      } else {
+        document.getElementById("selectPdb").innerHTML = "";
+        load.hidden = true;
+      }
+    });
+}
+
 // Función para poblar la lista desplegable de los pdb
 function poblarListasPdb(versionAllele) {
+ load.hidden = false;
   var $selectPdb = document.getElementById("selectPdb");
 
   $selectPdb.innerHTML = "";
@@ -478,189 +549,20 @@ function poblarListasPdb(versionAllele) {
     var option = new Option(element.custom_name, element.id);
     $selectPdb.add(option);
   });
-}
 
-function poblarListasCopy(uploadFileId) {
-  if (
-    localStorage.getItem("id") &&
-    localStorage.getItem("id") !== "null" &&
-    localStorage.getItem("id") !== ""
-  ) {
-    var userId = localStorage.getItem("id");
-    var url =
-      "/business-gestion/working-copy-of-original-file-for-user/?system_user=" +
-      userId +
-      "&uploaded_file=" +
-      uploadFileId;
-    var $selectCopy = document.getElementById("selectCopy");
-    var $inputGroup = document.getElementById("inputGroupCopy");
-    $selectCopy.innerHTML = "";
-    // Mostrar un mensaje de carga
-    var loadingOption = new Option("Cargando...", "");
-    $selectCopy.add(loadingOption);
-    axios
-      .get(url)
-      .then(function (response) {
-        // Limpiar opciones de carga
-        $selectCopy.innerHTML = "";
-        if (response.data.results.length > 0) {
-          response.data.results.forEach(function (element) {
-            var option = new Option(
-              "Personal Copy # " + element.id,
-              element.id
-            );
-            $selectCopy.add(option);
-            $inputGroup.hidden = false;
-          });
-        } else {
-          $inputGroup.hidden = true;
-        }
-      })
-      .catch(function (error) {
-        console.error("Error al obtener los datos:", error);
-        var errorOption = new Option("Error al cargar", "");
-        $selectCopy.add(errorOption);
-      });
+  let autoLoad = localStorage.getItem("autoLoad");
+
+  if (autoLoad == `true`) {
+    selectUrl();
+    localStorage.setItem("autoLoad", "false");
   }
-}
-
-var data1;
-function displaySNPData() {
-  // Datos proporcionados
-  load.hidden = false;
-  axios
-    .get(
-      "/business-gestion/uploaded-files/" +
-        localStorage.getItem("uploadFileId") +
-        "/initial-file-data/"
-    )
-    .then(function (response) {
-      data1 = response.data.results;
-      var table = document.getElementById("snptable");
-      if (!table.querySelector("thead") && !table.querySelector("tbody")) {
-        // Crear el encabezado de la tabla
-        var thead = document.createElement("thead");
-        var headerRow = document.createElement("tr");
-
-        var headers = ["Allele", "Marker", "Equalizer"];
-        for (var i = 0; i < headers.length; i++) {
-          var th = document.createElement("th");
-          th.classList.add("col-3"); // Agregar la clase "col-3"
-          th.textContent = headers[i];
-          headerRow.appendChild(th);
-        }
-
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-
-        // Crear el cuerpo de la tabla
-        var tbody = document.createElement("tbody");
-        for (var i = 0; i < data1.length; i++) {
-          var row = document.createElement("tr");
-
-          var alleleCell = document.createElement("td");
-          alleleCell.textContent = data1[i].allele;
-          row.appendChild(alleleCell);
-
-          var markerCell = document.createElement("td");
-          markerCell.textContent = data1[i].marker;
-          row.appendChild(markerCell);
-
-          var controlCell = document.createElement("td");
-          var input = document.createElement("input");
-          input.type = "text";
-          input.class = "rs_control";
-          input.name = "rs_control" + i;
-          input.id = "rs_control" + data1[i].id;
-          input.value = data1[i].current_percent;
-          controlCell.appendChild(input);
-          row.appendChild(controlCell);
-
-          tbody.appendChild(row);
-        }
-        table.appendChild(tbody);
-      }
-      for (var i = 0; i < data1.length; i++) {
-        $(`#rs_control${data1[i].id}`).ionRangeSlider({
-          min: 0,
-          max: 100,
-          type: "single",
-          step: 0.001,
-          postfix: "%",
-          prettify: false,
-          hasGrid: true,
-        });
-      }
-      load.hidden = true;
-    })
-    .catch(function (error) {
-      Toast.fire({
-        icon: "error",
-        title: `${error.response.data.detail}`,
-      });
-      load.hidden = true;
-    });
-  // Obtener la referencia de la tabla HTML
-}
-
-function sendRSControlValues() {
-  var rsControlInputs = document.querySelectorAll(".irs-hidden-input");
-  var values = [];
-  for (var i = 0; i < rsControlInputs.length; i++) {
-    var inputValue = rsControlInputs[i].value;
-    var inputId = parseInt(rsControlInputs[i].id.replace("rs_control", ""), 10);
-    values.push({
-      initial_filedata_id: inputId,
-      new_percent_value: inputValue,
-    });
-  }
-
-  var fileId = localStorage.getItem("uploadFileId");
-  var data = {
-    values: values,
-    file_id: fileId,
-  };
-
-  load.hidden = false;
-  $("#modal-xl").modal("hide");
-  axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
-  axios
-    .post("/business-gestion/new-coordinate-processor/", data)
-    .then(function (response) {
-      graficar_string(response.data.pdb_content);
-      load.hidden = true;
-    })
-    .catch(function (error) {
-      Toast.fire({
-        icon: "error",
-        title: `${error.response.data.detail}`,
-      });
-      load.hidden = true;
-    });
-}
-
-function selectPdbContainer() {
-  zoom.value = 0;
-  var $selectfile = document.getElementById("selectfile");
-  var idFile = $selectfile.value;
-  axios
-    .get("/business-gestion/uploaded-files/" + idFile + "/")
-    .then(function (response) {
-      const elemento = response.data;
-      let versionAllele = elemento.pdb_files;
-      poblarListasPdb(versionAllele);
-      poblarListasCopy(elemento.id);
-    })
-    .catch(function (error) {
-      Toast.fire({
-        icon: "error",
-        title: `${error.response.data.detail}`,
-      });
-    });
+  load.hidden = true;
 }
 
 function selectUrl() {
-  viewer.clear();
+  if (!multi_graph) {
+    viewer.clear();
+  }
   labelOn = false;
   zoom.value = 0;
   var $selectfile = document.getElementById("selectfile");
@@ -668,26 +570,16 @@ function selectUrl() {
   var idFile = $selectfile.value;
   document.getElementById("animation").disabled = false;
   document.getElementById("filter_region").disabled = false;
-  axios
-    .get("/business-gestion/uploaded-files/" + idFile + "/")
-    .then(function (response) {
-      const elemento = response.data;
-      let pos = findPosition(elemento.pdb_files, $selectPdb.value);
-      let versionAllele = elemento.pdb_files[pos].pdb_content;
-      localStorage.setItem("uploadFileId", idFile);
-      localStorage.setItem("pdb", versionAllele);
-      graficar_string(versionAllele);
-      // To enable the button
-      // loadOriginalXYZ();
-      snpModalShowBotton.disabled = false;
-      ExpandModalShowBotton.disabled = false;
-    })
-    .catch(function (error) {
-      Toast.fire({
-        icon: "error",
-        title: `${error.response}`,
-      });
-    });
+
+  const elemento = globalData[findPosition(globalData, $selectfile.value)];
+  let pos = findPosition(elemento.pdb_files, $selectPdb.value);
+
+  let versionAllele = elemento.pdb_files[pos].pdb_content;
+  localStorage.setItem("uploadFileId", idFile);
+  localStorage.setItem("pdb", versionAllele);
+  graficar_string(versionAllele);
+  snpModalShowBotton.disabled = false;
+  ExpandModalShowBotton.disabled = false;
 }
 
 function findPosition(data, id) {
@@ -1585,4 +1477,3 @@ function centerGrafig() {
   viewer.zoom(2, 1000);
   viewer.render();
 }
-

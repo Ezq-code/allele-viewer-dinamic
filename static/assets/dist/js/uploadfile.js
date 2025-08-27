@@ -98,6 +98,7 @@ $(document).ready(function () {
         { data: "custom_name", title: "Nombre" },
         { data: "description", title: "Descripción" },
         { data: "gene_name", title: "Gen" },
+        { data: "predefined", title: "Predefinido" },
         {
           data: "",
           title: "Acciones",
@@ -291,6 +292,9 @@ form.addEventListener("submit", function (event) {
     data.append("custom_name", document.getElementById("name").value);
     data.append("description", document.getElementById("description").value);
     data.append("gene", document.getElementById("gene").value);
+        // ...dentro del submit del formulario...
+    data.append("predefined", document.getElementById("predefined").checked);
+    // ...resto del código...
     if (document.getElementById("customFile").files[0] != null) {
       data.append(
         "original_file",

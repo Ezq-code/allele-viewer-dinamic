@@ -35,7 +35,7 @@ def ancestral(request):
     return render(request, "grafico/ancestral.html")
 
 
-@cache_page(60 * 15)
+# @cache_page(60 * 15)
 def uploadfile(request):
     return render(request, "grafico/uploadfile.html")
 
@@ -102,6 +102,6 @@ def event_gallery(request):
     )
 
 
-# @cache_page(60 * 15)
+
 def introduction(request):
     return render(request, "introduction/introduction.html")

@@ -12,7 +12,7 @@ const geneUrl = "/business-gestion/gene/";
 
 // Variables para la paginación
 let currentPage = 1;
-const genesPerPage = 16; // 4x4 matriz
+const genesPerPage = 18 // 4x4 matriz
 let allGenes = [];
 let totalPages = 1;
 
@@ -20,8 +20,8 @@ let totalPages = 1;
 async function loadGenes() {
   try {
     // Mostrar indicador de carga
-    const matrixContainer = document.getElementById('genes-matrix');
-    matrixContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Cargando genes...</div>';
+    const tableBody = document.getElementById('genes-table-body');
+    tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px; color: #666;"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Cargando genes...</td></tr>';
     
     const response = await axios.get(geneUrl, {
       params: {
@@ -37,61 +37,71 @@ async function loadGenes() {
     document.getElementById('genes-count').textContent = `Total de genes: ${allGenes.length}`;
     
     if (allGenes.length === 0) {
-      matrixContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">No se encontraron genes</div>';
+      tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px; color: #666;">No se encontraron genes</td></tr>';
       updatePaginationControls();
       return;
     }
     
     // Renderizar la primera página
-    renderGenesMatrix();
+    renderGenesTable();
     updatePaginationControls();
   } catch (error) {
     console.error("Error cargando genes:", error);
-    const matrixContainer = document.getElementById('genes-matrix');
-    matrixContainer.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: red;">
+    const tableBody = document.getElementById('genes-table-body');
+    tableBody.innerHTML = `
+      <tr><td colspan="3" style="text-align: center; padding: 40px; color: red;">
         <i class="fas fa-exclamation-triangle fa-2x"></i><br>
         Error cargando genes<br>
         <button onclick="loadGenes()" class="button special color2" style="margin-top: 15px;">
           Reintentar
         </button>
-      </div>
+      </td></tr>
     `;
   }
 }
 
-// Función para renderizar la matriz de genes
-function renderGenesMatrix() {
-  const matrixContainer = document.getElementById('genes-matrix');
+// Función para renderizar la tabla de genes
+function renderGenesTable() {
+  const tableBody = document.getElementById('genes-table-body');
   const startIndex = (currentPage - 1) * genesPerPage;
   const endIndex = startIndex + genesPerPage;
   const pageGenes = allGenes.slice(startIndex, endIndex);
-  
-  // Crear la matriz solo con los genes existentes
-  let matrixHTML = '';
-  
-  // Si hay menos de 16 genes en esta página, solo mostrar los existentes
-  const genesToShow = Math.min(pageGenes.length, 16);
-  
-  for (let i = 0; i < genesToShow; i++) {
-    const gene = pageGenes[i];
-    const buttonClass = gene.status === 'C' ? 'button special color2' : 'button color2';
-    const statusText = gene.status === 'C' ? 'Completado' : 'Incompleto';
-    const icon = gene.status === 'C' ? 'fa-check-circle' : 'fa-clock';
-    
-    matrixHTML += `
-      <li>
-        <a href="#" class="${buttonClass} icon ${icon}" 
-           title="${gene.name} - ${statusText}"
-           >
-          ${gene.name}
-           
-        </a>
-      </li>
+
+  let tableHTML = '';
+
+  // Calcular cuántas filas necesitamos (6 filas para 18 elementos en 3 columnas)
+  const rowsNeeded = Math.ceil(pageGenes.length / 3);
+
+  // Modifica el render para pasar el id:
+  for (let i = 0; i < rowsNeeded; i++) {
+    const geneCol1 = pageGenes[i * 3];
+    const geneCol2 = pageGenes[i * 3 + 1];
+    const geneCol3 = pageGenes[i * 3 + 2];
+
+    tableHTML += `
+      <tr>
+        <td>
+          ${geneCol1 ? `<a href="#" class="gene-name" onclick="handleGeneClick('${geneCol1.id}', '${geneCol1.name}')">${geneCol1.name}</a>` : '&nbsp;'}
+        </td>
+        <td>
+          ${geneCol2 ? `<a href="#" class="gene-name" onclick="handleGeneClick('${geneCol2.id}', '${geneCol2.name}')">${geneCol2.name}</a>` : '&nbsp;'}
+        </td>
+        <td>
+          ${geneCol3 ? `<a href="#" class="gene-name" onclick="handleGeneClick('${geneCol3.id}', '${geneCol3.name}')">${geneCol3.name}</a>` : '&nbsp;'}
+        </td>
+      </tr>
     `;
   }
-  
-  matrixContainer.innerHTML = `<ul class="actions">${matrixHTML}</ul>`;
+
+  tableBody.innerHTML = tableHTML;
+}
+
+// Cambia la función para guardar el id:
+function handleGeneClick(geneId, geneName) {
+  localStorage.setItem('selectedGen', geneName);
+  localStorage.setItem('selectedGenId', geneId);
+  localStorage.setItem('autoLoad', true);
+  redirectToAlleleViewer(geneName);
 }
 
 // Función para actualizar los controles de paginación
@@ -117,7 +127,7 @@ function updatePaginationControls() {
   }
   
   if (startPage > 1) {
-    pageNumbersHTML += `<button onclick="goToPage(1)" class="button" style="margin: 0 2px; padding: 5px 10px; font-size: 12px;">1</button>`;
+    pageNumbersHTML += `<button onclick="goToPage(1)" class="button small" style="margin: 0 2px; padding: 5px 10px; font-size: 12px;">1</button>`;
     if (startPage > 2) {
       pageNumbersHTML += `<span style="margin: 0 5px; color: #666;">...</span>`;
     }
@@ -125,14 +135,14 @@ function updatePaginationControls() {
   
   for (let i = startPage; i <= endPage; i++) {
     const buttonClass = i === currentPage ? 'button special color2' : 'button';
-    pageNumbersHTML += `<button onclick="goToPage(${i})" class="${buttonClass}" style="margin: 0 2px; padding: 5px 10px; font-size: 12px;">${i}</button>`;
+    pageNumbersHTML += `<button onclick="goToPage(${i})" class="${buttonClass} small" style="margin: 0 2px; padding: 5px 10px; font-size: 12px;">${i}</button>`;
   }
   
   if (endPage < totalPages) {
     if (endPage < totalPages - 1) {
       pageNumbersHTML += `<span style="margin: 0 5px; color: #666;">...</span>`;
     }
-    pageNumbersHTML += `<button onclick="goToPage(${totalPages})" class="button" style="margin: 0 2px; padding: 5px 10px; font-size: 12px;">${totalPages}</button>`;
+    pageNumbersHTML += `<button onclick="goToPage(${totalPages})" class="button small" style="margin: 0 2px; padding: 5px 10px; font-size: 12px;">${totalPages}</button>`;
   }
   
   pageNumbers.innerHTML = pageNumbersHTML;
@@ -142,7 +152,7 @@ function updatePaginationControls() {
 function goToPreviousPage() {
   if (currentPage > 1) {
     currentPage--;
-    renderGenesMatrix();
+    renderGenesTable();
     updatePaginationControls();
   }
 }
@@ -151,7 +161,7 @@ function goToPreviousPage() {
 function goToNextPage() {
   if (currentPage < totalPages) {
     currentPage++;
-    renderGenesMatrix();
+    renderGenesTable();
     updatePaginationControls();
   }
 }
@@ -160,7 +170,7 @@ function goToNextPage() {
 function goToPage(pageNumber) {
   if (pageNumber >= 1 && pageNumber <= totalPages) {
     currentPage = pageNumber;
-    renderGenesMatrix();
+    renderGenesTable();
     updatePaginationControls();
   }
 }
@@ -234,8 +244,15 @@ function closeGeneModal() {
   }
 }
 
-// Función para refrescar la matriz de genes
-function refreshGenesMatrix() {
+// Función para refrescar la tabla de genes
+function refreshGenesTable() {
   loadGenes();
+}
+
+// Función para redirigir a alleleviewer
+function redirectToAlleleViewer(geneName) {
+  // Redirigir a la página alleleviewer
+  // Se puede agregar el nombre del gen como parámetro si es necesario
+  window.location.href = "/alleleviewer/";
 }
 

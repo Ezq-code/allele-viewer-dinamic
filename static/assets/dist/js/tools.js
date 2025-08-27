@@ -1,7 +1,7 @@
 
 function graficar_string(pdb_content) {
   load.hidden = false;
-  viewer.removeAllModels();
+ // viewer.removeAllModels();
   // viewer.render();
   //  models[cont] = viewer.addModel(pdb_content, "pdb", { assignBonds: false });
   //  cont++;
@@ -256,4 +256,188 @@ function checkInternalStatus() {
   } else {
     console.log("internal_status no existe en localStorage.");
   }
+}
+
+
+function poblarListasCopy(uploadFileId) {
+  if (
+    localStorage.getItem("id") &&
+    localStorage.getItem("id") !== "null" &&
+    localStorage.getItem("id") !== ""
+  ) {
+    var userId = localStorage.getItem("id");
+    var url =
+      "/business-gestion/working-copy-of-original-file-for-user/?system_user=" +
+      userId +
+      "&uploaded_file=" +
+      uploadFileId;
+    var $selectCopy = document.getElementById("selectCopy");
+    var $inputGroup = document.getElementById("inputGroupCopy");
+    $selectCopy.innerHTML = "";
+    // Mostrar un mensaje de carga
+    var loadingOption = new Option("Cargando...", "");
+    $selectCopy.add(loadingOption);
+    axios
+      .get(url)
+      .then(function (response) {
+        console.log("✌️corte5");
+        // Limpiar opciones de carga
+        $selectCopy.innerHTML = "";
+        if (response.data.results.length > 0) {
+          response.data.results.forEach(function (element) {
+            var option = new Option(
+              "Personal Copy # " + element.id,
+              element.id
+            );
+            $selectCopy.add(option);
+            $inputGroup.hidden = false;
+          });
+        } else {
+          $inputGroup.hidden = true;
+        }
+      })
+      .catch(function (error) {
+        load.hidden = true;
+        console.error("Error al obtener los datos:", error);
+        var errorOption = new Option("Error al cargar", "");
+        $selectCopy.add(errorOption);
+      });
+  }
+}
+
+
+var data1;
+function displaySNPData() {
+  // Datos proporcionados
+  load.hidden = false;
+  axios
+    .get(
+      "/business-gestion/uploaded-files/" +
+        localStorage.getItem("uploadFileId") +
+        "/initial-file-data/"
+    )
+    .then(function (response) {
+      data1 = response.data.results;
+      var table = document.getElementById("snptable");
+      if (!table.querySelector("thead") && !table.querySelector("tbody")) {
+        // Crear el encabezado de la tabla
+        var thead = document.createElement("thead");
+        var headerRow = document.createElement("tr");
+
+        var headers = ["Allele", "Marker", "Equalizer"];
+        for (var i = 0; i < headers.length; i++) {
+          var th = document.createElement("th");
+          th.classList.add("col-3"); // Agregar la clase "col-3"
+          th.textContent = headers[i];
+          headerRow.appendChild(th);
+        }
+
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Crear el cuerpo de la tabla
+        var tbody = document.createElement("tbody");
+        for (var i = 0; i < data1.length; i++) {
+          var row = document.createElement("tr");
+
+          var alleleCell = document.createElement("td");
+          alleleCell.textContent = data1[i].allele;
+          row.appendChild(alleleCell);
+
+          var markerCell = document.createElement("td");
+          markerCell.textContent = data1[i].marker;
+          row.appendChild(markerCell);
+
+          var controlCell = document.createElement("td");
+          var input = document.createElement("input");
+          input.type = "text";
+          input.class = "rs_control";
+          input.name = "rs_control" + i;
+          input.id = "rs_control" + data1[i].id;
+          input.value = data1[i].current_percent;
+          controlCell.appendChild(input);
+          row.appendChild(controlCell);
+
+          tbody.appendChild(row);
+        }
+        table.appendChild(tbody);
+      }
+      for (var i = 0; i < data1.length; i++) {
+        $(`#rs_control${data1[i].id}`).ionRangeSlider({
+          min: 0,
+          max: 100,
+          type: "single",
+          step: 0.001,
+          postfix: "%",
+          prettify: false,
+          hasGrid: true,
+        });
+      }
+      load.hidden = true;
+    })
+    .catch(function (error) {
+      Toast.fire({
+        icon: "error",
+        title: `${error.response.data.detail}`,
+      });
+      load.hidden = true;
+    });
+  // Obtener la referencia de la tabla HTML
+}
+
+function sendRSControlValues() {
+  var rsControlInputs = document.querySelectorAll(".irs-hidden-input");
+  var values = [];
+  for (var i = 0; i < rsControlInputs.length; i++) {
+    var inputValue = rsControlInputs[i].value;
+    var inputId = parseInt(rsControlInputs[i].id.replace("rs_control", ""), 10);
+    values.push({
+      initial_filedata_id: inputId,
+      new_percent_value: inputValue,
+    });
+  }
+
+  var fileId = localStorage.getItem("uploadFileId");
+  var data = {
+    values: values,
+    file_id: fileId,
+  };
+
+  load.hidden = false;
+  $("#modal-xl").modal("hide");
+  axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
+  axios
+    .post("/business-gestion/new-coordinate-processor/", data)
+    .then(function (response) {
+      graficar_string(response.data.pdb_content);
+      load.hidden = true;
+    })
+    .catch(function (error) {
+      Toast.fire({
+        icon: "error",
+        title: `${error.response.data.detail}`,
+      });
+      load.hidden = true;
+    });
+}
+
+function selectPdbContainer() {
+  zoom.value = 0;
+  var $selectfile = document.getElementById("selectfile");
+  var idFile = $selectfile.value;
+  axios
+    .get("/business-gestion/uploaded-files/" + idFile + "/")
+    .then(function (response) {
+      
+      const elemento = response.data;
+      let versionAllele = elemento.pdb_files;
+      poblarListasPdb(versionAllele);
+      poblarListasCopy(elemento.id);
+    })
+    .catch(function (error) {
+      Toast.fire({
+        icon: "error",
+        title: `${error.response.data.detail}`,
+      });
+    });
 }
