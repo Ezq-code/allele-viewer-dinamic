@@ -98,7 +98,6 @@ class XslxToPdb(ExcelReader):
         print("Proccessing PDB file...")
         allele_allele_number_pool = []
         gene_formation_nodes_dict = {}
-        gene_formation_nodes = []
         gene_formation_links = []
         try:
             pdb_files = [io.StringIO() for _ in range(self.coordinates_sets)]

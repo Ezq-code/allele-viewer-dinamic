@@ -13,3 +13,8 @@ class GeneSerializer(serializers.ModelSerializer):
             "description",
             "status",
         ]
+
+
+class GeneGetOneSerializer(serializers.GeneSerializer):
+    class Meta(GeneSerializer.Meta):
+        fields = GeneSerializer.Meta.fields + ["formation"]
