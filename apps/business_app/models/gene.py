@@ -14,6 +14,7 @@ class Gene(models.Model):
         choices=Status.choices,
         default=Status.INCOMPLETED,
     )
+    formation = models.JSONField(null=True, blank=True)
 
     class Meta:
         verbose_name = _("Gene")
