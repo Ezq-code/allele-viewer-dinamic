@@ -194,11 +194,13 @@ class GeneAdmin(admin.ModelAdmin):
         "name",
         "description",
         "status",
+        "formation",
     ]
     fields = [
         "name",
         "description",
         "status",
+        "formation",
     ]
 
 

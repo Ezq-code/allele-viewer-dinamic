@@ -15,6 +15,6 @@ class GeneSerializer(serializers.ModelSerializer):
         ]
 
 
-class GeneGetOneSerializer(serializers.GeneSerializer):
+class GeneGetOneSerializer(GeneSerializer):
     class Meta(GeneSerializer.Meta):
         fields = GeneSerializer.Meta.fields + ["formation"]

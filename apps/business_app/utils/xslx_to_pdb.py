@@ -185,7 +185,8 @@ class XslxToPdb(ExcelReader):
                     gene_formation_nodes_dict[allele_number] = {
                         "id": allele_number,
                         "name": allele,
-                        "img": "https://cdn.balkan.app/shared/empty-img-white.svg",
+                        "title": region,
+                        "img": "/static_output/assets/dist/img/adn.gif",
                     }
                     current_coordinate_index += 1
 
@@ -241,7 +242,7 @@ class XslxToPdb(ExcelReader):
                                 current_node_info = gene_formation_nodes_dict.get(
                                     allele_number_value
                                 )
-                                if current_node_info.haskey("pid"):
+                                if "pid" in current_node_info:
                                     gene_formation_links.append(
                                         {"from": allele_number_value, "to": value}
                                     )
