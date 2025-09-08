@@ -5,6 +5,7 @@ import logging
 import pandas as pd
 
 from apps.business_app.models.allele_node import AlleleNode
+from apps.business_app.models.gene import Gene
 from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.initial_xyz_expansion_data import InitialXyzExpansionData
 from apps.business_app.models.pdb_files import PdbFiles
@@ -96,6 +97,9 @@ class XslxToPdb(ExcelReader):
     def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base):
         print("Proccessing PDB file...")
         allele_allele_number_pool = []
+        gene_formation_nodes_dict = {}
+        gene_formation_nodes = []
+        gene_formation_links = []
         try:
             pdb_files = [io.StringIO() for _ in range(self.coordinates_sets)]
             # Open the PDB file for writing
@@ -179,6 +183,11 @@ class XslxToPdb(ExcelReader):
                         )
                     )
                     memory_file.write("\n")
+                    gene_formation_nodes_dict[allele_number] = {
+                        "id": allele_number,
+                        "name": allele,
+                        "img": "https://cdn.balkan.app/shared/empty-img-white.svg",
+                    }
                     current_coordinate_index += 1
 
                 allele_nodes[allele_number] = AlleleNode.objects.create(
@@ -214,8 +223,8 @@ class XslxToPdb(ExcelReader):
                     stick_radius=self._get_stick_radius(0),
                 )
 
-            for k, v in relations_for_the_end.items():
-                current_node = allele_nodes.get(k)
+            for allele_number_value, v in relations_for_the_end.items():
+                current_node = allele_nodes.get(allele_number_value)
                 if current_node and current_node.pk:
                     children_list = []
                     for value in v:
@@ -225,11 +234,20 @@ class XslxToPdb(ExcelReader):
                             for memory_file in pdb_files:
                                 memory_file.write(
                                     ExcelNomenclators.get_atom_connection_record_string(
-                                        origin_index=k,
+                                        origin_index=allele_number_value,
                                         destination_index=value,
                                     )
                                 )
                                 memory_file.write("\n")
+                                current_node_info = gene_formation_nodes_dict.get(
+                                    allele_number_value
+                                )
+                                if current_node_info.haskey("pid"):
+                                    gene_formation_links.append(
+                                        {"from": allele_number_value, "to": value}
+                                    )
+                                else:
+                                    current_node_info["pid"] = value
 
                     current_node.children.set(children_list)
 
@@ -259,6 +277,12 @@ class XslxToPdb(ExcelReader):
                     kind=PdbFiles.KIND.EXCEL_GENERATED,
                 )
                 index += 1
+            Gene.objects.filter(uploaded_files=uploaded_file_id).update(
+                formation={
+                    "clinks": gene_formation_links,
+                    "nodes": list(gene_formation_nodes_dict.values()),
+                }
+            )
 
             # return pdb_file_0
         except Exception as e:
