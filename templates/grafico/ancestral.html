@@ -161,13 +161,7 @@
       </div>
     </div>
   </section>
-  <section class="content">
-    <div class="row">
-      <div class="col-12">
-        <div id="tree">hola</div>
-      </div>
-    </div>
-  </section>
+  
   <section class="content">
     <div class="container-fluid">
       <div class="row">
@@ -182,152 +176,24 @@
             <div class="modal-body">
 
   <div class="container-fluid">
-        <!-- Header -->
-        <div class="row bg-primary text-white p-3 mb-4">
-            <div class="col">
-                <h1><i class="fas fa-dna"></i> Formación de Alelos CYP2D6</h1>
-                <p class="mb-0">Organigrama genético mostrando la formación y variantes del gen CYP2D6</p>
-            </div>
-        </div>
-        
         <!-- Panel de Controles para Alelos -->
         <div class="row">
             <div class="col-12">
-                <div class="controls-panel">
-                    <h5 class="mb-3"><i class="fas fa-dna"></i> Controles para Gestión de Alelos CYP2D6</h5>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="searchInput">Buscar Alelos:</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="searchInput" placeholder="Buscar por nombre o descripción...">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="searchNodes($('#searchInput').val())">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="parentIdInput">ID Alelo Padre:</label>
-                                <input type="text" class="form-control" id="parentIdInput" placeholder="ID del alelo padre">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="newNodeTitle">Nombre del Nuevo Alelo:</label>
-                                <input type="text" class="form-control" id="newNodeTitle" placeholder="Nombre del alelo">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="newNodeContent">Descripción del Alelo:</label>
-                                <input type="text" class="form-control" id="newNodeContent" placeholder="Descripción del alelo">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <button class="btn btn-success me-2" onclick="addNewNodeFromForm()">
-                                <i class="fas fa-plus"></i> Agregar Alelo
-                            </button>
-                            <button class="btn btn-info me-2" onclick="exportOrgChart()">
-                                <i class="fas fa-download"></i> Exportar
-                            </button>
-                            <button class="btn btn-warning" onclick="resetOrgChart()">
-                                <i class="fas fa-redo"></i> Resetear
-                            </button>
-                        </div>
-                        <div class="col-md-6 text-end">
-                            <span class="badge bg-primary" id="nodeCount">Total Alelos: 0</span>
-                            <span class="badge bg-success" id="selectedNode">Seleccionado: Ninguno</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Panel de Notificaciones para Alelos -->
-        <div id="notifications" class="notifications-panel"></div>
-        
-        <!-- Organigrama de Alelos -->
-        <div class="row">
-            <div class="col-12">
-                <div id="orgChart" class="orgchart"></div>
-            </div>
-        </div>
-        
-        <!-- Panel de Información del Alelo -->
-        <div class="row">
-            <div class="col-12">
-                <div id="nodeInfo"></div>
-            </div>
-        </div>
-        
-        <!-- Panel de Estadísticas de Alelos -->
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-chart-pie"></i> Estadísticas de Alelos CYP2D6</h6>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Nivel Máximo:</strong> <span id="maxLevel">0</span></p>
-                        <p><strong>Total de Alelos:</strong> <span id="totalNodes">0</span></p>
-                        <p><strong>Alelos con Variantes:</strong> <span id="nodesWithChildren">0</span></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-info-circle"></i> Información del Organigrama Genético</h6>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Tipo:</strong> Organigrama Genético</p>
-                        <p><strong>Gen:</strong> CYP2D6</p>
-                        <p><strong>Funcionalidad:</strong> Metabolismo de Fármacos</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-cogs"></i> Acciones Rápidas para Alelos</h6>
-                    </div>
-                    <div class="card-body">
-                        <button class="btn btn-sm btn-outline-primary w-100 mb-2" onclick="expandAll()">
-                            <i class="fas fa-expand"></i> Expandir Todo
-                        </button>
-                        <button class="btn btn-sm btn-outline-secondary w-100 mb-2" onclick="collapseAll()">
-                            <i class="fas fa-compress"></i> Colapsar Todo
-                        </button>
-                        <button class="btn btn-sm btn-outline-info w-100" onclick="centerOrgChart()">
-                            <i class="fas fa-crosshairs"></i> Centrar Vista
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-</div>
-
-
-
-              
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
+                    <section class="content">
+                     <div class="row">
+                          <div class="col-12">
+                            <div id="tree"></div> 
+                            <div id="allele-tree"></div>
+                         </div>
+                     </div>
+                    </section>
+         </div>
+    </div>   
+       
   </section>
+ 
 </div>
+
 <!-- Modal Eliminar Gen -->
 
 {% endblock %}
@@ -349,115 +215,13 @@
 <script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
 <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
 <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
-<script src="{% static 'assets/dist/js/ancestral.js' %}"></script>
 <script src="{% static 'assets/plugins/orgchart/jquery.orgchart.js' %}"></script>
 <script src="{% static 'assets/plugins/orgchart/js/orgchart.js' %}"></script>
-<script>
-        // Función para agregar nodo desde el formulario
-        function addNewNodeFromForm() {
-            var parentId = $('#parentIdInput').val();
-            var title = $('#newNodeTitle').val();
-            var content = $('#newNodeContent').val();
-            
-            if (!parentId || !title || !content) {
-                showNotification('Por favor completa todos los campos', 'error');
-                return;
-            }
-            
-            addNewNode(parentId, title, content);
-            
-            // Limpiar formulario
-            $('#parentIdInput').val('');
-            $('#newNodeTitle').val('');
-            $('#newNodeContent').val('');
-        }
-        
-        // Función para resetear el organigrama
-        function resetOrgChart() {
-            if (confirm('¿Estás seguro de que quieres resetear el organigrama?')) {
-                location.reload();
-            }
-        }
-        
-        // Función para expandir todos los nodos
-        function expandAll() {
-            $('.expand-btn').each(function() {
-                var $btn = $(this);
-                var $node = $btn.closest('.node');
-                var $children = $node.siblings('.nodes').children();
-                
-                if (!$children.is(':visible')) {
-                    $children.show();
-                    $btn.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
-                }
-            });
-            showNotification('Todos los nodos han sido expandidos', 'success');
-        }
-        
-        // Función para colapsar todos los nodos
-        function collapseAll() {
-            $('.expand-btn').each(function() {
-                var $btn = $(this);
-                var $node = $btn.closest('.node');
-                var $children = $node.siblings('.nodes').children();
-                
-                if ($children.is(':visible')) {
-                    $children.hide();
-                    $btn.find('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
-                }
-            });
-            showNotification('Todos los nodos han sido colapsados', 'success');
-        }
-        
-        // Función para centrar la vista del organigrama
-        function centerOrgChart() {
-            var $orgchart = $('.orgchart');
-            $orgchart.scrollTop($orgchart.height() / 2);
-            $orgchart.scrollLeft($orgchart.width() / 2);
-            showNotification('Vista centrada', 'info');
-        }
-        
-        // Función para actualizar estadísticas
-        function updateStats() {
-            var totalNodes = $('.node').length;
-            var nodesWithChildren = $('.node').filter(function() {
-                return $(this).siblings('.nodes').children().length > 0;
-            }).length;
-            
-            var maxLevel = 0;
-            $('.node').each(function() {
-                var level = $(this).parents('.nodes').length;
-                if (level > maxLevel) maxLevel = level;
-            });
-            
-            $('#totalNodes').text(totalNodes);
-            $('#nodesWithChildren').text(nodesWithChildren);
-            $('#maxLevel').text(maxLevel);
-            $('#nodeCount').text('Total Alelos: ' + totalNodes);
-        }
-        
-        // Actualizar estadísticas cuando se carga la página
-        $(document).ready(function() {
-            setTimeout(updateStats, 1000);
-            
-            // Actualizar estadísticas cada 5 segundos
-            setInterval(updateStats, 5000);
-        });
-        
-        // Función para mostrar información del nodo seleccionado
-        function showSelectedNodeInfo() {
-            var $selectedNode = $('.node.selected');
-            if ($selectedNode.length > 0) {
-                var nodeId = $selectedNode.attr('id') || 'Sin ID';
-                $('#selectedNode').text('Seleccionado: ' + nodeId);
-            } else {
-                $('#selectedNode').text('Seleccionado: Ninguno');
-            }
-        }
-        
-        // Actualizar información del nodo seleccionado
-        $(document).on('click', '.node', function() {
-            setTimeout(showSelectedNodeInfo, 100);
-        });
-    </script>
+
+{#  <script src="{% static 'assets/dist/js/ancestral.js' %}"></script>  #}
+<script src="{% static 'assets/dist/js/allele_orgchart.js' %}"></script>
+
+
+
+
 {% endblock %}
