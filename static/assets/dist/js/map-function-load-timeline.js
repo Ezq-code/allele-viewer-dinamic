@@ -786,6 +786,7 @@ if (timeRange == "-12000/2025")
                                             }, 500);
 
                                         });
+
 }
 else
 {
@@ -1265,7 +1266,12 @@ const allTimes = data.features
                                             }, 500);
 
                                           });
-                                        
+
+                                          document.getElementById('legend').addEventListener('click', function() {
+                                            $('#legendModal').modal('show');
+                                        });
+
+
                                         document.getElementById('btreload').addEventListener('click', function() {
                                             
                                           
@@ -1287,9 +1293,9 @@ const allTimes = data.features
                                          
 
                                         if (aRegionTimeLine.value == "All the World"){ 
-                                          sessionStorage.setItem('lat', '10');
-                                          sessionStorage.setItem('long', '120');  
-                                          sessionStorage.setItem('zoom', '2');    
+                                          sessionStorage.setItem('lat', '22');
+                                          sessionStorage.setItem('long', '155');  
+                                          sessionStorage.setItem('zoom', '2.1');    
                                         }
                                         else
                                         if (aRegionTimeLine.value == "Africa"){
@@ -1334,9 +1340,9 @@ const allTimes = data.features
                                             sessionStorage.setItem('zoom', '4');                                                
                                         }
                                         else{
-                                            sessionStorage.setItem('lat', '10');
-                                            sessionStorage.setItem('long', '120');  
-                                            sessionStorage.setItem('zoom', '2');                                             
+                                            sessionStorage.setItem('lat', '22');
+                                            sessionStorage.setItem('long', '155');  
+                                            sessionStorage.setItem('zoom', '2.1');                                             
                                         }                                        
 
                                             // se muestra una alerta donde se especifica que se está actualizando la línea del tiempo

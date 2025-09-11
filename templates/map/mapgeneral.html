@@ -240,10 +240,12 @@
             </div>
         </aside>
 
+
+   
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <section class="content-header">
+        <section class="content-header" style= "padding-top: 3px; padding-bottom: 3px;">
         </section>
         <!-- Main content -->
         <section class="content">
@@ -251,15 +253,15 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header" style= "padding-top: 0.50rem; padding-bottom: 0.50rem;">
                                 <h3 class="card-title">Map - CYP2D6 Alleles-Expansions</h3>
                                 <div class="card-tools">
                                    <div class="d-inline-block">
                                         <select class="form-control form-control-sm" name="timeRange" id="timeRange" hidden="true">
-                                            <option value="-15000/2025" selected>From 15000 YBP to year 2025</option>
+                                            <option value="-15000/2025">From 15000 YBP to year 2025</option>
                                             <option value="-1800000/-800000">Homo Erectus Migrations</option>
                                             <option value="-700000/-160000">Heidelbergensis Migrations </option>
-                                            <option value="-69000/-15000">Homo Sapiens Migrations</option>
+                                            <option value="-69000/-15000" selected>Homo Sapiens Migrations</option>
                                             <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
                                         </select> 
                                             </div> 
@@ -273,31 +275,42 @@
                                             <option value="Oceania">Oceania</option>
                                             <option value="North America">North America</option>
                                             <option value="Latin America & Carib">Latin America & Carib</option>
-                                        </select>  
-                                            </div>
+                                        </select>
+
+                                        </div>
+
                                         <div class="d-inline-block">
-                                        <button class="btnok btn-primary btn-sm border-right" id="btreload">Load</button>
-                                            </div>
+                                         <button class="btnok btn-primary btn-sm border-right" id="btreload">Load</button>
+                                        </div>
+                                        <div class="d-inline-block">
+                                         <button class="btnok btn-success btn-sm border-right" id="legend"
+                                         >Legend</button>
+                                        </div>
                                         <div class="d-inline-block">
     
-                                    <button type="button" class="btnok btn-tool" title="CYP2D6 Alleles-Expansions"
+                                        <button type="button" class="btnok btn-tool" title="CYP2D6 Alleles-Expansions"
                                             data-widget="control-sidebar"
                                             data-controlsidebar-slide="true">
-                                        <i class="fas fa-walking"></i>
-                                    </button>
+                                          <i class="fas fa-walking"></i>
+                                        </button>
+                                        <button type="button" class="btnok btn-tool btn-toggle-panel"
+                                                title="CYP2D6 Alleles-Expansions" id="toggleTimeRangePanel">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
                                   </div>
                                 </div>
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-body">
+                            <div class="card-body" style= "padding-top: 0.70rem; padding-bottom: 0.70rem;">
                                 <div class="right-sidebar d-flex">
-                                    <div id="map" class="col-10"></div>
+                                    <div id="map" class="map-container col-lg-12"></div>
                                     <div id="timeRangeMigraions" class="time-range-container">
+                                        <h5>Time Range Selection</h5>
                                         <select class="custom-multiselect" size="5">
-                                            <option value="-15000/2025" selected>From 15000 YBP to year 2025</option>
+                                            <option value="-15000/2025">From 15000 YBP to year 2025</option>
                                             <option value="-1800000/-804400">Homo Erectus Migrations</option>
                                             <option value="-700000/-190539">Heidelbergensis Migrations</option>
-                                            <option value="-69000/-15000">Homo Sapiens Migrations</option>
+                                            <option value="-69000/-15000" selected>Homo Sapiens Migrations</option>
                                             <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
                                         </select>
                                     </div>
@@ -331,22 +344,43 @@
 
                                 <!-- codigo javascript para cargar archivos de tipo shape -->
                                 <script src="{% static 'assets/dist/js/map-load-shape.js' %}"></script>
-                                <!-- código javascript para cargar los eventos -->
-                                <script src="{% static 'assets/dist/js/timeline-timedimension/map-events-timedimension.js' %}"></script>
                                
+                                <!-- Script para controlar el panel deslizante -->
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const toggleButton = document.getElementById('toggleTimeRangePanel');
+                                        const timeRangePanel = document.getElementById('timeRangeMigraions');
+                                        const mapContainer = document.getElementById('map');
+
+                                        toggleButton.addEventListener('click', function () {
+                                            // Alternar la clase 'open' en el panel
+                                            timeRangePanel.classList.toggle('open');
+
+                                            // Alternar la clase 'panel-open' en el mapa para el ancho
+                                            mapContainer.classList.toggle('panel-open');
+
+                                            // Actualizar el mapa cuando cambie el tamaño del contenedor
+                                            setTimeout(function () {
+                                                if (typeof map !== 'undefined') {
+                                                    map.invalidateSize();
+                                                }
+                                            }, 300);
+                                        });
+                                    });
+                                </script>
  
                                 <script>
           
                                     if (!sessionStorage.getItem('inicializado')) {
                                      // Código que solo se ejecuta en la primera carga
-                                     sessionStorage.setItem('beginIntervalsesion', -15000);
-                                     sessionStorage.setItem('endIntervalsesion', 2025);
-                                     sessionStorage.setItem('durationSesion', 17025);  
-                                     sessionStorage.setItem('lat', 10);
-                                     sessionStorage.setItem('long', 120);
-                                     sessionStorage.setItem('zoom', 2); 
-                                     sessionStorage.setItem('timeRange', '-15000/2025'); 
-                                     sessionStorage.setItem('timeRangeMigraions', '-15000/2025'); 
+                                     sessionStorage.setItem('beginIntervalsesion', -69000);
+                                     sessionStorage.setItem('endIntervalsesion', -15000);
+                                     sessionStorage.setItem('durationSesion', 54000);  
+                                     sessionStorage.setItem('lat', 22);
+                                     sessionStorage.setItem('long', 155);
+                                     sessionStorage.setItem('zoom', 1.75); 
+                                     sessionStorage.setItem('timeRange', '-69000/-15000'); 
+                                     sessionStorage.setItem('timeRangeMigraions', '-69000/-15000'); 
                                      sessionStorage.setItem('region', 'All the World'); 
                                      sessionStorage.setItem('inicializado', 'true');
                                      sessionStorage.setItem('timedelayice', 'PT5S');
@@ -374,19 +408,19 @@
                                     var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";  //"http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
                                     var osmAttrib = "CYP2D6 Alleles-Expansions";
                                     var osmcountriesLayers = L.tileLayer(countriesLayers, {
-                                        minZoom: 2,
+                                        minZoom: 1,
                                         attribution: osmAttrib,
                                     });
 
                                     // Capa Base con mapa satelital
                                     var satelitalLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                                        minZoom: 2,
+                                        minZoom: 1,
                                         attribution: 'Allele-Viewer'
                                     });
 
                                     // Capa Base con mapa de los océanos
                                     var oceanLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
-                                        minZoom: 2,
+                                        minZoom: 1,
                                         attribution: 'Allele-Viewer'
                                     });
 
@@ -428,17 +462,6 @@ if (timeRange === "-12000/2025")
 }
 else
 {
-
-/*    
-    var map = L.map('map', {
-    layers: [satelitalLayer], //[osmcountriesLayers],
-    zoom: 2,//14,],
-    fullscreenControl: true,
-    timeDimension: true,
-    center: new L.LatLng(45, 120) //[36.72, -4.43]
-});  
-*/
-
     // Función para ajustar el mapa según el tamaño de la pantalla
     if (window.innerWidth <= 768) 
     { // Consideramos pantallas pequeñas (por ejemplo, teléfonos)
@@ -452,13 +475,13 @@ else
     } 
     else 
     {
-     // Centro y zoom para pantallas más grandes
      var map = L.map('map', {
       layers: [satelitalLayer], //[osmcountriesLayers],
-      zoom: 2,//14,],
+      zoomSnap: 0.1,
+      zoom: 2.1,//14,],
       fullscreenControl: true,
       timeDimension: true,
-      center: new L.LatLng(45, 120) //[36.72, -4.43]
+      center: new L.LatLng(22, 155), //[36.72, -4.43]
      });  
     }
 
@@ -639,6 +662,30 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
     </div>
        <!-- End modal -->
 
+
+    <!-- Modal que muestra la leyenda -->
+    <div class="modal fade" id="legendModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel"
+    aria-hidden="true">
+   <div class="modal-dialog" role="document">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title" id="eventModalLabel">Legend</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+               </button>
+           </div>
+           <div class="modal-body">
+            <img src="{% static 'assets/dist/Leaflet/Leyenda-Short.jpg' %}" 
+            alt="Legend"
+            style="height: 500px;">
+           </div>
+           <div class="modal-footer">
+               <button type="button" class="btnok btn-secondary" data-dismiss="modal">Close</button>
+           </div>
+       </div>
+   </div>
+</div>
+  <!-- End modal -->
 
 
 {% endblock %}
