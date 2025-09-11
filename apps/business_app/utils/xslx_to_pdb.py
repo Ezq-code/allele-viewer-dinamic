@@ -239,15 +239,15 @@ class XslxToPdb(ExcelReader):
                                     )
                                 )
                                 memory_file.write("\n")
-                                current_node_info = gene_formation_nodes_dict.get(
-                                    allele_number_value
+                            current_node_info = gene_formation_nodes_dict.get(
+                                allele_number_value
+                            )
+                            if "pid" in current_node_info:
+                                gene_formation_links.append(
+                                    {"from": allele_number_value, "to": value}
                                 )
-                                if "pid" in current_node_info:
-                                    gene_formation_links.append(
-                                        {"from": allele_number_value, "to": value}
-                                    )
-                                else:
-                                    current_node_info["pid"] = value
+                            else:
+                                current_node_info["pid"] = value
 
                     current_node.children.set(children_list)
 
