@@ -41,3 +41,21 @@ class Command(BaseCommand):
                 attrs=["blink"],
             )
         )
+
+        call_command("loaddata", "gene.json")
+        print(
+            colored(
+                "Successfully added gene list",
+                "green",
+                attrs=["blink"],
+            )
+        )
+
+        call_command("loaddata", "gene_groups.json")
+        print(
+            colored(
+                "Successfully added gene groups",
+                "green",
+                attrs=["blink"],
+            )
+        )

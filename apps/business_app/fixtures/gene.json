@@ -1,0 +1,1127 @@
+[
+  {
+    "model": "business_app.gene",
+    "pk": 1,
+    "fields": {
+      "name": "SLC2A4",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2,
+    "fields": {
+      "name": "SLC2A9",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 3,
+    "fields": {
+      "name": "SLC6A2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 4,
+    "fields": {
+      "name": "SLC6A3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 5,
+    "fields": {
+      "name": "SLC6A4",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 6,
+    "fields": {
+      "name": "SLC12A1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 7,
+    "fields": {
+      "name": "SLC12A3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 8,
+    "fields": {
+      "name": "SLC22A3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 9,
+    "fields": {
+      "name": "SLC22A12",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 10,
+    "fields": {
+      "name": "HLAA",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 11,
+    "fields": {
+      "name": "HLAB",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 12,
+    "fields": {
+      "name": "HLAC",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 13,
+    "fields": {
+      "name": "HLADRB1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 14,
+    "fields": {
+      "name": "HLADRP1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 15,
+    "fields": {
+      "name": "HLADRQ1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 16,
+    "fields": {
+      "name": "ACE",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 17,
+    "fields": {
+      "name": "ADRA1A",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 18,
+    "fields": {
+      "name": "ADRA1B",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 19,
+    "fields": {
+      "name": "ADRA1D",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 20,
+    "fields": {
+      "name": "ADRA2A",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 21,
+    "fields": {
+      "name": "ADRA2B",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 22,
+    "fields": {
+      "name": "ADRA2C",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 23,
+    "fields": {
+      "name": "ADRB1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 24,
+    "fields": {
+      "name": "ADRB2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 25,
+    "fields": {
+      "name": "ADRB3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 26,
+    "fields": {
+      "name": "ANK2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 27,
+    "fields": {
+      "name": "ATP1A1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 28,
+    "fields": {
+      "name": "ATP1A2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 29,
+    "fields": {
+      "name": "BRAF",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 30,
+    "fields": {
+      "name": "CACNA1C",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 31,
+    "fields": {
+      "name": "CACNA1D",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 32,
+    "fields": {
+      "name": "CACNA1G",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 33,
+    "fields": {
+      "name": "CACNA1H",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 34,
+    "fields": {
+      "name": "CASQ2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 35,
+    "fields": {
+      "name": "CFTR",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 36,
+    "fields": {
+      "name": "CRHR1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 37,
+    "fields": {
+      "name": "DRD1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 38,
+    "fields": {
+      "name": "DRD2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 39,
+    "fields": {
+      "name": "DRD3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 40,
+    "fields": {
+      "name": "DRD4",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 41,
+    "fields": {
+      "name": "DRD5",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 42,
+    "fields": {
+      "name": "DSP",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 43,
+    "fields": {
+      "name": "EGFR",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 44,
+    "fields": {
+      "name": "ERBB2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 45,
+    "fields": {
+      "name": "ERBB3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 46,
+    "fields": {
+      "name": "ERBB4",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 47,
+    "fields": {
+      "name": "ESR1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 48,
+    "fields": {
+      "name": "FDFT1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 49,
+    "fields": {
+      "name": "FDPS",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 50,
+    "fields": {
+      "name": "FGFR1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 51,
+    "fields": {
+      "name": "FKBP1A",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 52,
+    "fields": {
+      "name": "FLT3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 53,
+    "fields": {
+      "name": "GABRA1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 54,
+    "fields": {
+      "name": "GABRG2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 55,
+    "fields": {
+      "name": "GJA1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 56,
+    "fields": {
+      "name": "GJA5",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 57,
+    "fields": {
+      "name": "GJA7",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 58,
+    "fields": {
+      "name": "GRK4",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 59,
+    "fields": {
+      "name": "HCN2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 60,
+    "fields": {
+      "name": "HCN4",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 61,
+    "fields": {
+      "name": "HMGCR",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 62,
+    "fields": {
+      "name": "HMGCS1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 63,
+    "fields": {
+      "name": "HSD11B2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 64,
+    "fields": {
+      "name": "HTR1A",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 65,
+    "fields": {
+      "name": "HTR1B",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 66,
+    "fields": {
+      "name": "HTR1D",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 67,
+    "fields": {
+      "name": "HTR1E",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 68,
+    "fields": {
+      "name": "HTR1F",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 69,
+    "fields": {
+      "name": "HTR2A",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 70,
+    "fields": {
+      "name": "HTR2B",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 71,
+    "fields": {
+      "name": "HTR2C",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 72,
+    "fields": {
+      "name": "HTR3A",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 73,
+    "fields": {
+      "name": "HTR3B",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 74,
+    "fields": {
+      "name": "HTR3C",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 75,
+    "fields": {
+      "name": "HTR3D",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 76,
+    "fields": {
+      "name": "HTR3E",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 77,
+    "fields": {
+      "name": "HTR4",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 78,
+    "fields": {
+      "name": "HTR5A",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 79,
+    "fields": {
+      "name": "HTR6",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 80,
+    "fields": {
+      "name": "HTR7",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 81,
+    "fields": {
+      "name": "JUP",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 82,
+    "fields": {
+      "name": "KCNA5",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 83,
+    "fields": {
+      "name": "KCND3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 84,
+    "fields": {
+      "name": "KCNH2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 85,
+    "fields": {
+      "name": "KCNJ11",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 86,
+    "fields": {
+      "name": "KCNJ2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 87,
+    "fields": {
+      "name": "KCNJ3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 88,
+    "fields": {
+      "name": "KCNJ4",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 89,
+    "fields": {
+      "name": "KCNJ5",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 90,
+    "fields": {
+      "name": "KCNJ8",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 91,
+    "fields": {
+      "name": "KCNK1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 92,
+    "fields": {
+      "name": "KCNK3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 93,
+    "fields": {
+      "name": "KCNQ1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 94,
+    "fields": {
+      "name": "KIT",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 95,
+    "fields": {
+      "name": "LMNA",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 96,
+    "fields": {
+      "name": "NEDD4L",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 97,
+    "fields": {
+      "name": "NPR1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 98,
+    "fields": {
+      "name": "NR1I2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 99,
+    "fields": {
+      "name": "OPRM1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 100,
+    "fields": {
+      "name": "PDGFR",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 101,
+    "fields": {
+      "name": "PEAR1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 102,
+    "fields": {
+      "name": "PPIA",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 103,
+    "fields": {
+      "name": "PTGS1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 104,
+    "fields": {
+      "name": "PTGS2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 105,
+    "fields": {
+      "name": "RAF1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 106,
+    "fields": {
+      "name": "RET",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 107,
+    "fields": {
+      "name": "RYR1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 108,
+    "fields": {
+      "name": "RYR2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 109,
+    "fields": {
+      "name": "SCN5A",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 110,
+    "fields": {
+      "name": "SCNN1A",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 111,
+    "fields": {
+      "name": "SCNN1B",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 112,
+    "fields": {
+      "name": "SCNN1D",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 113,
+    "fields": {
+      "name": "SCNN1G",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 114,
+    "fields": {
+      "name": "SERCA1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 115,
+    "fields": {
+      "name": "SERCA2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 116,
+    "fields": {
+      "name": "SGK1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 120,
+    "fields": {
+      "name": "SLC8A2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 121,
+    "fields": {
+      "name": "SLC8A3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 122,
+    "fields": {
+      "name": "VDR",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 123,
+    "fields": {
+      "name": "VEGFR 1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 124,
+    "fields": {
+      "name": "VEGFR 2",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 125,
+    "fields": {
+      "name": "VEGFR 3",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 126,
+    "fields": {
+      "name": "VKORC1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 127,
+    "fields": {
+      "name": "WNK1",
+      "description": "",
+      "status": "I"
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 128,
+    "fields": {
+      "name": "WNK4",
+      "description": "",
+      "status": "I"
+    }
+  }
+]

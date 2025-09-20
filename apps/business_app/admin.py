@@ -1,22 +1,15 @@
-from django.contrib import admin
-from solo.admin import SingletonModelAdmin
 import logging
 
+from django.contrib import admin
+from solo.admin import SingletonModelAdmin
 
-from apps.business_app.models import (
-    AllowedExtensions,
-    SiteConfiguration,
-    UploadedFiles,
-    AlleleNode,
-    Marker,
-    EventGallery,
-    Event,
-    Layer,
-    Feature,
-    WorkingCopyOfOriginalFile,
-)
+from apps.business_app.models import (AlleleNode, AllowedExtensions, Event,
+                                      EventGallery, Feature, Layer, Marker,
+                                      SiteConfiguration, UploadedFiles,
+                                      WorkingCopyOfOriginalFile)
 from apps.business_app.models.event_type import EventType
 from apps.business_app.models.gene import Gene
+from apps.business_app.models.gene_group import GeneGroups
 from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.initial_file_data import InitialFileData
@@ -202,6 +195,24 @@ class GeneAdmin(admin.ModelAdmin):
         "description",
         "status",
     ]
+    search_fields = ("name",)
+
+
+@admin.register(GeneGroups)
+class GeneGroupsAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    filter_horizontal = ("genes",)
+
+    list_display = [
+        "id",
+        "name",
+        "description",
+    ]
+    fields = [
+        "name",
+        "description",
+    ]
+    search_fields = ("name",)
 
 
 @admin.register(UploadedFiles)
