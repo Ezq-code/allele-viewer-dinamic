@@ -1,10 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
-from apps.business_app.models.gene import Gene
 from rest_framework.viewsets import GenericViewSet
 from apps.business_app.models.gene_group import GeneGroups
 from apps.business_app.serializers.gene_group_serializer import GeneGroupsSerializer
-from apps.business_app.serializers.gene_serializer import GeneSerializer
 from apps.common.pagination import AllResultsSetPagination
 
 

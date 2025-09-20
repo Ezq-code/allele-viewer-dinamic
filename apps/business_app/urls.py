@@ -20,6 +20,8 @@ from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 
 from apps.business_app.views.event_type import EventTypeViewSet
 from apps.business_app.views.gene_groups_view import GeneGroupsViewSet
+from apps.business_app.views.gene_status_middle_view import GeneStatusMiddleViewSet
+from apps.business_app.views.gene_status_view import GeneStatusViewSet
 from apps.business_app.views.gene_view import GeneViewSet
 from apps.business_app.views.initial_xyz_expansion_data import (
     InitialXyzExpansionDataViewSet,
@@ -50,6 +52,16 @@ router.register(
     "gene-groups",
     GeneGroupsViewSet,
     basename="gene-groups",
+)
+router.register(
+    "gene-status",
+    GeneStatusViewSet,
+    basename="gene-status",
+)
+router.register(
+    "gene-status-middle",
+    GeneStatusMiddleViewSet,
+    basename="gene-status-middle",
 )
 
 uploaded_files_router = router.register(

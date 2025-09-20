@@ -3,10 +3,18 @@ import logging
 from django.contrib import admin
 from solo.admin import SingletonModelAdmin
 
-from apps.business_app.models import (AlleleNode, AllowedExtensions, Event,
-                                      EventGallery, Feature, Layer, Marker,
-                                      SiteConfiguration, UploadedFiles,
-                                      WorkingCopyOfOriginalFile)
+from apps.business_app.models import (
+    AlleleNode,
+    AllowedExtensions,
+    Event,
+    EventGallery,
+    Feature,
+    Layer,
+    Marker,
+    SiteConfiguration,
+    UploadedFiles,
+    WorkingCopyOfOriginalFile,
+)
 from apps.business_app.models.event_type import EventType
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.gene_group import GeneGroups
@@ -349,6 +357,7 @@ class GeneStatusAdmin(admin.ModelAdmin):
         "requires_evidence",
     ]
 
+
 @admin.register(GeneStatusMiddle)
 class GeneStatusMiddleAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
@@ -357,10 +366,11 @@ class GeneStatusMiddleAdmin(admin.ModelAdmin):
         "gene",
         "gene_status",
         "evidence",
+        "value",
     ]
     fields = [
         "gene",
         "gene_status",
         "evidence",
+        "value",
     ]
-
