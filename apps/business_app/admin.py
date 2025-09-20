@@ -17,6 +17,8 @@ from apps.business_app.models import (
 )
 from apps.business_app.models.event_type import EventType
 from apps.business_app.models.gene import Gene
+from apps.business_app.models.gene_status import GeneStatus
+from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.region import Region
@@ -317,3 +319,37 @@ class InitialFileDataAdmin(admin.ModelAdmin):
         "max_value",
         "uploaded_file",
     ]
+
+
+@admin.register(GeneStatus)
+class GeneStatusAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "description",
+        "type",
+        "requires_evidence",
+    ]
+    fields = [
+        "name",
+        "description",
+        "type",
+        "requires_evidence",
+    ]
+
+@admin.register(GeneStatusMiddle)
+class GeneStatusMiddleAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "gene",
+        "gene_status",
+        "evidence",
+    ]
+    fields = [
+        "gene",
+        "gene_status",
+        "evidence",
+    ]
+
