@@ -1201,12 +1201,14 @@ const allTimes = data.features
         'Marker Layer': markerLayer
     };
     
-    var layerControl = L.control.layers(baseLayers, overlays).addTo(map);
-     
+    var layerControl = L.control.layers(baseLayers, overlays, {
+        position: 'topleft' // Set control position
+      }
+      ).addTo(map);     
 }
 
 
-                                        document.getElementById('timeRangeMigraions').addEventListener('click', function(e) {
+    document.getElementById('timeRangeMigraions').addEventListener('click', function(e) {
 
                                             const opcionClick = e.target;
                                             if (opcionClick.tagName === 'OPTION') {
@@ -1293,9 +1295,9 @@ const allTimes = data.features
                                          
 
                                         if (aRegionTimeLine.value == "All the World"){ 
-                                          sessionStorage.setItem('lat', '22');
-                                          sessionStorage.setItem('long', '155');  
-                                          sessionStorage.setItem('zoom', '2.1');    
+                                          sessionStorage.setItem('lat', '15');
+                                          sessionStorage.setItem('long', '215');  
+                                          sessionStorage.setItem('zoom', '1.8');    
                                         }
                                         else
                                         if (aRegionTimeLine.value == "Africa"){
