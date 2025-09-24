@@ -58,4 +58,20 @@ class Command(BaseCommand):
                 "green",
                 attrs=["blink"],
             )
+        )        
+        call_command("loaddata", "disease_group.json")
+        print(
+            colored(
+                "Successfully added disease groups",
+                "green",
+                attrs=["blink"],
+            )
+        )     
+        call_command("loaddata", "disease_subgroup.json")
+        print(
+            colored(
+                "Successfully added disease subgroups",
+                "green",
+                attrs=["blink"],
+            )
         )
