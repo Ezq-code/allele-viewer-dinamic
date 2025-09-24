@@ -15,6 +15,7 @@ from apps.business_app.models import (
     UploadedFiles,
     WorkingCopyOfOriginalFile,
 )
+from apps.business_app.models.desease_group import DeseaseGroup
 from apps.business_app.models.event_type import EventType
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.gene_group import GeneGroups
@@ -202,6 +203,21 @@ class GeneAdmin(admin.ModelAdmin):
         "name",
         "description",
         "status",
+    ]
+    search_fields = ("name",)
+
+
+@admin.register(DeseaseGroup)
+class DeseaseGroupAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "description",
+    ]
+    fields = [
+        "name",
+        "description",
     ]
     search_fields = ("name",)
 

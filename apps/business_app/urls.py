@@ -18,6 +18,7 @@ from apps.business_app.views.allele_full_family import AlleleFullFamilyViewSet
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
 
 
+from apps.business_app.views.desease_group_view import DeseaseGroupViewSet
 from apps.business_app.views.event_type import EventTypeViewSet
 from apps.business_app.views.gene_groups_view import GeneGroupsViewSet
 from apps.business_app.views.gene_status_middle_view import GeneStatusMiddleViewSet
@@ -62,6 +63,11 @@ router.register(
     "gene-status-middle",
     GeneStatusMiddleViewSet,
     basename="gene-status-middle",
+)
+router.register(
+    "desease",
+    DeseaseGroupViewSet,
+    basename="desease",
 )
 
 uploaded_files_router = router.register(
