@@ -103,4 +103,4 @@ def event_gallery(request):
 
 
 def introduction(request):
-    return render(request, "introduction/introduction.html")
+    return render(request, "introduction/introductioniLanding.html")
