@@ -1,13 +1,15 @@
 from rest_framework import serializers
 
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
-from apps.business_app.serializers.gene_status_serializer import GeneStatusSerializer
 
 
 class GeneStatusMiddleSerializer(serializers.ModelSerializer):
     gene_status_name = serializers.CharField(source="gene_status.name", read_only=True)
     gene_status_type = serializers.CharField(source="gene_status.type", read_only=True)
-    gene_status_requires_evidence = serializers.BooleanField(source="gene_status.requires_evidence", read_only=True)
+    gene_status_requires_evidence = serializers.BooleanField(
+        source="gene_status.requires_evidence", read_only=True
+    )
+
     class Meta:
         model = GeneStatusMiddle
         fields = [

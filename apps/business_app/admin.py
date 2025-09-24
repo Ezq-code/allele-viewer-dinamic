@@ -15,7 +15,9 @@ from apps.business_app.models import (
     UploadedFiles,
     WorkingCopyOfOriginalFile,
 )
-from apps.business_app.models.desease_group import DeseaseGroup
+from apps.business_app.models.disease_group import DiseaseGroup
+from apps.business_app.models.disease_subgroup import DiseaseSubGroup
+from apps.business_app.models.disorder import Disorder
 from apps.business_app.models.event_type import EventType
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.gene_group import GeneGroups
@@ -207,8 +209,8 @@ class GeneAdmin(admin.ModelAdmin):
     search_fields = ("name",)
 
 
-@admin.register(DeseaseGroup)
-class DeseaseGroupAdmin(admin.ModelAdmin):
+@admin.register(DiseaseGroup)
+class DiseaseGroupAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
     list_display = [
         "id",
@@ -218,6 +220,38 @@ class DeseaseGroupAdmin(admin.ModelAdmin):
     fields = [
         "name",
         "description",
+    ]
+    search_fields = ("name",)
+
+
+@admin.register(DiseaseSubGroup)
+class DiseaseSubGroupAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "description",
+        "disease_group",
+    ]
+    fields = [
+        "name",
+        "description",
+        "disease_group",
+    ]
+    search_fields = ("name",)
+@admin.register(Disorder)
+class DisorderAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "description",
+        "disease_subgroup",
+    ]
+    fields = [
+        "name",
+        "description",
+        "disease_subgroup",
     ]
     search_fields = ("name",)
 
