@@ -45,7 +45,7 @@
     flex: 1;
     min-width: 0;
     height: 100% !important; /* Forzar altura */
-    min-height: 850px; /* Altura mínima */
+    min-height: 638px; /* Altura mínima */
     border-radius: 5px;
 }
 
@@ -172,7 +172,7 @@
 .right-sidebar {
     display: flex; /* Activa flexbox */
     width: 100%;
-    height: 850px; /* Altura fija para el contenedor */
+    height: 638px; /* Altura fija para el contenedor */
     gap: 15px; /* Espacio entre elementos */
 }
 
@@ -330,5 +330,144 @@
         min-height: 400px !important;
         width: 100%;
         flex: none;
+    }
+}
+/* Estilos para la leyenda */
+/* Estilos para la leyenda */
+/* Estilos para la leyenda */
+.legend {
+    /*padding: 12px;*/
+    font: 11px Arial, Helvetica, sans-serif;
+    background: white;
+    /*background: rgba(255, 255, 255, 1);*/
+    box-shadow: 0 0 15px rgba(0, 0, 0, 1);
+    border-radius: 5px;
+    line-height: 18px;
+    color: #333;
+    max-width: 310px; /* Más ancho para dos columnas */
+    max-height: 600px;
+    overflow-y: auto;
+    margin-top: 40px;
+}
+
+.leaflet-container .legend {
+  background-color: rgb(255, 255, 255) !important;
+}
+
+.legend h4 {
+    text-align: center;
+    font-size: 17px;
+    margin: 0 0 12px;
+    color: #222;
+    font-weight: bold;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+}
+
+.legend h5 {
+    font-size: 12px;
+    margin: 10px 0 10px;
+    color: #444;
+    font-weight: bold;
+}
+
+/* Contenedor de dos columnas */
+.legend-columns-container {
+    display: flex;
+    gap: 1px;
+}
+
+.legend-column {
+    flex: 1;
+    min-width: 0; /* Permite que las columnas se ajusten correctamente */
+}
+
+.legend-section {
+    margin-bottom: 12px;
+}
+
+.legend-separator {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 10px 0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 0 0;
+}
+
+/* Contenedor para icono y raya horizontal */
+.species-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.legend i {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    opacity: 1;
+    display: inline-block;
+    flex-shrink: 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.legend i.icon {
+    background-size: contain;
+    background-position: center;
+    background-color: white; 
+    border: 0px solid #FFFFFFCC;
+}
+
+/* Estilo para la raya de color HORIZONTAL */
+.color-line.horizontal {
+    width: 16px;
+    height: 3px;
+    display: block;
+    border-radius: 2px;
+    margin-top: 2px; /* Espacio entre icono y raya */
+}
+
+.legend span:not(.color-line) {
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* Estilo para la barra de scroll */
+.legend::-webkit-scrollbar {
+    width: 6px;
+}
+
+.legend::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.legend::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.legend::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive: en pantallas pequeñas volver a una columna */
+@media (max-width: 768px) {
+    .legend-columns-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .legend {
+        max-width: 240px;
+        max-height: 250px;
     }
 }
