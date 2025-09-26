@@ -239,6 +239,8 @@ class DiseaseSubGroupAdmin(admin.ModelAdmin):
         "disease_group",
     ]
     search_fields = ("name",)
+
+
 @admin.register(Disorder)
 class DisorderAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"

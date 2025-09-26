@@ -1,18 +1,18 @@
 [
-    {
-        "model": "business_app.availablelanguages",
-        "pk": 1,
-        "fields": {
-            "lang_name": "English",
-            "lang_code": "en"
-        }
-    },
-    {
-        "model": "business_app.availablelanguages",
-        "pk": 2,
-        "fields": {
-            "lang_name": "Spanish",
-            "lang_code": "es"
-        }
+  {
+    "model": "business_app.availablelanguages",
+    "pk": 1,
+    "fields": {
+      "lang_name": "English",
+      "lang_code": "en"
     }
+  },
+  {
+    "model": "business_app.availablelanguages",
+    "pk": 2,
+    "fields": {
+      "lang_name": "Spanish",
+      "lang_code": "es"
+    }
+  }
 ]

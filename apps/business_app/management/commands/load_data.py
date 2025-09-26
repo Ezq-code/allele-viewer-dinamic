@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 "green",
                 attrs=["blink"],
             )
-        )        
+        )
         call_command("loaddata", "disease_group.json")
         print(
             colored(
@@ -66,11 +66,27 @@ class Command(BaseCommand):
                 "green",
                 attrs=["blink"],
             )
-        )     
+        )
         call_command("loaddata", "disease_subgroup.json")
         print(
             colored(
                 "Successfully added disease subgroups",
+                "green",
+                attrs=["blink"],
+            )
+        )
+        call_command("loaddata", "disorder_1.json")
+        print(
+            colored(
+                "Successfully added disorders (chunk 1)",
+                "green",
+                attrs=["blink"],
+            )
+        )        
+        call_command("loaddata", "disorder_2.json")
+        print(
+            colored(
+                "Successfully added disorders (chunk 2)",
                 "green",
                 attrs=["blink"],
             )

@@ -386,7 +386,7 @@
       "disease_group": 4
     }
   },
-   {
+  {
     "model": "business_app.diseasesubgroup",
     "pk": 44,
     "fields": {
@@ -431,7 +431,7 @@
       "disease_group": 7
     }
   },
-    {
+  {
     "model": "business_app.diseasesubgroup",
     "pk": 49,
     "fields": {
@@ -576,7 +576,3 @@
     }
   }
 ]
-
-
-
-

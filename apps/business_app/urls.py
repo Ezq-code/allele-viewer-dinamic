@@ -70,7 +70,6 @@ router.register(
     "disease",
     DiseaseGroupViewSet,
     basename="disease",
-
 )
 router.register(
     "disease-subgroup",
