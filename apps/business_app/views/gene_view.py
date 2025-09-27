@@ -15,12 +15,16 @@ class GeneViewSet(
     GenericViewSet,
 ):
     pagination_class = AllResultsSetPagination
-    queryset = Gene.objects.all().prefetch_related("groups", "gene_status_list")
+    queryset = Gene.objects.all().prefetch_related(
+        "groups", "gene_status_list", "disorders"
+    )
 
     serializer_class = GeneSerializer
     search_fields = [
         "name",
         "description",
+        "disorders__name",
+        "groups__name",
     ]
     ordering_fields = "__all__"
     filter_backends = [
@@ -28,5 +32,5 @@ class GeneViewSet(
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    filterset_fields = ("status",)
+    filterset_fields = ("status", "groups", "disorders")
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]

@@ -82,7 +82,7 @@ class Command(BaseCommand):
                 "green",
                 attrs=["blink"],
             )
-        )        
+        )
         call_command("loaddata", "disorder_2.json")
         print(
             colored(

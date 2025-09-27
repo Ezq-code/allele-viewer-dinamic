@@ -5,6 +5,9 @@ from apps.business_app.models.disorder import Disorder
 
 
 class DisorderSerializer(serializers.ModelSerializer):
+    disease_subgroup = serializers.StringRelatedField()
+    genes = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = Disorder
         fields = [
@@ -12,4 +15,5 @@ class DisorderSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "disease_subgroup",
+            "genes",
         ]

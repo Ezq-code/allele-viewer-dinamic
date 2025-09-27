@@ -19,12 +19,17 @@ class DisorderViewSet(
     GenericViewSet,
 ):
     pagination_class = AllResultsSetPagination
-    queryset = Disorder.objects.select_related("disease_subgroup").all()
+    queryset = (
+        Disorder.objects.select_related("disease_subgroup")
+        .prefetch_related("genes")
+        .all()
+    )
 
     serializer_class = DisorderSerializer
     search_fields = [
         "name",
         "description",
+        "genes_name",
     ]
     filterset_fields = [
         "disease_subgroup",

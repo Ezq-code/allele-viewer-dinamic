@@ -15,12 +15,13 @@ class GeneGroupsViewSet(
     GenericViewSet,
 ):
     pagination_class = AllResultsSetPagination
-    queryset = GeneGroups.objects.all()
+    queryset = GeneGroups.objects.all().prefetch_related("genes")
 
     serializer_class = GeneGroupsSerializer
     search_fields = [
         "name",
         "description",
+        "genes_name",
     ]
     ordering_fields = "__all__"
     filter_backends = [

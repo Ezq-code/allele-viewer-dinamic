@@ -5,7 +5,7 @@ from apps.business_app.serializers.gene_serializer import GeneSerializer
 
 
 class GeneGroupsSerializer(serializers.ModelSerializer):
-    genes = GeneSerializer(many=True)
+    genes = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = GeneGroups

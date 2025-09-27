@@ -13570,9 +13570,7 @@ class Command(BaseCommand):
             disorder, _ = Disorder.objects.get_or_create(
                 name=disorder_name, defaults={"disease_subgroup": disease_subgroup}
             )
-                     
-            gene, _ = Gene.objects.get_or_create(
-                name=gene_name
-            )
+
+            gene, _ = Gene.objects.get_or_create(name=gene_name)
             disorder.genes.add(gene)
             gene_group.genes.add(gene)
