@@ -6,7 +6,7 @@ from apps.business_app.models.gene import Gene
 
 
 class Disorder(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=250, unique=True)
     description = models.TextField(null=True, blank=True)
     disease_subgroup = models.ForeignKey(to=DiseaseSubGroup, on_delete=models.CASCADE)
     genes = models.ManyToManyField(Gene, related_name="disorders")

@@ -1,0 +1,52 @@
+[
+    {
+        "model": "business_app.genestatus",
+        "pk": 6,
+        "fields": {
+            "name": "Data retrieval",
+            "description": "",
+            "type": "P",
+            "requires_evidence": false
+        }
+    },
+    {
+        "model": "business_app.genestatus",
+        "pk": 7,
+        "fields": {
+            "name": "Data generation from original sources",
+            "description": "",
+            "type": "P",
+            "requires_evidence": false
+        }
+    },
+    {
+        "model": "business_app.genestatus",
+        "pk": 8,
+        "fields": {
+            "name": "Publish information on website",
+            "description": "",
+            "type": "P",
+            "requires_evidence": false
+        }
+    },
+    {
+        "model": "business_app.genestatus",
+        "pk": 9,
+        "fields": {
+            "name": "Tridimentional conformation",
+            "description": "",
+            "type": "P",
+            "requires_evidence": false
+        }
+    },
+    {
+        "model": "business_app.genestatus",
+        "pk": 10,
+        "fields": {
+            "name": "Alleles and Migration Pathway",
+            "description": "",
+            "type": "P",
+            "requires_evidence": false
+        }
+    }
+]

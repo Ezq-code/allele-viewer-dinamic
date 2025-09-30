@@ -75,18 +75,42 @@ class Command(BaseCommand):
                 attrs=["blink"],
             )
         )
-        call_command("loaddata", "disorder_1.json")
+        # call_command("loaddata", "disorder_1.json")
+        # print(
+        #     colored(
+        #         "Successfully added disorders (chunk 1)",
+        #         "green",
+        #         attrs=["blink"],
+        #     )
+        # )
+        # call_command("loaddata", "disorder_2.json")
+        # print(
+        #     colored(
+        #         "Successfully added disorders (chunk 2)",
+        #         "green",
+        #         attrs=["blink"],
+        #     )
+        # )           
+        call_command("loaddata", "disorder.json")
         print(
             colored(
-                "Successfully added disorders (chunk 1)",
+                "Successfully added disorders",
                 "green",
                 attrs=["blink"],
             )
-        )
-        call_command("loaddata", "disorder_2.json")
+        )        
+        call_command("loaddata", "gene_status.json")
         print(
             colored(
-                "Successfully added disorders (chunk 2)",
+                "Successfully added gene stauses",
+                "green",
+                attrs=["blink"],
+            )
+        )        
+        call_command("loaddata", "gene_status_middle.json")
+        print(
+            colored(
+                "Successfully added gene stauses middle info",
                 "green",
                 attrs=["blink"],
             )
