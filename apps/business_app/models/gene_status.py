@@ -26,12 +26,13 @@ class GeneStatus(models.Model):
 
             gene_status_middle_list = []
             for gene in Gene.objects.all():
-                gene_status_middle_list.append(GeneStatusMiddle(
-                    gene=gene,
-                    gene_status=self,
-                ))
+                gene_status_middle_list.append(
+                    GeneStatusMiddle(
+                        gene=gene,
+                        gene_status=self,
+                    )
+                )
             GeneStatusMiddle.objects.bulk_create(gene_status_middle_list)
-                
 
     class Meta:
         verbose_name = _("Gene status")

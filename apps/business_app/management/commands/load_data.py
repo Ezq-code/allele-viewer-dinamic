@@ -90,7 +90,7 @@ class Command(BaseCommand):
         #         "green",
         #         attrs=["blink"],
         #     )
-        # )           
+        # )
         call_command("loaddata", "disorder.json")
         print(
             colored(
@@ -98,7 +98,7 @@ class Command(BaseCommand):
                 "green",
                 attrs=["blink"],
             )
-        )        
+        )
         call_command("loaddata", "gene_status.json")
         print(
             colored(
@@ -106,7 +106,7 @@ class Command(BaseCommand):
                 "green",
                 attrs=["blink"],
             )
-        )        
+        )
         call_command("loaddata", "gene_status_middle.json")
         print(
             colored(
