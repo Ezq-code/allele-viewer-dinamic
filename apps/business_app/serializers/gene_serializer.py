@@ -8,7 +8,7 @@ from apps.business_app.serializers.gene_group_middle_serializer import (
 
 
 class GeneSerializer(serializers.ModelSerializer):
-    gene_status_list = serializers.SerializerMethodField()
+    gene_status_list = GeneStatusMiddleReadSerializer(many=True, read_only=True)
     groups = serializers.StringRelatedField(many=True)
     disorders = serializers.StringRelatedField(many=True)
 
@@ -23,9 +23,3 @@ class GeneSerializer(serializers.ModelSerializer):
             "disorders",
             "gene_status_list",
         ]
-
-    def get_gene_status_list(self, obj):
-        return GeneStatusMiddleReadSerializer(
-            GeneStatusMiddle.objects.filter(gene=obj).select_related("gene_status"),
-            many=True,
-        ).data
