@@ -1171,18 +1171,18 @@ section,
 }
 
 .features .nav-link {
-  background-color: none;
-  color: var(--heading-color);
-  padding: 10px 30px;
-  transition: 0.3s;
-  border-radius: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  height: 100%;
-  border: 0;
-  margin: 0;
+  background-color: none !important;
+  color: var(--heading-color) !important;
+  padding: 10px 30px !important;
+  transition: 0.3s !important;
+  border-radius: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  height: 100% !important;
+  border: 0 !important;
+  margin: 0 !important;
 }
 
 @media (max-width: 468px) {
@@ -1203,20 +1203,20 @@ section,
 }
 
 .features .nav-link:hover {
-  border-color: color-mix(in srgb, var(--default-color), transparent 80%);
+  border-color: color-mix(in srgb, var(--default-color), transparent 80%) !important;
 }
 
 .features .nav-link:hover h4 {
-  color: var(--accent-color);
+  color: var(--accent-color) !important;
 }
 
 .features .nav-link.active {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
 }
 
 .features .nav-link.active h4 {
-  color: var(--contrast-color);
+  color: var(--contrast-color) !important;
 }
 
 .features .tab-content {

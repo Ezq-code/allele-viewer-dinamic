@@ -9,7 +9,7 @@
   <title>PGxSoftware - Tracing Genetic Ancestry</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
-
+  
   <!-- Favicons -->
   <link href="{% static 'assets/dist/img/AdminLTELogo.png' %}" rel="icon">
   <link href="{% static 'assets/iLanding/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
@@ -28,6 +28,17 @@
 
   <!-- Main CSS File -->
   <link href="{% static 'assets/iLanding/assets/css/main.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/plugins/toastr/toastr.min.css' %}">
+
+
+<link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/toastr/toastr.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
 
   <!-- =======================================================
   * Template Name: iLanding
@@ -245,8 +256,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Features</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+        <h2>Conformation</h2>
+        <p>The conformation of an allele is crucial because it can impact several biological processes</p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -257,19 +268,19 @@
 
             <li class="nav-item">
               <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#features-tab-1">
-                <h4>Modisit</h4>
+                <h4>PGX</h4>
               </a>
             </li><!-- End tab nav item -->
 
             <li class="nav-item">
               <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-2">
-                <h4>Praesenti</h4>
+                <h4>Genomic</h4>
               </a><!-- End tab nav item -->
 
             </li>
             <li class="nav-item">
               <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-3">
-                <h4>Explica</h4>
+                <h4>Priorities</h4>
               </a>
             </li><!-- End tab nav item -->
 
@@ -281,21 +292,49 @@
 
           <div class="tab-pane fade active show" id="features-tab-1">
             <div class="row">
-              <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
-                <h3>Voluptatem dignissimos provident</h3>
-                <p class="fst-italic">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                  magna aliqua.
+            
+              <div class="col-lg-6 order-1 order-lg-1 mt-3 mt-lg-0 d-flex flex-column ">
+                <h3>Pharmacodynamic</h3>
+                <p>
+                  <span class="accent-text">Pharmacodynamics</span> refers to the study of how <span class="fw-bold text-primary">drugs</span> affect the body. It examines the <span class="fw-bold text-primary">mechanisms of drug action</span>, including the relationship between <span class="fw-bold text-primary">drug concentration</span> and <span class="fw-bold text-primary">effect</span>, <span class="fw-bold text-primary">receptor interactions</span>, and the <span class="fw-bold text-primary">physiological</span> and <span class="fw-bold text-primary">biochemical responses</span> produced. Understanding <span class="accent-text">pharmacodynamics</span> helps predict the <span class="fw-bold text-primary">efficacy</span> and potential <span class="fw-bold text-primary">side effects</span> of medications.
                 </p>
-                <ul>
-                  <li><i class="bi bi-check2-all"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></li>
-                  <li><i class="bi bi-check2-all"></i> <span>Duis aute irure dolor in reprehenderit in voluptate velit.</span></li>
-                  <li><i class="bi bi-check2-all"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla pariatur.</span></li>
-                </ul>
+                <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(1)">Related Genes</button>
               </div>
-              <div class="col-lg-6 order-1 order-lg-2 text-center">
-                <img src="{% static 'assets/iLanding/assets/img/features-illustration-1.webp' %}" alt="" class="img-fluid">
+              <div class="col-lg-6 order-2 order-lg-2 mt-3 mt-lg-0 d-flex flex-column ">
+                <h3>Pharmacokinetic</h3>
+                <p>
+                  <span class="accent-text">Pharmacokinetics</span> is the study of how the body <span class="fw-bold text-primary">absorbs</span>, <span class="fw-bold text-primary">distributes</span>, <span class="fw-bold text-primary">metabolizes</span>, and <span class="fw-bold text-primary">excretes drugs</span>. It focuses on the movement of drugs within the body over time, including processes such as <span class="fw-bold text-primary">absorption</span>, <span class="fw-bold text-primary">bioavailability</span>, <span class="fw-bold text-primary">distribution</span>, <span class="fw-bold text-primary">metabolism</span>, and <span class="fw-bold text-primary">elimination</span>. <span class="accent-text">Pharmacokinetics</span> is essential for determining appropriate <span class="fw-bold text-primary">drug dosages</span> and <span class="fw-bold text-primary">schedules</span>.
+                </p>
+                <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(2)">Related Genes</button>
+              
+              
+              
               </div>
+
+              <!-- Modal para mostrar genes -->
+              <div class="modal fade" id="genesModal" data-backdrop="static" tabindex="-1" role="dialog"
+                  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="genesModalLabel">Genes Relacionados</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="genesTable" class="table table-bordered table-striped " width="100%">
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+              </div>
+         
+              
+              
             </div>
           </div><!-- End tab content item -->
 
@@ -1200,6 +1239,17 @@
 
   </footer>
 
+<!-- jQuery -->
+<script src="{% static 'assets/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'assets/dist/js/adminlte.min.js' %}"></script>
+
+<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
+<script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+
+
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -1210,9 +1260,39 @@
   <script src="{% static 'assets/iLanding/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
   <script src="{% static 'assets/iLanding/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
   <script src="{% static 'assets/iLanding/assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
-
   <!-- Main JS File -->
   <script src="{% static 'assets/iLanding/assets/js/main.js' %}"></script>
+
+  <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'assets/plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'assets/plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+
+
+
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <script src="{% static 'assets/dist/js/introductioniLanding.js' %}"></script>
+<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
+<script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+
+
+<script>
+var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+    });
+  </script>
 
 </body>
 
