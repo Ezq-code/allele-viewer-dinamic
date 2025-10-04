@@ -20,4 +20,4 @@ class Gene(models.Model):
         verbose_name_plural = _("Genes")
 
     def __str__(self):
-        return f"{self.name} ({self.status})"
+        return f"{self.name}"
