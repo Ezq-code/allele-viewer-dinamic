@@ -260,6 +260,11 @@ class DisorderAdmin(admin.ModelAdmin):
         "disease_subgroup",
     ]
     search_fields = ("name",)
+    list_filter = (
+        "disease_subgroup__disease_group",
+        "disease_subgroup",
+        "genes",
+    )
 
 
 @admin.register(GeneGroups)

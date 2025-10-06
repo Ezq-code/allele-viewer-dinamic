@@ -23,5 +23,25 @@ class GeneStatusMiddle(models.Model):
         verbose_name = _("Gene status Middle")
         verbose_name_plural = _("Gene status Middle")
 
+    def save(self, *args, **kwargs):
+        saved_row = super().save(*args, **kwargs)
+        related_gene_status_middle = GeneStatusMiddle.objects.filter(
+            gene=self.gene
+        ).only("value")
+        count = related_gene_status_middle.count()
+        total = 0
+        for related_row in related_gene_status_middle.all():
+            current_val = related_row.value
+            if (
+                current_val
+                and related_row.gene_status.type
+                is GeneStatus.TypeRepresentation.BOOLEAN
+            ):
+                current_val = 100
+            total += current_val
+        self.gene.status = total / count
+        self.gene.save(update_fields=["status"])
+        return saved_row
+
     def __str__(self):
         return f"{self.gene} ({self.gene_status})"

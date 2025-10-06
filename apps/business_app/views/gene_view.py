@@ -26,6 +26,7 @@ class GeneViewSet(
         "disorders__name",
         "groups__name",
     ]
+    ordering = "-status"
     ordering_fields = "__all__"
     filter_backends = [
         DjangoFilterBackend,
