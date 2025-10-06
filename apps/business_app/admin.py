@@ -206,11 +206,11 @@ class GeneAdmin(admin.ModelAdmin):
         "description",
         "status",
     ]
-    search_fields = ("name","disorders__name",)
-    list_filter = (
+    search_fields = ("name", "disorders__name")
+    list_filter = [
         "groups",
         "disorders",
-    )
+    ]
 
 
 @admin.register(DiseaseGroup)
@@ -435,7 +435,9 @@ class GeneStatusMiddleAdmin(admin.ModelAdmin):
         "evidence",
         "value",
     ]
-    list_filter = (
+    search_fields = ("gene__name",)
+    list_filter = [
+        "evidence",
         "gene_status",
-        "gene",
-    )
+        "value",
+    ]
