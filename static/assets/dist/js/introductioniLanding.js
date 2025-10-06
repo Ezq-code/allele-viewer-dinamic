@@ -7,7 +7,7 @@ function showGenesModal(id) {
             fetch(`/business-gestion/gene/?groups=${id}`)
                 .then(response => response.json())
                 .then(geneData => {
-                    document.getElementById('genesModalLabel').textContent = 'Genes and their States';
+                    document.getElementById('genesModalLabel').textContent = 'Genomic: Development Stages';
                     
                     // Destruir la tabla existente si ya está inicializada
                     if ($.fn.DataTable.isDataTable('#genesTable')) {
