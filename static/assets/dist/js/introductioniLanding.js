@@ -1,3 +1,94 @@
+function downloadEvidence(evidencePath) {
+    if (!evidencePath) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No evidence available for download',
+            timer: 3000
+        });
+        return;
+    }
+
+    const decodedPath = decodeURIComponent(evidencePath);
+
+    // Validate URL
+    try {
+        new URL(decodedPath);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Invalid evidence URL',
+            timer: 3000
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'Downloading...',
+        text: 'Please wait',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    fetch(decodedPath)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Download error');
+            }
+            // Get content type from server
+            const contentType = response.headers.get('content-type') || 'application/octet-stream';
+            // Get filename from Content-Disposition header if exists
+            const contentDisposition = response.headers.get('content-disposition');
+            let fileName = 'evidence';
+            
+            if (contentDisposition) {
+                const fileNameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (fileNameMatch && fileNameMatch[1]) {
+                    fileName = fileNameMatch[1].replace(/['"]/g, '');
+                }
+            } else {
+                // If no Content-Disposition, try to get name from path
+                fileName = decodedPath.split('/').pop() || fileName;
+            }
+
+            return response.blob().then(blob => ({
+                blob: new Blob([blob], { type: contentType }),
+                fileName: fileName
+            }));
+        })
+        .then(({ blob, fileName }) => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Download Complete',
+                text: 'File has been downloaded successfully',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        })
+        .catch(error => {
+            console.error('Download error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Download Error',
+                text: error.message || 'Could not download evidence file',
+                timer: 3000
+            });
+        });
+}
+
 function showGenesModal(id) {
     // Primero obtenemos los estados disponibles
     fetch('/business-gestion/gene-status/')
@@ -17,7 +108,7 @@ function showGenesModal(id) {
                     // Preparar las columnas
                     const columns = [
                         { 
-                            title: "Gen",
+                            title: "Gene",
                             data: "name"
                         }
                     ];
@@ -41,12 +132,22 @@ function showGenesModal(id) {
                                 else if (percent > 75 && percent <= 100) badgeClass = "bg-success";
                               }
                               const valueWithPercent = `${statusValue.value}%`;
-console.log('✌️statusValue --->', statusValue);
+
                                 
-                              if (statusValue.evidence) {
-                                return `<span class="badge ${badgeClass}" title="Evidencia: ${statusValue.evidence}">${valueWithPercent}</span>`;
-                              }
-                              return `<span class="badge ${badgeClass}">${valueWithPercent}</span> `;
+                                if (statusValue.evidence) {
+                                return `
+                                  <span class="badge ${badgeClass}" title="Evidence: ${statusValue.evidence}">${valueWithPercent}</span>
+                                  <button class="btn btn-sm btn-outline-secondary ms-1" title="Download evidence" onclick="downloadEvidence('${encodeURIComponent(statusValue.evidence)}')">
+                                  <i class="bi bi-download"></i>
+                                  </button>
+                                  <div class="progress progress-xs" style="height: 5px; margin-top: 2px;">
+                                  <div class="progress-bar ${badgeClass}" style="width: ${valueWithPercent}"></div>
+                                  </div>
+                                `;
+                                }
+                              return `<span class="badge ${badgeClass}">${valueWithPercent}</span> <div class="progress progress-xs" style="height: 5px; margin-top: 2px;">
+                                  <div class="progress-bar ${badgeClass}" style="width: ${valueWithPercent}"></div>
+                                  </div> `;
                             }
                             return '<span class="badge bg-secondary">N/A</span>';
                           }
