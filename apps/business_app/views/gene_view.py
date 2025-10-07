@@ -15,8 +15,10 @@ class GeneViewSet(
     GenericViewSet,
 ):
     pagination_class = AllResultsSetPagination
-    queryset = Gene.objects.all().prefetch_related(
-        "groups", "gene_status_list", "disorders"
+    queryset = (
+        Gene.objects.exclude(name="")
+        .all()
+        .prefetch_related("groups", "gene_status_list", "disorders")
     )
 
     serializer_class = GeneSerializer
