@@ -7,7 +7,9 @@ from apps.business_app.models.disease_group import DiseaseGroup
 class DiseaseSubGroup(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(null=True, blank=True)
-    disease_group = models.ForeignKey(to=DiseaseGroup, on_delete=models.CASCADE)
+    disease_group = models.ForeignKey(
+        to=DiseaseGroup, on_delete=models.CASCADE, related_name="subgroups"
+    )
 
     class Meta:
         verbose_name = _("Disease SubGroup")

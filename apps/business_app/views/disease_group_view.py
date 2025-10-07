@@ -17,7 +17,10 @@ class DiseaseGroupViewSet(
     GenericViewSet,
 ):
     pagination_class = AllResultsSetPagination
-    queryset = DiseaseGroup.objects.all()
+    queryset = DiseaseGroup.objects.all().prefetch_related(
+        "subgroups",
+        "subgroups__disorders",
+    )
 
     serializer_class = DiseaseGroupSerializer
     search_fields = [

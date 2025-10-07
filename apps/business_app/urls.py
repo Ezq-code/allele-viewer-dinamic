@@ -67,9 +67,9 @@ router.register(
     basename="gene-status-middle",
 )
 router.register(
-    "disease",
+    "disease-group",
     DiseaseGroupViewSet,
-    basename="disease",
+    basename="disease-group",
 )
 router.register(
     "disease-subgroup",
