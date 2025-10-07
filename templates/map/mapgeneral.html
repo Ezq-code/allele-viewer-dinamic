@@ -157,9 +157,9 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">   
+                                <div class="form-group">
                                     <label for="fechaini" class="mr-2">Begin:</label>
-                                    <div class="d-flex align-items-center">  
+                                    <div class="d-flex align-items-center">
                                         <input type="text" class="form-control mr-2" id="fechaini" name="fechaini"
                                                size="5">
                                         <select class="form-control" name="selectDateTypeBegin"
@@ -175,8 +175,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="fechafin" class="mr-2">End:</label>  
-                                    <div class="d-flex align-items-center">  
+                                    <label for="fechafin" class="mr-2">End:</label>
+                                    <div class="d-flex align-items-center">
                                         <input class="form-control mr-2" type="text" id="fechafin" name="fechafin"
                                                size="5">
                                         <select class="form-control" name="selectDateTypeEnd" id="selectDateTypeEnd">
@@ -241,7 +241,7 @@
         </aside>
 
 
-   
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -256,15 +256,6 @@
                             <div class="card-header" style= "padding-top: 0.50rem; padding-bottom: 0.50rem;">
                                 <h3 class="card-title">Map - CYP2D6 Alleles-Expansions</h3>
                                 <div class="card-tools">
-                                   <div class="d-inline-block">
-                                        <select class="form-control form-control-sm" name="timeRange" id="timeRange" hidden="true">
-                                            <option value="-15000/2025">From 15000 YBP to year 2025</option>
-                                            <option value="-1800000/-800000">Homo Erectus Migrations</option>
-                                            <option value="-700000/-160000">Heidelbergensis Migrations </option>
-                                            <option value="-69000/-15000" selected>Homo Sapiens Migrations</option>
-                                            <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
-                                        </select> 
-                                            </div> 
                                         <div class="d-inline-block">
                                         <select class="form-control form-control-sm" name="regionTimeLine" id="regionTimeLine" style= "width:140px;">
                                             <option value="All the World">All the World</option>
@@ -283,25 +274,38 @@
                                          <button class="btnok btn-primary btn-sm border-right" id="btreload">Load</button>
                                         </div>
                                         <div class="d-inline-block">
-                                         <button class="btnok btn-success btn-sm border-right" id="legend"
+                                         <button class="btnok btn-success btn-sm border-right" id="legend" hidden="true"
                                          >Legend</button>
                                         </div>
                                         <div class="d-inline-block">
-    
-                                        <button type="button" class="btnok btn-tool" title="CYP2D6 Alleles-Expansions"
-                                            data-widget="control-sidebar"
-                                            data-controlsidebar-slide="true">
-                                          <i class="fas fa-walking"></i>
-                                        </button>
-                                        <button type="button" class="btnok btn-tool btn-toggle-panel"
-                                                title="CYP2D6 Alleles-Expansions" id="toggleTimeRangePanel">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
+                                            <button type="button" class="btnok btn-sm btn-toggle-legend btn-danger"
+                                                title="Show/Hide Legend" id="toggleLegendPanel">
+                                                <i class="fas fa-book-open"></i>
+                                            </button>
+                                            <button type="button" class="btnok btn-sm btn-secondary"
+                                                    title="CYP2D6 Alleles-Expansions"
+                                                    data-widget="control-sidebar"
+                                                    data-controlsidebar-slide="true">
+                                                <i class="fas fa-walking"></i>
+                                            </button>
+                                            <div class="d-inline-block">
+                                                <select class="form-control form-control-sm" name="timeRange" id="timeRange" disabled>
+                                                    <option value="-15000/2025">From 15000 YBP to year 2025</option>
+                                                    <option value="-1800000/-804400">Homo Erectus Migrations</option>
+                                                    <option value="-700000/-190539">Heidelbergensis Migrations</option>
+                                                    <option value="-69000/-15000" selected>Homo Sapiens Migrations</option>
+                                                    <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
+                                                </select>
+                                                    </div>
+                                            <button type="button" class="btnok btn-sm btn-toggle-panel btn-warning"
+                                                    title="Time Range Selection" id="toggleTimeRangePanel">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
                                   </div>
                                 </div>
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-body" style= "padding-top: 0.70rem; padding-bottom: 0.70rem;">
+                            <div class="card-body" style= "padding-top: 0.70rem; padding-bottom: 0.70rem; padding-left: 2rem; padding-right: 2rem;">
                                 <div class="right-sidebar d-flex">
                                     <div id="map" class="map-container col-lg-12"></div>
                                     <div id="timeRangeMigraions" class="time-range-container">
@@ -315,12 +319,13 @@
                                         </select>
                                     </div>
                                 </div>
-                            
+
+                                <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
                                 <script>
                                     // Duración fija para el loader en milisegundos (10 segundos)
-                                    const LOADER_DURATION = 10000;
+                                    const LOADER_DURATION = 15000;
                                     // 1. Mostrar el loader en cuanto el DOM esté listo.
-                                    document.addEventListener('DOMContentLoaded', function () {
+                                   // document.addEventListener('DOMContentLoaded', function () {
                                         Swal.fire({
                                             title: 'Updating TimeLine Data...',
                                             html: 'Please wait a few seconds...',
@@ -333,7 +338,7 @@
                                             }
                                         });
 
-                                    });
+                                    //});
 
                                 </script>
 
@@ -343,7 +348,7 @@
 
                                 <!-- codigo javascript para cargar archivos de tipo shape -->
                                 <script src="{% static 'assets/dist/js/map-load-shape.js' %}"></script>
-                               
+
                                 <!-- Script para controlar el panel deslizante -->
                                 <script>
                                     document.addEventListener('DOMContentLoaded', function () {
@@ -367,20 +372,20 @@
                                         });
                                     });
                                 </script>
- 
+
                                 <script>
-          
+
                                     if (!sessionStorage.getItem('inicializado')) {
                                      // Código que solo se ejecuta en la primera carga
                                      sessionStorage.setItem('beginIntervalsesion', -69000);
                                      sessionStorage.setItem('endIntervalsesion', -15000);
-                                     sessionStorage.setItem('durationSesion', 54000);  
-                                     sessionStorage.setItem('lat', 22);
+                                     sessionStorage.setItem('durationSesion', 54000);
+                                     sessionStorage.setItem('lat', 5);
                                      sessionStorage.setItem('long', 155);
-                                     sessionStorage.setItem('zoom', 1.75); 
-                                     sessionStorage.setItem('timeRange', '-69000/-15000'); 
-                                     sessionStorage.setItem('timeRangeMigraions', '-69000/-15000'); 
-                                     sessionStorage.setItem('region', 'All the World'); 
+                                     sessionStorage.setItem('zoom', 2.1);
+                                     sessionStorage.setItem('timeRange', '-69000/-15000');
+                                     sessionStorage.setItem('timeRangeMigraions', '-69000/-15000');
+                                     sessionStorage.setItem('region', 'All the World');
                                      sessionStorage.setItem('inicializado', 'true');
                                      sessionStorage.setItem('timedelayice', 'PT9S');
                                      sessionStorage.setItem('timedelayland', 'PT9S');
@@ -401,8 +406,8 @@
                                     var currentTimeAnt = -1810000;
                                     var migrationlist = new Array();
 
-            
- 
+
+
                                     // Capa Base con mapa político
                                     var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";  //"http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
                                     var osmAttrib = "CYP2D6 Alleles-Expansions";
@@ -452,11 +457,8 @@ if (timeRange === "-12000/2025")
                                     });
 
                                     map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
-                                    
-                                    // INICIALIZAR LA LEYENDA AQUÍ (después de crear el mapa)
-                                    var legendControl = createLegend();
-                                    legendControl.addTo(map);
-                                    // Inicializar el filtro de eventos                                    
+
+                                    // Inicializar el filtro de eventos
                                     // Capa de las marcas
                                     markerLayer = new L.featureGroup().addTo(map);
                                     var markerMigrationPointLayer = new L.featureGroup().addTo(map);
@@ -466,7 +468,7 @@ if (timeRange === "-12000/2025")
 else
 {
     // Función para ajustar el mapa según el tamaño de la pantalla
-    if (window.innerWidth <= 768) 
+    if (window.innerWidth <= 768)
     { // Consideramos pantallas pequeñas (por ejemplo, teléfonos)
      var map = L.map('map', {
       layers: [satelitalLayer], //[osmcountriesLayers],
@@ -474,21 +476,19 @@ else
       fullscreenControl: true,
       timeDimension: true,
       center: new L.LatLng(10, 20) //[36.72, -4.43]
-     });  
-    } 
-    else 
+     });
+    }
+    else
     {
      var map = L.map('map', {
       layers: [satelitalLayer], //[osmcountriesLayers],
       zoomSnap: 0.1,
-      zoom: 1.8,//14,],
+      zoom: 2.1,//14,],
       fullscreenControl: true,
       timeDimension: true,
-      center: new L.LatLng(15, 215), //[36.72, -4.43]
-     });  
+      center: new L.LatLng(5, 155), //[36.72, -4.43]
+     });
     }
-var legendControl = createLegend();
-    legendControl.addTo(map);
 
 L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
     _getDisplayDateFormat: function(date){
@@ -513,7 +513,7 @@ var timeDimensionControl = new L.Control.TimeDimensionCustom({
        // buffer: 1,
        // minBufferReady: -1
     }
-    
+
 });
 
 map.addControl(timeDimensionControl);
@@ -525,7 +525,7 @@ markerLayer = new L.featureGroup().addTo(map);
 var markerMigrationPointLayer = new L.featureGroup().addTo(map);
 var labeled = false;
 //var eventFilter = new EventTimeFilter(map, null, timeRange);
-                            
+
 
 // Get the TimeDimension instance from the map
 var timeDimension = map.timeDimension;
@@ -549,7 +549,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
         // Establecer la opción correcta como selected
         timeRangeSelect.value = timeRange;
         timeRangeSelect.options[timeRangeSelect.selectedIndex].setAttribute('selected', 'selected');
-        
+
         timeRangeSelect.addEventListener('change', function(e) {
             var newRange = e.target.value;
             sessionStorage.setItem('timeRange', newRange);
@@ -560,7 +560,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
     var timeRangeSelect = document.getElementById('timeRangeMigraions');
     if (timeRangeSelect) {
         timeRangeSelect.value = timeRange;
-        
+
         timeRangeSelect.addEventListener('change', function(e) {
             var newRange = e.target.value;
             sessionStorage.setItem('timeRange', newRange);
@@ -570,104 +570,144 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
     */
 
     //Capa de marcadores por defecto apagada
-    markerLayer.remove();   
+    markerLayer.remove();
 
 }
 
-                                    var timelinetimedimension = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homosapiens.geojson' %}";     
-                                    var timelinetimedimensionHomoSapiens = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homosapiens.geojson' %}"; 
-                                    var timelinetimedimensionHomoHeidelBergensis = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homoheidelbergensis.geojson' %}"; 
-                                    var timelinetimedimensionHomoHerectus = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homoherectus.geojson' %}"; 
-                                    var timelinetimedimensiontimeline_130000_115000_HighTemperature = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-130000-115000-High-Temperature.geojson' %}"; 
-                                    var timelinetimedimensiontimeline_15000_2025 = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-15000-2025.geojson' %}"; 
+                                    var timelinetimedimension = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homosapiens.geojson' %}";
+                                    var timelinetimedimensionHomoSapiens = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homosapiens.geojson' %}";
+                                    var timelinetimedimensionHomoHeidelBergensis = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homoheidelbergensis.geojson' %}";
+                                    var timelinetimedimensionHomoHerectus = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homoherectus.geojson' %}";
+                                    var timelinetimedimensiontimeline_130000_115000_HighTemperature = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-130000-115000-High-Temperature.geojson' %}";
+                                    var timelinetimedimensiontimeline_15000_2025 = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-15000-2025.geojson' %}";
 
                                     var iconUrlpath = "{% static 'assets/dist/Leaflet/marker_black.png' %}";
                                     var iconUrlpathDestinationMigration = "{% static 'assets/dist/Leaflet/primitive-man4.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHeidel = "{% static 'assets/dist/Leaflet/primitive-man1.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHerectus = "{% static 'assets/dist/Leaflet/primitive-man25.png' %}";
-                                     // Función para crear la leyenda
-                                    // Función para crear la leyenda
-                                    function createLegend() {
-                                        var legend = L.control({ position: "topright" });
+
+                                    // Función para crear la leyenda deslizante
+                                    function createSlidingLegend() {
+                                        var legendContainer = document.createElement('div');
+                                        legendContainer.id = 'legendContainer';
+                                        legendContainer.className = 'legend-container';
+                                        
+                                        // Crear el contenido de la leyenda usando tu función existente
+                                        var legendDiv = createLegendContent();
+                                        legendContainer.appendChild(legendDiv);
+                                        
+                                        return legendContainer;
+                                    }
                                     
-                                        legend.onAdd = function(map) {
-                                            var div = L.DomUtil.create("div", "legend");
-                                            div.innerHTML = "<h4>Legend</h4>";
-                                            
-                                            // Contenedor principal de dos columnas
-                                            var columnsContainer = L.DomUtil.create("div", "legend-columns-container", div);
-                                            
-                                            // PRIMERA COLUMNA
-                                            var firstColumn = L.DomUtil.create("div", "legend-column", columnsContainer);
-                                            
-                                            // Sección: Especies Humanas
-                                            var speciesSection = L.DomUtil.create("div", "legend-section", firstColumn);
-                                            speciesSection.innerHTML += '<h5>Humans, Glacials and Land</h5>';
-                                            speciesSection.innerHTML += '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #FF5733"></span></div><span>Homo Erectus</span></div>';
-                                            speciesSection.innerHTML += '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #3398FF"></span></div><span>Homo Heidelbergensis</span></div>';
-                                            speciesSection.innerHTML += '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #33FF57"></span></div><span>Homo Sapiens</span></div>';
-                                            speciesSection.innerHTML += '<div class="legend-item"><i style="background: #FFFFFF; border: 1px solid #999"></i><span>Glacials</span></div>';
-                                            speciesSection.innerHTML += '<div class="legend-item"><i style="background: #676a4a; border: 1px solid #999"></i><span>Land Emerge</span></div>';
-                                            // Separador
-                                            firstColumn.innerHTML += '<hr class="legend-separator">';
-                                            
-                                            // Sección: Tipos de Eventos (desde Django)
-                                            var eventsSection = L.DomUtil.create("div", "legend-section", firstColumn);
-                                            eventsSection.innerHTML += '<h5>Event Types</h5>';
-                                            
-                                            // Aquí agregamos los tipos de eventos desde Django
-                                            {% for event_type in events_types %}
-                                            eventsSection.innerHTML += '<div class="legend-item"><i class="icon" style="background-image: url({{ event_type.icon.url }});background-repeat: no-repeat;"></i><span>{{ event_type.name }}</span></div>';
-                                            {% endfor %}
-                                            
-                                            // SEGUNDA COLUMNA
-                                            var secondColumn = L.DomUtil.create("div", "legend-column", columnsContainer);
-                                            
-                                            // Sección: Glaciales y Tierra Emergida
-                                            //var glacialSection = L.DomUtil.create("div", "legend-section", secondColumn);
-                                            //glacialSection.innerHTML += '<h5>Glacials and Land</h5>';
-                                            //glacialSection.innerHTML += '<div class="legend-item"><i style="background: #FFFFFF; border: 1px solid #999"></i><span>Glacials</span></div>';
-                                            //glacialSection.innerHTML += '<div class="legend-item"><i style="background: #676a4a; border: 1px solid #999"></i><span>Land Emerge</span></div>';
-                                            
-                                            // Separador
-                                            //secondColumn.innerHTML += '<hr class="legend-separator">';
-                                            
-                                            // Sección: Población
-                                            var populationSection = L.DomUtil.create("div", "legend-section", secondColumn);
-                                            populationSection.innerHTML += '<h5>Population</h5>';
-                                            
-                                            // Rangos de población
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #CCFFEE"></i><span>1 to 500 people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #B3FFE5"></i><span>501 to 1,000 people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #99FFDD"></i><span>1,000 to 5,000 people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #80FFD4"></i><span>5,000 to 10,000 people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #66FFCC"></i><span>10,000 to 50,000 people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #33FFBB"></i><span>50,000 to 100,000 people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #19FFB2"></i><span>100,000 to 500,000 people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #00FFAA"></i><span>500,000 to 1 million people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #00E699"></i><span>1 to 5 million people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #00CC88"></i><span>5 to 10 million people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #00B377"></i><span>10 to 50 million people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #009966"></i><span>50 to 100 million people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #008055"></i><span>100 to 500 million people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #006644"></i><span>500 to 1,000 million people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #004D33"></i><span>1,000 to 2,000 million people</span></div>';
-                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #003322"></i><span>More than 2,000 million people</span></div>';
-                                            
-                                            return div;
-                                        };
+                                    // Función que extrae solo el contenido HTML de tu leyenda original
+                                    function createLegendContent() {
+                                        var div = document.createElement("div");
+                                        div.className = "legend";
+                                        div.innerHTML = "<h4>Legend</h4>";
+                                        
+                                        // Contenedor principal de dos columnas
+                                        var columnsContainer = document.createElement("div");
+                                        columnsContainer.className = "legend-columns-container";
+                                        div.appendChild(columnsContainer);
+                                        
+                                        // PRIMERA COLUMNA
+                                        var firstColumn = document.createElement("div");
+                                        firstColumn.className = "legend-column";
+                                        columnsContainer.appendChild(firstColumn);
+                                        
+                                        // Sección: Especies Humanas
+                                        var speciesSection = document.createElement("div");
+                                        speciesSection.className = "legend-section";
+                                        speciesSection.innerHTML = '<h5>Humans, Glacials and Land</h5>' +
+                                            '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #FF5733"></span></div><span>Homo Erectus</span></div>' +
+                                            '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #3398FF"></span></div><span>Homo Heidelbergensis</span></div>' +
+                                            '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #33FF57"></span></div><span>Homo Sapiens</span></div>' +
+                                            '<div class="legend-item"><i style="background: #FFFFFF; border: 1px solid #999"></i><span>Glacials</span></div>' +
+                                            '<div class="legend-item"><i style="background: #676a4a; border: 1px solid #999"></i><span>Land Emerge</span></div>';
+                                        firstColumn.appendChild(speciesSection);
+                                        
+                                        // Separador
+                                        firstColumn.innerHTML += '<hr class="legend-separator">';
+                                        
+                                        // Sección: Tipos de Eventos (desde Django)
+                                        var eventsSection = document.createElement("div");
+                                        eventsSection.className = "legend-section";
+                                        eventsSection.innerHTML = '<h5>Event Types</h5>';
+                                        firstColumn.appendChild(eventsSection);
+                                        
+                                        // Aquí agregamos los tipos de eventos desde Django
+                                        {% for event_type in events_types %}
+                                        eventsSection.innerHTML += '<div class="legend-item"><i class="icon" style="background-image: url({{ event_type.icon.url }});background-repeat: no-repeat;"></i><span>{{ event_type.name }}</span></div>';
+                                        {% endfor %}
+                                        
+                                        // SEGUNDA COLUMNA
+                                        var secondColumn = document.createElement("div");
+                                        secondColumn.className = "legend-column";
+                                        columnsContainer.appendChild(secondColumn);
+                                        
+                                        // Sección: Población
+                                        var populationSection = document.createElement("div");
+                                        populationSection.className = "legend-section";
+                                        populationSection.innerHTML = '<h5>Population</h5>' +
+                                            '<div class="legend-item"><i style="background: #CCFFEE"></i><span>1 to 500 people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #B3FFE5"></i><span>501 to 1,000 people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #99FFDD"></i><span>1,000 to 5,000 people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #80FFD4"></i><span>5,000 to 10,000 people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #66FFCC"></i><span>10,000 to 50,000 people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #33FFBB"></i><span>50,000 to 100,000 people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #19FFB2"></i><span>100,000 to 500,000 people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #00FFAA"></i><span>500,000 to 1 million people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #00E699"></i><span>1 to 5 million people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #00CC88"></i><span>5 to 10 million people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #00B377"></i><span>10 to 50 million people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #009966"></i><span>50 to 100 million people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #008055"></i><span>100 to 500 million people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #006644"></i><span>500 to 1,000 million people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #004D33"></i><span>1,000 to 2,000 million people</span></div>' +
+                                            '<div class="legend-item"><i style="background: #003322"></i><span>More than 2,000 million people</span></div>';
+                                        secondColumn.appendChild(populationSection);
+                                        
+                                        return div;
+                                    }
                                     
-                                        return legend;
-}
+                                    // Control para mostrar/ocultar la leyenda
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const toggleLegendButton = document.getElementById('toggleLegendPanel');
+                                        const mapContainer = document.getElementById('map');
+                                        
+                                        // Crear y agregar el contenedor de leyenda
+                                        const legendContainer = createSlidingLegend();
+                                        document.querySelector('.right-sidebar').appendChild(legendContainer);
+                                        
+                                        toggleLegendButton.addEventListener('click', function () {
+                                            // Alternar la clase 'open' en el panel de leyenda
+                                            legendContainer.classList.toggle('open');
+                                            
+                                            // Alternar la clase 'legend-open' en el mapa para el ancho
+                                            mapContainer.classList.toggle('legend-open');
+                                            
+                                            // Actualizar el mapa cuando cambie el tamaño del contenedor
+                                            setTimeout(function () {
+                                                if (typeof map !== 'undefined') {
+                                                    map.invalidateSize();
+                                                }
+                                            }, 300);
+                                        });
+                                        
+                                        // NO llamar a createLegend() original - ya no la necesitamos
+                                        // var legendControl = createLegend();
+                                        // legendControl.addTo(map);
+                                    });
+
                                 </script>
                                 <!-- Script que almacena en la variable authenticated el estado del usuario, si esta autenticado o no -->
                                 <script>
                                     var authenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
                                 </script>
                                 <!-- código javasript para almacenar time stamp -->
-                                <!-- <script src="{% static 'assets/dist/js/map-array-time-stamp.js' %}"></script> -->                                 
+                                <!-- <script src="{% static 'assets/dist/js/map-array-time-stamp.js' %}"></script> -->
                                 <!-- código javascript para cargar el color dada la cantidad de habitantes -->
-                                <script src="{% static 'assets/dist/js/map-function-colors.js' %}"></script>                                
+                                <script src="{% static 'assets/dist/js/map-function-colors.js' %}"></script>
                                 <!-- código javascript para cargar la linea del tiempo -->
                                 <script src="{% static 'assets/dist/js/map-function-load-timeline.js' %}"></script>
                                 <!-- código javascript para gestionar la creacion de los marcadores y sus modales -->
@@ -680,8 +720,8 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
 
                                 <!-- Capa de marcadores por defecto apagada -->
                                 <script>
-                                 markerLayer.remove(); 
-                                 
+                                 markerLayer.remove();
+
                                      // Carga los eventos del Api
                                      fetchEventsFromAPI();
                                 </script>
@@ -702,7 +742,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
             <!-- /.container-fluid-->
         </section>
     </div>
-    
+
      <!-- Modal que muestra info de los eventos asi como sus imagenes correspondientes -->
     <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel"
          aria-hidden="true">
@@ -730,7 +770,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                     <!-- Sección de Imágenes -->
                     <h5 class="mt-3 mb-2">Event image:</h5>
                     <div id="eventImages" class="d-flex flex-wrap mb-4">
-                        
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -754,7 +794,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                </button>
            </div>
            <div class="modal-body">
-            <img src="{% static 'assets/dist/Leaflet/Leyenda-Short.jpg' %}" 
+            <img src="{% static 'assets/dist/Leaflet/Leyenda-Short.jpg' %}"
             alt="Legend"
             style="height: 500px;">
            </div>
