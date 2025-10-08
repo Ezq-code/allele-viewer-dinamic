@@ -64,7 +64,7 @@
         <ul>
           <li><a href="#hero" class="active">Home</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="#features">Features</a></li>
+          <li><a href="#Conformation">Conformation</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#pricing">Pricing</a></li>
           <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
@@ -252,7 +252,7 @@
     </section><!-- /About Section -->
 
     <!-- Features Section -->
-    <section id="features" class="features section">
+    <section id="Conformation" class="features section">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
@@ -301,42 +301,14 @@
                 <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(1)">Related Genes</button>
                 
               </div>
-              <div class="progress-bar progress-bar-danger" style="width: 55%"></div>           
+                        
               <div class="col-lg-6 order-2 order-lg-2 mt-3 mt-lg-0 d-flex flex-column ">
                 <h3>Pharmacokinetic</h3>
                 <p>
                   <span class="accent-text">Pharmacokinetics</span> is the study of how the body <span class="fw-bold text-primary">absorbs</span>, <span class="fw-bold text-primary">distributes</span>, <span class="fw-bold text-primary">metabolizes</span>, and <span class="fw-bold text-primary">excretes drugs</span>. It focuses on the movement of drugs within the body over time, including processes such as <span class="fw-bold text-primary">absorption</span>, <span class="fw-bold text-primary">bioavailability</span>, <span class="fw-bold text-primary">distribution</span>, <span class="fw-bold text-primary">metabolism</span>, and <span class="fw-bold text-primary">elimination</span>. <span class="accent-text">Pharmacokinetics</span> is essential for determining appropriate <span class="fw-bold text-primary">drug dosages</span> and <span class="fw-bold text-primary">schedules</span>.
                 </p>
                 <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(2)">Related Genes</button>
-              
-              
-              
               </div>
-
-              <!-- Modal para mostrar genes -->
-              <div class="modal fade" id="genesModal" data-backdrop="static" tabindex="-1" role="dialog"
-                  aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="genesModalLabel">Genes Relacionados</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <table id="genesTable" class="table table-bordered table-striped " width="100%">
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-              </div>
-         
-              
-              
             </div>
           </div><!-- End tab content item -->
 
@@ -344,10 +316,20 @@
             <div class="row">
               <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
                 <h3>Genomic Diseases</h3>
-                <p class="fst-italic">
-                 Genomic diseases are conditions caused by alterations in an organism's DNA, ranging from single nucleotide changes to large chromosomal rearrangements. These genetic variations can disrupt the normal function of genes, leading to a wide spectrum of health problems, including inherited disorders like cystic fibrosis or Huntington's disease, as well as complex conditions such as certain cancers and heart diseases. Understanding the specific genomic changes is crucial for diagnosis, prognosis, and the development of targeted therapies.
+               
+                <p >
+                 <span class="fst-italic">Genomic diseases are conditions caused by alterations in an organism's DNA,
+                  ranging from single nucleotide changes to large chromosomal rearrangements.</span> </p>
+                   <p class=" accent-text">
+                  These genetic variations can disrupt the normal function of genes, leading 
+                  to a wide spectrum of health problems, including inherited disorders like
+                   cystic fibrosis or Huntington's disease, as well as complex conditions 
+                   such as certain cancers and heart diseases. Understanding the specific
+                    genomic changes is crucial for diagnosis, prognosis, and the development
+                    of targeted therapies.
                 </p>
-                
+              <button type="button" class="btn btn-info mt-2" onclick="showGenomicDiseasesModal(3)">Related Genes</button>
+             
               </div>
               <div class="col-lg-6 order-1 order-lg-2 text-center">
                 <img src="{% static 'assets/iLanding/assets/img/GenomicDiseases.png' %}" alt="" class="img-fluid">
@@ -358,19 +340,24 @@
           <div class="tab-pane fade" id="features-tab-3">
             <div class="row">
               <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
-                <h3>Voluptatibus commodi accusamu</h3>
-                <ul>
-                  <li><i class="bi bi-check2-all"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></li>
-                  <li><i class="bi bi-check2-all"></i> <span>Duis aute irure dolor in reprehenderit in voluptate velit.</span></li>
-                  <li><i class="bi bi-check2-all"></i> <span>Provident mollitia neque rerum asperiores dolores quos qui a. Ipsum neque dolor voluptate nisi sed.</span></li>
-                </ul>
-                <p class="fst-italic">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                  magna aliqua.
+                <h3>Prioritized Gene List for Study</h3>
+                 <span class="fst-italic">  Our team maintains a curated list of genes prioritized for ongoing research, selected based on their relevance to key biological and clinical questions.
+              </span> </p>
+                  
+                <p class="accent-text">
+               This list helps guide our efforts and resources toward the most impactful discoveries.
+
+                If you’re interested in supporting our work and would like to propose a specific gene for inclusion in our priority list, we welcome your contribution. Through a donation, you can help us expand our research focus to include the gene of your choice.
+
+                To make a request and proceed with the donation, please reach out to our team using the contact options provided in the Contact section.
+
+                Thank you for being part of our mission to advance genetic research.
                 </p>
+                <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(4)">Related Genes</button>
+              
               </div>
               <div class="col-lg-6 order-1 order-lg-2 text-center">
-                <img src="{% static 'assets/iLanding/assets/img/features-illustration-3.webp' %}" alt="" class="img-fluid">
+                <img src="{% static 'assets/iLanding/assets/img/BCO.f7da826a-2d07-41e9-883e-382f6a7df18f.png' %}" alt="" class="img-fluid">
               </div>
             </div>
           </div><!-- End tab content item -->
@@ -1151,6 +1138,67 @@
 
     </section><!-- /Contact Section -->
 
+
+<!-- Modal para mostrar genes -->
+              <div class="modal fade" id="genesModal" data-backdrop="static" tabindex="-1" role="dialog"
+                  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="genesModalLabel">Related Genes</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="genesTable" class="table table-bordered table-striped " width="100%">
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+              </div>
+
+<!-- Modal para mostrar Genomic Diseases  -->
+              <div class="modal fade" id="genomicDiseasesModal" data-backdrop="static" tabindex="-1" role="dialog"
+                  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="genomicDiseasesModalLabel">Related Genomic Diseases</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="genomicDiseasesTable" class="table table-bordered table-striped " width="100%">
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+              </div>
+
+
+
+    <!-- Bootstrap Loading Spinner -->
+    <!-- Overlay Spinner: disables whole page while loading -->
+    <div id="global-spinner-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255,255,255,0.7); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+      <div class="spinner-border text-primary" role="status" aria-label="Loading">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <script>
+      // Example: Hide overlay after 2 seconds (remove this in production)
+      window.addEventListener('load', function() {
+        document.getElementById('global-spinner-overlay').style.display = 'none';
+      });
+    </script>
+
   </main>
 
   <footer id="footer" class="footer">
@@ -1271,7 +1319,7 @@
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
-
+<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
 
 
 <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

@@ -196,3 +196,94 @@ function showGenesModal(id) {
             });
         });
 }
+function showGenomicDiseasesModal(id) {
+    document.getElementById('global-spinner-overlay').style.display = 'flex';
+    // Destruir la tabla existente si ya está inicializada
+    if ($.fn.DataTable.isDataTable('#genesTable')) {
+        $('#genesTable').DataTable().destroy();
+    }
+
+    document.getElementById('genesModalLabel').textContent = 'Genomic: Associated Disorders';
+
+    // Inicializar DataTable con server-side processing
+    $('#genesTable')
+        .addClass("table table-hover")
+        .DataTable({
+            serverSide: true,
+            processing: true,
+            dom: '<"top"l><"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rtip',
+            ajax: function(data, callback, settings) {
+                // Determinar dirección de ordenamiento
+                const dir = data.order[0].dir === 'asc' ? '' : '-';
+                axios.get(`/business-gestion/gene/?groups=${id}`, {
+                    params: {
+                        page_size: data.length,
+                        page: (data.start / data.length) + 1,
+                        search: data.search.value,
+                        ordering: dir + data.columns[data.order[0].column].data,
+                    }
+                })
+                .then(response => {
+                    const geneData = response.data;
+                    callback({
+                        recordsTotal: geneData.count,
+                        recordsFiltered: geneData.count,
+                        data: geneData.results
+                    });
+                    document.getElementById('global-spinner-overlay').style.display = 'none';
+                })
+                .catch(error => {
+                    document.getElementById('global-spinner-overlay').style.display = 'none';
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudieron cargar los datos',
+                        timer: 3000
+                    });
+                    callback({
+                        recordsTotal: 0,
+                        recordsFiltered: 0,
+                        data: []
+                    });
+                });
+            },
+            columns: [
+                {
+                    title: "Gene",
+                    data: "name"
+                },
+                {
+                    title: "Disorders",
+                    data: "disorders",
+                    render: function(data, type, row) {
+                        if (Array.isArray(data) && data.length > 0) {
+                            return data.map(disorder => `<span class="badge bg-info text-dark me-1">${disorder}</span>`).join(' ');
+                        }
+                        return '<span class="badge bg-secondary">None</span>';
+                    }
+                }
+            ],
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: 'Excel'
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF'
+                },
+                {
+                    extend: 'print',
+                    text: 'Imprimir'
+                }
+            ],
+            responsive: true,
+            ordering: true,
+            searching: true,
+            paging: true
+        });
+
+    const modal = new bootstrap.Modal(document.getElementById('genesModal'));
+    modal.show();
+}
