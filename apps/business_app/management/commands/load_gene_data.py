@@ -1,6 +1,4 @@
-from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from termcolor import colored
 from apps.business_app.models.disease_subgroup import DiseaseSubGroup
 from apps.business_app.models.disorder import Disorder
 from apps.business_app.models.gene import Gene

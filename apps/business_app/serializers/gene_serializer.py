@@ -1,7 +1,9 @@
 from rest_framework import serializers
 
 from apps.business_app.models.gene import Gene
-from apps.business_app.models.gene_status_middle import GeneStatusMiddle
+from apps.business_app.serializers.disorder_serializer import (
+    DisorderTableSerializer,
+)
 from apps.business_app.serializers.gene_group_middle_serializer import (
     GeneStatusMiddleReadSerializer,
 )
@@ -22,4 +24,16 @@ class GeneSerializer(serializers.ModelSerializer):
             "groups",
             "disorders",
             "gene_status_list",
+        ]
+
+
+class GeneGetAllInfoSerializer(serializers.ModelSerializer):
+    disorders = DisorderTableSerializer(many=True)
+
+    class Meta:
+        model = Gene
+        fields = [
+            "id",
+            "name",
+            "disorders",
         ]

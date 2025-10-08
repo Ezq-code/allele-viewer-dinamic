@@ -1,11 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
-from apps.business_app.models.disease_group import DiseaseGroup
 from rest_framework.viewsets import GenericViewSet
 from apps.business_app.models.disorder import Disorder
-from apps.business_app.serializers.disease_group_serializer import (
-    DiseaseGroupSerializer,
-)
 from apps.business_app.serializers.disorder_serializer import DisorderSerializer
 from apps.common.pagination import AllResultsSetPagination
 
