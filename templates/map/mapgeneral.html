@@ -315,8 +315,7 @@
                                         </select>
                                     </div>
                                 </div>
-
-
+                            
                                 <script>
                                     // Duración fija para el loader en milisegundos (10 segundos)
                                     const LOADER_DURATION = 10000;
@@ -383,8 +382,8 @@
                                      sessionStorage.setItem('timeRangeMigraions', '-69000/-15000'); 
                                      sessionStorage.setItem('region', 'All the World'); 
                                      sessionStorage.setItem('inicializado', 'true');
-                                     sessionStorage.setItem('timedelayice', 'PT5S');
-                                     sessionStorage.setItem('timedelayland', 'PT5S');
+                                     sessionStorage.setItem('timedelayice', 'PT9S');
+                                     sessionStorage.setItem('timedelayland', 'PT9S');
                                     }
 
                                     var timeRange = sessionStorage.getItem('timeRange');
@@ -453,6 +452,10 @@ if (timeRange === "-12000/2025")
                                     });
 
                                     map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
+                                    
+                                    // INICIALIZAR LA LEYENDA AQUÍ (después de crear el mapa)
+                                    var legendControl = createLegend();
+                                    legendControl.addTo(map);
                                     // Inicializar el filtro de eventos                                    
                                     // Capa de las marcas
                                     markerLayer = new L.featureGroup().addTo(map);
@@ -478,12 +481,14 @@ else
      var map = L.map('map', {
       layers: [satelitalLayer], //[osmcountriesLayers],
       zoomSnap: 0.1,
-      zoom: 2.1,//14,],
+      zoom: 1.8,//14,],
       fullscreenControl: true,
       timeDimension: true,
-      center: new L.LatLng(22, 155), //[36.72, -4.43]
+      center: new L.LatLng(15, 215), //[36.72, -4.43]
      });  
     }
+var legendControl = createLegend();
+    legendControl.addTo(map);
 
 L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
     _getDisplayDateFormat: function(date){
@@ -580,6 +585,80 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                     var iconUrlpathDestinationMigration = "{% static 'assets/dist/Leaflet/primitive-man4.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHeidel = "{% static 'assets/dist/Leaflet/primitive-man1.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHerectus = "{% static 'assets/dist/Leaflet/primitive-man25.png' %}";
+                                     // Función para crear la leyenda
+                                    // Función para crear la leyenda
+                                    function createLegend() {
+                                        var legend = L.control({ position: "topright" });
+                                    
+                                        legend.onAdd = function(map) {
+                                            var div = L.DomUtil.create("div", "legend");
+                                            div.innerHTML = "<h4>Legend</h4>";
+                                            
+                                            // Contenedor principal de dos columnas
+                                            var columnsContainer = L.DomUtil.create("div", "legend-columns-container", div);
+                                            
+                                            // PRIMERA COLUMNA
+                                            var firstColumn = L.DomUtil.create("div", "legend-column", columnsContainer);
+                                            
+                                            // Sección: Especies Humanas
+                                            var speciesSection = L.DomUtil.create("div", "legend-section", firstColumn);
+                                            speciesSection.innerHTML += '<h5>Humans, Glacials and Land</h5>';
+                                            speciesSection.innerHTML += '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #FF5733"></span></div><span>Homo Erectus</span></div>';
+                                            speciesSection.innerHTML += '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #3398FF"></span></div><span>Homo Heidelbergensis</span></div>';
+                                            speciesSection.innerHTML += '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #33FF57"></span></div><span>Homo Sapiens</span></div>';
+                                            speciesSection.innerHTML += '<div class="legend-item"><i style="background: #FFFFFF; border: 1px solid #999"></i><span>Glacials</span></div>';
+                                            speciesSection.innerHTML += '<div class="legend-item"><i style="background: #676a4a; border: 1px solid #999"></i><span>Land Emerge</span></div>';
+                                            // Separador
+                                            firstColumn.innerHTML += '<hr class="legend-separator">';
+                                            
+                                            // Sección: Tipos de Eventos (desde Django)
+                                            var eventsSection = L.DomUtil.create("div", "legend-section", firstColumn);
+                                            eventsSection.innerHTML += '<h5>Event Types</h5>';
+                                            
+                                            // Aquí agregamos los tipos de eventos desde Django
+                                            {% for event_type in events_types %}
+                                            eventsSection.innerHTML += '<div class="legend-item"><i class="icon" style="background-image: url({{ event_type.icon.url }});background-repeat: no-repeat;"></i><span>{{ event_type.name }}</span></div>';
+                                            {% endfor %}
+                                            
+                                            // SEGUNDA COLUMNA
+                                            var secondColumn = L.DomUtil.create("div", "legend-column", columnsContainer);
+                                            
+                                            // Sección: Glaciales y Tierra Emergida
+                                            //var glacialSection = L.DomUtil.create("div", "legend-section", secondColumn);
+                                            //glacialSection.innerHTML += '<h5>Glacials and Land</h5>';
+                                            //glacialSection.innerHTML += '<div class="legend-item"><i style="background: #FFFFFF; border: 1px solid #999"></i><span>Glacials</span></div>';
+                                            //glacialSection.innerHTML += '<div class="legend-item"><i style="background: #676a4a; border: 1px solid #999"></i><span>Land Emerge</span></div>';
+                                            
+                                            // Separador
+                                            //secondColumn.innerHTML += '<hr class="legend-separator">';
+                                            
+                                            // Sección: Población
+                                            var populationSection = L.DomUtil.create("div", "legend-section", secondColumn);
+                                            populationSection.innerHTML += '<h5>Population</h5>';
+                                            
+                                            // Rangos de población
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #CCFFEE"></i><span>1 to 500 people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #B3FFE5"></i><span>501 to 1,000 people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #99FFDD"></i><span>1,000 to 5,000 people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #80FFD4"></i><span>5,000 to 10,000 people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #66FFCC"></i><span>10,000 to 50,000 people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #33FFBB"></i><span>50,000 to 100,000 people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #19FFB2"></i><span>100,000 to 500,000 people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #00FFAA"></i><span>500,000 to 1 million people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #00E699"></i><span>1 to 5 million people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #00CC88"></i><span>5 to 10 million people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #00B377"></i><span>10 to 50 million people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #009966"></i><span>50 to 100 million people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #008055"></i><span>100 to 500 million people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #006644"></i><span>500 to 1,000 million people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #004D33"></i><span>1,000 to 2,000 million people</span></div>';
+                                            populationSection.innerHTML += '<div class="legend-item"><i style="background: #003322"></i><span>More than 2,000 million people</span></div>';
+                                            
+                                            return div;
+                                        };
+                                    
+                                        return legend;
+}
                                 </script>
                                 <!-- Script que almacena en la variable authenticated el estado del usuario, si esta autenticado o no -->
                                 <script>

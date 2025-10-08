@@ -57,7 +57,8 @@ def register(request):
 
 @cache_page(60 * 15)
 def mapgeneral(request):
-    return render(request, "map/mapgeneral.html")
+    events_types = EventType.objects.all()
+    return render(request, "map/mapgeneral.html", {"events_types": events_types})
 
 
 @cache_page(60 * 15)
