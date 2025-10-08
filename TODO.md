@@ -1,8 +1,4 @@
-# FE Stuff
-1. Arreglar los responsive de las modalidades de participación.
+#Código de ejemplo para crear fixtures
+python manage.py dumpdata business_app.genegroups --indent=4 --output=apps/business_app/fixtures/gene_groups.json
 
-
-
-# BE Stuff
-1. Para el evento general, tomar en cuenta posibilidad de limitar cantidad de trabajos por taller (o al evento).
-2. Poner la traducción en inglés de las normas de participación (adicionar en el documento mismo)
+python manage.py dumpdata business_app.diseasegroup --indent=4 --output=apps/business_app/fixtures/disease_group.json

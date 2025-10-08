@@ -1,0 +1,52 @@
+[
+    {
+        "model": "business_app.genestatus",
+        "pk": 6,
+        "fields": {
+            "name": "Database Mining",
+            "description": "",
+            "type": "P",
+            "requires_evidence": false
+        }
+    },
+    {
+        "model": "business_app.genestatus",
+        "pk": 7,
+        "fields": {
+            "name": "Data Processing",
+            "description": "",
+            "type": "P",
+            "requires_evidence": false
+        }
+    },
+    {
+        "model": "business_app.genestatus",
+        "pk": 8,
+        "fields": {
+            "name": "Published Alleles on the Website",
+            "description": "",
+            "type": "P",
+            "requires_evidence": false
+        }
+    },
+    {
+        "model": "business_app.genestatus",
+        "pk": 9,
+        "fields": {
+            "name": "Tridimensional Conformations",
+            "description": "",
+            "type": "P",
+            "requires_evidence": false
+        }
+    },
+    {
+        "model": "business_app.genestatus",
+        "pk": 10,
+        "fields": {
+            "name": "Allele and Migration Pathways",
+            "description": "",
+            "type": "P",
+            "requires_evidence": false
+        }
+    }
+]

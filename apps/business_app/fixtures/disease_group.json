@@ -1,0 +1,90 @@
+[
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 1,
+    "fields": {
+      "name": "Diseases of the blood and blood-forming organs and certain disorders involving the immune mechanism",
+      "description": ""
+    }
+  },
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 2,
+    "fields": {
+      "name": "Endocrine, nutritional and metabolic diseases",
+      "description": ""
+    }
+  },
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 3,
+    "fields": {
+      "name": "Mental and behavioral disorders",
+      "description": ""
+    }
+  },
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 4,
+    "fields": {
+      "name": "Diseases of the nervous system",
+      "description": ""
+    }
+  },
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 5,
+    "fields": {
+      "name": "Diseases of the eye and adnexa",
+      "description": ""
+    }
+  },
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 6,
+    "fields": {
+      "name": "Diseases of the ear and mastoid process",
+      "description": ""
+    }
+  },
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 7,
+    "fields": {
+      "name": "Diseases of the circulatory system",
+      "description": ""
+    }
+  },
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 8,
+    "fields": {
+      "name": "Diseases of the digestive system",
+      "description": ""
+    }
+  },
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 9,
+    "fields": {
+      "name": "Diseases of the Genitourinary System",
+      "description": ""
+    }
+  },
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 10,
+    "fields": {
+      "name": "Congenital malformations, deformations and chromosomal abnormalities",
+      "description": ""
+    }
+  },
+  {
+    "model": "business_app.diseasegroup",
+    "pk": 11,
+    "fields": {
+      "name": "Genomics and Clinical Syndrome",
+      "description": ""
+    }
+  }
+]

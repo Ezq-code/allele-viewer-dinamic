@@ -1,128 +1,128 @@
 [
-{
+  {
     "model": "business_app.eventtype",
     "pk": 1,
     "fields": {
-        "name": "volcano",
-        "icon": "images/volcan.png",
-        "pause_time": 2000
+      "name": "volcano",
+      "icon": "images/volcan.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 2,
     "fields": {
-        "name": "Epidemics-Pandemics",
-        "icon": "images/epid31.png",
-        "pause_time": 2000
+      "name": "Epidemics-Pandemics",
+      "icon": "images/epid31.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 3,
     "fields": {
-        "name": "Wars before 1900",
-        "icon": "images/war8.png",
-        "pause_time": 2000
+      "name": "Wars before 1900",
+      "icon": "images/war8.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 4,
     "fields": {
-        "name": "Wars after 1900",
-        "icon": "images/war10.png",
-        "pause_time": 2000
+      "name": "Wars after 1900",
+      "icon": "images/war10.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 5,
     "fields": {
-        "name": "Glaciations",
-        "icon": "images/gla6.png",
-        "pause_time": 2000
+      "name": "Glaciations",
+      "icon": "images/gla6.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 6,
     "fields": {
-        "name": "Bolides",
-        "icon": "images/bolide2.png",
-        "pause_time": 2000
+      "name": "Bolides",
+      "icon": "images/bolide2.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 7,
     "fields": {
-        "name": " Economic Crisis",
-        "icon": "images/crisis-eco1.png",
-        "pause_time": 2000
+      "name": " Economic Crisis",
+      "icon": "images/crisis-eco1.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 8,
     "fields": {
-        "name": " Droughts",
-        "icon": "images/seq10.png",
-        "pause_time": 2000
+      "name": " Droughts",
+      "icon": "images/seq10.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 9,
     "fields": {
-        "name": " Famines",
-        "icon": "images/hambruna.png",
-        "pause_time": 2000
+      "name": " Famines",
+      "icon": "images/hambruna.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 10,
     "fields": {
-        "name": "Wet Weather",
-        "icon": "images/wet-wether.png",
-        "pause_time": 2000
+      "name": "Wet Weather",
+      "icon": "images/wet-wether.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 11,
     "fields": {
-        "name": "Earthquakes",
-        "icon": "images/earthquakes.png",
-        "pause_time": 2000
+      "name": "Earthquakes",
+      "icon": "images/earthquakes.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 12,
     "fields": {
-        "name": "Nuclear Bomb",
-        "icon": "images/explosion.png",
-        "pause_time": 2000
+      "name": "Nuclear Bomb",
+      "icon": "images/explosion.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 13,
     "fields": {
-        "name": "War ship",
-        "icon": "images/buque-de-guerra.png",
-        "pause_time": 2000
+      "name": "War ship",
+      "icon": "images/buque-de-guerra.png",
+      "pause_time": 2000
     }
-},
-{
+  },
+  {
     "model": "business_app.eventtype",
     "pk": 14,
     "fields": {
-        "name": "Population Collapse",
-        "icon": "images/skull-bones_41.png",
-        "pause_time": 2000
+      "name": "Population Collapse",
+      "icon": "images/skull-bones_41.png",
+      "pause_time": 2000
     }
-}
+  }
 ]
