@@ -1,22 +1,28 @@
-from django.contrib import admin
-from solo.admin import SingletonModelAdmin
 import logging
 
+from django.contrib import admin
+from solo.admin import SingletonModelAdmin
 
 from apps.business_app.models import (
+    AlleleNode,
     AllowedExtensions,
+    Event,
+    EventGallery,
+    Feature,
+    Layer,
+    Marker,
     SiteConfiguration,
     UploadedFiles,
-    AlleleNode,
-    Marker,
-    EventGallery,
-    Event,
-    Layer,
-    Feature,
     WorkingCopyOfOriginalFile,
 )
+from apps.business_app.models.disease_group import DiseaseGroup
+from apps.business_app.models.disease_subgroup import DiseaseSubGroup
+from apps.business_app.models.disorder import Disorder
 from apps.business_app.models.event_type import EventType
 from apps.business_app.models.gene import Gene
+from apps.business_app.models.gene_group import GeneGroups
+from apps.business_app.models.gene_status import GeneStatus
+from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.region import Region
@@ -200,6 +206,82 @@ class GeneAdmin(admin.ModelAdmin):
         "description",
         "status",
     ]
+    search_fields = ("name", "disorders__name")
+    list_filter = [
+        "groups",
+        "disorders",
+    ]
+
+
+@admin.register(DiseaseGroup)
+class DiseaseGroupAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "description",
+    ]
+    fields = [
+        "name",
+        "description",
+    ]
+    search_fields = ("name",)
+
+
+@admin.register(DiseaseSubGroup)
+class DiseaseSubGroupAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "description",
+        "disease_group",
+    ]
+    fields = [
+        "name",
+        "description",
+        "disease_group",
+    ]
+    search_fields = ("name",)
+
+
+@admin.register(Disorder)
+class DisorderAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "description",
+        "disease_subgroup",
+    ]
+    fields = [
+        "name",
+        "description",
+        "disease_subgroup",
+    ]
+    search_fields = ("name",)
+    list_filter = (
+        "disease_subgroup__disease_group",
+        "disease_subgroup",
+        "genes",
+    )
+
+
+@admin.register(GeneGroups)
+class GeneGroupsAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    filter_horizontal = ("genes",)
+
+    list_display = [
+        "id",
+        "name",
+        "description",
+    ]
+    fields = [
+        "name",
+        "description",
+    ]
+    search_fields = ("name",)
 
 
 @admin.register(UploadedFiles)
@@ -316,4 +398,46 @@ class InitialFileDataAdmin(admin.ModelAdmin):
         "min_value",
         "max_value",
         "uploaded_file",
+    ]
+
+
+@admin.register(GeneStatus)
+class GeneStatusAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "description",
+        "type",
+        "requires_evidence",
+    ]
+    fields = [
+        "name",
+        "description",
+        "type",
+        "requires_evidence",
+    ]
+
+
+@admin.register(GeneStatusMiddle)
+class GeneStatusMiddleAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "gene",
+        "gene_status",
+        "evidence",
+        "value",
+    ]
+    fields = [
+        "gene",
+        "gene_status",
+        "evidence",
+        "value",
+    ]
+    search_fields = ("gene__name",)
+    list_filter = [
+        "evidence",
+        "gene_status",
+        "value",
     ]

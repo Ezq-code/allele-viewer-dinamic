@@ -1,0 +1,578 @@
+[
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 1,
+    "fields": {
+      "name": "Nutritional Anemias",
+      "description": "",
+      "disease_group": 1
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 2,
+    "fields": {
+      "name": "Hereditary Hemolytic Anemias",
+      "description": "",
+      "disease_group": 1
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 3,
+    "fields": {
+      "name": "Aplastic and other Anemias",
+      "description": "",
+      "disease_group": 1
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 4,
+    "fields": {
+      "name": "Bleeding Disorders",
+      "description": "",
+      "disease_group": 1
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 5,
+    "fields": {
+      "name": "Coagulation Defects",
+      "description": "",
+      "disease_group": 1
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 6,
+    "fields": {
+      "name": "Other Diseases of Blood and Blood-forming Organs",
+      "description": "",
+      "disease_group": 1
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 7,
+    "fields": {
+      "name": "Disorders Involving the Immune Mechanism",
+      "description": "",
+      "disease_group": 1
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 8,
+    "fields": {
+      "name": "Thyroid Gland / Thyroid Hormone",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 9,
+    "fields": {
+      "name": "Pancreas / Insulin, Glucagon",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 10,
+    "fields": {
+      "name": "Parathyroid Gland / PTH",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 11,
+    "fields": {
+      "name": "Pituitary Gland / ADH, Oxytocin, GH, ACTH, TSH, LH, FSH and Prolactin",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 12,
+    "fields": {
+      "name": "Adrenal Gland / Aldosterone, Cortisol, Epinephrine and Norepinephrine",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 13,
+    "fields": {
+      "name": "Gonads / Estrogen, Androgens, Testosterone, etc.",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 14,
+    "fields": {
+      "name": "Polyglandular Dysfunction",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 15,
+    "fields": {
+      "name": "Nutritional Deficiencies",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 16,
+    "fields": {
+      "name": "Amino-acids Disorders",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 17,
+    "fields": {
+      "name": "Disorders of Branched-chain Amino-acid Metabolism and Fatty-acid Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 18,
+    "fields": {
+      "name": "Disorders of Fatty-acid Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 19,
+    "fields": {
+      "name": "Disorders of Amino-acid Transport",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 20,
+    "fields": {
+      "name": "Disorders of Sulfur-bearing Amino-acid Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 21,
+    "fields": {
+      "name": "Disorders of Urea Cycle and Ornithine Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 22,
+    "fields": {
+      "name": "Disorders of Lysine and Hydroxylysine Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 23,
+    "fields": {
+      "name": "Disorders of Glycine Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 24,
+    "fields": {
+      "name": "Other Specified Disorders of Amino-acid Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 25,
+    "fields": {
+      "name": "Carbohydrates Disorders",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 26,
+    "fields": {
+      "name": "Disorders of Sphingolipid Metabolism and other Lipid Storage Disorders",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 27,
+    "fields": {
+      "name": "Disorders of Glycosaminoglycan Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 28,
+    "fields": {
+      "name": "Disorders of Glycoprotein Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 29,
+    "fields": {
+      "name": "Pure hypercholesterolemia",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 30,
+    "fields": {
+      "name": "Disorders of Purine and Pyrimidine Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 31,
+    "fields": {
+      "name": "Disorders of Porphyrin and Bilirubin Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 32,
+    "fields": {
+      "name": "Disorders of Mineral Metabolism",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 33,
+    "fields": {
+      "name": "Cystic Fibrosis and Amyloidosis",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 34,
+    "fields": {
+      "name": "Combined Oxidative Phosphorylation Deficiency",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 35,
+    "fields": {
+      "name": "Disorders of Plasma-protein Metabolism (not elsewhere classified)",
+      "description": "",
+      "disease_group": 2
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 36,
+    "fields": {
+      "name": "Organic Mental Disorders (including symptomatic)",
+      "description": "",
+      "disease_group": 3
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 37,
+    "fields": {
+      "name": "Mental Retardation Syndrome",
+      "description": "",
+      "disease_group": 3
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 38,
+    "fields": {
+      "name": "Systemic Atrophies Primarily Affecting the Central Nervous System",
+      "description": "",
+      "disease_group": 4
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 39,
+    "fields": {
+      "name": "Extrapyramidal and Movement Disorders",
+      "description": "",
+      "disease_group": 4
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 40,
+    "fields": {
+      "name": "Degenerative Diseases of the Nervous System",
+      "description": "",
+      "disease_group": 4
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 41,
+    "fields": {
+      "name": "Episodic and Paroxysmal Disorders",
+      "description": "",
+      "disease_group": 4
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 42,
+    "fields": {
+      "name": "Polyneuropathies and other Disorders of the Peripheral Nervous System",
+      "description": "",
+      "disease_group": 4
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 43,
+    "fields": {
+      "name": "Diseases of Myoneural Junction and Muscle",
+      "description": "",
+      "disease_group": 4
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 44,
+    "fields": {
+      "name": "Disorders of Sclera and Cornea",
+      "description": "",
+      "disease_group": 5
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 45,
+    "fields": {
+      "name": "Disorders of Choroid and Retina",
+      "description": "",
+      "disease_group": 5
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 46,
+    "fields": {
+      "name": "Visual Disturbances and Blindness",
+      "description": "",
+      "disease_group": 5
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 47,
+    "fields": {
+      "name": "Disorders of Ear",
+      "description": "",
+      "disease_group": 6
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 48,
+    "fields": {
+      "name": "Other forms of Heart Disease",
+      "description": "",
+      "disease_group": 7
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 49,
+    "fields": {
+      "name": "Diseases of Oral Cavity Salivary Glands and Jaws",
+      "description": "",
+      "disease_group": 8
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 50,
+    "fields": {
+      "name": "Noninfective Enteritis and Colitis",
+      "description": "",
+      "disease_group": 8
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 51,
+    "fields": {
+      "name": "Disorders of Gallbladder Biliary Tract and Pancreas",
+      "description": "",
+      "disease_group": 8
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 52,
+    "fields": {
+      "name": "Glomerular Diseases",
+      "description": "",
+      "disease_group": 9
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 53,
+    "fields": {
+      "name": "Other Disorders of Urinary System",
+      "description": "",
+      "disease_group": 9
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 54,
+    "fields": {
+      "name": "Diseases of the Genitourinary System: Pelvis Genitals and Breasts",
+      "description": "",
+      "disease_group": 9
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 55,
+    "fields": {
+      "name": "Nervous System",
+      "description": "",
+      "disease_group": 10
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 56,
+    "fields": {
+      "name": "Congenital Malformations and Deformations of Eye Ear Face and  Neck",
+      "description": "",
+      "disease_group": 10
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 57,
+    "fields": {
+      "name": "Congenital Malformations and Deformations of Circulatory System",
+      "description": "",
+      "disease_group": 10
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 58,
+    "fields": {
+      "name": "Congenital Malformations and Deformations of Digestive System",
+      "description": "",
+      "disease_group": 10
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 59,
+    "fields": {
+      "name": "Congenital Malformations and Deformations of Genital Organs",
+      "description": "",
+      "disease_group": 10
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 60,
+    "fields": {
+      "name": "Congenital Malformations and Deformations of Urinary System",
+      "description": "",
+      "disease_group": 10
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 61,
+    "fields": {
+      "name": "Congenital Malformations and Deformations of Musculoskeletal System",
+      "description": "",
+      "disease_group": 10
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 62,
+    "fields": {
+      "name": "Congenital Malformations and Deformations of Other Disorders (not elsewhere classified)",
+      "description": "",
+      "disease_group": 10
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 63,
+    "fields": {
+      "name": "Chromosomal Abnormalities (not elsewhere classified)",
+      "description": "",
+      "disease_group": 10
+    }
+  },
+  {
+    "model": "business_app.diseasesubgroup",
+    "pk": 64,
+    "fields": {
+      "name": "Disorders with Skewed Patterns of X Inactivation",
+      "description": "",
+      "disease_group": 11
+    }
+  }
+]

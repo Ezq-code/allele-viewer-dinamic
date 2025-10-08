@@ -41,3 +41,77 @@ class Command(BaseCommand):
                 attrs=["blink"],
             )
         )
+
+        call_command("loaddata", "gene.json")
+        print(
+            colored(
+                "Successfully added gene list",
+                "green",
+                attrs=["blink"],
+            )
+        )
+
+        call_command("loaddata", "gene_groups.json")
+        print(
+            colored(
+                "Successfully added gene groups",
+                "green",
+                attrs=["blink"],
+            )
+        )
+        call_command("loaddata", "disease_group.json")
+        print(
+            colored(
+                "Successfully added disease groups",
+                "green",
+                attrs=["blink"],
+            )
+        )
+        call_command("loaddata", "disease_subgroup.json")
+        print(
+            colored(
+                "Successfully added disease subgroups",
+                "green",
+                attrs=["blink"],
+            )
+        )
+        # call_command("loaddata", "disorder_1.json")
+        # print(
+        #     colored(
+        #         "Successfully added disorders (chunk 1)",
+        #         "green",
+        #         attrs=["blink"],
+        #     )
+        # )
+        # call_command("loaddata", "disorder_2.json")
+        # print(
+        #     colored(
+        #         "Successfully added disorders (chunk 2)",
+        #         "green",
+        #         attrs=["blink"],
+        #     )
+        # )
+        call_command("loaddata", "disorder.json")
+        print(
+            colored(
+                "Successfully added disorders",
+                "green",
+                attrs=["blink"],
+            )
+        )
+        call_command("loaddata", "gene_status.json")
+        print(
+            colored(
+                "Successfully added gene stauses",
+                "green",
+                attrs=["blink"],
+            )
+        )
+        call_command("loaddata", "gene_status_middle.json")
+        print(
+            colored(
+                "Successfully added gene stauses middle info",
+                "green",
+                attrs=["blink"],
+            )
+        )

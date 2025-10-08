@@ -332,14 +332,58 @@
         flex: none;
     }
 }
+/* Estilos para la leyenda new code */
+.legend-container {
+    position: absolute;
+    right: -350px;
+    top: 0;
+    width: 336px;
+    height: 100%;
+    background: transparent;
+    z-index: 1000;
+    transition: right 0.3s ease;
+    padding: 0; /* Sin padding en el contenedor */
+    overflow-y: auto;
+}
+
+.legend-container.open {
+    right: 0;
+}
+
+/* Ajuste del mapa cuando la leyenda está abierta */
+.map-container.legend-open {
+    width: calc(100% - 320px) !important;
+}
+
+.legend-container .legend {
+    margin-top: 0;
+    max-width: none;
+    max-height: none;
+}
+
+/* Estilos para móviles */
+@media (max-width: 768px) {
+    .legend-container {
+        right: -100%;
+        width: 85%;
+    }
+
+    .legend-container.open {
+        right: 0;
+    }
+
+    .map-container.legend-open {
+        width: 100% !important;
+    }
+}
 /* Estilos para la leyenda */
-/* Estilos para la leyenda */
-/* Estilos para la leyenda */
+
+
 .legend {
-    /*padding: 12px;*/
+    padding: 12px;
     font: 11px Arial, Helvetica, sans-serif;
     background: white;
-    /*background: rgba(255, 255, 255, 1);*/
+
     box-shadow: 0 0 15px rgba(0, 0, 0, 1);
     border-radius: 5px;
     line-height: 18px;
@@ -422,7 +466,9 @@
 .legend i.icon {
     background-size: contain;
     background-position: center;
-    background-color: white; 
+
+    background-color: white;
+
     border: 0px solid #FFFFFFCC;
 }
 
@@ -470,4 +516,10 @@
         max-width: 240px;
         max-height: 250px;
     }
+
+}
+
+[class*="sidebar-dark"] .btn-sidebar:focus {
+  background-color: #4b545c !important;
+
 }

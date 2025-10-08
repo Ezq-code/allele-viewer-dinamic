@@ -15,21 +15,23 @@ __all__ = [
     "WorkingCopyOfOriginalFile",
     "Region",
     "RegionCountry",
+    "GeneGroups",
 ]
 
-from .allowed_extensions import AllowedExtensions
-from .site_configurations import SiteConfiguration
-from .uploaded_files import UploadedFiles
 from .allele_node import AlleleNode
-from .pdb_files import PdbFiles
+from .allowed_extensions import AllowedExtensions
+from .event import Event
+from .event_gallery import EventGallery
+from .event_type import EventType
+from .feature import Feature
+from .gene_group import GeneGroups
 from .initial_file_data import InitialFileData
 from .initial_xyz_expansion_data import InitialXyzExpansionData
-from .marker import Marker
-from .event_gallery import EventGallery
-from .event import Event
-from .event_type import EventType
 from .layer import Layer
-from .feature import Feature
-from .working_copy_of_original_file import WorkingCopyOfOriginalFile
+from .marker import Marker
+from .pdb_files import PdbFiles
 from .region import Region
 from .region_county import RegionCountry
+from .site_configurations import SiteConfiguration
+from .uploaded_files import UploadedFiles
+from .working_copy_of_original_file import WorkingCopyOfOriginalFile
