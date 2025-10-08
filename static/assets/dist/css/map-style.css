@@ -332,8 +332,6 @@
         flex: none;
     }
 }
-
-
 /* Estilos para la leyenda new code */
 .legend-container {
     position: absolute;
@@ -385,6 +383,7 @@
     padding: 12px;
     font: 11px Arial, Helvetica, sans-serif;
     background: white;
+
     box-shadow: 0 0 15px rgba(0, 0, 0, 1);
     border-radius: 5px;
     line-height: 18px;
@@ -467,7 +466,9 @@
 .legend i.icon {
     background-size: contain;
     background-position: center;
+
     background-color: white;
+
     border: 0px solid #FFFFFFCC;
 }
 
@@ -515,8 +516,10 @@
         max-width: 240px;
         max-height: 250px;
     }
+
 }
 
 [class*="sidebar-dark"] .btn-sidebar:focus {
   background-color: #4b545c !important;
+
 }

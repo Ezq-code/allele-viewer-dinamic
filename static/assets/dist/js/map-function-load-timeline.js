@@ -1295,9 +1295,11 @@ const allTimes = data.features
                                          
 
                                         if (aRegionTimeLine.value == "All the World"){ 
+
                                           sessionStorage.setItem('lat', '5');
                                           sessionStorage.setItem('long', '155');  
                                           sessionStorage.setItem('zoom', '2.1');    
+
                                         }
                                         else
                                         if (aRegionTimeLine.value == "Africa"){
