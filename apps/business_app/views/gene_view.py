@@ -22,7 +22,11 @@ class GeneViewSet(
     queryset = (
         Gene.objects.exclude(name="")
         .all()
-        .prefetch_related("groups", "gene_status_list", "disorders")
+        .prefetch_related(
+            "groups",
+            "gene_status_list__gene_status",
+            "disorders__disease_subgroup__disease_group",
+        )
     )
 
     serializer_class = GeneSerializer
