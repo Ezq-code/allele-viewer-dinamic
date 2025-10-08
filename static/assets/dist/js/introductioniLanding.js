@@ -376,7 +376,7 @@ function showGenomicDiseasesModal() {
             dataSrc: function(json) {
                 // Esta parte no cambia. Sigue esperando los datos del servidor.
                 json.recordsTotal = json.count;
-                json.recordsFiltered = json.filtered_total;
+                json.recordsFiltered = json.count;
                 return json.results;
             }
         },
