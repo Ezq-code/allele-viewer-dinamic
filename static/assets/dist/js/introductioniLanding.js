@@ -196,78 +196,114 @@ function showGenesModal(id) {
             });
         });
 }
-function showGenomicDiseasesModal(id) {
+function showGenomicDiseasesModal2(id) {
     document.getElementById('global-spinner-overlay').style.display = 'flex';
-    // Destruir la tabla existente si ya está inicializada
-    if ($.fn.DataTable.isDataTable('#genesTable')) {
-        $('#genesTable').DataTable().destroy();
+    
+    if ($.fn.DataTable.isDataTable('#genomicDiseasesTable')) {
+        $('#genomicDiseasesTable').DataTable().destroy();
     }
 
     document.getElementById('genesModalLabel').textContent = 'Genomic: Associated Disorders';
 
-    // Inicializar DataTable con server-side processing
-    $('#genesTable')
+    $('#genomicDiseasesTable')
         .addClass("table table-hover")
         .DataTable({
             serverSide: true,
             processing: true,
             dom: '<"top"l><"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rtip',
-            ajax: function(data, callback, settings) {
-                // Determinar dirección de ordenamiento
-                const dir = data.order[0].dir === 'asc' ? '' : '-';
-                axios.get(`/business-gestion/gene/?groups=${id}`, {
-                    params: {
-                        page_size: data.length,
-                        page: (data.start / data.length) + 1,
-                        search: data.search.value,
-                        ordering: dir + data.columns[data.order[0].column].data,
-                    }
-                })
-                .then(response => {
-                    const geneData = response.data;
-                    callback({
-                        recordsTotal: geneData.count,
-                        recordsFiltered: geneData.count,
-                        data: geneData.results
-                    });
+            ajax: {
+                url: '/business-gestion/gene/get-all-info/',
+                type: 'GET',
+                data: function(d) {
+                    return {
+                        page_size: d.length,
+                        page: (d.start / d.length) + 1,
+                        search: d.search.value,
+                        ordering: d.order[0].dir === 'asc' ? d.columns[d.order[0].column].data : '-' + d.columns[d.order[0].column].data
+                    };
+                },
+                dataSrc: function(json) {
                     document.getElementById('global-spinner-overlay').style.display = 'none';
-                })
-                .catch(error => {
-                    document.getElementById('global-spinner-overlay').style.display = 'none';
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudieron cargar los datos',
-                        timer: 3000
-                    });
-                    callback({
-                        recordsTotal: 0,
-                        recordsFiltered: 0,
-                        data: []
-                    });
-                });
+                    // Agrupar por nombre de gen
+                    const groupedData = json.results.reduce((acc, curr) => {
+                        const existing = acc.find(item => item.name === curr.name);
+                        if (existing) {
+                            // Combinar disorders sin duplicados
+                            curr.disorders.forEach(disorder => {
+                                if (!existing.disorders.find(d => d.id === disorder.id)) {
+                                    existing.disorders.push(disorder);
+                                }
+                            });
+                        } else {
+                            acc.push({...curr});
+                        }
+                        return acc;
+                    }, []);
+                    
+                    return groupedData;
+                }
             },
             columns: [
                 {
                     title: "Gene",
-                    data: "name"
+                    data: "name",
+                    className: 'dt-body-center'
                 },
                 {
-                    title: "Disorders",
+                    title: "Disorders by Group",
                     data: "disorders",
                     render: function(data, type, row) {
-                        if (Array.isArray(data) && data.length > 0) {
-                            return data.map(disorder => `<span class="badge bg-info text-dark me-1">${disorder}</span>`).join(' ');
+                        if (type === 'display') {
+                            if (Array.isArray(data) && data.length > 0) {
+                                const groupedDisorders = data.reduce((acc, curr) => {
+                                    if (!acc[curr.disease_group]) {
+                                        acc[curr.disease_group] = [];
+                                    }
+                                    acc[curr.disease_group].push(curr);
+                                    return acc;
+                                }, {});
+
+                                return Object.entries(groupedDisorders).map(([group, disorders]) => `
+                                    <div class="disorder-group mb-2">
+                                        <span class="badge bg-primary mb-1">${group}</span>
+                                        <div class="disorder-items">
+                                            ${disorders.map(d => `
+                                                <div class="disorder-item">
+                                                    <span class="badge bg-info text-dark me-1" 
+                                                          style="cursor: pointer;"
+                                                          onclick="showDisorderDetails('${d.name}', '${d.disease_group}', '${d.disease_subgroup}')">
+                                                        ${d.name}
+                                                    </span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `).join('');
+                            }
+                            return '<span class="badge bg-secondary">None</span>';
                         }
-                        return '<span class="badge bg-secondary">None</span>';
+                        return data;
                     }
                 }
             ],
             buttons: [
                 {
                     extend: 'excel',
-                    text: 'Excel'
+                    text: 'Excel',
+                    exportOptions: {
+                        columns: [0, 1],
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Limpiar tags HTML para la exportación
+                                if (column === 1) {
+                                    const temp = document.createElement('div');
+                                    temp.innerHTML = data;
+                                    return temp.textContent || temp.innerText;
+                                }
+                                return data;
+                            }
+                        }
+                    }
                 },
                 {
                     extend: 'pdf',
@@ -275,15 +311,183 @@ function showGenomicDiseasesModal(id) {
                 },
                 {
                     extend: 'print',
-                    text: 'Imprimir'
+                    text: 'Print'
                 }
             ],
+            language: {
+                processing: "Loading...",
+                search: "Search:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                infoEmpty: "Showing 0 to 0 of 0 entries",
+                paginate: {
+                    first: "First",
+                    last: "Last",
+                    next: "Next",
+                    previous: "Previous"
+                }
+            },
             responsive: true,
             ordering: true,
             searching: true,
-            paging: true
+            paging: true,
+            pageLength: 10,
+            order: [[0, 'asc']],
+            rowGroup: {
+                dataSrc: 'name'
+            }
         });
 
-    const modal = new bootstrap.Modal(document.getElementById('genesModal'));
+    const modal = new bootstrap.Modal(document.getElementById('genomicDiseasesModal'));
     modal.show();
+}
+
+// La función ya no necesita recibir un 'id'
+function showGenomicDiseasesModal() {
+    const $spinner = $('#global-spinner-overlay');
+    const $table = $('#genomicDiseasesTable');
+
+    $spinner.css('display', 'flex');
+
+    if ($.fn.DataTable.isDataTable($table)) {
+        $table.DataTable().destroy();
+        $table.empty();
+    }
+
+    $('#genesModalLabel').text('Genomic: Associated Disorders');
+
+    const dataTable = $table.DataTable({
+        serverSide: true,
+        processing: true,
+        dom: '<"top"l><"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rtip',
+        ajax: {
+            url: '/business-gestion/gene/get-all-info/',
+            type: 'GET',
+            data: function(d) {
+                // Objeto de datos sin el 'gene_id'.
+                // El servidor ahora paginará sobre todos los genes.
+                return {
+                    page_size: d.length,
+                    page: (d.start / d.length) + 1,
+                    search: d.search.value,
+                    ordering: d.order.length ? (d.order[0].dir === 'asc' ? d.columns[d.order[0].column].data : '-' + d.columns[d.order[0].column].data) : null
+                };
+            },
+            dataSrc: function(json) {
+                // Esta parte no cambia. Sigue esperando los datos del servidor.
+                json.recordsTotal = json.count;
+                json.recordsFiltered = json.filtered_total;
+                return json.results;
+            }
+        },
+        columns: [
+            {
+                title: "Gene",
+                data: "name",
+                className: 'dt-body-center'
+            },
+            {
+                title: "Disorders by Group",
+                data: "disorders",
+                orderable: false,
+                // La función render no necesita ningún cambio.
+                render: function(data, type, row) {
+                    if (type === 'display' && Array.isArray(data) && data.length > 0) {
+                        const groupedDisorders = data.reduce((acc, curr) => {
+                            const group = curr.disease_group || 'Uncategorized';
+                            if (!acc[group]) {
+                                acc[group] = [];
+                            }
+                            acc[group].push(curr);
+                            return acc;
+                        }, {});
+
+                        return Object.entries(groupedDisorders).map(([group, disorders]) => `
+                            <div class="disorder-group mb-2">
+                                <strong class="badge bg-primary mb-1">${group}</strong>
+                                <div class="disorder-items">
+                                    ${disorders.map(d => `
+                                        <div class="disorder-item">
+                                            <span class="badge bg-info text-dark me-1" 
+                                                  style="cursor: pointer;"
+                                                  onclick="showDisorderDetails('${d.name}', '${d.disease_group}', '${d.disease_subgroup}')">
+                                                ${d.name}
+                                            </span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                    return '<span class="badge bg-secondary">None</span>';
+                }
+            }
+        ],
+        // El resto de la configuración (botones, idioma, etc.) no cambia.
+        buttons: [
+            {
+                extend: 'excel',
+                text: 'Excel',
+                exportOptions: {
+                    columns: [0, 1],
+                    format: {
+                        body: function(data, row, column, node) {
+                            if (column === 1) {
+                                const temp = document.createElement('div');
+                                temp.innerHTML = data;
+                                return Array.from(temp.querySelectorAll('.disorder-group')).map(group => {
+                                    const groupName = group.querySelector('strong').textContent;
+                                    const items = Array.from(group.querySelectorAll('.disorder-item span')).map(item => item.textContent.trim()).join(', ');
+                                    return `${groupName}: ${items}`;
+                                }).join('\n');
+                            }
+                            return data;
+                        }
+                    }
+                }
+            },
+            'pdf', 'print'
+        ],
+        language: { processing: "Loading...", search: "Search:", lengthMenu: "Show _MENU_ entries", info: "Showing _START_ to _END_ of _TOTAL_ entries", infoEmpty: "Showing 0 to 0 of 0 entries", paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" } },
+        responsive: true,
+        ordering: true,
+        searching: true,
+        paging: true,
+        pageLength: 10,
+        order: [[0, 'asc']]
+    });
+    
+    dataTable.on('preXhr.dt', function () {
+        $spinner.css('display', 'flex');
+    }).on('xhr.dt', function () {
+        $spinner.css('display', 'none');
+    });
+
+    const modal = new bootstrap.Modal($('#genomicDiseasesModal')[0]);
+    modal.show();
+}
+
+function showDisorderDetails(name, group, subgroup) {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'info',
+        title: `${name}`,
+        html: `
+            <div class="mt-2">
+                <strong>Disease Group:</strong> ${group}<br>
+                <strong>Disease Subgroup:</strong> ${subgroup}
+            </div>
+        `
+    });
 }

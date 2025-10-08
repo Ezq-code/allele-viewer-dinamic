@@ -40,6 +40,35 @@
 <link rel="stylesheet" href="{% static 'assets/plugins/toastr/toastr.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
 
+<style>
+.disorder-group {
+    border-left: 3px solid #0d6efd;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+
+.disorder-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.disorder-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+.disorder-item .badge {
+    transition: all 0.3s ease;
+}
+
+.disorder-item .badge:hover {
+    background-color: #0dcaf0 !important;
+    transform: scale(1.05);
+    cursor: pointer;
+}
+</style>
   <!-- =======================================================
   * Template Name: iLanding
   * Template URL: https://bootstrapmade.com/ilanding-bootstrap-landing-page-template/
@@ -328,7 +357,7 @@
                     genomic changes is crucial for diagnosis, prognosis, and the development
                     of targeted therapies.
                 </p>
-              <button type="button" class="btn btn-info mt-2" onclick="showGenomicDiseasesModal(3)">Related Genes</button>
+              <button type="button" class="btn btn-info mt-2" onclick="showGenomicDiseasesModal()">Related Genes</button>
              
               </div>
               <div class="col-lg-6 order-1 order-lg-2 text-center">
