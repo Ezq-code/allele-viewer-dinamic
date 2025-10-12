@@ -319,27 +319,6 @@
                                         </select>
                                     </div>
                                 </div>
-                            
-                                <script>
-                                    // Duración fija para el loader en milisegundos (10 segundos)
-                                    const LOADER_DURATION = 10000;
-                                    // 1. Mostrar el loader en cuanto el DOM esté listo.
-                                    document.addEventListener('DOMContentLoaded', function () {
-                                        Swal.fire({
-                                            title: 'Updating TimeLine Data...',
-                                            html: 'Please wait a few seconds...',
-                                            timer: LOADER_DURATION,
-                                            timerProgressBar: true, // barra de progreso del tiempo
-                                            allowOutsideClick: false,
-                                            allowEscapeKey: false,
-                                            didOpen: () => {
-                                                Swal.showLoading();
-                                            }
-                                        });
-
-                                    });
-
-                                </script>
 
                                 <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
                                 <script>
@@ -479,9 +458,7 @@ if (timeRange === "-12000/2025")
 
                                     map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
 
-
                                     // Inicializar el filtro de eventos
-
                                     // Capa de las marcas
                                     markerLayer = new L.featureGroup().addTo(map);
                                     var markerMigrationPointLayer = new L.featureGroup().addTo(map);
@@ -506,16 +483,12 @@ else
      var map = L.map('map', {
       layers: [satelitalLayer], //[osmcountriesLayers],
       zoomSnap: 0.1,
-      zoom: 1.8,//14,],
+      zoom: 2.1,//14,],
       fullscreenControl: true,
       timeDimension: true,
-
       center: new L.LatLng(5, 155), //[36.72, -4.43]
      });
-
     }
-var legendControl = createLegend();
-    legendControl.addTo(map);
 
 L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
     _getDisplayDateFormat: function(date){
@@ -612,7 +585,6 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                     var iconUrlpathDestinationMigration = "{% static 'assets/dist/Leaflet/primitive-man4.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHeidel = "{% static 'assets/dist/Leaflet/primitive-man1.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHerectus = "{% static 'assets/dist/Leaflet/primitive-man25.png' %}";
-
 
                                     // Función para crear la leyenda deslizante
                                     function createSlidingLegend() {
@@ -726,7 +698,6 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                         // var legendControl = createLegend();
                                         // legendControl.addTo(map);
                                     });
-
 
                                 </script>
                                 <!-- Script que almacena en la variable authenticated el estado del usuario, si esta autenticado o no -->
