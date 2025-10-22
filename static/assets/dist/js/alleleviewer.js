@@ -476,28 +476,30 @@ $(function () {
 // Función para cargar genes en el select
 function cargarGenes() {
   load.hidden = false;
-  axios.get("/business-gestion/gene/?page_size=1000").then(function (response) {
-    const selectGene = document.getElementById("selectGene");
-    // selectGene.innerHTML = '<option value="">Selec gen</option>';
-    response.data.results.forEach(function (gene) {
-      const option = document.createElement("option");
-      option.value = gene.id;
-      option.textContent = gene.name;
-      selectGene.appendChild(option);
-    });
+  axios
+    .get("/business-gestion/gene/list-for-graph/?page_size=1000")
+    .then(function (response) {
+      const selectGene = document.getElementById("selectGene");
+      // selectGene.innerHTML = '<option value="">Selec gen</option>';
+      response.data.results.forEach(function (gene) {
+        const option = document.createElement("option");
+        option.value = gene.id;
+        option.textContent = gene.name;
+        selectGene.appendChild(option);
+      });
 
-    // Si existe selectedGenId en localStorage, selecciona ese gen y llama a poblarArchivosPorGen
-    const selectedGenId = localStorage.getItem("selectedGenId");
-    if (selectedGenId) {
-      selectGene.value = selectedGenId;
-      poblarArchivosPorGen(selectedGenId);
-    } else {
-      // Si hay genes, poblar los archivos del primero
-      if (response.data.results.length > 0) {
-        poblarArchivosPorGen(response.data.results[0].id);
+      // Si existe selectedGenId en localStorage, selecciona ese gen y llama a poblarArchivosPorGen
+      const selectedGenId = localStorage.getItem("selectedGenId");
+      if (selectedGenId) {
+        selectGene.value = selectedGenId;
+        poblarArchivosPorGen(selectedGenId);
+      } else {
+        // Si hay genes, poblar los archivos del primero
+        if (response.data.results.length > 0) {
+          poblarArchivosPorGen(response.data.results[0].id);
+        }
       }
-    }
-  });
+    });
 }
 
 // Evento: al cambiar el gen, filtra los archivos asociados
