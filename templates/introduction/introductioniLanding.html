@@ -94,8 +94,8 @@
           <li><a href="#hero" class="active">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#Conformation">Conformation</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#tridimencional">Tridimencional</a></li>
+          <li><a href="#map">Map</a></li>
           <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
               <li><a href="#">Dropdown 1</a></li>
@@ -266,13 +266,8 @@
             <div class="image-wrapper">
               <div class="images position-relative" data-aos="zoom-out" data-aos-delay="400">
                 <img src="{% static 'assets/dist/img/diagrama1.png' %}" alt="Business Meeting" class="img-fluid main-image rounded-4">
-                {% comment %} <img src="{% static 'assets/iLanding/assets/img/about-2.webp' %}" alt="Team Discussion" class="img-fluid small-image rounded-4"> {% endcomment %}
+                </div>
               </div>
-              {% comment %} <div class="experience-badge floating">
-                <h3>15+ <span>Years</span></h3>
-                <p>Of experience in business service</p>
-              </div> {% endcomment %}
-            </div>
           </div>
         </div>
 
@@ -282,7 +277,6 @@
 
     <!-- Features Section -->
     <section id="Conformation" class="features section">
-
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Conformation</h2>
@@ -397,159 +391,125 @@
 
     </section><!-- /Features Section -->
 
-    <!-- Features Cards Section -->
-    <section id="features-cards" class="features-cards section">
+    <!-- Tridimencional Section -->
+    <section id="tridimencional" class="testimonials section light-background">
 
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Tridimencional</h2>
+        <p>Plot alleles in 3D</p>
+      </div><!-- End Section Title -->
       <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
-            <div class="feature-box orange">
-              <i class="bi bi-award"></i>
-              <h4>Corporis voluptates</h4>
-              <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut aliquip</p>
+        <div class="row">
+              <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
+                <h3>3D Visualization of Genes and Alleles</h3>
+                 <span class="fst-italic">  A New Perspective for Studying Their Origins</span> </p>
+                  
+                <p class="accent-text">
+              The understanding of genetics has advanced significantly with sequencing tools and data analysis. However, the inherent complexity of genetic interactions and the spatial organization of the genome are often lost in two-dimensional representations. Three-dimensional (3D) visualization of genes and their alleles emerges as a powerful tool that offers a revolutionary perspective, especially for unraveling the origins and evolution of these fundamental units of heredity.
+                </p>
+                <a href="{% url 'alleleviewer' %}" class="btn btn-info mt-2">
+                  <i class="bi bi-play-circle me-1"></i> Allele Viewer Tool
+                </a>
+               
+              </div>
+              <div class="col-lg-6 order-1 order-lg-2 text-center">
+                <img style="border-radius: 10px;" src="{% static 'assets/iLanding/assets/img/alleledisplay.png' %}" alt="" class="img-fluid">
+              </div>
             </div>
-          </div><!-- End Feature Borx-->
-
-          <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
-            <div class="feature-box blue">
-              <i class="bi bi-patch-check"></i>
-              <h4>Explicabo consectetur</h4>
-              <p>Est autem dicta beatae suscipit. Sint veritatis et sit quasi ab aut inventore</p>
-            </div>
-          </div><!-- End Feature Borx-->
-
-          <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
-            <div class="feature-box green">
-              <i class="bi bi-sunrise"></i>
-              <h4>Ullamco laboris</h4>
-              <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt</p>
-            </div>
-          </div><!-- End Feature Borx-->
-
-          <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
-            <div class="feature-box red">
-              <i class="bi bi-shield-check"></i>
-              <h4>Labore consequatur</h4>
-              <p>Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis facere</p>
-            </div>
-          </div><!-- End Feature Borx-->
-
-        </div>
-
       </div>
 
-    </section><!-- /Features Cards Section -->
+    </section><!-- /tridimencional -->
 
-    <!-- Features 2 Section -->
-    <section id="features-2" class="features-2 section">
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <div class="row align-items-center">
+<!-- Features Cards Section - Advantages of 3D Visualization (English) -->
+<section id="features-cards-advantages-en" class="features-cards section">
 
-          <div class="col-lg-4">
+  <div class="container">
 
-            <div class="feature-item text-end mb-5" data-aos="fade-right" data-aos-delay="200">
-              <div class="d-flex align-items-center justify-content-end gap-4">
-                <div class="feature-content">
-                  <h3>Use On Any Device</h3>
-                  <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia.</p>
-                </div>
-                <div class="feature-icon flex-shrink-0">
-                  <i class="bi bi-display"></i>
-                </div>
-              </div>
-            </div><!-- End .feature-item -->
+    <div class="row gy-4">
 
-            <div class="feature-item text-end mb-5" data-aos="fade-right" data-aos-delay="300">
-              <div class="d-flex align-items-center justify-content-end gap-4">
-                <div class="feature-content">
-                  <h3>Feather Icons</h3>
-                  <p>Phasellus ullamcorper ipsum rutrum nunc nunc nonummy metus vestibulum volutpat sapien arcu sed augue aliquam erat volutpat.</p>
-                </div>
-                <div class="feature-icon flex-shrink-0">
-                  <i class="bi bi-feather"></i>
-                </div>
-              </div>
-            </div><!-- End .feature-item -->
-
-            <div class="feature-item text-end" data-aos="fade-right" data-aos-delay="400">
-              <div class="d-flex align-items-center justify-content-end gap-4">
-                <div class="feature-content">
-                  <h3>Retina Ready</h3>
-                  <p>Aenean tellus metus bibendum sed posuere ac mattis non nunc vestibulum fringilla purus sit amet fermentum aenean commodo.</p>
-                </div>
-                <div class="feature-icon flex-shrink-0">
-                  <i class="bi bi-eye"></i>
-                </div>
-              </div>
-            </div><!-- End .feature-item -->
-
-          </div>
-
-          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
-            <div class="phone-mockup text-center">
-              <img src="{% static 'assets/iLanding/assets/img/phone-app-screen.webp' %}" alt="Phone Mockup" class="img-fluid">
-            </div>
-          </div><!-- End Phone Mockup -->
-
-          <div class="col-lg-4">
-
-            <div class="feature-item mb-5" data-aos="fade-left" data-aos-delay="200">
-              <div class="d-flex align-items-center gap-4">
-                <div class="feature-icon flex-shrink-0">
-                  <i class="bi bi-code-square"></i>
-                </div>
-                <div class="feature-content">
-                  <h3>W3c Valid Code</h3>
-                  <p>Donec vitae sapien ut libero venenatis faucibus nullam quis ante etiam sit amet orci eget eros faucibus tincidunt.</p>
-                </div>
-              </div>
-            </div><!-- End .feature-item -->
-
-            <div class="feature-item mb-5" data-aos="fade-left" data-aos-delay="300">
-              <div class="d-flex align-items-center gap-4">
-                <div class="feature-icon flex-shrink-0">
-                  <i class="bi bi-phone"></i>
-                </div>
-                <div class="feature-content">
-                  <h3>Fully Responsive</h3>
-                  <p>Maecenas tempus tellus eget condimentum rhoncus sem quam semper libero sit amet adipiscing sem neque sed ipsum.</p>
-                </div>
-              </div>
-            </div><!-- End .feature-item -->
-
-            <div class="feature-item" data-aos="fade-left" data-aos-delay="400">
-              <div class="d-flex align-items-center gap-4">
-                <div class="feature-icon flex-shrink-0">
-                  <i class="bi bi-browser-chrome"></i>
-                </div>
-                <div class="feature-content">
-                  <h3>Browser Compatibility</h3>
-                  <p>Nullam dictum felis eu pede mollis pretium integer tincidunt cras dapibus vivamus elementum semper nisi aenean vulputate.</p>
-                </div>
-              </div>
-            </div><!-- End .feature-item -->
-
-          </div>
+      <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+        <div class="feature-box orange">
+          <i class="bi bi-feather"></i>
+          <h4>Enhanced Spatial Context</h4>
+          <p>Visualize gene and allele location within folded chromatin, understanding positional influence on expression.</p>
         </div>
+      </div><!-- End Feature Box-->
 
-      </div>
+      <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+        <div class="feature-box blue">
+          <i class="bi bi-link-45deg"></i>
+          <h4>Physical Interactions Revealed</h4>
+          <p>Identify physically proximate DNA regions, crucial for gene regulation and co-evolutionary insights.</p>
+        </div>
+      </div><!-- End Feature Box-->
 
-    </section><!-- /Features 2 Section -->
+      <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+        <div class="feature-box green">
+          <i class="bi bi-node-plus"></i>
+          <h4>Complex Allelic Relationships</h4>
+          <p>Track haplotype blocks and linkage disequilibrium, fundamental for tracing the evolutionary history of alleles.</p>
+        </div>
+      </div><!-- End Feature Box-->
 
-    <!-- Call To Action Section -->
-    <section id="call-to-action" class="call-to-action section">
+      <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
+        <div class="feature-box red">
+          <i class="bi bi-shuffle"></i>
+          <h4>Recombination & Duplication Events</h4>
+          <p>Illustrate DNA segment exchanges and duplications, showing breakpoints and new genetic configurations.</p>
+        </div>
+      </div><!-- End Feature Box-->
+
+      <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="500">
+        <div class="feature-box green">
+          <i class="bi bi-collection"></i>
+          <h4>Gene Clusters & Families</h4>
+          <p>Detect gene clusters from duplications, understanding how gene families formed and their functional divergence.</p>
+        </div>
+      </div><!-- End Feature Box-->
+
+      <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="600">
+        <div class="feature-box red">
+          <i class="bi bi-globe"></i>
+          <h4>Interspecific Comparative Analysis</h4>
+          <p>Compare synteny and chromosomal rearrangements across species, revealing events shaping genome evolution.</p>
+        </div>
+      </div><!-- End Feature Box-->
+
+      <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="700">
+        <div class="feature-box orange">
+          <i class="bi bi-graph-up-arrow"></i>
+          <h4>Mutation & Selection Simulations</h4>
+          <p>Simulate allele evolution by integrating mutation rates and selective pressures to predict trajectories.</p>
+        </div>
+      </div><!-- End Feature Box-->
+
+      <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="800">
+        <div class="feature-box blue">
+          <i class="bi bi-arrow-left-right"></i>
+          <h4>Visualization of Gene Flow</h4>
+          <p>Represent gene flow between populations, showing allele dispersal and mixing, crucial for genetic diversity.</p>
+        </div>
+      </div><!-- End Feature Box-->
+
+    </div>
+
+  </div>
+
+</section><!-- /Features Cards Section - Advantages of 3D Visualization (English) -->
+
+   <!-- Call To Action Section -->
+    <section id="map" class="call-to-action section">
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
         <div class="row content justify-content-center align-items-center position-relative">
           <div class="col-lg-8 mx-auto text-center">
-            <h2 class="display-4 mb-4">Maecenas tempus tellus eget condimentum</h2>
-            <p class="mb-4">Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel</p>
-            <a href="#" class="btn btn-cta">Call To Action</a>
+            <h2 class="display-4 mb-4">The Long Road of Humanity's Genetic Transformation</h2>
+            <p class="mb-4">Advanced web-based digital platform, designed to visualize and analyze the complex interactions between hominid migrations, environmental and sociopolitical factors, and the formation of the human gene pool.</p>
+            <a href="{% url 'mapgeneral' %}" class="btn btn-cta">Call To Action</a>
           </div>
 
           <!-- Abstract Background Elements -->
@@ -594,9 +554,108 @@
       </div>
 
     </section><!-- /Call To Action Section -->
+    <!-- Features 2 Section -->
+<section id="features-2" class="features-2 section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row align-items-center">
+
+          <div class="col-lg-4">
+
+            <div class="feature-item text-end mb-5" data-aos="fade-right" data-aos-delay="200">
+              <div class="d-flex align-items-center justify-content-end gap-4">
+                <div class="feature-content">
+                  <h3>Dynamic Timeline</h3>
+                  <p>Navigate through millions of years to observe hominid evolution and changing environments.</p>
+                </div>
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-clock-history"></i>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+            <div class="feature-item text-end mb-5" data-aos="fade-right" data-aos-delay="300">
+              <div class="d-flex align-items-center justify-content-end gap-4">
+                <div class="feature-content">
+                  <h3>Animated Migration Routes</h3>
+                  <p>Visualize the global dispersion of hominid species with detailed temporal animations.</p>
+                </div>
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-signpost-split"></i>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+            <div class="feature-item text-end" data-aos="fade-right" data-aos-delay="400">
+              <div class="d-flex align-items-center justify-content-end gap-4">
+                <div class="feature-content">
+                  <h3>Paleoenvironmental Layers</h3>
+                  <p>Overlay maps of climate, sea level, and ecosystems to understand the environmental context.</p>
+                </div>
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-globe-americas"></i>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+          </div>
+
+          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
+            <div class="phone-mockup text-center">
+              <img src="{% static 'assets/iLanding/assets/img/phone-app-screen.png' %}" alt="Phone Mockup" class="img-fluid">
+            </div>
+          </div><!-- End Phone Mockup -->
+
+          <div class="col-lg-4">
+
+            <div class="feature-item mb-5" data-aos="fade-left" data-aos-delay="200">
+              <div class="d-flex align-items-center gap-4">
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-shuffle"></i>
+                </div>
+                <div class="feature-content">
+                  <h3>Visual Genetic Diversity</h3>
+                  <p>Explore the distribution of haplogroups and regional genetic diversity over time.</p>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+            <div class="feature-item mb-5" data-aos="fade-left" data-aos-delay="300">
+              <div class="d-flex align-items-center gap-4">
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-search"></i>
+                </div>
+                <div class="feature-content">
+                  <h3>Adaptive Genes & Selection</h3>
+                  <p>Track the frequency of key genes (e.g., lactase, pigmentation) and their adaptive evolution.</p>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+            <div class="feature-item" data-aos="fade-left" data-aos-delay="400">
+              <div class="d-flex align-items-center gap-4">
+                <div class="feature-icon flex-shrink-0">
+                  <i class="bi bi-people"></i>
+                </div>
+                <div class="feature-content">
+                  <h3>Socio-Cultural Events</h3>
+                  <p>Observe technological diffusion, archaeological sites, and population density on the map.</p>
+                </div>
+              </div>
+            </div><!-- End .feature-item -->
+
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Features 2 Section -->
+
+ 
 
     <!-- Clients Section -->
-    <section id="clients" class="clients section">
+    {% comment %} <section id="clients" class="clients section">
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
@@ -649,10 +708,10 @@
 
       </div>
 
-    </section><!-- /Clients Section -->
+    </section><!-- /Clients Section --> {% endcomment %}
 
     <!-- Testimonials Section -->
-    <section id="testimonials" class="testimonials section light-background">
+    {% comment %} <section id="testimonials" class="testimonials section light-background">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
@@ -732,10 +791,10 @@
 
       </div>
 
-    </section><!-- /Testimonials Section -->
+    </section><!-- /Testimonials Section --> {% endcomment %}
 
     <!-- Stats Section -->
-    <section id="stats" class="stats section">
+    {% comment %} <section id="stats" class="stats section">
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
@@ -773,212 +832,155 @@
 
       </div>
 
-    </section><!-- /Stats Section -->
+    </section><!-- /Stats Section --> {% endcomment %}
 
-    <!-- Services Section -->
-    <section id="services" class="services section light-background">
+   <section id="human-evolution-timeline" class="services section light-background">
 
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Services</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="row g-4">
-
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="service-card d-flex">
-              <div class="icon flex-shrink-0">
-                <i class="bi bi-activity"></i>
-              </div>
-              <div>
-                <h3>Nesciunt Mete</h3>
-                <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
-                <a href="service-details.html" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
-              </div>
-            </div>
-          </div><!-- End Service Card -->
-
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="service-card d-flex">
-              <div class="icon flex-shrink-0">
-                <i class="bi bi-diagram-3"></i>
-              </div>
-              <div>
-                <h3>Eosle Commodi</h3>
-                <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum hic non ut nesciunt dolorem.</p>
-                <a href="service-details.html" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
-              </div>
-            </div>
-          </div><!-- End Service Card -->
-
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="service-card d-flex">
-              <div class="icon flex-shrink-0">
-                <i class="bi bi-easel"></i>
-              </div>
-              <div>
-                <h3>Ledo Markt</h3>
-                <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci eos earum corrupti.</p>
-                <a href="service-details.html" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
-              </div>
-            </div>
-          </div><!-- End Service Card -->
-
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
-            <div class="service-card d-flex">
-              <div class="icon flex-shrink-0">
-                <i class="bi bi-clipboard-data"></i>
-              </div>
-              <div>
-                <h3>Asperiores Commodit</h3>
-                <p>Non et temporibus minus omnis sed dolor esse consequatur. Cupiditate sed error ea fuga sit provident adipisci neque.</p>
-                <a href="service-details.html" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
-              </div>
-            </div>
-          </div><!-- End Service Card -->
-
+        <div class="container section-title">
+            <h2>Human Genes Timeline</h2>
+            <p>Explore the key stages and factors in the genetic transformation of humanity.</p>
         </div>
 
-      </div>
+        <div class="container">
+            <div class="row">
 
-    </section><!-- /Services Section -->
+                <div class="col-lg-12">
+                    <div class="service-card">
+                         <div>
+                          <img src="{% static 'assets/iLanding/assets/img/FormacionAlelos.png' %}" alt="Phone Mockup" class="img-fluid">
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <!-- Pricing Section -->
+    </section>
     <section id="pricing" class="pricing section light-background">
 
-      <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Pricing</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
+        <h2>Support Our Research</h2>
+        <p>Help advance our understanding of genetic evolution by contributing to our research priorities.</p>
+      </div>
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
-
         <div class="row g-4 justify-content-center">
 
-          <!-- Basic Plan -->
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-            <div class="pricing-card">
-              <h3>Basic Plan</h3>
-              <div class="price">
-                <span class="currency">$</span>
-                <span class="amount">9.9</span>
-                <span class="period">/ month</span>
-              </div>
-              <p class="description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium totam.</p>
+        <div class="pricing-card">
+          <h3>Basic Contribution</h3>
+          <div class="price">
+            <span class="currency">$</span>
+            <span class="amount">50</span>
+            <span class="period">one-time</span>
+          </div>
+          <p class="description">Add a gene of your interest to our research priority list.</p>
 
-              <h4>Featured Included:</h4>
-              <ul class="features-list">
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Duis aute irure dolor
-                </li>
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Excepteur sint occaecat
-                </li>
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Nemo enim ipsam voluptatem
-                </li>
-              </ul>
+          <h4>Benefits Include:</h4>
+          <ul class="features-list">
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Add one gene to priority list
+            </li>
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Quarterly updates on research progress
+            </li>
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Recognition in our contributors page
+            </li>
+          </ul>
 
-              <a href="#" class="btn btn-primary">
-                Buy Now
-                <i class="bi bi-arrow-right"></i>
-              </a>
-            </div>
+          <a href="#contact" class="btn btn-primary">
+            Contribute Now
+            <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
           </div>
 
-          <!-- Standard Plan -->
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-            <div class="pricing-card popular">
-              <div class="popular-badge">Most Popular</div>
-              <h3>Standard Plan</h3>
-              <div class="price">
-                <span class="currency">$</span>
-                <span class="amount">19.9</span>
-                <span class="period">/ month</span>
-              </div>
-              <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum.</p>
+        <div class="pricing-card popular">
+          <div class="popular-badge">Most Popular</div>
+          <h3>Priority Research</h3>
+          <div class="price">
+            <span class="currency">$</span>
+            <span class="amount">150</span>
+            <span class="period">one-time</span>
+          </div>
+          <p class="description">Elevate the priority level of a gene in our research queue.</p>
 
-              <h4>Featured Included:</h4>
-              <ul class="features-list">
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Lorem ipsum dolor sit amet
-                </li>
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Consectetur adipiscing elit
-                </li>
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Sed do eiusmod tempor
-                </li>
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Ut labore et dolore magna
-                </li>
-              </ul>
+          <h4>Benefits Include:</h4>
+          <ul class="features-list">
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Move one gene to high priority status
+            </li>
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Monthly research updates
+            </li>
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Access to preliminary findings
+            </li>
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Virtual lab tour invitation
+            </li>
+          </ul>
 
-              <a href="#" class="btn btn-light">
-                Buy Now
-                <i class="bi bi-arrow-right"></i>
-              </a>
-            </div>
+          <a href="#contact" class="btn btn-light">
+            Contribute Now
+            <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
           </div>
 
-          <!-- Premium Plan -->
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
-            <div class="pricing-card">
-              <h3>Premium Plan</h3>
-              <div class="price">
-                <span class="currency">$</span>
-                <span class="amount">39.9</span>
-                <span class="period">/ month</span>
-              </div>
-              <p class="description">Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae.</p>
+        <div class="pricing-card">
+          <h3>Research Partner</h3>
+          <div class="price">
+            <span class="currency">$</span>
+            <span class="amount">500</span>
+            <span class="period">one-time</span>
+          </div>
+          <p class="description">Become a key partner in our genetic evolution research.</p>
 
-              <h4>Featured Included:</h4>
-              <ul class="features-list">
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Temporibus autem quibusdam
-                </li>
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Saepe eveniet ut et voluptates
-                </li>
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Nam libero tempore soluta
-                </li>
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Cumque nihil impedit quo
-                </li>
-                <li>
-                  <i class="bi bi-check-circle-fill"></i>
-                  Maxime placeat facere possimus
-                </li>
-              </ul>
+          <h4>Benefits Include:</h4>
+          <ul class="features-list">
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Add multiple genes to priority list
+            </li>
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Weekly research briefings
+            </li>
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Direct communication with research team
+            </li>
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Acknowledgment in publications
+            </li>
+            <li>
+          <i class="bi bi-check-circle-fill"></i>
+          Custom research focus report
+            </li>
+          </ul>
 
-              <a href="#" class="btn btn-primary">
-                Buy Now
-                <i class="bi bi-arrow-right"></i>
-              </a>
-            </div>
+          <a href="#contact" class="btn btn-primary">
+            Become a Partner
+            <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
           </div>
 
         </div>
-
       </div>
 
-    </section><!-- /Pricing Section -->
+        </section>
 
     <!-- Faq Section -->
     <section class="faq-9 faq section light-background" id="faq">
