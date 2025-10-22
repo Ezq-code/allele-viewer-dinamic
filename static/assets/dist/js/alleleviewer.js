@@ -481,6 +481,10 @@ function cargarGenes() {
     .then(function (response) {
       const selectGene = document.getElementById("selectGene");
       // selectGene.innerHTML = '<option value="">Selec gen</option>';
+      if (response.data.results.length == 0) {
+        console.log("✌️retornóooooooooooooooooooo --->");
+        return;
+      }
       response.data.results.forEach(function (gene) {
         const option = document.createElement("option");
         option.value = gene.id;
