@@ -68,6 +68,24 @@
     transform: scale(1.05);
     cursor: pointer;
 }
+
+.gene-btn {
+  margin: 5px;
+  min-width: 120px;
+  transition: all 0.3s ease;
+}
+.gene-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+#gene-buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+}
+
 </style>
   <!-- =======================================================
   * Template Name: iLanding
@@ -290,19 +308,19 @@
           <ul class="nav nav-tabs" data-aos="fade-up" data-aos-delay="100">
 
             <li class="nav-item">
-              <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#features-tab-1">
+              <a class="nav-link active" data-toggle="tab" href="#features-tab-1" role="tab">
                 <h4>PGX</h4>
               </a>
             </li><!-- End tab nav item -->
 
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-2">
+              <a class="nav-link" data-toggle="tab" href="#features-tab-2" role="tab">
                 <h4>Genomic</h4>
               </a><!-- End tab nav item -->
 
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-3">
+              <a class="nav-link" data-toggle="tab" href="#features-tab-3" role="tab">
                 <h4>Priorities</h4>
               </a>
             </li><!-- End tab nav item -->
@@ -313,7 +331,7 @@
 
         <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
 
-          <div class="tab-pane fade active show" id="features-tab-1">
+          <div class="tab-pane fade show active" id="features-tab-1" role="tabpanel">
             <div class="row">
             
               <div class="col-lg-6 order-1 order-lg-1 mt-3 mt-lg-0 d-flex flex-column ">
@@ -321,7 +339,7 @@
                 <p>
                   <span class="accent-text">Pharmacodynamics</span> refers to the study of how <span class="fw-bold text-primary">drugs</span> affect the body. It examines the <span class="fw-bold text-primary">mechanisms of drug action</span>, including the relationship between <span class="fw-bold text-primary">drug concentration</span> and <span class="fw-bold text-primary">effect</span>, <span class="fw-bold text-primary">receptor interactions</span>, and the <span class="fw-bold text-primary">physiological</span> and <span class="fw-bold text-primary">biochemical responses</span> produced. Understanding <span class="accent-text">pharmacodynamics</span> helps predict the <span class="fw-bold text-primary">efficacy</span> and potential <span class="fw-bold text-primary">side effects</span> of medications.
                 </p>
-                <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(1)">Related Genes</button>
+                <button type="button" class="btn btn-info mt-2 load-genes-btn" data-group-id="1" data-group-name="Pharmacodynamics">Related Genes</button>
                 
               </div>
                         
@@ -330,12 +348,12 @@
                 <p>
                   <span class="accent-text">Pharmacokinetics</span> is the study of how the body <span class="fw-bold text-primary">absorbs</span>, <span class="fw-bold text-primary">distributes</span>, <span class="fw-bold text-primary">metabolizes</span>, and <span class="fw-bold text-primary">excretes drugs</span>. It focuses on the movement of drugs within the body over time, including processes such as <span class="fw-bold text-primary">absorption</span>, <span class="fw-bold text-primary">bioavailability</span>, <span class="fw-bold text-primary">distribution</span>, <span class="fw-bold text-primary">metabolism</span>, and <span class="fw-bold text-primary">elimination</span>. <span class="accent-text">Pharmacokinetics</span> is essential for determining appropriate <span class="fw-bold text-primary">drug dosages</span> and <span class="fw-bold text-primary">schedules</span>.
                 </p>
-                <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(2)">Related Genes</button>
+                <button type="button" class="btn btn-info mt-2 load-genes-btn" data-group-id="2" data-group-name="Pharmacokinetics">Related Genes</button>
               </div>
             </div>
           </div><!-- End tab content item -->
 
-          <div class="tab-pane fade" id="features-tab-2">
+          <div class="tab-pane fade" id="features-tab-2" role="tabpanel">
             <div class="row">
               <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
                 <h3>Genomic Diseases</h3>
@@ -351,7 +369,7 @@
                     genomic changes is crucial for diagnosis, prognosis, and the development
                     of targeted therapies.
                 </p>
-              <button type="button" class="btn btn-info mt-2" onclick="showGenomicDiseasesModal()">Related Genes</button>
+              <button type="button" class="btn btn-info mt-2 load-genes-btn" data-group-id="3" data-group-name="Genomic Diseases">Related Genes</button>
              
               </div>
               <div class="col-lg-6 order-1 order-lg-2 text-center">
@@ -360,7 +378,7 @@
             </div>
           </div><!-- End tab content item -->
 
-          <div class="tab-pane fade" id="features-tab-3">
+          <div class="tab-pane fade" id="features-tab-3" role="tabpanel">
             <div class="row">
               <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
                 <h3>Prioritized Gene List for Study</h3>
@@ -376,7 +394,7 @@
 
                 Thank you for being part of our mission to advance genetic research.
                 </p>
-                <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(4)">Related Genes</button>
+                <button type="button" class="btn btn-info mt-2 load-genes-btn" data-group-id="4" data-group-name="Prioritized Gene List for Study">Related Genes</button>
               
               </div>
               <div class="col-lg-6 order-1 order-lg-2 text-center">
@@ -388,137 +406,47 @@
         </div>
 
       </div>
-  <div class="col-6 col-md-3 text-center">
-                    <input type="text" class="knob" value="50" data-width="90" data-height="90" data-fgColor="#3c8dbc"
-                           data-readonly="true">
-                  </div>
+
     </section><!-- /Features Section -->
 
     
 
 
- <section id="gene-matrix" class="gene-matrix section dark-background">
+ <section id="gene-matrix" class="gene-matrix section dark-background" hidden>
       <div class="container">
         <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
           <div class="col-xl-12">
             <div class="text-center">
               <h3>Gene Matrix</h3>
-              <p>Explore our collection of genes related to pharmacodynamics. Click on any gene to see its detailed information.</p>
+                <p>Explore our collection of <span id="selected-group-name"></span> genes. Click on any gene to see its detailed information.</p>
+             <div class="row mb-3">
+             
+                <div class="col-md-6 offset-md-3">
+                    {% comment %} <label for="gene-search-input" class="form-label text-light">Search Gene:</label> {% endcomment %}
+                    <input type="search" id="gene-search-input" class="form-control" placeholder="Type the gene name and press Enter...">
+                </div>
+             </div>
               <div id="gene-buttons-container" class="mt-4">
                 <!-- Gene buttons will be inserted here -->
-                <div class="spinner-border text-light" role="status">
+                {% comment %} <div class="spinner-border text-light" role="status">
                   <span class="visually-hidden">Loading...</span>
-                </div>
+                </div> {% endcomment %}
+                
               </div>
+                <nav id="pagination-controls" aria-label="Gene pagination" class="d-none">
+                   <button id="prev-page-btn" class="btn btn-secondary me-2" type="button">
+                     <i class="bi bi-chevron-left"></i> Previous
+                   </button>
+                   <span id="page-info" class="text-light align-middle">Page 1</span>
+                   <button id="next-page-btn" class="btn btn-secondary ms-2" type="button">
+                     Next <i class="bi bi-chevron-right"></i>
+                   </button>
+                </nav>
             </div>
           </div>
         </div>
       </div>
     </section>
-
-    <style>
-    .gene-btn {
-      margin: 5px;
-      min-width: 120px;
-      transition: all 0.3s ease;
-    }
-    .gene-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    #gene-buttons-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      padding: 20px;
-    }
-    </style>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const container = document.getElementById('gene-buttons-container');
-        const spinner = container.querySelector('.spinner-border');
-        
-        // Cargar los genes
-        fetch('/business-gestion/gene/?groups=1')
-            .then(response => response.json())
-            .then(data => {
-                spinner.style.display = 'none';
-                if (data.results && data.results.length > 0) {
-                    // Crear botones para cada gen
-                    data.results.forEach(gene => {
-                        const button = document.createElement('button');
-                        button.className = 'btn btn-outline-light gene-btn';
-                        button.textContent = gene.name;
-                        
-                        button.addEventListener('click', () => {
-                            // Mostrar detalles del gen usando SweetAlert2
-                            const statusList = gene.gene_status_list || [];
-                            const statusHtml = statusList.map(status => {
-                                const percent = parseFloat(status.value);
-                                let badgeClass = "bg-secondary";
-                                if (!isNaN(percent)) {
-                                    if (percent >= 0 && percent <= 25) badgeClass = "bg-danger";
-                                    else if (percent >= 26 && percent <= 50) badgeClass = "bg-warning";
-                                    else if (percent >= 51 && percent <= 75) badgeClass = "bg-primary";
-                                    else if (percent > 75 && percent <= 100) badgeClass = "bg-success";
-                                }
-                                
-                                return `
-                                    <div class="col-6 col-md-3 text-center">
-                                        <input type="text" class="knob" value="${status.value}" data-width="90" data-height="90" data-fgColor="#3c8dbc"
-                                          data-readonly="true">
-                                          <div class="knob-label">${status.gene_status}</div>
-                                        </div>
-                                    <div class="mb-3">
-                                        <div class="d-flex justify-content-between align-items-center mb-1">
-                                            <strong>${status.gene_status}</strong>
-                                            <span class="badge ${badgeClass}">${status.value}%</span>
-                                        </div>
-                                        <div class="progress" style="height: 5px;">
-                                            <div class="progress-bar ${badgeClass}" style="width: ${status.value}%"></div>
-                                        </div>
-                                        ${status.evidence ? `
-                                            <button class="btn btn-sm btn-link mt-1 p-0" 
-                                                    onclick="downloadEvidence('${encodeURIComponent(status.evidence)}')">
-                                                <i class="bi bi-download"></i> Download Evidence
-                                            </button>
-                                        ` : ''}
-                                    </div>
-                                `;
-                            }).join('');
-
-                            Swal.fire({
-                                title: gene.name,
-                                html: `
-                                    <div class="text-start">
-                                        ${statusList.length ? statusHtml : '<p class="text-muted">No status information available</p>'}
-                                    </div>
-                                `,
-                                width: 600,
-                                showCloseButton: true,
-                                showConfirmButton: false,
-                                customClass: {
-                                    container: 'gene-detail-modal'
-                                }
-                            });
-                        });
-                        
-                        container.appendChild(button);
-                    });
-                } else {
-                    container.innerHTML = '<p class="text-light">No genes found</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Error loading genes:', error);
-                spinner.style.display = 'none';
-                container.innerHTML = '<p class="text-danger">Error loading genes</p>';
-            });
-    });
-    </script>
-
 
     <!-- Tridimencional Section -->
     <section id="tridimensional" class="testimonials section light-background">
@@ -1300,48 +1228,30 @@
 
 
 <!-- Modal para mostrar genes -->
-              <div class="modal fade" id="genesModal" data-backdrop="static" tabindex="-1" role="dialog"
-                  aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="genesModalLabel">Related Genes</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <table id="genesTable" class="table table-bordered table-striped " width="100%">
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
-                    </div>
+<div class="modal fade" id="genesModal" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document"> <!-- Cambiado a modal-xl para más espacio -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="genesModalLabel">Gene Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- El dashboard se renderizará aquí -->
+                <div id="gene-dashboard-container">
+                    <!-- Contenido dinámico -->
                 </div>
-              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<!-- Modal para mostrar Genomic Diseases  -->
-              <div class="modal fade" id="genomicDiseasesModal" data-backdrop="static" tabindex="-1" role="dialog"
-                  aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="genomicDiseasesModalLabel">Related Genomic Diseases</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <table id="genomicDiseasesTable" class="table table-bordered table-striped " width="100%">
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-              </div>
+
 
 
 
@@ -1446,28 +1356,27 @@
 <!-- jQuery -->
 <script src="{% static 'assets/plugins/jquery/jquery.min.js' %}"></script>
 <!-- Bootstrap 4 -->
-<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<!-- AdminLTE App -->
+{% comment %} <script src="{% static 'assets/iLanding/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script> {% endcomment %}
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script> 
 <script src="{% static 'assets/dist/js/adminlte.min.js' %}"></script>
-
-<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
 <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
-
-
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="{% static 'assets/iLanding/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static 'assets/iLanding/assets/vendor/php-email-form/validate.js' %}"></script>
+    
+   <script src="{% static 'assets/iLanding/assets/js/main.js' %}"></script>
+ <script src="{% static 'assets/iLanding/assets/vendor/php-email-form/validate.js' %}"></script>
   <script src="{% static 'assets/iLanding/assets/vendor/aos/aos.js' %}"></script>
   <script src="{% static 'assets/iLanding/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
   <script src="{% static 'assets/iLanding/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
   <script src="{% static 'assets/iLanding/assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
   <!-- Main JS File -->
-  <script src="{% static 'assets/iLanding/assets/js/main.js' %}"></script>
+<script src="{% static 'assets/iLanding/assets/js/main.js' %}"></script>
+<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-knob/jquery.knob.min.js' %}"></script>
 
-  <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
   <script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
   <script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
@@ -1479,15 +1388,13 @@
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
-<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
 
 
-<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-  <script src="{% static 'assets/dist/js/introductioniLanding.js' %}"></script>
-<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
-<script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
-<script src="{% static 'assets/plugins/jquery-knob/jquery.knob.min.js' %}"></script>
+
+<script src="{% static 'assets/dist/js/introductioniLanding.js' %}"></script>
+<script src="{% static 'assets/dist/js/introductioniLandingLoadGenes.js' %}"></script>
+
 
 
 <script>
@@ -1564,15 +1471,7 @@ var Toast = Swal.mixin({
     })
     /* END JQUERY KNOB */
 
-    //INITIALIZE SPARKLINE CHARTS
-    var sparkline1 = new Sparkline($('#sparkline-1')[0], { width: 240, height: 70, lineColor: '#92c1dc', endColor: '#92c1dc' })
-    var sparkline2 = new Sparkline($('#sparkline-2')[0], { width: 240, height: 70, lineColor: '#f56954', endColor: '#f56954' })
-    var sparkline3 = new Sparkline($('#sparkline-3')[0], { width: 240, height: 70, lineColor: '#3af221', endColor: '#3af221' })
-
-    sparkline1.draw([1000, 1200, 920, 927, 931, 1027, 819, 930, 1021])
-    sparkline2.draw([515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921])
-    sparkline3.draw([15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21])
-
+   
   })
 
 </script>
