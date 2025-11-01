@@ -405,39 +405,34 @@
                                             ],
                                         });
 
-                                    map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
+                                        map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
 
-                                    // Inicializar el filtro de eventos
-                                    // Capa de las marcas
-                                    markerLayer = new L.featureGroup().addTo(map);
-                                    var markerMigrationPointLayer = new L.featureGroup().addTo(map);
-                                    var labeled = false;
-                                    //var eventFilter = new EventTimeFilter(map, null, timeRange);
-}
-else
-{
-    // Función para ajustar el mapa según el tamaño de la pantalla
-    if (window.innerWidth <= 768)
-    { // Consideramos pantallas pequeñas (por ejemplo, teléfonos)
-     var map = L.map('map', {
-      layers: [satelitalLayer], //[osmcountriesLayers],
-      zoom: 2,//14,],
-      fullscreenControl: true,
-      timeDimension: true,
-      center: new L.LatLng(10, 20) //[36.72, -4.43]
-     });
-    }
-    else
-    {
-     var map = L.map('map', {
-      layers: [satelitalLayer], //[osmcountriesLayers],
-      zoomSnap: 0.1,
-      zoom: 2.1,//14,],
-      fullscreenControl: true,
-      timeDimension: true,
-      center: new L.LatLng(5, 155), //[36.72, -4.43]
-     });
-    }
+                                        // Inicializar el filtro de eventos
+                                        // Capa de las marcas
+                                        markerLayer = new L.featureGroup().addTo(map);
+                                        var markerMigrationPointLayer = new L.featureGroup().addTo(map);
+                                        var labeled = false;
+                                        //var eventFilter = new EventTimeFilter(map, null, timeRange);
+                                    } else {
+                                        // Función para ajustar el mapa según el tamaño de la pantalla
+                                        if (window.innerWidth <= 768) { // Consideramos pantallas pequeñas (por ejemplo, teléfonos)
+                                            var map = L.map('map', {
+                                                layers: [satelitalLayer], //[osmcountriesLayers],
+                                                zoom: 2,//14,],
+                                                fullscreenControl: true,
+                                                timeDimension: true,
+                                                center: new L.LatLng(10, 20) //[36.72, -4.43]
+                                            });
+                                        } else {
+                                            var map = L.map('map', {
+                                                layers: [satelitalLayer], //[osmcountriesLayers],
+                                                zoomSnap: 0.1,
+                                                zoom: 2.1,//14,],
+                                                fullscreenControl: true,
+                                                timeDimension: true,
+                                                center: new L.LatLng(5, 155), //[36.72, -4.43]
+                                            });
+                                        }
 
                                         L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
                                             _getDisplayDateFormat: function (date) {
