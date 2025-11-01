@@ -14,7 +14,7 @@ $(document).ready(function () {
       dom: '<"top"l>Bfrtip',
       buttons: [
         {
-          text: " Agregar",
+          text: "Add",
           className: " btn btn-primary btn-info",
           action: function (e, dt, node, config) {
             $("#modal-crear-elemento").modal("show");
@@ -30,7 +30,7 @@ $(document).ready(function () {
         },
         {
           extend: "print",
-          text: "Imprimir",
+          text: "Print",
         },
       ],
       //Adding server-side processing
@@ -65,22 +65,22 @@ $(document).ready(function () {
           });
       },
       columns: [
-        { data: "name", title: "Nombre" },
-        { data: "description", title: "Descripción" },
+        { data: "name", title: "Name" },
+        { data: "description", title: "Description" },
         {
           data: "status",
-          title: "Estatus",
+          title: "Status",
           render: function (data, type, row) {
             if (data === "C")
-              return '<span class="badge badge-success">Completado</span>';
+              return '<span class="badge badge-success">Completed</span>';
             if (data === "I")
-              return '<span class="badge badge-warning">En proceso</span>';
+              return '<span class="badge badge-warning">In Progress</span>';
             return data;
           },
         },
         {
           data: "",
-          title: "Acciones",
+            title: "Actions",
           render: (data, type, row) => {
             return `<div class="btn-group">
                         <button type="button" title="Edit" class="btn bg-info" data-toggle="modal" data-target="#modal-crear-elemento" data-id="${row.id}" data-type="edit" data-name="${row.name}" data-description="${row.description}" data-status="${row.status}" id="${row.id}"  >
@@ -98,7 +98,7 @@ $(document).ready(function () {
           targets: 1,
           render: function (data, type, row) {
             if (data == null || data == "") {
-              return "Sin Datos";
+              return "No Data";
             } else {
               return type === "display" && data.length > 80
                 ? data.substr(0, 80) + "…"
@@ -115,7 +115,7 @@ $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
   var dataName = button.data("name"); // Extract info from data-* attributes
   selected_id = button.data("id"); // Extract info from data-* attributes
   var modal = $(this);
-  modal.find(".modal-body").text("¿Desea eliminar el gen " + dataName + "?");
+  modal.find(".modal-body").text("Do you want to delete the gene " + dataName + "?");
 });
 
 // funcion para eliminar usuario
@@ -127,14 +127,14 @@ function function_delete(selected_id) {
     .then((response) => {
       Toast.fire({
         icon: "success",
-        title: "El gen fue eliminado correctamente",
+        title: "Gene deleted successfully",
       });
       table.row(`#${selected_id}`).remove().draw(); // use id selector to remove the row
     })
     .catch((error) => {
       Toast.fire({
         icon: "error",
-        title: "El gen no fue eliminado",
+        title: "Gene was not deleted",
       });
     });
 }
@@ -163,12 +163,12 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
     var dataStatus = button.data("status"); // Extract info from data-* attributes
     selected_id = dataId; // Extract info from data-* attributes
     edit_elemento = true;
-    modal.find(".modal-title").text("Editar " + dataName);
+    modal.find(".modal-title").text("Edit " + dataName);
     form.elements.name.value = dataName;
     form.elements.description.value = dataDescription;
     form.elements.status.value = dataStatus;
   } else {
-    modal.find(".modal-title").text("Crear Gen");
+    modal.find(".modal-title").text("Create Gene");
     form.reset();
   }
 });
@@ -180,7 +180,7 @@ $(function () {
 // form validator
 $(function () {
   $.validator.setDefaults({
-    language: "es",
+    language: "en",
     submitHandler: function () {
       // alert("Form successful submitted!");
     },
@@ -197,10 +197,10 @@ $(function () {
     },
     messages: {
       name: {
-        required: "El nombre es requerido",
+        required: "Name is required",
       },
       status: {
-        required: "El estatus es obligatorio",
+        required: "Status is required",
       },
     },
     errorElement: "span",
@@ -242,7 +242,7 @@ form.addEventListener("submit", function (event) {
             table.ajax.reload();
             Swal.fire({
               icon: "success",
-              title: "Gen editado con éxito",
+                title: "Gene edited successfully",
               showConfirmButton: false,
               timer: 1500,
             });
@@ -253,15 +253,15 @@ form.addEventListener("submit", function (event) {
         .catch((error) => {
           load.hidden = true;
           let dict = error.response.data;
-          let textError = "Detalles: ";
+          let textError = "Details: ";
           for (const key in dict) {
             textError += key + ": " + dict[key];
           }
 
           Swal.fire({
             icon: "error",
-            title: "Error al editar Gen",
-            text: textError,
+                title: "Error editing Gene",
+                text: textError,
             showConfirmButton: false,
             timer: 5000,
           });
@@ -277,7 +277,7 @@ form.addEventListener("submit", function (event) {
             table.ajax.reload();
             Swal.fire({
               icon: "success",
-              title: "Gen creado con éxito",
+                title: "Gene created successfully",
               showConfirmButton: false,
               timer: 1500,
             });
@@ -287,14 +287,14 @@ form.addEventListener("submit", function (event) {
           load.hidden = true;
           let dict = error.response.data;
 
-          let textError = "Revise los siguientes campos: ";
+            let textError = "Please check the following fields: ";
           for (const key in dict) {
             textError += " " + key + ": " + dict[key];
           }
 
           Swal.fire({
             icon: "error",
-            title: "Error al crear Gen",
+              title: "Error creating Gene",
             text: textError,
             showConfirmButton: true,
             // timer: 3000
