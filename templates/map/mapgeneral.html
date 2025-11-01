@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/default.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/Control.FullScreen.min.css' %}"/>
 
-    <link rel="stylesheet" href="{% static 'assets/dist/css/timeline-timedimension/leaflet.timedimension.control.css' %}"/>
+    <link rel="stylesheet"
+          href="{% static 'assets/dist/css/timeline-timedimension/leaflet.timedimension.control.css' %}"/>
 
     <link rel="stylesheet" href="{% static 'assets/dist/css/map-style.css' %}"/>
 
@@ -91,6 +92,8 @@
     <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.layer.geojson.js' %}"></script>
     <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.player.js' %}"></script>
     <script src="{% static 'assets/dist/js/timeline-timedimension/leaflet.timedimension.control.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'assets/dist/css/driver.css' %}"/>
+    <script src="{% static 'assets/dist/js/driver.js' %}"></script>
 
 
 {% endblock %}
@@ -114,11 +117,6 @@
                             <select required class="form-control" id="eventoModal">
                             </select>
                         </div>
-                       <!-- <div class="form-group">
-                            <label for="tipoeventofirtmodal">Event Type:</label>
-                            <select required class="form-group" id="tipoeventofirtmodal">
-                            </select>
-                        </div> -->
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -146,61 +144,6 @@
                             <label for="evento">Event:</label>
                             <select class="form-control" id="evento"></select>
                         </div>
-                    <!--    <div class="form-group">
-                            <label for="tipoevento">Event Type:</label>
-                            <select class="form-control" id="tipoevento"></select>
-                        </div>
-                        <div class="form-group">
-                            <label for="pause_time">Pause time(Milliseconds):</label>
-                            <input class="form-control" type="text"
-                                   id="pause_time" name="pause_time">
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="fechaini" class="mr-2">Begin:</label>
-                                    <div class="d-flex align-items-center">
-                                        <input type="text" class="form-control mr-2" id="fechaini" name="fechaini"
-                                               size="5">
-                                        <select class="form-control" name="selectDateTypeBegin"
-                                                id="selectDateTypeBegin">
-                                            <option value="Before Present (YBP)">Before Present (YBP)</option>
-                                            <option value="Before Christ (BC)">Before Christ (BC)</option>
-                                            <option selected value="After Christ (AC)">After Christ (AC)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="fechafin" class="mr-2">End:</label>
-                                    <div class="d-flex align-items-center">
-                                        <input class="form-control mr-2" type="text" id="fechafin" name="fechafin"
-                                               size="5">
-                                        <select class="form-control" name="selectDateTypeEnd" id="selectDateTypeEnd">
-                                            <option value="Before Present (YBP)">Before Present (YBP)</option>
-                                            <option value="Before Christ (BC)">Before Christ (BC)</option>
-                                            <option selected value="After Christ (AC)">After Christ (AC)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="event_name">Name:</label>
-                            <input class="form-control" type="text" id="event_name" name="event_name">
-                        </div>
-                        <div class="form-group">
-                            <label for="descripcion">Description:</label>
-                            <textarea class="form-control" rows="1" id="descripcion" name="descripcion"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="reference">Reference:</label>
-                            <textarea class="form-control" rows="1" id="reference" name="reference"></textarea>
-                        </div>
-                        -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -225,27 +168,25 @@
         </div>
     </div>
 
-        <!-- Sidebar con el panel derecho que muestra el listado de las migraciones cronológicamente -->
-        <aside id="info" class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-            <div class="p-3 d-flex flex-column">
-                <div class="d-flex align-items-center">
-                    <h6 class="mr-3">CYP2D6 Alleles-Expansions</h6>
-                    <a class="nav-link ml-auto" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#"
-                       role="button">
-                        <i class="fas fa-times"></i>
-                    </a>
-                </div>
-                <ul id="displayed-list" style="font-size:11px;"></ul>
+    <!-- Sidebar con el panel derecho que muestra el listado de las migraciones cronológicamente -->
+    <aside id="info" class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+        <div class="p-3 d-flex flex-column">
+            <div class="d-flex align-items-center">
+                <h6 class="mr-3">CYP2D6 Alleles-Expansions</h6>
+                <a class="nav-link ml-auto" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#"
+                   role="button">
+                    <i class="fas fa-times"></i>
+                </a>
             </div>
-        </aside>
-
-
+            <ul id="displayed-list" style="font-size:11px;"></ul>
+        </div>
+    </aside>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <section class="content-header" style= "padding-top: 3px; padding-bottom: 3px;">
+        <section class="content-header" style="padding-top: 3px; padding-bottom: 3px;">
         </section>
         <!-- Main content -->
         <section class="content">
@@ -253,11 +194,12 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header" style= "padding-top: 0.50rem; padding-bottom: 0.50rem;">
+                            <div class="card-header" style="padding-top: 0.50rem; padding-bottom: 0.50rem;">
                                 <h3 class="card-title">Map - CYP2D6 Alleles-Expansions</h3>
                                 <div class="card-tools">
-                                        <div class="d-inline-block">
-                                        <select class="form-control form-control-sm" name="regionTimeLine" id="regionTimeLine" style= "width:140px;">
+                                    <div class="d-inline-block">
+                                        <select class="form-control form-control-sm" name="regionTimeLine"
+                                                id="regionTimeLine" style="width:140px;">
                                             <option value="All the World">All the World</option>
                                             <option value="Africa">Africa</option>
                                             <option value="Western Asia">Western Asia</option>
@@ -268,44 +210,55 @@
                                             <option value="Latin America & Carib">Latin America & Carib</option>
                                         </select>
 
-                                        </div>
+                                    </div>
 
-                                        <div class="d-inline-block">
-                                         <button class="btnok btn-primary btn-sm border-right" id="btreload">Load</button>
-                                        </div>
-                                        <div class="d-inline-block">
-                                         <button class="btnok btn-success btn-sm border-right" id="legend" hidden="true"
-                                         >Legend</button>
-                                        </div>
-                                        <div class="d-inline-block">
-                                            <button type="button" class="btnok btn-sm btn-toggle-legend btn-danger"
+                                    <div class="d-inline-block">
+                                        <button class="btnok btn-primary btn-sm border-right" id="btreload">Load
+                                        </button>
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <button class="btnok btn-success btn-sm border-right" id="legend" hidden="true"
+                                        >Legend
+                                        </button>
+                                    </div>
+                                    <div class="d-inline-block">
+                                        <button type="button" class="btnok btn-sm btn-toggle-legend btn-danger"
                                                 title="Show/Hide Legend" id="toggleLegendPanel">
-                                                <i class="fas fa-book-open"></i>
+                                            <i class="fas fa-book-open"></i>
+                                        </button>
+                                        <button id="toggleWalking" type="button" class="btnok btn-sm btn-secondary"
+                                                title="CYP2D6 Alleles-Expansions"
+                                                data-widget="control-sidebar"
+                                                data-controlsidebar-slide="true">
+                                            <i class="fas fa-walking"></i>
+                                        </button>
+                                        <div class="d-inline-block">
+                                            <select class="form-control form-control-sm" name="timeRange" id="timeRange"
+                                                    disabled>
+                                                <option value="-15000/2025">From 15000 YBP to year 2025</option>
+                                                <option value="-1800000/-804400">Homo Erectus Migrations</option>
+                                                <option value="-700000/-190539">Heidelbergensis Migrations</option>
+                                                <option value="-69000/-15000" selected>Homo Sapiens Migrations</option>
+                                                <option value="-130000/-115000">-130000 to -115000 High Temperature
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btnok btn-sm btn-toggle-panel btn-warning"
+                                                title="Time Range Selection" id="toggleTimeRangePanel">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <div class="d-inline-block">
+                                            <button type="button" class="btnok btn-sm btn-info" id="startTourBtn"
+                                                    title="Iniciar Tour Guiado">
+                                                <i class="fas fa-question-circle"></i> Help
                                             </button>
-                                            <button type="button" class="btnok btn-sm btn-secondary"
-                                                    title="CYP2D6 Alleles-Expansions"
-                                                    data-widget="control-sidebar"
-                                                    data-controlsidebar-slide="true">
-                                                <i class="fas fa-walking"></i>
-                                            </button>
-                                            <div class="d-inline-block">
-                                                <select class="form-control form-control-sm" name="timeRange" id="timeRange" disabled>
-                                                    <option value="-15000/2025">From 15000 YBP to year 2025</option>
-                                                    <option value="-1800000/-804400">Homo Erectus Migrations</option>
-                                                    <option value="-700000/-190539">Heidelbergensis Migrations</option>
-                                                    <option value="-69000/-15000" selected>Homo Sapiens Migrations</option>
-                                                    <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
-                                                </select>
-                                                    </div>
-                                            <button type="button" class="btnok btn-sm btn-toggle-panel btn-warning"
-                                                    title="Time Range Selection" id="toggleTimeRangePanel">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                  </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-body" style= "padding-top: 0.70rem; padding-bottom: 0.70rem; padding-left: 2rem; padding-right: 2rem;">
+                            <div class="card-body"
+                                 style="padding-top: 0.70rem; padding-bottom: 0.70rem; padding-left: 2rem; padding-right: 2rem;">
                                 <div class="right-sidebar d-flex">
                                     <div id="map" class="map-container col-lg-12"></div>
                                     <div id="timeRangeMigraions" class="time-range-container">
@@ -319,45 +272,24 @@
                                         </select>
                                     </div>
                                 </div>
-                            
-                                <script>
-                                    // Duración fija para el loader en milisegundos (10 segundos)
-                                    const LOADER_DURATION = 10000;
-                                    // 1. Mostrar el loader en cuanto el DOM esté listo.
-                                    document.addEventListener('DOMContentLoaded', function () {
-                                        Swal.fire({
-                                            title: 'Updating TimeLine Data...',
-                                            html: 'Please wait a few seconds...',
-                                            timer: LOADER_DURATION,
-                                            timerProgressBar: true, // barra de progreso del tiempo
-                                            allowOutsideClick: false,
-                                            allowEscapeKey: false,
-                                            didOpen: () => {
-                                                Swal.showLoading();
-                                            }
-                                        });
-
-                                    });
-
-                                </script>
 
                                 <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
                                 <script>
                                     // Duración fija para el loader en milisegundos (10 segundos)
                                     const LOADER_DURATION = 15000;
                                     // 1. Mostrar el loader en cuanto el DOM esté listo.
-                                   // document.addEventListener('DOMContentLoaded', function () {
-                                        Swal.fire({
-                                            title: 'Updating TimeLine Data...',
-                                            html: 'Please wait a few seconds...',
-                                            timer: LOADER_DURATION,
-                                            timerProgressBar: true, // barra de progreso del tiempo
-                                            allowOutsideClick: false,
-                                            allowEscapeKey: false,
-                                            didOpen: () => {
-                                                Swal.showLoading();
-                                            }
-                                        });
+                                    // document.addEventListener('DOMContentLoaded', function () {
+                                    Swal.fire({
+                                        title: 'Updating TimeLine Data...',
+                                        html: 'Please wait a few seconds...',
+                                        timer: LOADER_DURATION,
+                                        timerProgressBar: true, // barra de progreso del tiempo
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
 
                                     //});
 
@@ -397,19 +329,19 @@
                                 <script>
 
                                     if (!sessionStorage.getItem('inicializado')) {
-                                     // Código que solo se ejecuta en la primera carga
-                                     sessionStorage.setItem('beginIntervalsesion', -69000);
-                                     sessionStorage.setItem('endIntervalsesion', -15000);
-                                     sessionStorage.setItem('durationSesion', 54000);
-                                     sessionStorage.setItem('lat', 5);
-                                     sessionStorage.setItem('long', 155);
-                                     sessionStorage.setItem('zoom', 2.1);
-                                     sessionStorage.setItem('timeRange', '-69000/-15000');
-                                     sessionStorage.setItem('timeRangeMigraions', '-69000/-15000');
-                                     sessionStorage.setItem('region', 'All the World');
-                                     sessionStorage.setItem('inicializado', 'true');
-                                     sessionStorage.setItem('timedelayice', 'PT9S');
-                                     sessionStorage.setItem('timedelayland', 'PT9S');
+                                        // Código que solo se ejecuta en la primera carga
+                                        sessionStorage.setItem('beginIntervalsesion', -69000);
+                                        sessionStorage.setItem('endIntervalsesion', -15000);
+                                        sessionStorage.setItem('durationSesion', 54000);
+                                        sessionStorage.setItem('lat', 5);
+                                        sessionStorage.setItem('long', 155);
+                                        sessionStorage.setItem('zoom', 2.1);
+                                        sessionStorage.setItem('timeRange', '-69000/-15000');
+                                        sessionStorage.setItem('timeRangeMigraions', '-69000/-15000');
+                                        sessionStorage.setItem('region', 'All the World');
+                                        sessionStorage.setItem('inicializado', 'true');
+                                        sessionStorage.setItem('timedelayice', 'PT9S');
+                                        sessionStorage.setItem('timedelayland', 'PT9S');
                                     }
 
                                     var timeRange = sessionStorage.getItem('timeRange');
@@ -423,14 +355,11 @@
                                     regionTimeLineIni.value = sessionStorage.getItem('region');
                                     timeRangeMigraionsIni.value = sessionStorage.getItem('timeRange');
                                     var timeOld = sessionStorage.getItem('beginIntervalsesion');
-                                    //var timeAnt = sessionStorage.getItem('beginIntervalsesion')-10000;
                                     var currentTimeAnt = -1810000;
                                     var migrationlist = new Array();
 
-
-
                                     // Capa Base con mapa político
-                                    var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";  //"http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png";
+                                    var countriesLayers = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"; 
                                     var osmAttrib = "CYP2D6 Alleles-Expansions";
                                     var osmcountriesLayers = L.tileLayer(countriesLayers, {
                                         minZoom: 1,
@@ -463,143 +392,114 @@
                                     });
 
 
-if (timeRange === "-12000/2025")
-{
+                                    if (timeRange === "-12000/2025") {
 
-                                    // Creación de la variable del Mapa
-                                    var map = L.map("map", {
-                                        layers: [satelitalLayer],
-                                        center: new L.LatLng(10, 120),//new L.LatLng(-3, 20),
-                                        zoom: 2,//4,
-                                        maxBounds: [
-                                            [90, -50],
-                                            [-90, 335],
-                                        ],
-                                    });
+                                        // Creación de la variable del Mapa
+                                        var map = L.map("map", {
+                                            layers: [satelitalLayer],
+                                            center: new L.LatLng(10, 120),//new L.LatLng(-3, 20),
+                                            zoom: 2,//4,
+                                            maxBounds: [
+                                                [90, -50],
+                                                [-90, 335],
+                                            ],
+                                        });
 
-                                    map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
+                                        map.setView(new L.LatLng(parseInt(sessionStorage.getItem('lat')), parseInt(sessionStorage.getItem('long'))), parseInt(sessionStorage.getItem('zoom')));
 
+                                        // Inicializar el filtro de eventos
+                                        // Capa de las marcas
+                                        markerLayer = new L.featureGroup().addTo(map);
+                                        var markerMigrationPointLayer = new L.featureGroup().addTo(map);
+                                        var labeled = false;
+                                        //var eventFilter = new EventTimeFilter(map, null, timeRange);
+                                    } else {
+                                        // Función para ajustar el mapa según el tamaño de la pantalla
+                                        if (window.innerWidth <= 768) { // Consideramos pantallas pequeñas (por ejemplo, teléfonos)
+                                            var map = L.map('map', {
+                                                layers: [satelitalLayer], //[osmcountriesLayers],
+                                                zoom: 2,//14,],
+                                                fullscreenControl: true,
+                                                timeDimension: true,
+                                                center: new L.LatLng(10, 20) //[36.72, -4.43]
+                                            });
+                                        } else {
+                                            var map = L.map('map', {
+                                                layers: [satelitalLayer], //[osmcountriesLayers],
+                                                zoomSnap: 0.1,
+                                                zoom: 2.1,//14,],
+                                                fullscreenControl: true,
+                                                timeDimension: true,
+                                                center: new L.LatLng(5, 155), //[36.72, -4.43]
+                                            });
+                                        }
 
-                                    // Inicializar el filtro de eventos
+                                        L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
+                                            _getDisplayDateFormat: function (date) {
+                                                return date.getTime() + " Years Before"; //Date.parse(date); //date.getFullYear();
+                                            }
+                                        });
+                                        var timeDimensionControl = new L.Control.TimeDimensionCustom({
+                                            displayTime: false,
+                                            timeSliderDragUpdate: true,
+                                            loopButton: true,
+                                            //speed: 60,
+                                            minSpeed: 0,
+                                            maxSpeed: 60,
+                                            speedStep: 1,
+                                            speedSlider: true,
+                                            autoPlay: false,
+                                            playerOptions: {
+                                                transitionTime: 50, // Velocidad INICIAL (ms entre pasos)
+                                                minTransitionTime: 16, // 60 FPS (1000ms/60 ≈ 16ms)
+                                                maxTransitionTime: 50, // 20 FPS (1000ms/20 = 50ms)
+                                                loop: false
+                                                // buffer: 1,
+                                                // minBufferReady: -1
+                                            }
 
-                                    // Capa de las marcas
-                                    markerLayer = new L.featureGroup().addTo(map);
-                                    var markerMigrationPointLayer = new L.featureGroup().addTo(map);
-                                    var labeled = false;
-                                    //var eventFilter = new EventTimeFilter(map, null, timeRange);
-}
-else
-{
-    // Función para ajustar el mapa según el tamaño de la pantalla
-    if (window.innerWidth <= 768)
-    { // Consideramos pantallas pequeñas (por ejemplo, teléfonos)
-     var map = L.map('map', {
-      layers: [satelitalLayer], //[osmcountriesLayers],
-      zoom: 2,//14,],
-      fullscreenControl: true,
-      timeDimension: true,
-      center: new L.LatLng(10, 20) //[36.72, -4.43]
-     });
-    }
-    else
-    {
-     var map = L.map('map', {
-      layers: [satelitalLayer], //[osmcountriesLayers],
-      zoomSnap: 0.1,
-      zoom: 1.8,//14,],
-      fullscreenControl: true,
-      timeDimension: true,
+                                        });
 
-      center: new L.LatLng(5, 155), //[36.72, -4.43]
-     });
-
-    }
-var legendControl = createLegend();
-    legendControl.addTo(map);
-
-L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
-    _getDisplayDateFormat: function(date){
-        return date.getTime()+" Years Before"; //Date.parse(date); //date.getFullYear();
-    }
-});
-var timeDimensionControl = new L.Control.TimeDimensionCustom({
-        displayTime: false,
-        timeSliderDragUpdate: true,
-        loopButton: true,
-        //speed: 60,
-        minSpeed: 0,
-        maxSpeed: 60,
-        speedStep: 1,
-        speedSlider: true,
-        autoPlay: false,
-    playerOptions: {
-        transitionTime: 50, // Velocidad INICIAL (ms entre pasos)
-        minTransitionTime: 16, // 60 FPS (1000ms/60 ≈ 16ms)
-        maxTransitionTime: 50, // 20 FPS (1000ms/20 = 50ms)
-        loop: false
-       // buffer: 1,
-       // minBufferReady: -1
-    }
-
-});
-
-map.addControl(timeDimensionControl);
+                                        map.addControl(timeDimensionControl);
 
 
 // Inicializar el filtro de eventos                                    
 // Capa de las marcas
-markerLayer = new L.featureGroup().addTo(map);
-var markerMigrationPointLayer = new L.featureGroup().addTo(map);
-var labeled = false;
-//var eventFilter = new EventTimeFilter(map, null, timeRange);
-
+                                        markerLayer = new L.featureGroup().addTo(map);
+                                        var markerMigrationPointLayer = new L.featureGroup().addTo(map);
+                                        var labeled = false;
 
 // Get the TimeDimension instance from the map
-var timeDimension = map.timeDimension;
-// Initialize EventTimeFilter with both map and timeDimension
-
-//var eventFilter = new EventTimeFilter(map, timeDimension, timeRange);
+                                        var timeDimension = map.timeDimension;
 
 // Configurar el selector de rangos
 // Configurar el selector de rangos// LOS CAMBIOS FUERON AQUI
-var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelector('select');
-    if (timeRangeSelect) {
-        // Si no hay valor en sessionStorage, usar el valor de la primera opción por defecto
-        if (!sessionStorage.getItem('timeRange')) {
-            timeRange = timeRangeSelect.options[0].value;
-            sessionStorage.setItem('timeRange', timeRange);
-        }
-        // Remover selected de todas las opciones primero
-        Array.from(timeRangeSelect.options).forEach(option => {
-            option.removeAttribute('selected');
-        });
-        // Establecer la opción correcta como selected
-        timeRangeSelect.value = timeRange;
-        timeRangeSelect.options[timeRangeSelect.selectedIndex].setAttribute('selected', 'selected');
+                                        var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelector('select');
+                                        if (timeRangeSelect) {
+                                            // Si no hay valor en sessionStorage, usar el valor de la primera opción por defecto
+                                            if (!sessionStorage.getItem('timeRange')) {
+                                                timeRange = timeRangeSelect.options[0].value;
+                                                sessionStorage.setItem('timeRange', timeRange);
+                                            }
+                                            // Remover selected de todas las opciones primero
+                                            Array.from(timeRangeSelect.options).forEach(option => {
+                                                option.removeAttribute('selected');
+                                            });
+                                            // Establecer la opción correcta como selected
+                                            timeRangeSelect.value = timeRange;
+                                            timeRangeSelect.options[timeRangeSelect.selectedIndex].setAttribute('selected', 'selected');
 
-        timeRangeSelect.addEventListener('change', function(e) {
-            var newRange = e.target.value;
-            sessionStorage.setItem('timeRange', newRange);
-            location.reload();
-        });
-    }
-  /*
-    var timeRangeSelect = document.getElementById('timeRangeMigraions');
-    if (timeRangeSelect) {
-        timeRangeSelect.value = timeRange;
+                                            timeRangeSelect.addEventListener('change', function (e) {
+                                                var newRange = e.target.value;
+                                                sessionStorage.setItem('timeRange', newRange);
+                                                location.reload();
+                                            });
+                                        }
 
-        timeRangeSelect.addEventListener('change', function(e) {
-            var newRange = e.target.value;
-            sessionStorage.setItem('timeRange', newRange);
-            location.reload();
-        });
-    }
-    */
+                                        //Capa de marcadores por defecto apagada
+                                        markerLayer.remove();
 
-    //Capa de marcadores por defecto apagada
-    markerLayer.remove();
-
-}
+                                    }
 
                                     var timelinetimedimension = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homosapiens.geojson' %}";
                                     var timelinetimedimensionHomoSapiens = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homosapiens.geojson' %}";
@@ -613,36 +513,35 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                     var iconUrlpathDestinationMigrationHomoHeidel = "{% static 'assets/dist/Leaflet/primitive-man1.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHerectus = "{% static 'assets/dist/Leaflet/primitive-man25.png' %}";
 
-
                                     // Función para crear la leyenda deslizante
                                     function createSlidingLegend() {
                                         var legendContainer = document.createElement('div');
                                         legendContainer.id = 'legendContainer';
                                         legendContainer.className = 'legend-container';
-                                        
+
                                         // Crear el contenido de la leyenda usando tu función existente
                                         var legendDiv = createLegendContent();
                                         legendContainer.appendChild(legendDiv);
-                                        
+
                                         return legendContainer;
                                     }
-                                    
+
                                     // Función que extrae solo el contenido HTML de tu leyenda original
                                     function createLegendContent() {
                                         var div = document.createElement("div");
                                         div.className = "legend";
                                         div.innerHTML = "<h4>Legend</h4>";
-                                        
+
                                         // Contenedor principal de dos columnas
                                         var columnsContainer = document.createElement("div");
                                         columnsContainer.className = "legend-columns-container";
                                         div.appendChild(columnsContainer);
-                                        
+
                                         // PRIMERA COLUMNA
                                         var firstColumn = document.createElement("div");
                                         firstColumn.className = "legend-column";
                                         columnsContainer.appendChild(firstColumn);
-                                        
+
                                         // Sección: Especies Humanas
                                         var speciesSection = document.createElement("div");
                                         speciesSection.className = "legend-section";
@@ -653,26 +552,26 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                             '<div class="legend-item"><i style="background: #FFFFFF; border: 1px solid #999"></i><span>Glacials</span></div>' +
                                             '<div class="legend-item"><i style="background: #676a4a; border: 1px solid #999"></i><span>Land Emerge</span></div>';
                                         firstColumn.appendChild(speciesSection);
-                                        
+
                                         // Separador
                                         firstColumn.innerHTML += '<hr class="legend-separator">';
-                                        
+
                                         // Sección: Tipos de Eventos (desde Django)
                                         var eventsSection = document.createElement("div");
                                         eventsSection.className = "legend-section";
                                         eventsSection.innerHTML = '<h5>Event Types</h5>';
                                         firstColumn.appendChild(eventsSection);
-                                        
+
                                         // Aquí agregamos los tipos de eventos desde Django
                                         {% for event_type in events_types %}
-                                        eventsSection.innerHTML += '<div class="legend-item"><i class="icon" style="background-image: url({{ event_type.icon.url }});background-repeat: no-repeat;"></i><span>{{ event_type.name }}</span></div>';
+                                            eventsSection.innerHTML += '<div class="legend-item"><i class="icon" style="background-image: url({{ event_type.icon.url }});background-repeat: no-repeat;"></i><span>{{ event_type.name }}</span></div>';
                                         {% endfor %}
-                                        
+
                                         // SEGUNDA COLUMNA
                                         var secondColumn = document.createElement("div");
                                         secondColumn.className = "legend-column";
                                         columnsContainer.appendChild(secondColumn);
-                                        
+
                                         // Sección: Población
                                         var populationSection = document.createElement("div");
                                         populationSection.className = "legend-section";
@@ -694,26 +593,26 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                             '<div class="legend-item"><i style="background: #004D33"></i><span>1,000 to 2,000 million people</span></div>' +
                                             '<div class="legend-item"><i style="background: #003322"></i><span>More than 2,000 million people</span></div>';
                                         secondColumn.appendChild(populationSection);
-                                        
+
                                         return div;
                                     }
-                                    
+
                                     // Control para mostrar/ocultar la leyenda
                                     document.addEventListener('DOMContentLoaded', function () {
                                         const toggleLegendButton = document.getElementById('toggleLegendPanel');
                                         const mapContainer = document.getElementById('map');
-                                        
+
                                         // Crear y agregar el contenedor de leyenda
                                         const legendContainer = createSlidingLegend();
                                         document.querySelector('.right-sidebar').appendChild(legendContainer);
-                                        
+
                                         toggleLegendButton.addEventListener('click', function () {
                                             // Alternar la clase 'open' en el panel de leyenda
                                             legendContainer.classList.toggle('open');
-                                            
+
                                             // Alternar la clase 'legend-open' en el mapa para el ancho
                                             mapContainer.classList.toggle('legend-open');
-                                            
+
                                             // Actualizar el mapa cuando cambie el tamaño del contenedor
                                             setTimeout(function () {
                                                 if (typeof map !== 'undefined') {
@@ -721,12 +620,8 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                                 }
                                             }, 300);
                                         });
-                                        
-                                        // NO llamar a createLegend() original - ya no la necesitamos
-                                        // var legendControl = createLegend();
-                                        // legendControl.addTo(map);
-                                    });
 
+                                    });
 
                                 </script>
                                 <!-- Script que almacena en la variable authenticated el estado del usuario, si esta autenticado o no -->
@@ -749,16 +644,280 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
 
                                 <!-- Capa de marcadores por defecto apagada -->
                                 <script>
-                                 markerLayer.remove();
+                                    markerLayer.remove();
 
-                                     // Carga los eventos del Api
-                                     fetchEventsFromAPI();
+                                    // Carga los eventos del Api
+                                    fetchEventsFromAPI();
                                 </script>
 
                                 <!-- Este es el archivo que tiene la llamada a la función eqfeed_callback -->
                                 <!-- y tiene como parámetro varios de los vectores que conforman la línea del tiempo -->
                                 <!-- los cuáles son: el hielo, la tierra que emerge y las trayectorias de las migraciones-->
                                 <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/migration-timeline.geojsonp' %}"></script>
+                                <script>
+                                    // Según la documentación oficial exacta
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        console.log('=== INICIALIZANDO TOUR COMPLETO ===');
+
+                                        setTimeout(function () {
+                                            try {
+                                                // Enfoque de la documentación oficial
+                                                const driverObj = window.driver.js.driver({
+                                                    popoverClass: 'driverjs-theme',
+                                                    showProgress: true,
+                                                    animate: true,
+                                                    overlayOpacity: 0.7,
+                                                    smoothScroll: false,
+                                                    allowClose: true,
+                                                    stagePadding: 10,
+                                                    stageRadius: 5
+                                                });
+
+                                                // Definir todos los pasos del tour
+                                                const steps = [
+                                                    {
+                                                        element: '#map',
+                                                        popover: {
+                                                            title: '🗺️ Principal Map',
+                                                            description: 'This is the interactive map that visualizes all human migrations and the spread of CYP2D6 alleles over time and space. You can zoom in with the mouse wheel and drag to navigate through different regions.',
+                                                            side: "bottom",
+                                                            align: 'center'
+                                                        }
+                                                    },
+                                                    {
+                                                        element: '#regionTimeLine',
+                                                        popover: {
+                                                            title: '🌍 Filter by Region',
+                                                            description: 'Select a specific geographic region to filter the migrations displayed on the map. By default, all world regions are shown. Options include Africa, Asia, Europe, the Americas, and more.',
+                                                            side: "left",
+                                                            align: 'start'
+                                                        }
+                                                    },
+                                                    {
+                                                        element: '#btreload',
+                                                        popover: {
+                                                            title: '🔄 Load Data',
+                                                            description: 'After selecting the desired filters, click here to apply the changes and load the corresponding data onto the map. This will update the display with the selected region and time period.',
+                                                            side: "bottom",
+                                                            align: 'center'
+                                                        }
+                                                    },
+                                                    {
+                                                        element: '#timeRange',
+                                                        popover: {
+                                                            title: '⏰ Time Range',
+                                                            description: 'Select different historical periods to visualize specific migrations. Includes migrations of Homo sapiens, Homo erectus, Heidelbergensis, and specific climate periods such as the Last Glacial Maximum.',
+                                                            side: "bottom",
+                                                            align: 'center'
+                                                        }
+                                                    },
+                                                    {
+                                                        element: '#toggleTimeRangePanel',
+                                                        popover: {
+                                                            title: '📊 Time Range Panel',
+                                                            description: 'Click here to show or hide the side panel with additional time range options. Useful for quickly accessing different preconfigured periods.',
+                                                            side: "left",
+                                                            align: 'start'
+                                                        }
+                                                    },
+                                                    {
+                                                        element: '#toggleLegendPanel',
+                                                        popover: {
+                                                            title: '📖 Map Legend',
+                                                            description: 'Open and close the legend panel to understand the meaning of the different symbols, colors, and icons used on the map. It includes information on human species, event types, and population density.',
+                                                            side: "left",
+                                                            align: 'start'
+                                                        }
+                                                    },
+                                                    {
+                                                        element: '#toggleWalking',
+                                                        popover: {
+                                                            title: '👣 Migration List',
+                                                            description: 'Show or hide the side panel with the complete chronological list of all CYP2D6 allele migrations and expansions. Allows you to quickly navigate between different migration events.',
+                                                            side: "left",
+                                                            align: 'start'
+                                                        }
+                                                    },
+                                                    {
+                                                        element: '.map-container',
+                                                        popover: {
+                                                            title: '🎯 Map Interaction',
+                                                            description: 'You can click on any marker on the map to see specific event details. Different colors and symbols represent different types of migrations and genetic expansion events.',
+                                                            side: "mid-center",
+                                                            align: 'center'
+                                                        }
+                                                    },
+                                                    {
+                                                        element: '#startTourBtn',
+                                                        popover: {
+                                                            title: '❓ Help and Suport',
+                                                            description: 'You can always restart this guided tour by clicking this button if you need a refresher on available features or have questions about how to use the app.',
+                                                            side: "bottom",
+                                                            align: 'center'
+                                                        }
+                                                    }
+                                                ];
+
+                                                // Configurar botón de inicio del tour
+                                                const startBtn = document.getElementById('startTourBtn');
+                                                if (startBtn) {
+                                                    startBtn.addEventListener('click', () => {
+                                                        driverObj.setSteps(steps);
+                                                        driverObj.drive();
+                                                    });
+                                                    console.log('✅ Botón de tour configurado');
+                                                }
+
+                                                // Auto-inicio en primera visita
+                                                if (!sessionStorage.getItem('driverTourShown')) {
+                                                    setTimeout(() => {
+                                                        driverObj.setSteps(steps);
+                                                        driverObj.drive();
+                                                        sessionStorage.setItem('driverTourShown', 'true');
+                                                        console.log('✅ Tour automático iniciado');
+                                                    }, 3000);
+                                                }
+
+                                            } catch (error) {
+                                                console.error('Error con driver.js.driver:', error);
+                                                tryAlternativeApproach();
+                                            }
+                                        }, 1000);
+                                    });
+
+                                    function tryAlternativeApproach() {
+                                        console.log('Probando enfoque alternativo...');
+
+                                        // Intentar diferentes formas
+                                        const drivers = [
+                                            () => window.driver?.(),
+                                            () => window.driver?.js?.driver?.(),
+                                            () => window.driverjs?.driver?.()
+                                        ];
+
+                                        for (let i = 0; i < drivers.length; i++) {
+                                            try {
+                                                const driverObj = drivers[i]();
+                                                if (driverObj) {
+                                                    console.log(`✅ Driver inicializado con enfoque ${i + 1}`);
+                                                    setupTour(driverObj);
+                                                    return;
+                                                }
+                                            } catch (e) {
+                                                console.log(`❌ Enfoque ${i + 1} falló:`, e.message);
+                                            }
+                                        }
+
+                                        console.error('❌ Todos los enfoques fallaron');
+                                    }
+
+                                    function setupTour(driverObj) {
+                                        // Definir todos los pasos del tour (misma estructura que arriba)
+                                        const steps = [
+                                            {
+                                                element: '#map',
+                                                popover: {
+                                                    title: '🗺️ Mapa Principal',
+                                                    description: 'Este es el mapa interactivo donde se visualizan todas las migraciones humanas y la expansión de los alelos CYP2D6.',
+                                                    side: "bottom",
+                                                    align: 'center'
+                                                }
+                                            },
+                                            {
+                                                element: '#regionTimeLine',
+                                                popover: {
+                                                    title: '🌍 Filtro por Región',
+                                                    description: 'Selecciona una región geográfica específica para filtrar las migraciones.',
+                                                    side: "left",
+                                                    align: 'start'
+                                                }
+                                            },
+                                            {
+                                                element: '#btreload',
+                                                popover: {
+                                                    title: '🔄 Cargar Datos',
+                                                    description: 'Haz clic aquí para aplicar los filtros seleccionados.',
+                                                    side: "bottom",
+                                                    align: 'center'
+                                                }
+                                            },
+                                            {
+                                                element: '#timeRange',
+                                                popover: {
+                                                    title: '⏰ Rango de Tiempo',
+                                                    description: 'Selecciona diferentes períodos históricos para visualizar migraciones específicas.',
+                                                    side: "bottom",
+                                                    align: 'center'
+                                                }
+                                            },
+                                            {
+                                                element: '#toggleTimeRangePanel',
+                                                popover: {
+                                                    title: '📊 Panel de Rangos',
+                                                    description: 'Muestra/oculta panel lateral con opciones de tiempo.',
+                                                    side: "left",
+                                                    align: 'start'
+                                                }
+                                            },
+                                            {
+                                                element: '#toggleLegendPanel',
+                                                popover: {
+                                                    title: '📖 Leyenda',
+                                                    description: 'Abre/cierra el panel de leyenda del mapa.',
+                                                    side: "left",
+                                                    align: 'start'
+                                                }
+                                            },
+                                            {
+                                                element: '#toggleWalking',
+                                                popover: {
+                                                    title: '👣 Lista de Migraciones',
+                                                    description: 'Panel lateral con lista cronológica de eventos.',
+                                                    side: "left",
+                                                    align: 'start'
+                                                }
+                                            },
+                                            {
+                                                element: '#startTourBtn',
+                                                popover: {
+                                                    title: '❓ Ayuda',
+                                                    description: 'Reinicia este tour cuando lo necesites.',
+                                                    side: "bottom",
+                                                    align: 'center'
+                                                }
+                                            }
+                                        ];
+
+                                        // Configurar botón
+                                        const startBtn = document.getElementById('startTourBtn');
+                                        if (startBtn) {
+                                            startBtn.addEventListener('click', () => {
+                                                if (driverObj.setSteps) {
+                                                    driverObj.setSteps(steps);
+                                                    driverObj.drive();
+                                                } else if (driverObj.defineSteps) {
+                                                    driverObj.defineSteps(steps);
+                                                    driverObj.start();
+                                                }
+                                            });
+                                        }
+
+                                        // Auto-inicio
+                                        if (!sessionStorage.getItem('tourShown')) {
+                                            setTimeout(() => {
+                                                if (driverObj.setSteps) {
+                                                    driverObj.setSteps(steps);
+                                                    driverObj.drive();
+                                                } else if (driverObj.defineSteps) {
+                                                    driverObj.defineSteps(steps);
+                                                    driverObj.start();
+                                                }
+                                                sessionStorage.setItem('tourShown', 'true');
+                                            }, 2000);
+                                        }
+                                    }
+                                </script>
+
                             </div>
                             <!-- /.card-body -->
                         </div>
@@ -772,7 +931,11 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
         </section>
     </div>
 
-     <!-- Modal que muestra info de los eventos asi como sus imagenes correspondientes -->
+   
+
+
+
+    <!-- Modal que muestra info de los eventos asi como sus imagenes correspondientes -->
     <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -808,32 +971,32 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
             </div>
         </div>
     </div>
-       <!-- End modal -->
+    <!-- End modal -->
 
 
     <!-- Modal que muestra la leyenda -->
     <div class="modal fade" id="legendModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel"
-    aria-hidden="true">
-   <div class="modal-dialog" role="document">
-       <div class="modal-content">
-           <div class="modal-header">
-               <h5 class="modal-title" id="eventModalLabel">Legend</h5>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                   <span aria-hidden="true">&times;</span>
-               </button>
-           </div>
-           <div class="modal-body">
-            <img src="{% static 'assets/dist/Leaflet/Leyenda-Short.jpg' %}"
-            alt="Legend"
-            style="height: 500px;">
-           </div>
-           <div class="modal-footer">
-               <button type="button" class="btnok btn-secondary" data-dismiss="modal">Close</button>
-           </div>
-       </div>
-   </div>
-</div>
-  <!-- End modal -->
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventModalLabel">Legend</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="{% static 'assets/dist/Leaflet/Leyenda-Short.jpg' %}"
+                         alt="Legend"
+                         style="height: 500px;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btnok btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End modal -->
 
 
 {% endblock %}
