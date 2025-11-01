@@ -174,7 +174,7 @@ function showGenesModal(id) {
                             },
                             {
                                 extend: 'print',
-                                text: 'Imprimir'
+                                text: 'Print'
                             }
                         ],
                                  
@@ -195,7 +195,7 @@ function showGenesModal(id) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'No se pudieron cargar los datos',
+                text: 'Could not load data',
                 timer: 3000
             });
         });
