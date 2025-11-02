@@ -11,8 +11,8 @@ from apps.business_app.serializers.gene_group_middle_serializer import (
 
 class GeneSerializer(serializers.ModelSerializer):
     gene_status_list = GeneStatusMiddleReadSerializer(many=True, read_only=True)
-    groups = serializers.StringRelatedField(many=True)
-    disorders = serializers.StringRelatedField(many=True)
+    groups_names = serializers.StringRelatedField(many=True, source="groups")
+    disorders_names = serializers.StringRelatedField(many=True, source="disorders")
 
     class Meta:
         model = Gene
@@ -21,10 +21,13 @@ class GeneSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "status",
+            "groups_names",
+            "disorders_names",
             "groups",
             "disorders",
             "gene_status_list",
         ]
+        
 
 
 class GeneGetAllInfoSerializer(serializers.ModelSerializer):
