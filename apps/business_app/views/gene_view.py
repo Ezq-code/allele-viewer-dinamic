@@ -26,9 +26,11 @@ class GeneViewSet(
         .all()
         .prefetch_related(
             "groups",
+            "disorders",
             "gene_status_list__gene_status",
             "disorders__disease_subgroup__disease_group",
         )
+
     )
 
     def get_queryset(self):
@@ -56,6 +58,13 @@ class GeneViewSet(
     ]
     filterset_fields = ("status", "groups", "disorders")
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    # Sobrescribir create y update para manejar relaciones M2M
+    def perform_create(self, serializer):
+        instance = serializer.save()
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
 
     @action(
         detail=False,
