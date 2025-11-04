@@ -1,6 +1,6 @@
 // --- VARIABLES GLOBALES (sin cambios) ---
 let chartsCurrentPage = 1;
-const chartsItemsPerPage = 10;
+const chartsItemsPerPage = 12;
 let activeGroupIdForCharts = null;
 let chartsSearchQuery = '';
 let geneChartInstance = null;
@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const groupId = this.dataset.groupId;
             const groupName = this.dataset.groupName;
             document.getElementById('selected-group-name').textContent = groupName;
+            document.getElementById('gene-charts-section').hidden = false;
+            document.getElementById('gene-charts-section').scrollIntoView({ behavior: 'smooth' });
             await loadChartsForGroup(groupId);
         });
     });
@@ -167,9 +169,9 @@ console.log('✌️genes --->', genes);
             if (typeof GeneDonutChart !== 'undefined') {
                 geneChartInstance = new GeneDonutChart({
                     containerId: 'gene-charts-container',
-                    chartWidth: 200,
-                    chartHeight: 200,
-                    legendTitle: 'Estados de Genes',
+                    chartWidth: 237,
+                    chartHeight: 237,
+                    legendTitle: 'Estados de Genes 222',
                     showLegend: false
                 });
                 console.log('✅ GeneDonutChart instance created.');

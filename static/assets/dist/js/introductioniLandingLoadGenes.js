@@ -1,3 +1,45 @@
+
+/*-html para los botones de genes y la sección de matriz de genes
+
+<section id="gene-matrix" class="gene-matrix section dark-background" hidden>
+      <div class="container">
+        <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
+          <div class="col-xl-12">
+            <div class="text-center">
+              <h3>Gene Matrix</h3>
+                <p>Explore our collection of <span id="selected-group-name"></span> genes. Click on any gene to see its detailed information.</p>
+             <div class="row mb-3">
+             
+                <div class="col-md-6 offset-md-3">
+                    {% comment %} <label for="gene-search-input" class="form-label text-light">Search Gene:</label> {% endcomment %}
+                    <input type="search" id="gene-search-input" class="form-control" placeholder="Type the gene name and press Enter...">
+                </div>
+             </div>
+              <div id="gene-buttons-container" class="mt-4">
+                <!-- Gene buttons will be inserted here -->
+                {% comment %} <div class="spinner-border text-light" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div> {% endcomment %}
+                
+              </div>
+                <nav id="pagination-controls" aria-label="Gene pagination" class="d-none">
+                   <button id="prev-page-btn" class="btn btn-secondary me-2" type="button">
+                     <i class="bi bi-chevron-left"></i> Previous
+                   </button>
+                   <span id="page-info" class="text-light align-middle">Page 1</span>
+                   <button id="next-page-btn" class="btn btn-secondary ms-2" type="button">
+                     Next <i class="bi bi-chevron-right"></i>
+                   </button>
+                </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>*/
+
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
   // --- 1. DOM ELEMENT REFERENCES (Se mantiene igual) ---
   const container = document.getElementById("gene-buttons-container");

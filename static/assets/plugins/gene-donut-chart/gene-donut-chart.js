@@ -25,7 +25,7 @@
         innerRadiusRatio: 0.6,
         colors: ['#dc3545', '#ffc107', '#28a745', '#17a2b8', '#6f42c1', '#fd7e14'],
         animationDuration: 800,
-        showLegend: true,
+        showLegend: false,
         legendTitle: 'Leyenda General',
         legendPosition: 'bottom', // 'bottom' o 'top'
         chartClass: 'gene-donut-chart',
@@ -66,6 +66,7 @@
         // Crear contenedor para la leyenda
         this.legendContainer = document.createElement('div');
         this.legendContainer.className = 'gene-legend-container';
+        this.legendContainer.hidden = true;
         
         // Añadir elementos al DOM
         chartSection.appendChild(this.chartsContainer);
@@ -99,12 +100,12 @@
             
             .gene-donut-chart-wrapper {
                 position: relative;
-                width: ${this.options.chartWidth}px;
-                height: ${this.options.chartHeight}px;
+                width: ${this.options.chartWidth+10}px;
+                height: ${this.options.chartHeight+5}px;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 border-radius: 8px;
                 background-color: white;
-                padding: 15px;
+                padding: 2px;
                 transition: transform 0.3s ease;
             }
             
@@ -197,6 +198,7 @@ console.log('✌️genes --->', genes);
         // Crear leyenda general si está habilitada
         if (this.options.showLegend) {
             this.createLegend(statusData);
+            
         }
         
         // Crear una gráfica para cada gen
