@@ -20329,5 +20329,113 @@
       "description": null,
       "status": 0
     }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2263,
+    "fields": {
+      "name": "HLAE",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2264,
+    "fields": {
+      "name": "HLAF",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2265,
+    "fields": {
+      "name": "HLAG",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2266,
+    "fields": {
+      "name": "HLADRB3",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2267,
+    "fields": {
+      "name": "HLADRB5",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2268,
+    "fields": {
+      "name": "HLADRA",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2269,
+    "fields": {
+      "name": "HLADQA1",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2270,
+    "fields": {
+      "name": "HLADPA1",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2271,
+    "fields": {
+      "name": "TLR1",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2272,
+    "fields": {
+      "name": "TLR6",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2273,
+    "fields": {
+      "name": "TLR10",
+      "description": "",
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2274,
+    "fields": {
+      "name": "OAS1",
+      "description": "",
+      "status": 0
+    }
   }
 ]
