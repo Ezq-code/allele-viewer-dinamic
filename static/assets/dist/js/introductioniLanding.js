@@ -16,7 +16,6 @@ async function loadGeneStatusData() {
             label: status.name,
             color: status.color || '#808080'
         }));
-        console.log('Gene status data loaded:', geneStatusData);
         return true;
     } catch (error) {
         console.error('Error loading gene status data:', error);
@@ -24,8 +23,31 @@ async function loadGeneStatusData() {
     }
 }
 
+// Función manejadora global para los clics en botones de genes
+function handleGeneButtonClick(event) {
+    const button = event.target.closest('.load-info-genes-btn');
+    if (!button) return;
+    
+    const geneName = button.getAttribute('data-gene-name');
+    
+    // Obtener los datos del gen del caché
+    const genes = window.currentGenes || [];
+    const targetGene = genes.find(g => g.name === geneName);
+    
+    if (targetGene) {
+        showGeneDetails(targetGene);
+        $('#genesModal').modal('show');
+    } else {
+        console.error('❌ Gen no encontrado:', geneName);
+        Toast.fire({
+            icon: 'error',
+            title: 'Error',
+            text: `No se encontró información para el gen ${geneName}`
+        });
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-    console.log('DOM loaded, initializing...');
     loadGeneStatusData();
     initializeGeneChartsSection();
     
@@ -70,7 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function initializeGeneChartsSection() {
-        console.log('Gene charts section initialized');
         // La instancia se creará bajo demanda en processAndRenderCharts
         updateLegend();
     }
@@ -87,7 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // --- CAMBIO CLAVE 1: Limpiar la instancia de forma más segura ---
     function clearCharts() {
-        console.log('🧹 clearCharts: Destroying previous instance...');
         if (geneChartInstance) {
             // Si la librería tuviera un método destroy, lo llamaríamos aquí.
             // Por ejemplo: geneChartInstance.destroy();
@@ -131,24 +151,52 @@ document.addEventListener("DOMContentLoaded", function () {
     // --- CAMBIO CLAVE 2: Lógica más robusta para obtener los datos ---
  
 function processAndRenderCharts(genes) {
-console.log('✌️genes --->', genes);
     if (!genes || genes.length === 0) return;
+    
+    // Guardar los genes en una variable global para acceso posterior
+    window.currentGenes = genes;
 
     try {
-        // 1. Preparar los datos para cada gen individualmente
+        // --- INICIO DE LA LÓGICA DE COLORES DINÁMICOS ---
+
+        // 1. Recopilar todos los nombres de estado únicos de todos los genes
+        const allStatusNames = new Set();
+        genes.forEach(gene => {
+            if (gene.gene_status_list && Array.isArray(gene.gene_status_list)) {
+                gene.gene_status_list.forEach(status => {
+                    if (status.gene_status) {
+                        allStatusNames.add(status.gene_status);
+                    }
+                });
+            }
+        });
+        // 2. Definir una paleta de colores amplia y variada
+        const colorPalette = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD',
+            '#FFD93D', '#6C5B7B', '#C06C84', '#F67280', '#355C7D',
+            '#6C5CE7', '#A29BFE', '#FD79A8', '#FDCB6E', '#6C63FF',
+            '#00B894', '#00CEC9', '#0984E3', '#EE5A24', '#F79F1F',
+            '#A3CB38', '#1289A7', '#D980FA', '#B53471', '#30336B'
+        ];
+
+        // 3. Crear el mapa de colores asignando un color a cada estado único
+        const statusColorMap = {};
+        Array.from(allStatusNames).forEach((statusName, index) => {
+            statusColorMap[statusName] = colorPalette[index % colorPalette.length];
+        });
+        // --- FIN DE LA LÓGICA DE COLORES DINÁMICOS ---
+
+        // 4. Preparar los datos para cada gen usando el mapa de colores
         const geneData = genes.map(gene => {
             // Procesar los estados para este gen específico
             const statusData = (gene.gene_status_list || [])
                 .map(status => {
                     const v = parseFloat(status.value);
-                    let color = "#6c757d";
                     
-                    if (!isNaN(v)) {
-                        if (v <= 25) color = "#dc3545";
-                        else if (v <= 50) color = "#ffc107";
-                        else if (v <= 75) color = "#17a2b8";
-                        else color = "#28a745";
-                    }
+                    // NOTA: Se reemplaza la lógica anterior de colores fijos.
+                    // Ahora se busca directamente en nuestro mapa dinámico.
+                    // Si por alguna razón un estado no está en el mapa, se usa un color gris por defecto.
+                    const color = statusColorMap[status.gene_status] || '#CCCCCC';
                     
                     return {
                         label: status.gene_status,
@@ -164,7 +212,7 @@ console.log('✌️genes --->', genes);
             };
         });
 
-        // 2. Asegurarse de que la instancia de la librería existe
+        // 5. Asegurarse de que la instancia de la librería existe
         if (!geneChartInstance) {
             if (typeof GeneDonutChart !== 'undefined') {
                 geneChartInstance = new GeneDonutChart({
@@ -174,23 +222,40 @@ console.log('✌️genes --->', genes);
                     legendTitle: 'Estados de Genes 222',
                     showLegend: false
                 });
-                console.log('✅ GeneDonutChart instance created.');
-            } else {
+              } else {
                 console.error("❌ GeneDonutChart library is not loaded.");
                 return;
             }
         }
 
-        // 3. Renderizar con los datos específicos de cada gen
+        // 6. Renderizar con los datos específicos de cada gen
         geneChartInstance.render(
             geneData.map(g => g.name),
             geneData.map(g => g.statusData)
         );
+        // 7. Configurar listeners para botones y gráficas
+        const chartsContainer = document.getElementById('gene-charts-container');
+        
+        // Remover listeners previos para evitar duplicados
+        chartsContainer.removeEventListener('click', handleGeneButtonClick);
+        chartsContainer.removeEventListener('gene-chart-click', handleChartClick);
+        
+        // Función para manejar clics en la gráfica
+        function handleChartClick(event) {
+            const geneName = event.detail.geneName;            
+            const targetGene = genes.find(g => g.name === geneName);
+            if (targetGene) {
+                showGeneDetails(targetGene);
+                $('#genesModal').modal('show');
+            }
+        }
+        
+        // Agregar los nuevos listeners
+        chartsContainer.addEventListener('click', handleGeneButtonClick);
+        chartsContainer.addEventListener('gene-chart-click', handleChartClick);
 
-        console.log('✅ Renderizado completado con datos específicos por gen.');
         
     } catch (error) {
-        console.error('💥 Error al procesar y renderizar gráficas:', error);
         document.getElementById('error-message').classList.remove('d-none');
         document.getElementById('error-message').textContent = 
             `Error rendering charts: ${error.message}`;
@@ -323,265 +388,220 @@ function downloadEvidence(evidencePath) {
 }
 
 
-// function showGenesModal(id) {
-//     const $spinner = $('#global-spinner-overlay');
-//       $spinner.css('display', 'flex');
-//     // Primero obtenemos los estados disponibles
-//     fetch('/business-gestion/gene-status/')
-//         .then(response => response.json())
-//         .then(statusData => {
-//             // Una vez que tenemos los estados, obtenemos los genes
-//             fetch(`/business-gestion/gene/?groups=${id}`)
-//                 .then(response => response.json())
-//                 .then(geneData => {
-//                     document.getElementById('genesModalLabel').textContent = 'Genomic: Development Stages';
-                    
-//                     // Destruir la tabla existente si ya está inicializada
-//                     if ($.fn.DataTable.isDataTable('#genesTable')) {
-//                         $('#genesTable').DataTable().destroy();
-//                     }
+// --- 7. NEW FUNCTION TO SHOW DETAILS IN BOOTSTRAP MODAL ---
+function showGeneDetails(gene) {
+    const modalTitle = document.getElementById('genesModalLabel');
+    const dashboardContainer = document.getElementById('gene-dashboard-container');
+    dashboardContainer.innerHTML = '';
+    modalTitle.textContent = `Details for ${gene.name}`;
 
-//                     // Preparar las columnas
-//                     const columns = [
-//                         { 
-//                             title: "Gene",
-//                             data: "name"
-//                         }
-//                     ];
+    let dashboardHtml = `
+            <div class="row mb-4">
+                    <div class="col-md-12">
+                            ${gene.description ? `<p>${gene.description}</p>` : ''}
+                    </div>
+            </div>`;
 
-//                     // Agregar una columna para cada estado
-//                     statusData.results.forEach(status => {
-//                         columns.push({
-//                           title: status.name,
-//                           data: null,
-//                           render: function(data, type, row) {
-//                             const statusValue = row.gene_status_list.find(
-//                               sl => sl.gene_status === status.name
-//                             );
-//                             if (statusValue) {
-//                               let badgeClass = "bg-secondary";
-//                               const percent = parseFloat(statusValue.value);
-//                               if (!isNaN(percent)) {
-//                                 if (percent >= 0 && percent <= 25) badgeClass = "bg-danger";
-//                                 else if (percent >= 26 && percent <= 50) badgeClass = "bg-warning";
-//                                 else if (percent >= 51 && percent <= 75) badgeClass = "bg-primary";
-//                                 else if (percent > 75 && percent <= 100) badgeClass = "bg-success";
-//                               }
-//                               const valueWithPercent = `${statusValue.value}%`;
-
-                                
-//                                 if (statusValue.evidence) {
-//                                 return `
-//                                   <span class="badge ${badgeClass}" title="Evidence: ${statusValue.evidence}">${valueWithPercent}</span>
-//                                   <button class="btn btn-sm btn-outline-secondary ms-1" title="Download evidence" onclick="downloadEvidence('${encodeURIComponent(statusValue.evidence)}')">
-//                                   <i class="bi bi-download"></i>
-//                                   </button>
-//                                   <div class="progress progress-xs" style="height: 5px; margin-top: 2px;">
-//                                   <div class="progress-bar ${badgeClass}" style="width: ${valueWithPercent}"></div>
-//                                   </div>
-//                                 `;
-//                                 }
-//                               return `<span class="badge ${badgeClass}">${valueWithPercent}</span> <div class="progress progress-xs" style="height: 5px; margin-top: 2px;">
-//                                   <div class="progress-bar ${badgeClass}" style="width: ${valueWithPercent}"></div>
-//                                   </div> `;
-//                             }
-//                             return '<span class="badge bg-secondary">N/A</span>';
-//                           }
-//                         });
-//                     });
-
-//                     // Inicializar DataTable
-//                     $('#genesTable')
-//                     .addClass("table table-hover")
-//                     .DataTable({
-//                         dom: '<"top"l><"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rtip',
-//                         data: geneData.results,
-//                         columns: columns,
-//                         buttons: [
-//                             {
-//                                 extend: 'excel',
-//                                 text: 'Excel'
-//                             },
-//                             {
-//                                 extend: 'pdf',
-//                                 text: 'PDF'
-//                             },
-//                             {
-//                                 extend: 'print',
-//                                 text: 'Print'
-//                             }
-//                         ],
-                                 
-//                         responsive: true,
-//                         ordering: true,
-//                         searching: true,
-//                         paging: true
-//                     });
-//                     $spinner.css('display', 'none');             
-//                     const modal = new bootstrap.Modal(document.getElementById('genesModal'));
-//                     modal.show();
-
-//                 });
-//         })
-//         .catch(error => {
-//             $spinner.css('display', 'none');
-//             console.error('Error:', error);
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Error',
-//                 text: 'Could not load data',
-//                 timer: 3000
-//             });
-//         });
-// }
-
-
-// // La función ya no necesita recibir un 'id'
-// function showGenomicDiseasesModal() {
-//     const $spinner = $('#global-spinner-overlay');
-//     const $table = $('#genomicDiseasesTable');
-
-//     $spinner.css('display', 'flex');
-
-//     if ($.fn.DataTable.isDataTable($table)) {
-//         $table.DataTable().destroy();
-//         $table.empty();
-//     }
-
-//     $('#genesModalLabel').text('Genomic: Associated Disorders');
-
-//     const dataTable = $table.DataTable({
-//         serverSide: true,
-//         processing: true,
-//         dom: '<"top"l><"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rtip',
-//         ajax: {
-//             url: '/business-gestion/gene/get-all-info/',
-//             type: 'GET',
-//             data: function(d) {
-//                 // Objeto de datos sin el 'gene_id'.
-//                 // El servidor ahora paginará sobre todos los genes.
-//                 return {
-//                     page_size: d.length,
-//                     page: (d.start / d.length) + 1,
-//                     search: d.search.value,
-//                     ordering: d.order.length ? (d.order[0].dir === 'asc' ? d.columns[d.order[0].column].data : '-' + d.columns[d.order[0].column].data) : null
-//                 };
-//             },
-//             dataSrc: function(json) {
-//                 // Esta parte no cambia. Sigue esperando los datos del servidor.
-//                 json.recordsTotal = json.count;
-//                 json.recordsFiltered = json.count;
-//                 return json.results;
-//             }
-//         },
-//         columns: [
-//             {
-//                 title: "Gene",
-//                 data: "name",
-//                 className: 'dt-body-center'
-//             },
-//             {
-//                 title: "Disorders by Group",
-//                 data: "disorders",
-//                 orderable: false,
-//                 // La función render no necesita ningún cambio.
-//                 render: function(data, type, row) {
-//                     if (type === 'display' && Array.isArray(data) && data.length > 0) {
-//                         const groupedDisorders = data.reduce((acc, curr) => {
-//                             const group = curr.disease_group || 'Uncategorized';
-//                             if (!acc[group]) {
-//                                 acc[group] = [];
-//                             }
-//                             acc[group].push(curr);
-//                             return acc;
-//                         }, {});
-
-//                         return Object.entries(groupedDisorders).map(([group, disorders]) => `
-//                             <div class="disorder-group mb-2">
-//                                 <strong class="badge bg-primary mb-1">${group}</strong>
-//                                 <div class="disorder-items">
-//                                     ${disorders.map(d => `
-//                                         <div class="disorder-item">
-//                                             <span class="badge bg-info text-dark me-1" 
-//                                                   style="cursor: pointer;"
-//                                                   onclick="showDisorderDetails('${d.name}', '${d.disease_group}', '${d.disease_subgroup}')">
-//                                                 ${d.name}
-//                                             </span>
-//                                         </div>
-//                                     `).join('')}
-//                                 </div>
-//                             </div>
-//                         `).join('');
-//                     }
-//                     return '<span class="badge bg-secondary">None</span>';
-//                 }
-//             }
-//         ],
-//         // El resto de la configuración (botones, idioma, etc.) no cambia.
-//         buttons: [
-//             {
-//                 extend: 'excel',
-//                 text: 'Excel',
-//                 exportOptions: {
-//                     columns: [0, 1],
-//                     format: {
-//                         body: function(data, row, column, node) {
-//                             if (column === 1) {
-//                                 const temp = document.createElement('div');
-//                                 temp.innerHTML = data;
-//                                 return Array.from(temp.querySelectorAll('.disorder-group')).map(group => {
-//                                     const groupName = group.querySelector('strong').textContent;
-//                                     const items = Array.from(group.querySelectorAll('.disorder-item span')).map(item => item.textContent.trim()).join(', ');
-//                                     return `${groupName}: ${items}`;
-//                                 }).join('\n');
-//                             }
-//                             return data;
-//                         }
-//                     }
-//                 }
-//             },
-//             'pdf', 'print'
-//         ],
-//         language: { processing: "Loading...", search: "Search:", lengthMenu: "Show _MENU_ entries", info: "Showing _START_ to _END_ of _TOTAL_ entries", infoEmpty: "Showing 0 to 0 of 0 entries", paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" } },
-//         responsive: true,
-//         ordering: true,
-//         searching: true,
-//         paging: true,
-//         pageLength: 10,
-//         order: [[0, 'asc']]
-//     });
+    // Status section with donut chart
+    dashboardHtml += `<div class="row">`;
+    const statusList = gene.gene_status_list || [];
     
-//     dataTable.on('preXhr.dt', function () {
-//         $spinner.css('display', 'flex');
-//     }).on('xhr.dt', function () {
-//         $spinner.css('display', 'none');
-//     });
+    if (statusList.length > 0) {
+        // Add donut chart container
+        dashboardHtml += `
+            <div class="col-12 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Status Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <canvas id="geneStatusChart" width="400" height="400"></canvas>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="chartLegend" class="mt-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Individual status items with knobs
+        statusList.forEach((status) => {
+            const percent = parseFloat(status.value);
+            let knobColor = "#6c757d";
+            if (!isNaN(percent)) {
+                if (percent >= 0 && percent <= 25) knobColor = "#dc3545";
+                else if (percent >= 26 && percent <= 50) knobColor = "#ffc107";
+                else if (percent >= 51 && percent <= 75) knobColor = "#17a2b8";
+                else if (percent > 75 && percent <= 100) knobColor = "#28a745";
+            }
 
-//     const modal = new bootstrap.Modal($('#genomicDiseasesModal')[0]);
-//     modal.show();
-// }
+            dashboardHtml += `
+                    <div class="col-md-6 col-lg-4 mb-4 text-center">
+                            <input type="text" class="knob mb-2" value="${status.value}" 
+                                         data-width="100" data-height="100" data-fgColor="${knobColor}" 
+                                         data-thickness=".2" data-readOnly="true" data-angleOffset="-125" data-angleArc="250">
+                            <h6 class="mb-1">${status.gene_status}</h6>
+                            ${status.evidence ? `
+                                    <button class="btn btn-sm btn-outline-secondary" data-toggle="tooltip" data-placement="top" 
+                                                    title="Download Evidence" 
+                                                    onclick="downloadEvidence('${encodeURIComponent(status.evidence)}')">
+                                            <i class="bi bi-download"></i>
+                                    </button>
+                            ` : ''}
+                    </div>
+            `;
+        });
+    } else {
+        dashboardHtml += `
+                <div class="col-12">
+                        <p class="text-muted">No status information available for this gene.</p>
+                </div>
+        `;
+    }
+    
+    // Add disorders section if they exist
+    if (gene.disorders && gene.disorders.length > 0) {
+        dashboardHtml += `
+        <div class="row mb-4">
+                <div class="col-12">
+                        <div class="card card-primary">
+                                <div class="card-header">
+                                        <h3 class="card-title">Associated Disorders</h3>
+                                </div>
+                                <div class="card-body">
+                                        <div class="row">
+                                                ${gene.disorders.map((disorder, index) => {
+                                                    // Array of Bootstrap background classes
+                                                    const bgColors = ['bg-info', 'bg-success', 'bg-warning', 'bg-danger', 'bg-primary', 'bg-secondary'];
+                                                    // Get color by index, cycling through the array
+                                                    const bgColor = bgColors[index % bgColors.length];
+                                                    
+                                                    return `
+                                                        <div class="col-md-4">
+                                                                <div class="info-box ${bgColor}">
+                                                                        <span class="info-box-icon">
+                                                                                <i class="bi bi-clipboard2-pulse"></i>
+                                                                        </span>
+                                                                        <div class="info-box-content">
+                                                                                ${disorder ? 
+                                                                                    `<span class="info-box-number">${disorder}</span>` : 
+                                                                                    ''}
+                                                                        </div>
+                                                                </div>
+                                                        </div>
+                                                    `;
+                                                }).join('')}
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>`;
+    }
+    dashboardHtml += `</div>`;
 
-// function showDisorderDetails(name, group, subgroup) {
-//     const Toast = Swal.mixin({
-//         toast: true,
-//         position: 'top-end',
-//         showConfirmButton: false,
-//         timer: 5000,
-//         timerProgressBar: true,
-//         didOpen: (toast) => {
-//             toast.addEventListener('mouseenter', Swal.stopTimer)
-//             toast.addEventListener('mouseleave', Swal.resumeTimer)
-//         }
-//     });
+    dashboardContainer.innerHTML = dashboardHtml;
+    $('#genesModal').modal('show');
 
-//     Toast.fire({
-//         icon: 'info',
-//         title: `${name}`,
-//         html: `
-//             <div class="mt-2">
-//                 <strong>Disease Group:</strong> ${group}<br>
-//                 <strong>Disease Subgroup:</strong> ${subgroup}
-//             </div>
-//         `
-//     });
-// }
+    $('#genesModal').on('shown.bs.modal', function () {
+        $('.knob').knob();
+        $('[data-toggle="tooltip"]').tooltip();
+        
+        // Create donut chart if there's status data
+        if (statusList.length > 0) {
+            try {
+                // Prepare data for the chart
+                const labels = statusList.map(s => s.gene_status || '');
+                const data = statusList.map(s => {
+                    const v = parseFloat(s.value);
+                    return isNaN(v) ? 0 : v;
+                });
+                const backgroundColors = statusList.map(s => {
+                    const v = parseFloat(s.value);
+                    if (isNaN(v)) return '#6c757d';
+                    if (v <= 25) return '#dc3545';
+                    if (v <= 50) return '#ffc107';
+                    if (v <= 75) return '#17a2b8';
+                    return '#28a745';
+                });
+                
+                // Create the chart (Chart.js)
+                const ctx = document.getElementById('geneStatusChart').getContext('2d');
+                const geneStatusChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '60%',
+                         plugins: {
+      legend: {
+        display: false // Oculta la leyenda (colores y etiquetas)
+      },
+      tooltip: {
+        enabled: false // Desactiva los tooltips al pasar el ratón
+      },
+      title: {
+        display: false // Desactiva el título del gráfico si lo hubiera
+      }
+    }
+                    }
+                });
+                
+                // Create custom legend
+                const legendContainer = document.getElementById('chartLegend');
+                let legendHtml = '<h5>Status Breakdown</h5><div class="mt-3">';
+                
+                statusList.forEach((status, index) => {
+                    const percent = parseFloat(status.value);
+                    let color = "#6c757d";
+                    if (!isNaN(percent)) {
+                        if (percent >= 0 && percent <= 25) color = "#dc3545";
+                        else if (percent >= 26 && percent <= 50) color = "#ffc107";
+                        else if (percent >= 51 && percent <= 75) color = "#17a2b8";
+                        else if (percent > 75 && percent <= 100) color = "#28a745";
+                    }
+                    
+                    legendHtml += `
+                        <div class="d-flex align-items-center mb-2">
+                            <div style="width: 20px; height: 20px; background-color: ${color}; margin-right: 10px; border-radius: 3px;"></div>
+                            <span>${status.gene_status}: ${status.value}%</span>
+                        </div>
+                    `;
+                });
+                
+                legendHtml += '</div>';
+                legendContainer.innerHTML = legendHtml;
+                
+                // Store chart reference for cleanup
+                if (!window._modalChartsRegistry) {
+                    window._modalChartsRegistry = {};
+                }
+                window._modalChartsRegistry['geneStatusChart'] = geneStatusChart;
+                
+            } catch (err) {
+                console.error('Error creating gene status chart', err);
+            }
+        }
+    });
+    
+    // Clean up charts when modal is hidden
+    $('#genesModal').on('hidden.bs.modal', function () {
+        if (window._modalChartsRegistry) {
+            Object.values(window._modalChartsRegistry).forEach(chart => {
+                try { chart.destroy(); } catch (e) {}
+            });
+            window._modalChartsRegistry = {};
+        }
+    });
+}

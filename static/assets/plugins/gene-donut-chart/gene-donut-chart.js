@@ -106,11 +106,21 @@
                 border-radius: 8px;
                 background-color: white;
                 padding: 2px;
-                transition: transform 0.3s ease;
+                transition: all 0.3s ease;
+                cursor: pointer;
             }
             
             .gene-donut-chart-wrapper:hover {
                 transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+            
+            .gene-donut-chart-wrapper svg path {
+                transition: all 0.2s ease;
+            }
+            
+            .gene-donut-chart-wrapper:hover svg path {
+                filter: brightness(1.1);
             }
             
             .gene-donut-chart {
@@ -251,8 +261,12 @@ console.log('✌️genes --->', genes);
         
         const centerText = document.createElement('div');
         centerText.className = 'gene-donut-chart-center';
+        // 1. Asignar el nombre del gen como ID
+        centerText.id = geneName;
+        // 2. Añadir el botón con el atributo data-gene-name
         centerText.innerHTML = `
-            <div class="gene-donut-chart-center-name">${geneName}</div>
+
+            <span class=" mt-2 load-info-genes-btn" data-gene-name="${geneName}">${geneName}</span>
         `;
         
         chartWrapper.appendChild(chart);
@@ -319,7 +333,7 @@ console.log('✌️genes --->', genes);
                 }, index * 100);
             }
             
-            // Añadir efecto hover
+            // Añadir efecto hover y clic
             if (this.options.hoverEffect) {
                 segment.addEventListener('mouseenter', function() {
                     this.style.opacity = '0.8';
@@ -328,6 +342,16 @@ console.log('✌️genes --->', genes);
                 
                 segment.addEventListener('mouseleave', function() {
                     this.style.opacity = '1';
+                });
+
+                // Añadir evento de clic al segmento
+                segment.addEventListener('click', function() {
+                    const geneName = container.closest('.gene-donut-chart-wrapper').querySelector('.load-info-genes-btn').getAttribute('data-gene-name');
+                    const clickEvent = new CustomEvent('gene-chart-click', {
+                        detail: { geneName: geneName },
+                        bubbles: true
+                    });
+                    container.dispatchEvent(clickEvent);
                 });
             }
             
