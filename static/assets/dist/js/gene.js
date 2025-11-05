@@ -1,3 +1,6 @@
+// Variables globales para almacenar opciones
+let geneGroupsOptions = [];
+let disorderOptions = [];
 // variable para gestionar los elementos seleccionados
 let selected_id;
 const csrfToken = document.cookie
@@ -8,6 +11,17 @@ const url = "/business-gestion/gene/";
 var load = document.getElementById("load");
 
 $(document).ready(function () {
+  $('#groups').select2({
+    theme: 'bootstrap4',
+    placeholder: 'Select groups',
+    allowClear: true
+  });
+
+  $('#disorders').select2({
+    theme: 'bootstrap4',
+    placeholder: 'Select disorders',
+    allowClear: true
+  });
   $("table")
     .addClass("table table-hover")
     .DataTable({
@@ -71,26 +85,55 @@ $(document).ready(function () {
           data: "status",
           title: "Status",
           render: function (data, type, row) {
-            if (data === "C")
-              return '<span class="badge badge-success">Completed</span>';
-            if (data === "I")
-              return '<span class="badge badge-warning">In Progress</span>';
-            return data;
+            // if (data === "C")
+            //   return '<span class="badge badge-success">Completed</span>';
+            // if (data === "I")
+            //   return '<span class="badge badge-warning">In Progress</span>';
+            // return data;
+            return `<span class="badge badge-info">${data}</span>`;
           },
         },
-        {
-          data: "",
-            title: "Actions",
-          render: (data, type, row) => {
-            return `<div class="btn-group">
-                        <button type="button" title="Edit" class="btn bg-info" data-toggle="modal" data-target="#modal-crear-elemento" data-id="${row.id}" data-type="edit" data-name="${row.name}" data-description="${row.description}" data-status="${row.status}" id="${row.id}"  >
-                          <i class="fas fa-edit"></i></button>                    
-                        <button type="button" title="Delete" class="btn bg-olive" data-toggle="modal" data-target="#modal-eliminar-elemento" data-name="${row.name}" data-id="${row.id}">
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </div>`;
+          {
+    data: "groups_names",
+    title: "Groups",
+    render: function (data, type, row) {
+      if (data && data.length > 0) {
+        return data.join(', ');
+      }
+      return '<span class="text-muted">No groups</span>';
+    }
+  },
+  {
+    data: "disorders_names",
+    title: "Disorders",
+    render: function (data, type, row) {
+      if (data && data.length > 0) {
+        return data.join(', ');
+      }
+      return '<span class="text-muted">No disorders</span>';
+    }
+  },
+  {
+    data: "",
+    title: "Actions",
+    render: (data, type, row) => {
+      return `<div class="btn-group">
+                  <button type="button" title="Edit" class="btn bg-info" data-toggle="modal" data-target="#modal-crear-elemento" 
+                    data-id="${row.id}" 
+                    data-type="edit" 
+                    data-name="${row.name}" 
+                    data-description="${row.description}" 
+                    data-groups='${JSON.stringify(row.groups)}'
+                    data-disorders='${JSON.stringify(row.disorders)}'
+                    id="${row.id}">
+                    <i class="fas fa-edit"></i>
+                  </button>                    
+                  <button type="button" title="Delete" class="btn bg-olive" data-toggle="modal" data-target="#modal-eliminar-elemento" data-name="${row.name}" data-id="${row.id}">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>`;
+            },
           },
-        },
       ],
       //  esto es para truncar el texto de las celdas
       columnDefs: [
@@ -152,27 +195,41 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
 });
 
 let edit_elemento = false;
-$("#modal-crear-elemento").on("show.bs.modal", function (event) {
-  var button = $(event.relatedTarget); // Button that triggered the modal
+$("#modal-crear-elemento").on("show.bs.modal", async function (event) {
+  var button = $(event.relatedTarget);
   var modal = $(this);
   var form = modal.find("form")[0];
+
+  // Cargar opciones si es la primera vez
+  if (geneGroupsOptions.length === 0 || disorderOptions.length === 0) {
+    await loadSelectOptions();
+  }
+
   if (button.data("type") == "edit") {
-    var dataName = button.data("name"); // Extract info from data-* attributes
-    var dataId = button.data("id"); // Extract info from data-* attributes
-    var dataDescription = button.data("description"); // Extract info from data-* attributes
-    var dataStatus = button.data("status"); // Extract info from data-* attributes
-    selected_id = dataId; // Extract info from data-* attributes
+    var dataName = button.data("name");
+    var dataId = button.data("id");
+    var dataDescription = button.data("description");
+    var dataGroups = button.data("groups") || [];
+    var dataDisorders = button.data("disorders") || [];
+
+    selected_id = dataId;
     edit_elemento = true;
     modal.find(".modal-title").text("Edit " + dataName);
     form.elements.name.value = dataName;
     form.elements.description.value = dataDescription;
-    form.elements.status.value = dataStatus;
+
+    // Establecer valores seleccionados en multiselects
+    $('#groups').val(dataGroups).trigger('change');
+    $('#disorders').val(dataDisorders).trigger('change');
+
   } else {
     modal.find(".modal-title").text("Create Gene");
     form.reset();
+    // Limpiar multiselects
+    $('#groups').val(null).trigger('change');
+    $('#disorders').val(null).trigger('change');
   }
 });
-
 $(function () {
   bsCustomFileInput.init();
 });
@@ -228,7 +285,8 @@ form.addEventListener("submit", function (event) {
     let data = {
       name: form.elements.name.value,
       description: form.elements.description.value,
-      status: form.elements.status.value,
+      groups: $('#groups').val() || [], // Array de IDs de grupos
+      disorders: $('#disorders').val() || [] // Array de IDs de desórdenes
     };
 
     if (edit_elemento) {
@@ -242,11 +300,10 @@ form.addEventListener("submit", function (event) {
             table.ajax.reload();
             Swal.fire({
               icon: "success",
-                title: "Gene edited successfully",
+              title: "Gene edited successfully",
               showConfirmButton: false,
               timer: 1500,
             });
-
             edit_elemento = false;
           }
         })
@@ -257,11 +314,10 @@ form.addEventListener("submit", function (event) {
           for (const key in dict) {
             textError += key + ": " + dict[key];
           }
-
           Swal.fire({
             icon: "error",
-                title: "Error editing Gene",
-                text: textError,
+            title: "Error editing Gene",
+            text: textError,
             showConfirmButton: false,
             timer: 5000,
           });
@@ -277,7 +333,7 @@ form.addEventListener("submit", function (event) {
             table.ajax.reload();
             Swal.fire({
               icon: "success",
-                title: "Gene created successfully",
+              title: "Gene created successfully",
               showConfirmButton: false,
               timer: 1500,
             });
@@ -286,18 +342,15 @@ form.addEventListener("submit", function (event) {
         .catch((error) => {
           load.hidden = true;
           let dict = error.response.data;
-
-            let textError = "Please check the following fields: ";
+          let textError = "Please check the following fields: ";
           for (const key in dict) {
             textError += " " + key + ": " + dict[key];
           }
-
           Swal.fire({
             icon: "error",
-              title: "Error creating Gene",
+            title: "Error creating Gene",
             text: textError,
             showConfirmButton: true,
-            // timer: 3000
           });
         });
     }
@@ -420,4 +473,46 @@ function showGraphChangesForm() {
         timer: 3000,
       });
     });
+}
+
+// Función para cargar opciones de multiselects
+async function loadSelectOptions() {
+  try {
+    // Cargar grupos de genes
+    const groupsResponse = await axios.get('/business-gestion/gene-groups/minimal-list/');
+    geneGroupsOptions = groupsResponse.data;
+
+    // Cargar desórdenes
+    const disordersResponse = await axios.get('/business-gestion/disorder/minimal-list/');
+    disorderOptions = disordersResponse.data;
+
+    // Inicializar Select2 para grupos
+    $('#groups').select2({
+      theme: 'bootstrap4',
+      data: geneGroupsOptions.map(group => ({
+        id: group.id,
+        text: group.name
+      })),
+      placeholder: 'Select groups',
+      allowClear: true
+    });
+
+    // Inicializar Select2 para desórdenes
+    $('#disorders').select2({
+      theme: 'bootstrap4',
+      data: disorderOptions.map(disorder => ({
+        id: disorder.id,
+        text: disorder.name
+      })),
+      placeholder: 'Select disorders',
+      allowClear: true
+    });
+
+  } catch (error) {
+    console.error('Error loading select options:', error);
+    Toast.fire({
+      icon: 'error',
+      title: 'Error loading form options'
+    });
+  }
 }
