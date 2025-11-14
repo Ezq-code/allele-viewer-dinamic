@@ -58,3 +58,25 @@ class DisorderViewSet(
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="filter-by-groups",
+        url_name="filter-by-groups",
+        serializer_class=DisorderMinimalSerializer,
+    )
+    def filter_by_groups(self, request):
+        group_ids = request.query_params.get('group_ids', '')
+
+        if group_ids:
+            group_id_list = [int(id) for id in group_ids.split(',') if id.isdigit()]
+            # Aqui filtro los disorders que tengan al menos un gen en los grupos especificados
+            queryset = Disorder.objects.filter(
+                genes__groups__in=group_id_list
+            ).distinct()
+        else:
+            queryset = Disorder.objects.none()
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
