@@ -6,7 +6,7 @@
 "features": [
 
  { "type": "Feature",
-    "properties": { "id": 12, "mag": 12.0, "place": "Bodo", "time": -160001, "title": "Bodo 700000 years ago, North East of Etiopía,Africa,", "timefinal": -700000,
+    "properties": { "id": 12, "mag": 12.0, "place": "Bodo", "time": -160001, "title": "Bodo 700000 years ago, North East of Etiopia,Africa,", "timefinal": -700000,
         "name": "Bodo 700000 years ago, North East of Etiopía,Africa ",
         "times": [
 -700000,-699243,-698486,-697729,-696972,-696215,-695458,-694701,-693944,-693187,-692430,-691673,-690916,-690159,-689402,-688645,-687888,-687131,-686374,-685617,-684860,-684103,

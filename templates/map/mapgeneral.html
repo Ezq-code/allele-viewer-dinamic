@@ -648,13 +648,7 @@
 
                                     // Carga los eventos del Api
                                     fetchEventsFromAPI();
-                                </script>
 
-                                <!-- Este es el archivo que tiene la llamada a la función eqfeed_callback -->
-                                <!-- y tiene como parámetro varios de los vectores que conforman la línea del tiempo -->
-                                <!-- los cuáles son: el hielo, la tierra que emerge y las trayectorias de las migraciones-->
-                                <script src="{% static 'assets/dist/Leaflet/Leaflet.timeline/migration-timeline.geojsonp' %}"></script>
-                                <script>
                                     // Según la documentación oficial exacta
                                     document.addEventListener('DOMContentLoaded', function () {
                                         console.log('=== INICIALIZANDO TOUR COMPLETO ===');
@@ -769,6 +763,7 @@
                                                 }
 
                                                 // Auto-inicio en primera visita
+                                                /*
                                                 if (!sessionStorage.getItem('driverTourShown')) {
                                                     setTimeout(() => {
                                                         driverObj.setSteps(steps);
@@ -777,7 +772,8 @@
                                                         console.log('✅ Tour automático iniciado');
                                                     }, 3000);
                                                 }
-
+                                                */
+                                               
                                             } catch (error) {
                                                 console.error('Error con driver.js.driver:', error);
                                                 tryAlternativeApproach();
