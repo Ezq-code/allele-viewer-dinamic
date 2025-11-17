@@ -2328,3 +2328,151 @@ section,
 .starter-section {
   /* Add your styles here */
 }
+
+/* Donation Section Styles */
+.donation .donation-info-card,
+.donation .donation-form-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+.donation .card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  margin: 0;
+}
+
+.donation .card-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.donation .card-body {
+  padding: 25px;
+}
+
+.donation .amount-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.donation .amount-btn {
+  flex: 1;
+  min-width: 80px;
+  transition: all 0.3s ease;
+}
+
+.donation .amount-btn:hover,
+.donation .amount-btn.active {
+  background-color: #667eea;
+  border-color: #667eea;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+}
+
+.donation .payment-methods .form-check {
+  padding: 10px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.donation .payment-methods .form-check:hover {
+  background-color: #f8f9fa;
+  border-color: #667eea;
+}
+
+.donation .crypto-options {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.donation .crypto-options .form-check {
+  padding: 8px 0;
+}
+
+.donation .network-options {
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.donation .network-options .form-check {
+  padding: 5px 0;
+}
+
+.donation .address-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.donation .address-text {
+  font-family: monospace;
+  font-size: 0.9rem;
+  background-color: #f0f0f0;
+  padding: 8px;
+  border-radius: 4px;
+  word-break: break-all;
+  flex-grow: 1;
+}
+
+.donation .impact-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.donation .impact-card:hover {
+  transform: translateY(-5px);
+}
+
+.donation .impact-card i {
+  font-size: 2.5rem;
+  color: #667eea;
+  margin-bottom: 15px;
+}
+
+.donation .impact-card h4 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.donation .impact-card p {
+  margin: 0;
+  color: #666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .donation .amount-options {
+    justify-content: center;
+  }
+  
+  .donation .amount-btn {
+    flex: 0 0 calc(50% - 5px);
+  }
+  
+  .donation .address-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .donation .address-text {
+    margin-bottom: 10px;
+  }
+}
