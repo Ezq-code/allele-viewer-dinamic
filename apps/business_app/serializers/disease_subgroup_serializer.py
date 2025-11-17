@@ -13,4 +13,5 @@ class DiseaseSubGroupSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "disorders",
+            "disease_group",
         ]
