@@ -21,4 +21,6 @@ class GeneStatusMiddleReadSerializer(serializers.ModelSerializer):
             "gene_status_requires_evidence",
             "evidence",
             "value",
+            "created_timestamp",
+            "updated_timestamp",
         ]

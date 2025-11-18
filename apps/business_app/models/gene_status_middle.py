@@ -18,6 +18,12 @@ class GeneStatusMiddle(models.Model):
     evidence = models.FileField(
         null=True, blank=True, upload_to="gene_status_evidence/"
     )
+    created_timestamp = models.DateTimeField(
+        verbose_name=_("Created timestamp"), auto_now_add=True
+    )
+    updated_timestamp = models.DateTimeField(
+        verbose_name=_("Updated timestamp"), auto_now=True, null=True
+    )
 
     class Meta:
         verbose_name = _("Gene status Middle")
