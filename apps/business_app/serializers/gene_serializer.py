@@ -4,7 +4,7 @@ from apps.business_app.models.gene import Gene
 from apps.business_app.serializers.disorder_serializer import (
     DisorderTableSerializer,
 )
-from apps.business_app.serializers.gene_group_middle_serializer import (
+from apps.business_app.serializers.gene_status_middle_serializer import (
     GeneStatusMiddleReadSerializer,
 )
 
