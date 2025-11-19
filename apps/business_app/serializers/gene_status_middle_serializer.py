@@ -10,7 +10,7 @@ class GeneStatusMiddleReadSerializer(serializers.ModelSerializer):
     gene_status_requires_evidence = serializers.BooleanField(
         source="gene_status.requires_evidence", read_only=True
     )
-    updated_timestamp = serializers.SerializerMethodField()
+    updated_since = serializers.SerializerMethodField()
 
     class Meta:
         model = GeneStatusMiddle
@@ -23,8 +23,9 @@ class GeneStatusMiddleReadSerializer(serializers.ModelSerializer):
             "evidence",
             "value",
             "updated_timestamp",
+            "updated_since",
         ]
-    def get_updated_timestamp(self, obj):
+    def get_updated_since(self, obj):
         last_updated = obj.updated_timestamp or obj.created_timestamp
         if not last_updated:
             return None 
