@@ -1,5 +1,7 @@
 // Variables globales para almacenar opciones
 let geneGroupsOptions = [];
+let diseaseGroupsOptions = [];
+let diseaseSubgroupsOptions = [];
 let disorderOptions = [];
 // variable para gestionar los elementos seleccionados
 let selected_id;
@@ -10,11 +12,197 @@ const csrfToken = document.cookie
 const url = "/business-gestion/gene/";
 var load = document.getElementById("load");
 
+// Función para cargar DiseaseGroups
+async function loadDiseaseGroups() {
+  try {
+    const response = await axios.get('/business-gestion/disease-group/');
+    diseaseGroupsOptions = response.data.results;
+
+    // Inicializar Select2 para disease groups
+    $('#disease_group').select2({
+      theme: 'bootstrap4',
+      data: diseaseGroupsOptions.map(group => ({
+        id: group.id,
+        text: group.name
+      })),
+      placeholder: 'Select a disease group'
+    });
+  } catch (error) {
+    console.error('Error loading disease groups:', error);
+  }
+}
+
+// Función para cargar SubGroups basado en el DiseaseGroup seleccionado
+async function loadDiseaseSubGroups(diseaseGroupId) {
+  try {
+    const response = await axios.get(`/business-gestion/disease-subgroup/?disease_group=${diseaseGroupId}`);
+    diseaseSubgroupsOptions = response.data.results;
+
+    // Habilitar y actualizar el selector de subgroups
+    $('#disease_subgroup').prop('disabled', false);
+    $('#disease_subgroup').empty().append('<option value="">Select a disease subgroup</option>');
+
+    diseaseSubgroupsOptions.forEach(subgroup => {
+      $('#disease_subgroup').append(new Option(subgroup.name, subgroup.id, false, false));
+    });
+
+    // Resetear disorders cuando cambia el subgroup
+    $('#disorders').val(null).trigger('change').prop('disabled', true);
+
+  } catch (error) {
+    console.error('Error loading disease subgroups:', error);
+  }
+}
+
+// Función para cargar Disorders basado en el DiseaseSubGroup seleccionado
+async function loadDisorders(diseaseSubgroupId) {
+  try {
+    const response = await axios.get(`/business-gestion/disorder/?disease_subgroup=${diseaseSubgroupId}`);
+    const newDisorders = response.data.results;
+
+    // Habilitar el selector de disorders
+    $('#disorders').prop('disabled', false);
+
+    // Limpiar SOLO las opciones que fueron cargadas por la cascada (no las que ya estaban seleccionadas)
+    $('#disorders option').each(function() {
+      // Remover solo las opciones que no tienen valor (las placeholder) o que no están seleccionadas
+      if ($(this).val() === '' || (!$(this).prop('selected') && $(this).val() !== '')) {
+        $(this).remove();
+      }
+    });
+
+    // Agregar nuevos disorders
+    newDisorders.forEach(disorder => {
+      // Solo agregar si no existe ya
+      if ($('#disorders').find(`option[value="${disorder.id}"]`).length === 0) {
+        $('#disorders').append(new Option(disorder.name, disorder.id, false, false));
+      }
+    });
+
+    // Actualizar Select2
+    $('#disorders').trigger('change');
+
+  } catch (error) {
+    console.error('Error loading disorders:', error);
+  }
+}
+
+// Función para cargar todos los select options
+async function loadSelectOptions() {
+  try {
+    // Cargar grupos de genes
+    const groupsResponse = await axios.get('/business-gestion/gene-groups/minimal-list/');
+    geneGroupsOptions = groupsResponse.data;
+
+    // Cargar disease groups
+    await loadDiseaseGroups();
+
+    // Inicializar Select2 para grupos de genes
+    $('#groups').select2({
+      theme: 'bootstrap4',
+      data: geneGroupsOptions.map(group => ({
+        id: group.id,
+        text: group.name
+      })),
+      placeholder: 'Select groups',
+      allowClear: true
+    });
+
+    // Inicializar Select2 para disease subgroups
+    $('#disease_subgroup').select2({
+      theme: 'bootstrap4',
+      placeholder: 'Select a disease subgroup'
+    });
+
+    // Inicializar Select2 para disorders
+    $('#disorders').select2({
+      theme: 'bootstrap4',
+      placeholder: 'Select disorders',
+      allowClear: true
+    });
+
+  } catch (error) {
+    console.error('Error loading select options:', error);
+    Toast.fire({
+      icon: 'error',
+      title: 'Error loading form options'
+    });
+  }
+}
+
+// Función para resetear completamente la cascada
+function resetCascade() {
+  $('#disease_group').val(null).trigger('change');
+  $('#disease_subgroup').empty().append('<option value="">First select a disease group</option>')
+    .prop('disabled', true).trigger('change');
+  $('#disorders').empty().prop('disabled', true).trigger('change');
+}
+
+// Función para determinar el disease group y subgroup de los disorders seleccionados
+async function determineDiseaseGroupsFromDisorders(disorderIds) {
+  if (!disorderIds || disorderIds.length === 0) return;
+
+  try {
+    // Cargar información de los disorders seleccionados
+    const disordersInfo = await Promise.all(
+      disorderIds.map(id =>
+        axios.get(`/business-gestion/disorder/${id}/`).catch(() => null)
+      )
+    );
+
+    // Encontrar los disease subgroups únicos
+    const subgroupIds = [...new Set(
+      disordersInfo
+        .filter(info => info && info.data)
+        .map(info => info.data.disease_subgroup)
+    )];
+
+    if (subgroupIds.length > 0) {
+      // Cargar información de los subgroups
+      const subgroupsInfo = await Promise.all(
+        subgroupIds.map(id =>
+          axios.get(`/business-gestion/disease-subgroup/${id}/`).catch(() => null)
+        )
+      );
+
+      // Encontrar los disease groups únicos
+      const groupIds = [...new Set(
+        subgroupsInfo
+          .filter(info => info && info.data)
+          .map(info => info.data.disease_group)
+      )];
+
+      // Si hay un solo disease group, seleccionarlo y cargar sus subgroups
+      if (groupIds.length === 1) {
+        $('#disease_group').val(groupIds[0]).trigger('change');
+
+        // Esperar a que se carguen los subgroups y luego seleccionar los correspondientes
+        setTimeout(() => {
+          $('#disease_subgroup').val(subgroupIds).trigger('change');
+        }, 500);
+      }
+    }
+  } catch (error) {
+    console.error('Error determining disease groups:', error);
+  }
+}
+
 $(document).ready(function () {
+  // Inicializar TODOS los select2
   $('#groups').select2({
     theme: 'bootstrap4',
     placeholder: 'Select groups',
     allowClear: true
+  });
+
+  $('#disease_group').select2({
+    theme: 'bootstrap4',
+    placeholder: 'Select a disease group'
+  });
+
+  $('#disease_subgroup').select2({
+    theme: 'bootstrap4',
+    placeholder: 'Select a disease subgroup'
   });
 
   $('#disorders').select2({
@@ -22,6 +210,28 @@ $(document).ready(function () {
     placeholder: 'Select disorders',
     allowClear: true
   });
+
+  // Event listeners para la cascada
+  $('#disease_group').on('change', function() {
+    const diseaseGroupId = $(this).val();
+    if (diseaseGroupId) {
+      loadDiseaseSubGroups(diseaseGroupId);
+    } else {
+      $('#disease_subgroup').val(null).trigger('change').prop('disabled', true);
+      $('#disorders').val(null).trigger('change').prop('disabled', true);
+    }
+  });
+
+  $('#disease_subgroup').on('change', function() {
+    const diseaseSubgroupId = $(this).val();
+    if (diseaseSubgroupId) {
+      loadDisorders(diseaseSubgroupId);
+    } else {
+      $('#disorders').val(null).trigger('change').prop('disabled', true);
+    }
+  });
+
+  // DataTable initialization
   $("table")
     .addClass("table table-hover")
     .DataTable({
@@ -85,57 +295,52 @@ $(document).ready(function () {
           data: "status",
           title: "Status",
           render: function (data, type, row) {
-            // if (data === "C")
-            //   return '<span class="badge badge-success">Completed</span>';
-            // if (data === "I")
-            //   return '<span class="badge badge-warning">In Progress</span>';
-            // return data;
             return `<span class="badge badge-info">${data}</span>`;
           },
         },
-          {
-    data: "groups_names",
-    title: "Groups",
-    render: function (data, type, row) {
-      if (data && data.length > 0) {
-        return data.join(', ');
-      }
-      return '<span class="text-muted">No groups</span>';
-    }
-  },
-  {
-    data: "disorders_names",
-    title: "Disorders",
-    render: function (data, type, row) {
-      if (data && data.length > 0) {
-        return data.join(', ');
-      }
-      return '<span class="text-muted">No disorders</span>';
-    }
-  },
-  {
-    data: "",
-    title: "Actions",
-    render: (data, type, row) => {
-      return `<div class="btn-group">
-                  <button type="button" title="Edit" class="btn bg-info" data-toggle="modal" data-target="#modal-crear-elemento" 
-                    data-id="${row.id}" 
-                    data-type="edit" 
-                    data-name="${row.name}" 
-                    data-description="${row.description}" 
-                    data-groups='${JSON.stringify(row.groups)}'
-                    data-disorders='${JSON.stringify(row.disorders)}'
-                    id="${row.id}">
-                    <i class="fas fa-edit"></i>
-                  </button>                    
-                  <button type="button" title="Delete" class="btn bg-olive" data-toggle="modal" data-target="#modal-eliminar-elemento" data-name="${row.name}" data-id="${row.id}">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>`;
-            },
+        {
+          data: "groups_names",
+          title: "Groups",
+          render: function (data, type, row) {
+            if (data && data.length > 0) {
+              return data.join(', ');
+            }
+            return '<span class="text-muted">No groups</span>';
+          }
+        },
+        {
+          data: "disorders_names",
+          title: "Disorders",
+          render: function (data, type, row) {
+            if (data && data.length > 0) {
+              return data.join(', ');
+            }
+            return '<span class="text-muted">No disorders</span>';
+          }
+        },
+        {
+          data: "",
+          title: "Actions",
+          render: (data, type, row) => {
+            return `<div class="btn-group">
+                      <button type="button" title="Edit" class="btn bg-info" data-toggle="modal" data-target="#modal-crear-elemento" 
+                        data-id="${row.id}" 
+                        data-type="edit" 
+                        data-name="${row.name}" 
+                        data-description="${row.description}" 
+                        data-groups='${JSON.stringify(row.groups)}'
+                        data-disorders='${JSON.stringify(row.disorders)}'
+                        id="${row.id}">
+                        <i class="fas fa-edit"></i>
+                      </button>                    
+                      <button type="button" title="Delete" class="btn bg-olive" data-toggle="modal" data-target="#modal-eliminar-elemento" data-name="${row.name}" data-id="${row.id}">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>`;
           },
+        },
       ],
-      //  esto es para truncar el texto de las celdas
+      // esto es para truncar el texto de las celdas
       columnDefs: [
         {
           targets: 1,
@@ -182,26 +387,28 @@ function function_delete(selected_id) {
     });
 }
 
+// Modificar el event handler del modal para resetear la cascada
 $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
-  // The form element is selected from the event trigger and its value is reset.
   const form = event.currentTarget.querySelector("form");
   form.reset();
-  // The 'edit_elemento' flag is set to false.
   edit_elemento = false;
-  // An array 'elements' is created containing all the HTML elements found inside the form element.
+
+  // Resetear completamente la cascada
+  resetCascade();
+
   const elements = [...form.elements];
-  // A forEach loop is used to iterate through each element in the array.
   elements.forEach((elem) => elem.classList.remove("is-invalid"));
 });
 
 let edit_elemento = false;
+// Modificar el event handler del modal para manejar la edición
 $("#modal-crear-elemento").on("show.bs.modal", async function (event) {
   var button = $(event.relatedTarget);
   var modal = $(this);
   var form = modal.find("form")[0];
 
   // Cargar opciones si es la primera vez
-  if (geneGroupsOptions.length === 0 || disorderOptions.length === 0) {
+  if (geneGroupsOptions.length === 0) {
     await loadSelectOptions();
   }
 
@@ -220,16 +427,36 @@ $("#modal-crear-elemento").on("show.bs.modal", async function (event) {
 
     // Establecer valores seleccionados en multiselects
     $('#groups').val(dataGroups).trigger('change');
-    $('#disorders').val(dataDisorders).trigger('change');
+
+    // En modo edición, cargar todos los disorders disponibles
+    try {
+      const disordersResponse = await axios.get('/business-gestion/disorder/minimal-list/');
+      disorderOptions = disordersResponse.data;
+
+      $('#disorders').empty().prop('disabled', false);
+      disorderOptions.forEach(disorder => {
+        $('#disorders').append(new Option(disorder.name, disorder.id, false, false));
+      });
+
+      // Establecer los valores seleccionados
+      $('#disorders').val(dataDisorders).trigger('change');
+
+      // Determinar y establecer los disease groups y subgroups correspondientes
+      await determineDiseaseGroupsFromDisorders(dataDisorders);
+
+    } catch (error) {
+      console.error('Error loading disorders for edit:', error);
+    }
 
   } else {
     modal.find(".modal-title").text("Create Gene");
     form.reset();
-    // Limpiar multiselects
+    // Limpiar multiselects y resetear cascada
     $('#groups').val(null).trigger('change');
-    $('#disorders').val(null).trigger('change');
+    resetCascade();
   }
 });
+
 $(function () {
   bsCustomFileInput.init();
 });
@@ -473,46 +700,4 @@ function showGraphChangesForm() {
         timer: 3000,
       });
     });
-}
-
-// Función para cargar opciones de multiselects
-async function loadSelectOptions() {
-  try {
-    // Cargar grupos de genes
-    const groupsResponse = await axios.get('/business-gestion/gene-groups/minimal-list/');
-    geneGroupsOptions = groupsResponse.data;
-
-    // Cargar desórdenes
-    const disordersResponse = await axios.get('/business-gestion/disorder/minimal-list/');
-    disorderOptions = disordersResponse.data;
-
-    // Inicializar Select2 para grupos
-    $('#groups').select2({
-      theme: 'bootstrap4',
-      data: geneGroupsOptions.map(group => ({
-        id: group.id,
-        text: group.name
-      })),
-      placeholder: 'Select groups',
-      allowClear: true
-    });
-
-    // Inicializar Select2 para desórdenes
-    $('#disorders').select2({
-      theme: 'bootstrap4',
-      data: disorderOptions.map(disorder => ({
-        id: disorder.id,
-        text: disorder.name
-      })),
-      placeholder: 'Select disorders',
-      allowClear: true
-    });
-
-  } catch (error) {
-    console.error('Error loading select options:', error);
-    Toast.fire({
-      icon: 'error',
-      title: 'Error loading form options'
-    });
-  }
 }

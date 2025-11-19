@@ -1,10 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework import filters, permissions, viewsets
 from apps.business_app.models.disease_group import DiseaseGroup
 from rest_framework.viewsets import GenericViewSet
 from apps.business_app.serializers.disease_group_serializer import (
     DiseaseGroupSerializer,
 )
+from apps.business_app.serializers.minimal_serializers import DiseaseGroupMinimalSerializer
+
 from apps.common.pagination import AllResultsSetPagination
 
 
@@ -22,7 +26,11 @@ class DiseaseGroupViewSet(
         "subgroups__disorders",
     )
 
-    serializer_class = DiseaseGroupSerializer
+    def get_serializer_class(self):
+        if self.action == 'minimal_list':
+            return DiseaseGroupMinimalSerializer
+        return DiseaseGroupSerializer
+
     search_fields = [
         "name",
         "description",
@@ -34,3 +42,16 @@ class DiseaseGroupViewSet(
         CommonOrderingFilter,
     ]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    # Endpoint reducido
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="minimal-list",
+        url_name="minimal-list",
+    )
+    def minimal_list(self, request):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+

@@ -95,10 +95,24 @@
               <!-- Options will be loaded dynamically -->
             </select>
           </div>
+          
+          <!-- Selectores en cascada para Disorders -->
+          <div class="form-group col-md-12">
+            <label for="disease_group">Disease Group</label>
+            <select class="form-control select2" id="disease_group" name="disease_group" style="width: 100%;">
+              <option value="">Select a disease group</option>
+            </select>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="disease_subgroup">Disease SubGroup</label>
+            <select class="form-control select2" id="disease_subgroup" name="disease_subgroup" style="width: 100%;" disabled>
+              <option value="">First select a disease group</option>
+            </select>
+          </div>
           <div class="form-group col-md-12">
             <label for="disorders">Disorders</label>
-            <select class="form-control select2" id="disorders" name="disorders" multiple="multiple" style="width: 100%;">
-              <!-- Options will be loaded dynamically -->
+            <select class="form-control select2" id="disorders" name="disorders" multiple="multiple" style="width: 100%;" disabled>
+              <option value="">First select a disease subgroup</option>
             </select>
           </div>
         </div>
