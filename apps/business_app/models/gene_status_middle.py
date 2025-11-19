@@ -13,10 +13,16 @@ class GeneStatusMiddle(models.Model):
         to=GeneStatus, on_delete=models.CASCADE, related_name="gene_list"
     )
     value = models.PositiveSmallIntegerField(
-        default=0
+        default=1
     )  # For boolean status type, remember 0 is False
     evidence = models.FileField(
         null=True, blank=True, upload_to="gene_status_evidence/"
+    )
+    created_timestamp = models.DateTimeField(
+        verbose_name=_("Created timestamp"), auto_now_add=True
+    )
+    updated_timestamp = models.DateTimeField(
+        verbose_name=_("Updated timestamp"), auto_now=True, null=True
     )
 
     class Meta:

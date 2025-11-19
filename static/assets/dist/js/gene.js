@@ -255,6 +255,7 @@ $(document).ready(function () {
         {
           extend: "print",
           text: "Print",
+          text: "Print",
         },
       ],
       //Adding server-side processing
@@ -291,8 +292,11 @@ $(document).ready(function () {
       columns: [
         { data: "name", title: "Name" },
         { data: "description", title: "Description" },
+        { data: "name", title: "Name" },
+        { data: "description", title: "Description" },
         {
           data: "status",
+          title: "Status",
           title: "Status",
           render: function (data, type, row) {
             return `<span class="badge badge-info">${data}</span>`;
@@ -347,6 +351,7 @@ $(document).ready(function () {
           render: function (data, type, row) {
             if (data == null || data == "") {
               return "No Data";
+              return "No Data";
             } else {
               return type === "display" && data.length > 80
                 ? data.substr(0, 80) + "…"
@@ -364,6 +369,7 @@ $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
   selected_id = button.data("id"); // Extract info from data-* attributes
   var modal = $(this);
   modal.find(".modal-body").text("Do you want to delete the gene " + dataName + "?");
+  modal.find(".modal-body").text("Do you want to delete the gene " + dataName + "?");
 });
 
 // funcion para eliminar usuario
@@ -376,12 +382,14 @@ function function_delete(selected_id) {
       Toast.fire({
         icon: "success",
         title: "Gene deleted successfully",
+        title: "Gene deleted successfully",
       });
       table.row(`#${selected_id}`).remove().draw(); // use id selector to remove the row
     })
     .catch((error) => {
       Toast.fire({
         icon: "error",
+        title: "Gene was not deleted",
         title: "Gene was not deleted",
       });
     });
@@ -422,6 +430,7 @@ $("#modal-crear-elemento").on("show.bs.modal", async function (event) {
     selected_id = dataId;
     edit_elemento = true;
     modal.find(".modal-title").text("Edit " + dataName);
+    modal.find(".modal-title").text("Edit " + dataName);
     form.elements.name.value = dataName;
     form.elements.description.value = dataDescription;
 
@@ -450,6 +459,7 @@ $("#modal-crear-elemento").on("show.bs.modal", async function (event) {
 
   } else {
     modal.find(".modal-title").text("Create Gene");
+    modal.find(".modal-title").text("Create Gene");
     form.reset();
     // Limpiar multiselects y resetear cascada
     $('#groups').val(null).trigger('change');
@@ -464,6 +474,7 @@ $(function () {
 // form validator
 $(function () {
   $.validator.setDefaults({
+    language: "en",
     language: "en",
     submitHandler: function () {
       // alert("Form successful submitted!");
@@ -482,8 +493,10 @@ $(function () {
     messages: {
       name: {
         required: "Name is required",
+        required: "Name is required",
       },
       status: {
+        required: "Status is required",
         required: "Status is required",
       },
     },
@@ -537,6 +550,7 @@ form.addEventListener("submit", function (event) {
         .catch((error) => {
           load.hidden = true;
           let dict = error.response.data;
+          let textError = "Details: ";
           let textError = "Details: ";
           for (const key in dict) {
             textError += key + ": " + dict[key];

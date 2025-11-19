@@ -69,11 +69,13 @@
   </div>
 </div>
 <!-- Modal Create/Edit Gene -->
+<!-- Modal Create/Edit Gene -->
 <div class="modal fade" id="modal-crear-elemento" data-backdrop="static" tabindex="-1" role="dialog"
   aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
+        <h4 class="modal-title">Create Gene</h4>
         <h4 class="modal-title">Create Gene</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -119,6 +121,8 @@
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </div>
       </form>
     </div>
@@ -146,3 +150,4 @@
 <script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
 <script src="{% static 'assets/dist/js/gene.js' %}"></script>
 {% endblock %}
+

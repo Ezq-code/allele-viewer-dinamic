@@ -2,11 +2,10 @@
 {% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>PGxSoftware - Tracing Genetic Ancestry</title>
+  <title>PGxSoftware - Tracing Genomic Ancestry</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
   
@@ -68,6 +67,110 @@
     transform: scale(1.05);
     cursor: pointer;
 }
+
+.gene-btn {
+  margin: 5px;
+  min-width: 120px;
+  transition: all 0.3s ease;
+}
+.gene-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+#gene-buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  min-height: 200px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+.gene-chart-item {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 10px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gene-chart-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.gene-donut-chart-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background: rgba(218, 138, 19, 0.9);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.gene-donut-chart-center:hover {
+  background: rgba(218, 201, 19, 0.9);
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.gene-donut-chart-center-name {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+
+/* Estilos para la sección de gráficas */
+#gene-charts-section {
+  background-color: var(--background-color);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+
+#gene-charts-container {
+    min-height: 300px;
+    margin-bottom: 20px;
+}
+
+/* Personalización de la paginación */
+.pagination .page-link {
+    color: #007bff;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gene-donut-chart-wrapper {
+        width: 237px;
+        height: 237px;
+    }
+    
+    .gene-donut-chart-center-name {
+        font-size: 14px;
+    }
+}
+
 </style>
   <!-- =======================================================
   * Template Name: iLanding
@@ -96,29 +199,11 @@
           <li><a href="#Conformation">Conformation</a></li>
           <li><a href="#tridimensional">Tridimensional</a></li>
           <li><a href="#map">Map</a></li>
-          <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li>
-            </ul>
-          </li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#human-evolution-timeline">Genes Timeline</a></li>
         </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
 
-      <a class="btn-getstarted" href="index.html#about">Get Started</a>
+      <a class="btn-getstarted" href="{% url 'alleleviewer' %}">Get Started</a>
 
     </div>
   </header>
@@ -139,12 +224,12 @@
               </div>
 
               <h1 class="mb-4">
-                Unveiling Genetic Formation Through Ancestral Tracing <br>
+                Unveiling Genomic Formation Through Ancestral Tracing <br>
                 
               </h1>
               <h3><span class="accent-text">"From Ancient Migrations to Modern Insights"</span></h3>
               <p class="mb-4 mb-md-5">
-                Explore the *developmental* journey of genes, tracing their *formation* through human migrations and ancestral events. Discover how our mapping tools and 3D visualizations provide a unique perspective on genetic history.
+                Explore the *developmental* journey of genes, tracing their *formation* through human migrations and ancestral events. Discover how our mapping tools and 3D visualizations provide a unique perspective on genomic history.
               </p>
 
               <div class="hero-buttons">
@@ -212,7 +297,7 @@
                 <i class="bi bi-badge-3d"></i>
               </div>
               <div class="stat-content">
-                <h4>Tridimencional</h4>
+                <h4>Tridimensional</h4>
                 <p class="mb-0">Plot alleles in 3D & Migration Pathway</p>
               </div>
             </div>
@@ -235,7 +320,7 @@
             <h2 class="about-title">Process developed for obtaining the information to be published</h2>
             <p class="about-description">Our process is based on several stages. First, information is obtained from various related and prestigious sources that publish their scientific data on the internet. This information is structured and stored, and subsequently, cross-referencing techniques, expert criteria, and other methods are applied to guarantee its quality and veracity.</p>
             <p class="about-description">Once a sufficiently broad and reliable knowledge base is available, this information is processed to extract other data of extreme importance, such as SNPs, Allele Annotation, Allele frequency, conformation, ancestral data, age, location, color, parentage, recombination, three-dimensional backbone, etc.</p>
-            <p class="about-description">This information allows us to perform 3D plotting of genes, as well as to map ancient human migrations and how they contributed to the genetic reservoir of current society. Furthermore, based on complex algorithms, we are able to evaluate the impact of diseases and medications on individuals, according to genetic studies performed.</p>
+            <p class="about-description">This information allows us to perform 3D plotting of genes, as well as to map ancient human migrations and how they contributed to the genomic reservoir of current society. Furthermore, based on complex algorithms, we are able to evaluate the impact of diseases and medications on individuals, according to genomic studies performed.</p>
 
             
             {% comment %} <div class="info-wrapper">
@@ -290,19 +375,19 @@
           <ul class="nav nav-tabs" data-aos="fade-up" data-aos-delay="100">
 
             <li class="nav-item">
-              <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#features-tab-1">
+              <a class="nav-link active" data-toggle="tab" href="#features-tab-1" role="tab">
                 <h4>PGX</h4>
               </a>
             </li><!-- End tab nav item -->
 
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-2">
+              <a class="nav-link" data-toggle="tab" href="#features-tab-2" role="tab">
                 <h4>Genomic</h4>
               </a><!-- End tab nav item -->
 
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-3">
+              <a class="nav-link" data-toggle="tab" href="#features-tab-3" role="tab">
                 <h4>Priorities</h4>
               </a>
             </li><!-- End tab nav item -->
@@ -313,7 +398,7 @@
 
         <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
 
-          <div class="tab-pane fade active show" id="features-tab-1">
+          <div class="tab-pane fade show active" id="features-tab-1" role="tabpanel">
             <div class="row">
             
               <div class="col-lg-6 order-1 order-lg-1 mt-3 mt-lg-0 d-flex flex-column ">
@@ -321,7 +406,7 @@
                 <p>
                   <span class="accent-text">Pharmacodynamics</span> refers to the study of how <span class="fw-bold text-primary">drugs</span> affect the body. It examines the <span class="fw-bold text-primary">mechanisms of drug action</span>, including the relationship between <span class="fw-bold text-primary">drug concentration</span> and <span class="fw-bold text-primary">effect</span>, <span class="fw-bold text-primary">receptor interactions</span>, and the <span class="fw-bold text-primary">physiological</span> and <span class="fw-bold text-primary">biochemical responses</span> produced. Understanding <span class="accent-text">pharmacodynamics</span> helps predict the <span class="fw-bold text-primary">efficacy</span> and potential <span class="fw-bold text-primary">side effects</span> of medications.
                 </p>
-                <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(1)">Related Genes</button>
+                <button type="button" class="btn btn-info mt-2 load-genes-btn" data-group-id="1" data-group-name="Pharmacodynamics">Related Genes</button>
                 
               </div>
                         
@@ -330,12 +415,12 @@
                 <p>
                   <span class="accent-text">Pharmacokinetics</span> is the study of how the body <span class="fw-bold text-primary">absorbs</span>, <span class="fw-bold text-primary">distributes</span>, <span class="fw-bold text-primary">metabolizes</span>, and <span class="fw-bold text-primary">excretes drugs</span>. It focuses on the movement of drugs within the body over time, including processes such as <span class="fw-bold text-primary">absorption</span>, <span class="fw-bold text-primary">bioavailability</span>, <span class="fw-bold text-primary">distribution</span>, <span class="fw-bold text-primary">metabolism</span>, and <span class="fw-bold text-primary">elimination</span>. <span class="accent-text">Pharmacokinetics</span> is essential for determining appropriate <span class="fw-bold text-primary">drug dosages</span> and <span class="fw-bold text-primary">schedules</span>.
                 </p>
-                <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(2)">Related Genes</button>
+                <button type="button" class="btn btn-info mt-2 load-genes-btn" data-group-id="2" data-group-name="Pharmacokinetics">Related Genes</button>
               </div>
             </div>
           </div><!-- End tab content item -->
 
-          <div class="tab-pane fade" id="features-tab-2">
+          <div class="tab-pane fade" id="features-tab-2" role="tabpanel">
             <div class="row">
               <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
                 <h3>Genomic Diseases</h3>
@@ -344,14 +429,14 @@
                  <span class="fst-italic">Genomic diseases are conditions caused by alterations in an organism's DNA,
                   ranging from single nucleotide changes to large chromosomal rearrangements.</span> </p>
                    <p class=" accent-text">
-                  These genetic variations can disrupt the normal function of genes, leading 
+                  These genomic variations can disrupt the normal function of genes, leading 
                   to a wide spectrum of health problems, including inherited disorders like
                    cystic fibrosis or Huntington's disease, as well as complex conditions 
                    such as certain cancers and heart diseases. Understanding the specific
                     genomic changes is crucial for diagnosis, prognosis, and the development
                     of targeted therapies.
                 </p>
-              <button type="button" class="btn btn-info mt-2" onclick="showGenomicDiseasesModal()">Related Genes</button>
+              <button type="button" class="btn btn-info mt-2 load-genes-btn" data-group-id="3" data-group-name="Genomic Diseases">Related Genes</button>
              
               </div>
               <div class="col-lg-6 order-1 order-lg-2 text-center">
@@ -360,7 +445,7 @@
             </div>
           </div><!-- End tab content item -->
 
-          <div class="tab-pane fade" id="features-tab-3">
+          <div class="tab-pane fade" id="features-tab-3" role="tabpanel">
             <div class="row">
               <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
                 <h3>Prioritized Gene List for Study</h3>
@@ -374,9 +459,9 @@
 
                 To make a request and proceed with the donation, please reach out to our team using the contact options provided in the Contact section.
 
-                Thank you for being part of our mission to advance genetic research.
+                Thank you for being part of our mission to advance genomic research.
                 </p>
-                <button type="button" class="btn btn-info mt-2" onclick="showGenesModal(4)">Related Genes</button>
+                <button type="button" class="btn btn-info mt-2 load-genes-btn" data-group-id="4" data-group-name="Prioritized Gene List for Study">Related Genes</button>
               
               </div>
               <div class="col-lg-6 order-1 order-lg-2 text-center">
@@ -397,135 +482,82 @@
     
 
 
- <section id="gene-matrix" class="gene-matrix section dark-background">
-      <div class="container">
-        <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
-          <div class="col-xl-12">
-            <div class="text-center">
-              <h3>Gene Matrix</h3>
-              <p>Explore our collection of genes related to pharmacodynamics. Click on any gene to see its detailed information.</p>
-              <div id="gene-buttons-container" class="mt-4">
-                <!-- Gene buttons will be inserted here -->
-                <div class="spinner-border text-light" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
+
+ 
+
+<section id="gene-charts-section" class="section dark-background" hidden>
+  <div class="container">
+    <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
+      <div class="col-xl-12">
+        <div class="text-center">
+          <h3>Gene Matrix</h3>
+          <p>Explore our collection of <span id="selected-group-name"></span> genes. Click on any gene to see its detailed information.</p>
+          
+          <div class="row mb-3">
+            <div class="col-md-6 offset-md-3">
+              <input type="search" id="gene-search-input" class="form-control" placeholder="Type the gene name and press Enter...">
+            </div>
+          </div>
+          
+          <!-- Contenedor flexible para las gráficas de dona -->
+          <div id="gene-charts-container" class="d-flex flex-wrap justify-content-center gap-4 mt-4">
+            <!-- Las gráficas se insertarán aquí dinámicamente -->
+          </div>
+          
+         
+          
+          <!-- Template para las gráficas de dona -->
+          <template id="gene-chart-template">
+            <div class="gene-chart-item">
+              <canvas class="gene-donut-chart"></canvas>
+              <div class="gene-donut-chart-center">
+                <p class="gene-donut-chart-center-name"></p>
               </div>
             </div>
+          </template>
+          
+          <!-- Controles de paginación mejorados -->
+          <nav id="charts-pagination" aria-label="Gene pagination" class="mt-4">
+            <div class="d-flex justify-content-center align-items-center gap-3">
+              <button id="prev-page-btn" class="btn btn-outline-light" type="button" disabled>
+                <i class="bi bi-chevron-left"></i> Previous
+              </button>
+              <div class="px-3">
+                <span id="current-page" class="text-light">1</span>
+                <span class="text-light">/</span>
+                <span id="total-pages" class="text-light">1</span>
+              </div>
+              <button id="next-page-btn" class="btn btn-outline-light" type="button" disabled>
+                Next <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          </nav>
+
+          <!-- Loading spinner -->
+          <div id="loading-spinner" class="text-center mt-4 d-none">
+            <div class="spinner-border text-light" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Error message -->
+          <div id="error-message" class="alert alert-danger mt-4 d-none" role="alert">
+            An error occurred while loading the genes. Please try again.
           </div>
         </div>
       </div>
-    </section>
+    </div>d
+  </div>
+</section>
 
-    <style>
-    .gene-btn {
-      margin: 5px;
-      min-width: 120px;
-      transition: all 0.3s ease;
-    }
-    .gene-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    #gene-buttons-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      padding: 20px;
-    }
-    </style>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const container = document.getElementById('gene-buttons-container');
-        const spinner = container.querySelector('.spinner-border');
-        
-        // Cargar los genes
-        fetch('/business-gestion/gene/?groups=1')
-            .then(response => response.json())
-            .then(data => {
-                spinner.style.display = 'none';
-                if (data.results && data.results.length > 0) {
-                    // Crear botones para cada gen
-                    data.results.forEach(gene => {
-                        const button = document.createElement('button');
-                        button.className = 'btn btn-outline-light gene-btn';
-                        button.textContent = gene.name;
-                        
-                        button.addEventListener('click', () => {
-                            // Mostrar detalles del gen usando SweetAlert2
-                            const statusList = gene.gene_status_list || [];
-                            const statusHtml = statusList.map(status => {
-                                const percent = parseFloat(status.value);
-                                let badgeClass = "bg-secondary";
-                                if (!isNaN(percent)) {
-                                    if (percent >= 0 && percent <= 25) badgeClass = "bg-danger";
-                                    else if (percent >= 26 && percent <= 50) badgeClass = "bg-warning";
-                                    else if (percent >= 51 && percent <= 75) badgeClass = "bg-primary";
-                                    else if (percent > 75 && percent <= 100) badgeClass = "bg-success";
-                                }
-                                
-                                return `
-                                    <div class="col-6 col-md-3 text-center">
-                                        <input type="text" class="knob" value="${status.value}" data-width="90" data-height="90" data-fgColor="#3c8dbc"
-                                          data-readonly="true">
-                                          <div class="knob-label">${status.gene_status}</div>
-                                        </div>
-                                    <div class="mb-3">
-                                        <div class="d-flex justify-content-between align-items-center mb-1">
-                                            <strong>${status.gene_status}</strong>
-                                            <span class="badge ${badgeClass}">${status.value}%</span>
-                                        </div>
-                                        <div class="progress" style="height: 5px;">
-                                            <div class="progress-bar ${badgeClass}" style="width: ${status.value}%"></div>
-                                        </div>
-                                        ${status.evidence ? `
-                                            <button class="btn btn-sm btn-link mt-1 p-0" 
-                                                    onclick="downloadEvidence('${encodeURIComponent(status.evidence)}')">
-                                                <i class="bi bi-download"></i> Download Evidence
-                                            </button>
-                                        ` : ''}
-                                    </div>
-                                `;
-                            }).join('');
-
-                            Swal.fire({
-                                title: gene.name,
-                                html: `
-                                    <div class="text-start">
-                                        ${statusList.length ? statusHtml : '<p class="text-muted">No status information available</p>'}
-                                    </div>
-                                `,
-                                width: 600,
-                                showCloseButton: true,
-                                showConfirmButton: false,
-                                customClass: {
-                                    container: 'gene-detail-modal'
-                                }
-                            });
-                        });
-                        
-                        container.appendChild(button);
-                    });
-                } else {
-                    container.innerHTML = '<p class="text-light">No genes found</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Error loading genes:', error);
-                spinner.style.display = 'none';
-                container.innerHTML = '<p class="text-danger">Error loading genes</p>';
-            });
-    });
-    </script>
-
-
-    <!-- Tridimencional Section -->
+    <!-- Tridimensional Section -->
     <section id="tridimensional" class="testimonials section light-background">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Tridimencional</h2>
+
+        <h2>Tridimensional</h2>
+
         <p>Plot alleles in 3D</p>
       </div><!-- End Section Title -->
       <div class="container">
@@ -535,7 +567,7 @@
                  <span class="fst-italic">  A New Perspective for Studying Their Origins</span> </p>
                   
                 <p class="accent-text">
-              The understanding of genetics has advanced significantly with sequencing tools and data analysis. However, the inherent complexity of genetic interactions and the spatial organization of the genome are often lost in two-dimensional representations. Three-dimensional (3D) visualization of genes and their alleles emerges as a powerful tool that offers a revolutionary perspective, especially for unraveling the origins and evolution of these fundamental units of heredity.
+              The understanding of genomics has advanced significantly with sequencing tools and data analysis. However, the inherent complexity of genomic interactions and the spatial organization of the genome are often lost in two-dimensional representations. Three-dimensional (3D) visualization of genes and their alleles emerges as a powerful tool that offers a revolutionary perspective, especially for unraveling the origins and evolution of these fundamental units of heredity.
                 </p>
                 <a href="{% url 'alleleviewer' %}" class="btn btn-info mt-2">
                   <i class="bi bi-play-circle me-1"></i> Allele Viewer Tool
@@ -587,7 +619,7 @@
         <div class="feature-box red">
           <i class="bi bi-shuffle"></i>
           <h4>Recombination & Duplication Events</h4>
-          <p>Illustrate DNA segment exchanges and duplications, showing breakpoints and new genetic configurations.</p>
+          <p>Illustrate DNA segment exchanges and duplications, showing breakpoints and new genomic configurations.</p>
         </div>
       </div><!-- End Feature Box-->
 
@@ -619,7 +651,7 @@
         <div class="feature-box blue">
           <i class="bi bi-arrow-left-right"></i>
           <h4>Visualization of Gene Flow</h4>
-          <p>Represent gene flow between populations, showing allele dispersal and mixing, crucial for genetic diversity.</p>
+          <p>Represent gene flow between populations, showing allele dispersal and mixing, crucial for genomic diversity.</p>
         </div>
       </div><!-- End Feature Box-->
 
@@ -636,7 +668,7 @@
 
         <div class="row content justify-content-center align-items-center position-relative">
           <div class="col-lg-8 mx-auto text-center">
-            <h2 class="display-4 mb-4">The Long Road of Humanity's Genetic Transformation</h2>
+            <h2 class="display-4 mb-4">The Long Road of Humanity's Genomic Transformation</h2>
             <p class="mb-4">Advanced web-based digital platform, designed to visualize and analyze the complex interactions between hominid migrations, environmental and sociopolitical factors, and the formation of the human gene pool.</p>
             <a href="{% url 'mapgeneral' %}" class="btn btn-cta">Call To Action</a>
           </div>
@@ -744,8 +776,8 @@
                   <i class="bi bi-shuffle"></i>
                 </div>
                 <div class="feature-content">
-                  <h3>Visual Genetic Diversity</h3>
-                  <p>Explore the distribution of haplogroups and regional genetic diversity over time.</p>
+                  <h3>Visual Genomic Diversity</h3>
+                  <p>Explore the distribution of haplogroups and regional genomic diversity over time.</p>
                 </div>
               </div>
             </div><!-- End .feature-item -->
@@ -783,7 +815,7 @@
 
  
 
-    <!-- Clients Section -->
+  
     {% comment %} <section id="clients" class="clients section">
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -967,7 +999,7 @@
 
         <div class="container section-title">
             <h2>Human Genes Timeline</h2>
-            <p>Explore the key stages and factors in the genetic transformation of humanity.</p>
+            <p>Explore the key stages and factors in the genomic transformation of humanity.</p>
         </div>
 
         <div class="container">
@@ -984,134 +1016,319 @@
         </div>
 
     </section>
-    <section id="pricing" class="pricing section light-background">
+    
+<!-- Donation Section -->
+<section id="donation" class="donation section light-background">
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Support Our Research</h2>
+    <p>Help us accelerate genomic discoveries through your generous contribution</p>
+  </div>
 
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Support Our Research</h2>
-        <p>Help advance our understanding of genetic evolution by contributing to our research priorities.</p>
-      </div>
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row g-4 justify-content-center">
-
-          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-        <div class="pricing-card">
-          <h3>Basic Contribution</h3>
-          <div class="price">
-            <span class="currency">$</span>
-            <span class="amount">50</span>
-            <span class="period">one-time</span>
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row">
+      <div class="col-lg-6 mb-4">
+        <div class="donation-info-card">
+          <div class="card-header">
+            <h3><i class="bi bi-heart-fill text-danger"></i> Why Donate?</h3>
           </div>
-          <p class="description">Add a gene of your interest to our research priority list.</p>
+          <div class="card-body">
+            <p class="lead">Our research is conducted with <strong>no profit motive</strong>, driven solely by the passion to advance genomic science.</p>
+            
+            <div class="donation-purpose mt-4">
+              <h5>Your voluntary contribution helps us:</h5>
+              <ul class="list-unstyled mt-3">
+                <li class="mb-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  Maintain subscriptions to critical genomic databases
+                </li>
+                <li class="mb-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  Access premium bioinformatics tools and services
+                </li>
+                <li class="mb-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  Process genes faster through third-party computational resources
+                </li>
+                <li class="mb-2">
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                  Keep our platform free and accessible to all researchers
+                </li>
+              </ul>
+            </div>
 
-          <h4>Benefits Include:</h4>
-          <ul class="features-list">
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Add one gene to priority list
-            </li>
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Quarterly updates on research progress
-            </li>
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Recognition in our contributors page
-            </li>
-          </ul>
-
-          <a href="#contact" class="btn btn-primary">
-            Contribute Now
-            <i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
+            <div class="alert alert-info mt-4" role="alert">
+              <i class="bi bi-info-circle"></i> <strong>Note:</strong> All donations are unconditional contributions to support non-profit research. No goods or services are provided in exchange.
+            </div>
           </div>
-
-          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-        <div class="pricing-card popular">
-          <div class="popular-badge">Most Popular</div>
-          <h3>Priority Research</h3>
-          <div class="price">
-            <span class="currency">$</span>
-            <span class="amount">150</span>
-            <span class="period">one-time</span>
-          </div>
-          <p class="description">Elevate the priority level of a gene in our research queue.</p>
-
-          <h4>Benefits Include:</h4>
-          <ul class="features-list">
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Move one gene to high priority status
-            </li>
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Monthly research updates
-            </li>
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Access to preliminary findings
-            </li>
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Virtual lab tour invitation
-            </li>
-          </ul>
-
-          <a href="#contact" class="btn btn-light">
-            Contribute Now
-            <i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
-          </div>
-
-          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
-        <div class="pricing-card">
-          <h3>Research Partner</h3>
-          <div class="price">
-            <span class="currency">$</span>
-            <span class="amount">500</span>
-            <span class="period">one-time</span>
-          </div>
-          <p class="description">Become a key partner in our genetic evolution research.</p>
-
-          <h4>Benefits Include:</h4>
-          <ul class="features-list">
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Add multiple genes to priority list
-            </li>
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Weekly research briefings
-            </li>
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Direct communication with research team
-            </li>
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Acknowledgment in publications
-            </li>
-            <li>
-          <i class="bi bi-check-circle-fill"></i>
-          Custom research focus report
-            </li>
-          </ul>
-
-          <a href="#contact" class="btn btn-primary">
-            Become a Partner
-            <i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
-          </div>
-
         </div>
       </div>
 
-        </section>
+      <div class="col-lg-6 mb-4">
+        <div class="donation-form-card">
+          <div class="card-header">
+            <h3><i class="bi bi-gift"></i> Make a Contribution</h3>
+          </div>
+          <div class="card-body">
+            <form id="donation-form">
+              <div class="form-group mb-3">
+                <label for="donation-amount">Select Amount (USD)</label>
+                <div class="amount-options mt-2">
+                  <button type="button" class="btn btn-outline-primary amount-btn" data-amount="25">$25</button>
+                  <button type="button" class="btn btn-outline-primary amount-btn" data-amount="50">$50</button>
+                  <button type="button" class="btn btn-outline-primary amount-btn" data-amount="100">$100</button>
+                  <button type="button" class="btn btn-outline-primary amount-btn" data-amount="250">$250</button>
+                  <button type="button" class="btn btn-outline-primary amount-btn" data-amount="500">$500</button>
+                </div>
+                <div class="input-group mt-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                  </div>
+                  <input type="number" class="form-control" id="custom-amount" placeholder="Custom amount" min="1">
+                </div>
+              </div>
 
-    <!-- Faq Section -->
+              <div class="form-group mb-3">
+                <label for="donor-email">Email Address</label>
+                <input type="email" class="form-control" id="donor-email" placeholder="your@email.com" required>
+                <small class="form-text text-muted">For receipt purposes only</small>
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="donor-message">Optional Message</label>
+                <textarea class="form-control" id="donor-message" rows="3" placeholder="Any message you'd like to share with our team..."></textarea>
+              </div>
+
+              <div class="payment-methods mb-3">
+                <label class="d-block mb-2">Choose Payment Method</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="payment-method" id="stripe" value="stripe" checked>
+                  <label class="form-check-label" for="stripe">
+                    <i class="bi bi-credit-card"></i> Credit/Debit Card (Stripe)
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="payment-method" id="bluevine" value="bluevine">
+                  <label class="form-check-label" for="bluevine">
+                    <i class="bi bi-bank"></i> Bank Transfer (Bluevine)
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="payment-method" id="crypto" value="crypto">
+                  <label class="form-check-label" for="crypto">
+                    <i class="bi bi-currency-bitcoin"></i> Cryptocurrency
+                  </label>
+                </div>
+              </div>
+
+              <div id="crypto-options" class="crypto-options mb-3" style="display: none;">
+                <label class="d-block mb-2">Select Cryptocurrency</label>
+                <div class="row" style="margin-left: 30px;">
+                  <div class="col-6">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="crypto-type" id="usdt" value="usdt" checked>
+                      <label class="form-check-label" for="usdt">
+                        <img src="{% static 'assets/dist/img/crypto/usdt.png' %}" alt="USDT" width="20"> USDT
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="crypto-type" id="usdc" value="usdc">
+                      <label class="form-check-label" for="usdc">
+                        <img src="{% static 'assets/dist/img/crypto/usdc.png' %}" alt="USDC" width="20"> USDC
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="crypto-type" id="eth" value="eth">
+                      <label class="form-check-label" for="eth">
+                        <img src="{% static 'assets/dist/img/crypto/eth.png' %}" alt="ETH" width="20"> ETH
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="crypto-type" id="btc" value="btc">
+                      <label class="form-check-label" for="btc">
+                        <img src="{% static 'assets/dist/img/crypto/btc.png' %}" alt="BTC" width="20"> BTC
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="network-options" class="network-options mt-3">
+                  <label class="d-block mb-2">Select Network</label>
+                  <div class="row" style="margin-left: 30px;" id="usdt-networks">
+                    <div class="col-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="network" id="matic" value="matic" checked>
+                        <label class="form-check-label" for="matic">
+                          <img src="{% static 'assets/dist/img/crypto/polygon.png' %}" alt="MATIC" width="20"> Polygon (MATIC)
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="network" id="bsc" value="bsc">
+                        <label class="form-check-label" for="bsc">
+                          <img src="{% static 'assets/dist/img/crypto/bnb.png' %}" alt="BSC" width="20"> BSC (BEP20)
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="network" id="erc20" value="erc20">
+                        <label class="form-check-label" for="erc20">
+                          <img src="{% static 'assets/dist/img/crypto/eth.png' %}" alt="ERC20" width="20"> Ethereum (ERC20)
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="network" id="arbitrum" value="arbitrum">
+                        <label class="form-check-label" for="arbitrum">
+                          <img src="{% static 'assets/dist/img/crypto/arbitrum.png' %}" alt="Arbitrum" width="20"> Arbitrum
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row" id="eth-networks" style="display: none; margin-left: 30px;">
+                    <div class="col-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="network" id="bsc-eth" value="bsc" checked>
+                        <label class="form-check-label" for="bsc-eth">
+                          <img src="{% static 'assets/dist/img/crypto/bnb.png' %}" alt="BSC" width="20"> BSC (BEP20)
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="network" id="erc20-eth" value="erc20">
+                        <label class="form-check-label" for="erc20-eth">
+                          <img src="{% static 'assets/dist/img/crypto/eth.png' %}" alt="ERC20" width="20"> Ethereum (ERC20)
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="network" id="arbitrum-eth" value="arbitrum">
+                        <label class="form-check-label" for="arbitrum-eth">
+                          <img src="{% static 'assets/dist/img/crypto/arbitrum.png' %}" alt="Arbitrum" width="20"> Arbitrum
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row" id="btc-networks" style="display: none; margin-left: 30px;">
+                    <div class="col-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="network" id="btc-native" value="native" checked>
+                        <label class="form-check-label" for="btc-native">
+                          <img src="{% static 'assets/dist/img/crypto/btc.png' %}" alt="Bitcoin" width="20"> Bitcoin Network
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="network" id="btc-bep20" value="bep20">
+                        <label class="form-check-label" for="btc-bep20">
+                          <img src="{% static 'assets/dist/img/crypto/bnb.png' %}" alt="BSC" width="20"> BSC (BEP20)
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="crypto-address" class="crypto-address mt-3">
+                  <div class="alert alert-success">
+                    <h5><i class="bi bi-wallet2"></i> Deposit Address</h5>
+                    <div class="address-container">
+                      <p class="address-text mb-2" id="address-display">0xfe54017ba47b007ae4a56598740a224461c348af</p>
+                      <button type="button" class="btn btn-sm btn-outline-secondary" id="copy-address">
+                        <i class="bi bi-clipboard"></i> Copy
+                      </button>
+                    </div>
+                    <div class="qr-code mt-3 text-center">
+                      <img src="{% static 'assets/dist/img/crypto/qr-placeholder.png' %}" alt="QR Code" id="qr-code" width="150">
+                      <p class="mt-2">Scan QR code with your wallet</p>
+                    </div>
+                    <div class="alert alert-warning mt-3">
+                      <i class="bi bi-exclamation-triangle"></i> 
+                      <strong>Important:</strong> Please send only <span id="crypto-warning-text">USDT</span> to this address. Sending other coins may result in permanent loss.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg btn-block" id="donate-btn">
+                <i class="bi bi-heart"></i> Donate Now
+              </button>
+            </form>
+
+            <div id="payment-processing" class="text-center mt-3" style="display: none;">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Processing...</span>
+              </div>
+              <p class="mt-2">Processing your donation...</p>
+            </div>
+
+            <div id="bluevine-instructions" class="mt-3" style="display: none;">
+              <div class="alert alert-success">
+                <h5><i class="bi bi-bank"></i> Bank Transfer Instructions</h5>
+                <p>Please transfer your donation to:</p>
+                <ul class="list-unstyled">
+                  <li><strong>Bank:</strong> Bluevine</li>
+                  <li><strong>Account Name:</strong> AIGenomicResources.com LLC</li>
+                  <li><strong>Account Number:</strong> [875105077601]</li>
+                  <li><strong>Routing Number:</strong> [125109019]</li>
+                </ul>
+                <p class="mb-0">Reference: <code id="bluevine-reference">[REFERENCE]</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="donation-impact text-center">
+          <h3>Research Impact</h3>
+          <div class="row mt-4">
+            <div class="col-md-3 mb-3">
+              <div class="impact-card">
+                <i class="bi bi-infinity"></i>
+                <h4>100+ Genes</h4>
+                <p>Processed with each $100 donation</p>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="impact-card">
+                <i class="bi bi-people"></i>
+                <h4>50+ Researchers</h4>
+                <p>Benefit from free platform access</p>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="impact-card">
+                <i class="bi bi-graph-up"></i>
+                <h4>30% Faster</h4>
+                <p>Research processing with donations</p>
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="impact-card">
+                <i class="bi bi-globe"></i>
+                <h4>Global Access</h4>
+                <p>Keeping data open and accessible</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+     <!-- Faq Section -->
     <section class="faq-9 faq section light-background" id="faq">
 
       <div class="container">
@@ -1119,7 +1336,7 @@
 
           <div class="col-lg-5" data-aos="fade-up">
             <h2 class="faq-title">Have a question? Check out the FAQ</h2>
-            <p class="faq-description">Maecenas tempus tellus eget condimentum rhoncus sem quam semper libero sit amet adipiscing sem neque sed ipsum.</p>
+            <p class="faq-description">Learn about allele conformations: their types, how we visualize them, and how to interpret conformational summaries in the viewer.</p>
             <div class="faq-arrow d-none d-lg-block" data-aos="fade-up" data-aos-delay="200">
               <svg class="faq-arrow" width="200" height="211" viewBox="0 0 200 211" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M198.804 194.488C189.279 189.596 179.529 185.52 169.407 182.07L169.384 182.049C169.227 181.994 169.07 181.939 168.912 181.884C166.669 181.139 165.906 184.546 167.669 185.615C174.053 189.473 182.761 191.837 189.146 195.695C156.603 195.912 119.781 196.591 91.266 179.049C62.5221 161.368 48.1094 130.695 56.934 98.891C84.5539 98.7247 112.556 84.0176 129.508 62.667C136.396 53.9724 146.193 35.1448 129.773 30.2717C114.292 25.6624 93.7109 41.8875 83.1971 51.3147C70.1109 63.039 59.63 78.433 54.2039 95.0087C52.1221 94.9842 50.0776 94.8683 48.0703 94.6608C30.1803 92.8027 11.2197 83.6338 5.44902 65.1074C-1.88449 41.5699 14.4994 19.0183 27.9202 1.56641C28.6411 0.625793 27.2862 -0.561638 26.5419 0.358501C13.4588 16.4098 -0.221091 34.5242 0.896608 56.5659C1.8218 74.6941 14.221 87.9401 30.4121 94.2058C37.7076 97.0203 45.3454 98.5003 53.0334 98.8449C47.8679 117.532 49.2961 137.487 60.7729 155.283C87.7615 197.081 139.616 201.147 184.786 201.155L174.332 206.827C172.119 208.033 174.345 211.287 176.537 210.105C182.06 207.125 187.582 204.122 193.084 201.144C193.346 201.147 195.161 199.887 195.423 199.868C197.08 198.548 193.084 201.144 195.528 199.81C196.688 199.192 197.846 198.552 199.006 197.935C200.397 197.167 200.007 195.087 198.804 194.488ZM60.8213 88.0427C67.6894 72.648 78.8538 59.1566 92.1207 49.0388C98.8475 43.9065 106.334 39.2953 114.188 36.1439C117.295 34.8947 120.798 33.6609 124.168 33.635C134.365 33.5511 136.354 42.9911 132.638 51.031C120.47 77.4222 86.8639 93.9837 58.0983 94.9666C58.8971 92.6666 59.783 90.3603 60.8213 88.0427Z" fill="currentColor"></path>
@@ -1131,49 +1348,43 @@
             <div class="faq-container">
 
               <div class="faq-item faq-active">
-                <h3>Non consectetur a erat nam at lectus urna duis?</h3>
+                <h3>What is genomic ancestry and how is it determined?</h3>
                 <div class="faq-content">
-                  <p>Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.</p>
+                  <p>Genomic ancestry is inferred by comparing DNA segments to reference populations. Algorithms examine allele patterns and haplotypes to estimate ancestral contributions across the genome.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-down"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3>How do alleles influence trait inheritance?</h3>
+                <div class="faq-content">
+                  <p>Alleles are variant forms of a gene; combinations of alleles (homozygous/heterozygous) determine how traits are expressed. Some alleles are dominant, others recessive or additive.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              
+
+              <div class="faq-item">
+                <h3>How are allele conformations interpreted?</h3>
+                <div class="faq-content">
+                  <p>Conformations summarize allele structure and functional predictions. We show frequency across populations, predicted effects, and supporting evidence so researchers can interpret biological relevance.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
               </div><!-- End Faq item-->
 
               <div class="faq-item">
-                <h3>Feugiat scelerisque varius morbi enim nunc faucibus?</h3>
+                <h3>What are the main types of allele conformation?</h3>
                 <div class="faq-content">
-                  <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                  <p>Conformation types typically include sequence-based classifications (allele sequence variants), structural conformations (insertions/deletions and rearrangements), and functional categories (predicted effect on gene product). Our viewer shows these aspects together to help evaluate biological relevance.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
               </div><!-- End Faq item-->
 
               <div class="faq-item">
-                <h3>Dolor sit amet consectetur adipiscing elit pellentesque?</h3>
+                <h3>How can I support the project?</h3>
                 <div class="faq-content">
-                  <p>Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item">
-                <h3>Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?</h3>
-                <div class="faq-content">
-                  <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item">
-                <h3>Tempus quam pellentesque nec nam aliquam sem et tortor?</h3>
-                <div class="faq-content">
-                  <p>Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl suscipit adipiscing bibendum est. Purus gravida quis blandit turpis cursus in</p>
-                </div>
-                <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
-
-              <div class="faq-item">
-                <h3>Perspiciatis quod quo quos nulla quo illum ullam?</h3>
-                <div class="faq-content">
-                  <p>Enim ea facilis quaerat voluptas quidem et dolorem. Quis et consequatur non sed in suscipit sequi. Distinctio ipsam dolore et.</p>
+                  <p>You can support our work via donations or by sharing anonymized datasets. Visit the Donation section or contact us via WhatsApp for collaboration opportunities.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
               </div><!-- End Faq item-->
@@ -1183,10 +1394,73 @@
 
         </div>
       </div>
-    </section><!-- /Faq Section -->
+    </section>
+    
+    <!-- /Faq Section -->
+
+    <script>
+    // FAQ accordion: open one item at a time; close others when one opens
+    document.addEventListener('DOMContentLoaded', function() {
+      try {
+        const container = document.querySelector('.faq-container');
+        if (!container) return;
+
+        const items = Array.from(container.querySelectorAll('.faq-item'));
+
+        function closeItem(i) {
+          i.classList.remove('faq-active');
+          const c = i.querySelector('.faq-content');
+          const t = i.querySelector('.faq-toggle');
+          if (c) c.style.display = 'none';
+          if (t) { t.classList.remove('bi-chevron-down'); t.classList.add('bi-chevron-right'); }
+        }
+
+        function openItem(i) {
+          i.classList.add('faq-active');
+          const c = i.querySelector('.faq-content');
+          const t = i.querySelector('.faq-toggle');
+          if (c) c.style.display = 'block';
+          if (t) { t.classList.remove('bi-chevron-right'); t.classList.add('bi-chevron-down'); }
+        }
+
+        items.forEach(item => {
+          const toggle = item.querySelector('.faq-toggle');
+          const header = item.querySelector('h3');
+
+          // Initialize
+          if (item.classList.contains('faq-active')) {
+            openItem(item);
+          } else {
+            closeItem(item);
+          }
+
+          function onToggle() {
+            const isActive = item.classList.contains('faq-active');
+            // Close all other items
+            items.forEach(other => { if (other !== item) closeItem(other); });
+            // Toggle this one
+            if (!isActive) openItem(item);
+            else closeItem(item);
+          }
+
+          if (toggle) {
+            toggle.style.cursor = 'pointer';
+            toggle.addEventListener('click', onToggle);
+          }
+          if (header) {
+            header.style.cursor = 'pointer';
+            header.addEventListener('click', onToggle);
+          }
+        });
+
+      } catch (err) {
+        console.error('FAQ toggler error:', err);
+      }
+    });
+    </script>
 
     <!-- Call To Action 2 Section -->
-    <section id="call-to-action-2" class="call-to-action-2 section dark-background">
+    {% comment %} <section id="call-to-action-2" class="call-to-action-2 section dark-background">
 
       <div class="container">
         <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
@@ -1200,152 +1474,35 @@
         </div>
       </div>
 
-    </section><!-- /Call To Action 2 Section -->
+    </section><!-- /Call To Action 2 Section --> {% endcomment %}
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact section light-background">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Contact</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-      </div><!-- End Section Title -->
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="row g-4 g-lg-5">
-          <div class="col-lg-5">
-            <div class="info-box" data-aos="fade-up" data-aos-delay="200">
-              <h3>Contact Info</h3>
-              <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis.</p>
-
-              <div class="info-item" data-aos="fade-up" data-aos-delay="300">
-                <div class="icon-box">
-                  <i class="bi bi-geo-alt"></i>
-                </div>
-                <div class="content">
-                  <h4>Our Location</h4>
-                  <p>A108 Adam Street</p>
-                  <p>New York, NY 535022</p>
-                </div>
-              </div>
-
-              <div class="info-item" data-aos="fade-up" data-aos-delay="400">
-                <div class="icon-box">
-                  <i class="bi bi-telephone"></i>
-                </div>
-                <div class="content">
-                  <h4>Phone Number</h4>
-                  <p>+1 5589 55488 55</p>
-                  <p>+1 6678 254445 41</p>
-                </div>
-              </div>
-
-              <div class="info-item" data-aos="fade-up" data-aos-delay="500">
-                <div class="icon-box">
-                  <i class="bi bi-envelope"></i>
-                </div>
-                <div class="content">
-                  <h4>Email Address</h4>
-                  <p>info@example.com</p>
-                  <p>contact@example.com</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-7">
-            <div class="contact-form" data-aos="fade-up" data-aos-delay="300">
-              <h3>Get In Touch</h3>
-              <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis.</p>
-
-              <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-                <div class="row gy-4">
-
-                  <div class="col-md-6">
-                    <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
-                  </div>
-
-                  <div class="col-md-6 ">
-                    <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
-                  </div>
-
-                  <div class="col-12">
-                    <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
-                  </div>
-
-                  <div class="col-12">
-                    <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
-                  </div>
-
-                  <div class="col-12 text-center">
-                    <div class="loading">Loading</div>
-                    <div class="error-message"></div>
-                    <div class="sent-message">Your message has been sent. Thank you!</div>
-
-                    <button type="submit" class="btn">Send Message</button>
-                  </div>
-
-                </div>
-              </form>
-
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section><!-- /Contact Section -->
+ 
 
 
 <!-- Modal para mostrar genes -->
-              <div class="modal fade" id="genesModal" data-backdrop="static" tabindex="-1" role="dialog"
-                  aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="genesModalLabel">Related Genes</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <table id="genesTable" class="table table-bordered table-striped " width="100%">
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
-                    </div>
+<div class="modal fade" id="genesModal" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="genesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="genesModalLabel">Gene Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>            
+          <div class="modal-body">
+                <!-- El dashboard se renderizará aquí -->
+                <div id="gene-dashboard-container">
+                    <!-- Contenido dinámico -->
                 </div>
-              </div>
-
-<!-- Modal para mostrar Genomic Diseases  -->
-              <div class="modal fade" id="genomicDiseasesModal" data-backdrop="static" tabindex="-1" role="dialog"
-                  aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="genomicDiseasesModalLabel">Related Genomic Diseases</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <table id="genomicDiseasesTable" class="table table-bordered table-striped " width="100%">
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-              </div>
-
-
-
-    <!-- Bootstrap Loading Spinner -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap Loading Spinner -->
     <!-- Overlay Spinner: disables whole page while loading -->
     <div id="global-spinner-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255,255,255,0.7); z-index: 9999; display: flex; justify-content: center; align-items: center;">
       <div class="spinner-border text-primary" role="status" aria-label="Loading">
@@ -1363,111 +1520,50 @@
 
   <footer id="footer" class="footer">
 
-    <div class="container footer-top">
+     <div class="container footer-top">
       <div class="row gy-4">
         <div class="col-lg-4 col-md-6 footer-about">
           <a href="index.html" class="logo d-flex align-items-center">
-            <span class="sitename">iLanding</span>
+            <span class="sitename">PGxSoftware</span>
           </a>
           <div class="footer-contact pt-3">
-            <p>A108 Adam Street</p>
-            <p>New York, NY 535022</p>
-            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-            <p><strong>Email:</strong> <span>info@example.com</span></p>
+                      
           </div>
           <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
+                      <a href="mailto:info@pgxsoftware.com"><i class="bi bi-envelope"></i></a><a href="https://www.linkedin.com/in/oreste-ezequiel-salavaggione-ba059b22/"><i class="bi bi-linkedin"></i></a>
           </div>
         </div>
 
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Useful Links</h4>
-          <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About us</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Terms of service</a></li>
-            <li><a href="#">Privacy policy</a></li>
-          </ul>
-        </div>
+        
 
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Our Services</h4>
-          <ul>
-            <li><a href="#">Web Design</a></li>
-            <li><a href="#">Web Development</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Marketing</a></li>
-            <li><a href="#">Graphic Design</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Hic solutasetp</h4>
-          <ul>
-            <li><a href="#">Molestiae accusamus iure</a></li>
-            <li><a href="#">Excepturi dignissimos</a></li>
-            <li><a href="#">Suscipit distinctio</a></li>
-            <li><a href="#">Dilecta</a></li>
-            <li><a href="#">Sit quas consectetur</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h4>Nobis illum</h4>
-          <ul>
-            <li><a href="#">Ipsam</a></li>
-            <li><a href="#">Laudantium dolorum</a></li>
-            <li><a href="#">Dinera</a></li>
-            <li><a href="#">Trodelas</a></li>
-            <li><a href="#">Flexo</a></li>
-          </ul>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">iLanding</strong> <span>All Rights Reserved</span></p>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>
-      </div>
-    </div>
-
+<div class="copyright">&copy; Genetic Ancestry Project. Designed by <strong>PGxSoftware.com</strong></div>
+      
   </footer>
 
 <!-- jQuery -->
 <script src="{% static 'assets/plugins/jquery/jquery.min.js' %}"></script>
 <!-- Bootstrap 4 -->
-<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<!-- AdminLTE App -->
+{% comment %} <script src="{% static 'assets/iLanding/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script> {% endcomment %}
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script> 
 <script src="{% static 'assets/dist/js/adminlte.min.js' %}"></script>
-
-<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
 <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
-
-
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="{% static 'assets/iLanding/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static 'assets/iLanding/assets/vendor/php-email-form/validate.js' %}"></script>
+    
+   <script src="{% static 'assets/iLanding/assets/js/main.js' %}"></script>
+ <script src="{% static 'assets/iLanding/assets/vendor/php-email-form/validate.js' %}"></script>
   <script src="{% static 'assets/iLanding/assets/vendor/aos/aos.js' %}"></script>
   <script src="{% static 'assets/iLanding/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
   <script src="{% static 'assets/iLanding/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
   <script src="{% static 'assets/iLanding/assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
   <!-- Main JS File -->
-  <script src="{% static 'assets/iLanding/assets/js/main.js' %}"></script>
+<script src="{% static 'assets/iLanding/assets/js/main.js' %}"></script>
+<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-knob/jquery.knob.min.js' %}"></script>
 
-  <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
   <script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
   <script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
@@ -1479,15 +1575,17 @@
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
-<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
 
+<!-- Chart libraries (load before app scripts) -->
+<script src="{% static 'assets/plugins/chart.js/Chart.min.js' %}"></script>
+<script src="{% static 'assets/plugins/gene-donut-chart/gene-donut-chart.js' %}"></script>
 
-<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- Application scripts -->
+ 
+<script src="{% static 'assets/dist/js/introductioniLanding.js' %}"></script>
+<script src="{% static 'assets/dist/js/donation.js' %}"></script>
+{% comment %} <script src="{% static 'assets/dist/js/introductioniLandingLoadGenes.js' %}"></script> {% endcomment %}
 
-  <script src="{% static 'assets/dist/js/introductioniLanding.js' %}"></script>
-<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
-<script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
-<script src="{% static 'assets/plugins/jquery-knob/jquery.knob.min.js' %}"></script>
 
 
 <script>
@@ -1499,83 +1597,7 @@ var Toast = Swal.mixin({
     });
   </script>
 
-  <script>
-  $(function () {
-    /* jQueryKnob */
 
-    $('.knob').knob({
-      /*change : function (value) {
-       //console.log("change : " + value);
-       },
-       release : function (value) {
-       console.log("release : " + value);
-       },
-       cancel : function () {
-       console.log("cancel : " + this.value);
-       },*/
-      draw: function () {
-
-        // "tron" case
-        if (this.$.data('skin') == 'tron') {
-
-          var a   = this.angle(this.cv)  // Angle
-            ,
-              sa  = this.startAngle          // Previous start angle
-            ,
-              sat = this.startAngle         // Start angle
-            ,
-              ea                            // Previous end angle
-            ,
-              eat = sat + a                 // End angle
-            ,
-              r   = true
-
-          this.g.lineWidth = this.lineWidth
-
-          this.o.cursor
-          && (sat = eat - 0.3)
-          && (eat = eat + 0.3)
-
-          if (this.o.displayPrevious) {
-            ea = this.startAngle + this.angle(this.value)
-            this.o.cursor
-            && (sa = ea - 0.3)
-            && (ea = ea + 0.3)
-            this.g.beginPath()
-            this.g.strokeStyle = this.previousColor
-            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false)
-            this.g.stroke()
-          }
-
-          this.g.beginPath()
-          this.g.strokeStyle = r ? this.o.fgColor : this.fgColor
-          this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false)
-          this.g.stroke()
-
-          this.g.lineWidth = 2
-          this.g.beginPath()
-          this.g.strokeStyle = this.o.fgColor
-          this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false)
-          this.g.stroke()
-
-          return false
-        }
-      }
-    })
-    /* END JQUERY KNOB */
-
-    //INITIALIZE SPARKLINE CHARTS
-    var sparkline1 = new Sparkline($('#sparkline-1')[0], { width: 240, height: 70, lineColor: '#92c1dc', endColor: '#92c1dc' })
-    var sparkline2 = new Sparkline($('#sparkline-2')[0], { width: 240, height: 70, lineColor: '#f56954', endColor: '#f56954' })
-    var sparkline3 = new Sparkline($('#sparkline-3')[0], { width: 240, height: 70, lineColor: '#3af221', endColor: '#3af221' })
-
-    sparkline1.draw([1000, 1200, 920, 927, 931, 1027, 819, 930, 1021])
-    sparkline2.draw([515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921])
-    sparkline3.draw([15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21])
-
-  })
-
-</script>
 
 </body>
 
