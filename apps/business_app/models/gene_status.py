@@ -17,6 +17,12 @@ class GeneStatus(models.Model):
         default=TypeRepresentation.PERCENT,
     )
     requires_evidence = models.BooleanField(default=False)
+    created_timestamp = models.DateTimeField(
+        verbose_name=_("Created timestamp"), auto_now_add=True
+    )
+    updated_timestamp = models.DateTimeField(
+        verbose_name=_("Updated timestamp"), auto_now=True, null=True
+    )
 
     def save(self, *args, **kwargs):
         is_new = self.pk is None

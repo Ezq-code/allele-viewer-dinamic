@@ -410,6 +410,8 @@ class GeneStatusAdmin(admin.ModelAdmin):
         "description",
         "type",
         "requires_evidence",
+        "created_timestamp",
+        "updated_timestamp",
     ]
     fields = [
         "name",
@@ -428,6 +430,8 @@ class GeneStatusMiddleAdmin(admin.ModelAdmin):
         "gene_status",
         "evidence",
         "value",
+        "created_timestamp",
+        "updated_timestamp",
     ]
     fields = [
         "gene",
