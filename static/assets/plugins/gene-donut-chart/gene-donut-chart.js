@@ -193,7 +193,7 @@
 
     // Método para renderizar las gráficas
     GeneDonutChart.prototype.render = function(genes, statusData) {
-console.log('✌️statusData --->', statusData);
+console.log('✌️statusDatatotal --->', statusData);
 console.log('✌️genes --->', genes);
         if (!this.container) {
             console.error('GeneDonutChart: El componente no ha sido inicializado correctamente');
@@ -357,8 +357,10 @@ console.log('✌️genes --->', genes);
             
             // Añadir tooltip
             if (this.options.tooltipEnabled) {
+console.log('✌️item.value --->', item.value);
                 const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-                title.textContent = `${item.label}: ${item.value} (${(percentage * 100).toFixed(1)}%)`;
+                title.textContent = `${item.label}: ${item.value} (${(percentage * 100).toFixed(1)}%) Last updated ${item.updated_since} days ago`;
+
                 segment.appendChild(title);
             }
             
