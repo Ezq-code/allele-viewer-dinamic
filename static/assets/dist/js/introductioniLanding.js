@@ -191,17 +191,20 @@ function processAndRenderCharts(genes) {
             // Procesar los estados para este gen específico
             const statusData = (gene.gene_status_list || [])
                 .map(status => {
-                    const v = parseFloat(status.value);
-                    
+                    const v = parseFloat(status.value);                    
                     // NOTA: Se reemplaza la lógica anterior de colores fijos.
                     // Ahora se busca directamente en nuestro mapa dinámico.
                     // Si por alguna razón un estado no está en el mapa, se usa un color gris por defecto.
                     const color = statusColorMap[status.gene_status] || '#CCCCCC';
+
+                    const updated_since =status.updated_since;
+
                     
                     return {
                         label: status.gene_status,
                         value: v,
-                        color: color
+                        color: color,
+                        updated_since: updated_since
                     };
                 })
                 .filter(item => !isNaN(item.value));
