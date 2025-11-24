@@ -330,3 +330,6 @@ else:
     }
 
 CACHES = {"default": cache_backend}
+
+STRIPE_PUBLIC_KEY = env.str("STRIPE_PUBLIC_KEY", default="")
+STRIPE_SECRET_KEY = env.str("STRIPE_SECRET_KEY", default="")
