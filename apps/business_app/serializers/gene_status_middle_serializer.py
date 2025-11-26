@@ -25,10 +25,11 @@ class GeneStatusMiddleReadSerializer(serializers.ModelSerializer):
             "updated_timestamp",
             "updated_since",
         ]
+
     def get_updated_since(self, obj):
         last_updated = obj.updated_timestamp or obj.created_timestamp
         if not last_updated:
-            return None 
+            return None
         now = datetime.now()
         naive_last_updated = last_updated.replace(tzinfo=None)
 
