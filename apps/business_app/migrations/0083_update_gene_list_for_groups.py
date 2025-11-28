@@ -220,6 +220,24 @@ def update_gene_list(apps, schema_editor):
                     [Gene(name=name) for name in missing_gene_names]
                 )
 
+                GeneStatus = apps.get_model("business_app", "GeneStatus")
+                GeneStatusMiddle = apps.get_model("business_app", "GeneStatusMiddle")
+
+                missing_genes = Gene.objects.filter(name__in=missing_gene_names)
+                gene_status_list = GeneStatus.objects.all()
+                gene_status_middle_list = []
+                for gen in missing_genes:
+                    gene_status_middle_list.extend(
+                        [
+                            GeneStatusMiddle(
+                                gene=gen,
+                                gene_status=gene_status,
+                            )
+                            for gene_status in gene_status_list
+                        ]
+                    )
+                GeneStatusMiddle.objects.bulk_create(gene_status_middle_list)
+
             # Obtener todos los objetos Gene necesarios en una sola consulta
             genes_to_add = Gene.objects.filter(name__in=gene_list)
 
