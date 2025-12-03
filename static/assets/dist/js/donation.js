@@ -1,4 +1,29 @@
  $(document).ready(function() {
+    // ==========================================
+    // PAYMENT GATEWAY CONFIGURATION
+    // ==========================================
+    // URLs de pago predefinidas para diferentes montos
+    // STRIPE - Reemplazar con URLs reales de Stripe checkout
+    const stripePaymentLinks = {
+        25: 'https://buy.stripe.com/cNidRa5AL5jlgGU5PXbEA04',
+        50: 'https://buy.stripe.com/8x29AU1kv4fh2Q4fqxbEA06',
+        100: 'https://buy.stripe.com/14A5kE1kv4fheyM6U1bEA07',
+        500: 'https://buy.stripe.com/7sY7sMfbl6npcqE929bEA09',
+        custom: 'https://buy.stripe.com/eVq9AUbZ95jl76kguBbEA05' // Link base para montos personalizados
+    };
+    
+    // BLUEVINE - Reemplazar con URLs reales de Bluevine
+    const bluevinePaymentLinks = {
+        25: 'https://buy.stripe.com/cNidRa5AL5jlgGU5PXbEA04',
+        50: 'https://buy.stripe.com/8x29AU1kv4fh2Q4fqxbEA06',
+        100: 'https://buy.stripe.com/14A5kE1kv4fheyM6U1bEA07',
+        500: 'https://buy.stripe.com/7sY7sMfbl6npcqE929bEA09',
+        custom: 'https://buy.stripe.com/eVq9AUbZ95jl76kguBbEA05' // Link base para montos personalizados
+    };
+    
+    // Montos predefinidos disponibles
+    const predefinedAmounts = [25, 50, 100, 500];
+    
     // Initialize donation variables
     let selectedAmount = 0;
     let selectedPaymentMethod = 'stripe';
@@ -34,20 +59,20 @@
     $('.amount-btn').on('click', function() {
         $('.amount-btn').removeClass('active');
         $(this).addClass('active');
-        selectedAmount = $(this).data('amount');
-        $('#custom-amount').val('');
+        selectedAmount = parseFloat($(this).data('amount')) || $(this).data('amount');
+
     });
     
-    // Custom amount input handler
-    $('#custom-amount').on('input', function() {
-        $('.amount-btn').removeClass('active');
-        selectedAmount = parseFloat($(this).val()) || 0;
-    });
+   
     
     // Payment method change handler
     $('input[name="payment-method"]').on('change', function() {
         selectedPaymentMethod = $(this).val();
-        $('#bluevine-instructions').hide();
+if (selectedPaymentMethod === 'stripe') {
+            $('#custom-btn').show();
+        }else {
+            $('#custom-btn').hide();
+        }
         
         if (selectedPaymentMethod === 'crypto') {
             $('#crypto-options').slideDown();
@@ -156,7 +181,7 @@
         
         // Process based on payment method
         if (selectedPaymentMethod === 'bluevine') {
-            showBluevineInstructions();
+            processBluevinePayment();
         } else if (selectedPaymentMethod === 'crypto') {
             showCryptoInstructions();
         } else {
@@ -164,17 +189,18 @@
         }
     });
     
-    // Show Bluevine instructions
-    function showBluevineInstructions() {
-        const reference = 'DON-' + Date.now();
-        $('#bluevine-reference').text(reference);
-        $('#bluevine-instructions').slideDown();
+    // Show Bluevine instructions and redirect to payment
+    function processBluevinePayment() {
+        const paymentUrl = getPaymentUrl('bluevine');
         
         Swal.fire({
             icon: 'info',
-            title: 'Bank Transfer Instructions',
-            html: 'Please complete the transfer using the details shown below.<br>Your reference code is: <strong>' + reference + '</strong>',
-            confirmButtonColor: '#667eea'
+            title: 'Redirecting to Bluevine',
+            text: 'You will be redirected to complete your donation via Bluevine bank transfer.',
+            confirmButtonColor: '#667eea',
+            didClose: function() {
+                window.location.href = paymentUrl;
+            }
         });
     }
     
@@ -188,37 +214,38 @@
         });
     }
     
-    // Process Stripe payment
+    // Process Stripe payment - Redirect to Stripe payment link
     function processStripePayment() {
-        $('#payment-processing').show();
-        $('#donate-btn').prop('disabled', true);
+        const paymentUrl = getPaymentUrl('stripe');
         
-        // Create Stripe checkout session
-        const donationData = {
-            amount: selectedAmount * 100, // Convert to cents
-            email: $('#donor-email').val(),
-            message: $('#donor-message').val(),
-            currency: 'usd'
-        };
+        Swal.fire({
+            icon: 'info',
+            title: 'Redirecting to Stripe',
+            text: 'You will be redirected to complete your secure payment via Stripe.',
+            confirmButtonColor: '#667eea',
+            didClose: function() {
+                window.location.href = paymentUrl;
+            }
+        });
+    }
+    
+    // Get payment URL based on amount and payment method
+    function getPaymentUrl(method) {
+        const links = method === 'stripe' ? stripePaymentLinks : bluevinePaymentLinks;
         
-        // Make API call to create Stripe session
-        axios.post('/api/create-stripe-session/', donationData)
-            .then(function(response) {
-                // Redirect to Stripe Checkout
-                window.location.href = response.data.session_url;
-            })
-            .catch(function(error) {
-                console.error('Stripe session creation failed:', error);
-                $('#payment-processing').hide();
-                $('#donate-btn').prop('disabled', false);
-                
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Payment Error',
-                    text: 'Unable to process payment. Please try again or contact support.',
-                    confirmButtonColor: '#667eea'
-                });
-            });
+        // Check if amount matches a predefined amount
+        if (links[selectedAmount]) {
+            return links[selectedAmount];
+        }
+        
+        // For custom amounts, append to the custom link
+        if (method === 'stripe') {
+            // Stripe uses amount in cents
+            return `${links.custom}`;
+        } else {
+            // Bluevine appends amount directly
+            return `${links.custom}`;
+        }
     }
     
     // Email validation helper
