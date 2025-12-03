@@ -4,7 +4,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from apps.business_app.models.disorder import Disorder
-from apps.business_app.serializers.disorder_serializer import DisorderSerializer
+from apps.business_app.serializers.disorder_serializer import DisorderSerializer, DisorderTableSerializer
 from apps.common.pagination import AllResultsSetPagination
 from apps.business_app.serializers.minimal_serializers import DisorderMinimalSerializer
 
@@ -28,6 +28,9 @@ class DisorderViewSet(
     def get_serializer_class(self):
         if self.action == 'minimal_list':
             return DisorderMinimalSerializer
+        # CAMBIO: Usar DisorderTableSerializer para list
+        elif self.action == 'list':
+            return DisorderTableSerializer
         return DisorderSerializer
 
     search_fields = [
