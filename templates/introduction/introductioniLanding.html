@@ -171,6 +171,301 @@
     }
 }
 
+/* ==========================================
+   DONATION SECTION STYLES
+   ========================================== */
+
+.donation-info-card,
+.donation-form-card {
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.donation-info-card:hover,
+.donation-form-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.donation-info-card .card-header,
+.donation-form-card .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1.5rem;
+}
+
+.donation-info-card .card-header h3,
+.donation-form-card .card-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.donation-info-card .card-body,
+.donation-form-card .card-body {
+    padding: 2rem;
+}
+
+/* Amount buttons styling */
+.amount-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.amount-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 2px solid #667eea;
+    color: #667eea;
+}
+
+.amount-btn:hover {
+    background-color: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.amount-btn.active {
+    background-color: #667eea;
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.custom-amount-btn {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.custom-amount-btn:hover {
+    background-color: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+
+.custom-amount-btn.active {
+    background-color: #6c757d;
+    color: white;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
+/* Modal styling */
+.modal-content {
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+}
+
+.modal-header {
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.input-group-lg .form-control {
+    font-size: 1.2rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border: 2px solid #dee2e6;
+}
+
+.input-group-lg .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 1.5rem;
+}
+
+/* Payment method styling */
+.payment-methods .form-check {
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.payment-methods .form-check:hover {
+    background-color: #f8f9fa;
+    border-color: #667eea;
+}
+
+.payment-methods .form-check-input:checked {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+.payment-methods .form-check-label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+/* Crypto options styling */
+.crypto-options {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.crypto-address .alert-success {
+    background-color: #28a745;
+    border-color: #23923d;
+    border-radius: 8px;
+}
+
+
+
+
+
+.donation .address-text {
+    font-family: monospace;
+    font-size: 0.8rem;
+    background-color: #d8cdcd;
+    padding: 8px;
+    border-radius: 4px;
+    word-break: break-all;
+    flex-grow: 1;
+}
+
+.qr-code {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+/* Button styling */
+#donate-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+#donate-btn:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #6a3d91 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+#donate-btn:active {
+    transform: translateY(0);
+}
+
+/* Impact cards styling */
+.donation-impact {
+    margin-top: 3rem;
+    padding: 2rem 0;
+}
+
+.donation-impact h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.impact-card {
+    padding: 2rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #f0f3fa 100%);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.impact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.2);
+    background: linear-gradient(135deg, #e7ecff 0%, #f0e6ff 100%);
+}
+
+.impact-card i {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 1rem;
+}
+
+.impact-card h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.impact-card p {
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Form styling */
+.form-control,
+.form-check-input {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-check-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Responsive donation section */
+@media (max-width: 768px) {
+    .amount-options {
+        gap: 8px;
+    }
+
+    .amount-btn {
+        min-width: 70px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .donation-info-card .card-header,
+    .donation-form-card .card-header {
+        padding: 1rem;
+    }
+
+    .donation-info-card .card-body,
+    .donation-form-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .donation-impact h3 {
+        font-size: 1.5rem;
+    }
+
+    .impact-card {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+}
+
 </style>
   <!-- =======================================================
   * Template Name: iLanding
@@ -1068,51 +1363,44 @@
           <div class="card-body">
             <form id="donation-form">
               <div class="form-group mb-3">
-                <label for="donation-amount">Select Amount (USD)</label>
-                <div class="amount-options mt-2">
+                <label for="donation-amount" class="mb-2">Select Amount (USD)</label>
+                <div class="amount-options" id="amount-options-group">
                   <button type="button" class="btn btn-outline-primary amount-btn" data-amount="25">$25</button>
                   <button type="button" class="btn btn-outline-primary amount-btn" data-amount="50">$50</button>
                   <button type="button" class="btn btn-outline-primary amount-btn" data-amount="100">$100</button>
-                  <button type="button" class="btn btn-outline-primary amount-btn" data-amount="250">$250</button>
                   <button type="button" class="btn btn-outline-primary amount-btn" data-amount="500">$500</button>
+                  <button type="button" class="btn btn-outline-secondary amount-btn" id="custom-btn" data-amount="5">Custom</button>
                 </div>
-                <div class="input-group mt-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">$</span>
-                  </div>
-                  <input type="number" class="form-control" id="custom-amount" placeholder="Custom amount" min="1">
-                </div>
+                <small class="form-text text-muted d-block mt-2" id="amount-help-text">Select a preset amount or custom</small>
               </div>
 
               <div class="form-group mb-3">
                 <label for="donor-email">Email Address</label>
                 <input type="email" class="form-control" id="donor-email" placeholder="your@email.com" required>
-                <small class="form-text text-muted">For receipt purposes only</small>
+                <small class="form-text text-muted">For payment confirmation</small>
               </div>
 
-              <div class="form-group mb-3">
-                <label for="donor-message">Optional Message</label>
-                <textarea class="form-control" id="donor-message" rows="3" placeholder="Any message you'd like to share with our team..."></textarea>
-              </div>
-
-              <div class="payment-methods mb-3">
-                <label class="d-block mb-2">Choose Payment Method</label>
-                <div class="form-check">
+              <div class="payment-methods mb-4">
+                <label class="d-block mb-3 font-weight-bold">Choose Payment Method</label>
+                <div class="form-check mb-2">
                   <input class="form-check-input" type="radio" name="payment-method" id="stripe" value="stripe" checked>
                   <label class="form-check-label" for="stripe">
-                    <i class="bi bi-credit-card"></i> Credit/Debit Card (Stripe)
+                    <i class="bi bi-credit-card"></i> <strong>Credit/Debit Card (Stripe)</strong>
+                    <br><small class="text-muted">Fast and secure credit card payments</small>
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check mb-2" hidden>
                   <input class="form-check-input" type="radio" name="payment-method" id="bluevine" value="bluevine">
                   <label class="form-check-label" for="bluevine">
-                    <i class="bi bi-bank"></i> Bank Transfer (Bluevine)
+                    <i class="bi bi-bank"></i> <strong>Bank Transfer (Bluevine)</strong>
+                    <br><small class="text-muted">Direct bank transfer to our account</small>
                   </label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="payment-method" id="crypto" value="crypto">
                   <label class="form-check-label" for="crypto">
-                    <i class="bi bi-currency-bitcoin"></i> Cryptocurrency
+                    <i class="bi bi-currency-bitcoin"></i> <strong>Cryptocurrency</strong>
+                    <br><small class="text-muted">Support us with blockchain donations</small>
                   </label>
                 </div>
               </div>
@@ -1256,7 +1544,7 @@
               </div>
 
               <button type="submit" class="btn btn-primary btn-lg btn-block" id="donate-btn">
-                <i class="bi bi-heart"></i> Donate Now
+                <i class="bi bi-heart"></i> Proceed to Payment
               </button>
             </form>
 
@@ -1264,21 +1552,7 @@
               <div class="spinner-border text-primary" role="status">
                 <span class="sr-only">Processing...</span>
               </div>
-              <p class="mt-2">Processing your donation...</p>
-            </div>
-
-            <div id="bluevine-instructions" class="mt-3" style="display: none;">
-              <div class="alert alert-success">
-                <h5><i class="bi bi-bank"></i> Bank Transfer Instructions</h5>
-                <p>Please transfer your donation to:</p>
-                <ul class="list-unstyled">
-                  <li><strong>Bank:</strong> Bluevine</li>
-                  <li><strong>Account Name:</strong> AIGenomicResources.com LLC</li>
-                  <li><strong>Account Number:</strong> [875105077601]</li>
-                  <li><strong>Routing Number:</strong> [125109019]</li>
-                </ul>
-                <p class="mb-0">Reference: <code id="bluevine-reference">[REFERENCE]</code></p>
-              </div>
+              <p class="mt-2">Redirecting to payment gateway...</p>
             </div>
           </div>
         </div>
