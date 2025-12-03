@@ -1356,6 +1356,7 @@
     </div>
   </section>
 
+
      <!-- Faq Section -->
     <section class="faq-9 faq section light-background" id="faq">
 
@@ -1424,6 +1425,69 @@
       </div>
     </section>
 
+    
+    <!-- /Faq Section -->
+
+    <script>
+    // FAQ accordion: open one item at a time; close others when one opens
+    document.addEventListener('DOMContentLoaded', function() {
+      try {
+        const container = document.querySelector('.faq-container');
+        if (!container) return;
+
+        const items = Array.from(container.querySelectorAll('.faq-item'));
+
+        function closeItem(i) {
+          i.classList.remove('faq-active');
+          const c = i.querySelector('.faq-content');
+          const t = i.querySelector('.faq-toggle');
+          if (c) c.style.display = 'none';
+          if (t) { t.classList.remove('bi-chevron-down'); t.classList.add('bi-chevron-right'); }
+        }
+
+        function openItem(i) {
+          i.classList.add('faq-active');
+          const c = i.querySelector('.faq-content');
+          const t = i.querySelector('.faq-toggle');
+          if (c) c.style.display = 'block';
+          if (t) { t.classList.remove('bi-chevron-right'); t.classList.add('bi-chevron-down'); }
+        }
+
+        items.forEach(item => {
+          const toggle = item.querySelector('.faq-toggle');
+          const header = item.querySelector('h3');
+
+          // Initialize
+          if (item.classList.contains('faq-active')) {
+            openItem(item);
+          } else {
+            closeItem(item);
+          }
+
+          function onToggle() {
+            const isActive = item.classList.contains('faq-active');
+            // Close all other items
+            items.forEach(other => { if (other !== item) closeItem(other); });
+            // Toggle this one
+            if (!isActive) openItem(item);
+            else closeItem(item);
+          }
+
+          if (toggle) {
+            toggle.style.cursor = 'pointer';
+            toggle.addEventListener('click', onToggle);
+          }
+          if (header) {
+            header.style.cursor = 'pointer';
+            header.addEventListener('click', onToggle);
+          }
+        });
+
+      } catch (err) {
+        console.error('FAQ toggler error:', err);
+      }
+    });
+    </script>
 
     <!-- Call To Action 2 Section -->
     {% comment %} <section id="call-to-action-2" class="call-to-action-2 section dark-background">
