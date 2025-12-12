@@ -12,13 +12,40 @@
         custom: 'https://buy.stripe.com/eVq9AUbZ95jl76kguBbEA05' // Link base para montos personalizados
     };
     
-    // BLUEVINE - Reemplazar con URLs reales de Bluevine
-    const bluevinePaymentLinks = {
-        25: 'https://buy.stripe.com/cNidRa5AL5jlgGU5PXbEA04',
-        50: 'https://buy.stripe.com/8x29AU1kv4fh2Q4fqxbEA06',
-        100: 'https://buy.stripe.com/14A5kE1kv4fheyM6U1bEA07',
-        500: 'https://buy.stripe.com/7sY7sMfbl6npcqE929bEA09',
-        custom: 'https://buy.stripe.com/eVq9AUbZ95jl76kguBbEA05' // Link base para montos personalizados
+    // BANK TRANSFER INFO - Mercury (International) y Domestic Banks (USA)
+    const bankTransferInfo = {
+        international: {
+            provider: 'Mercury',
+            currency: 'USD',
+            method: 'SWIFT International Wire',
+            accountName: 'AIGenomicResources LLC',
+            accountNumber: '202315706652', // Reemplazar con número real
+            routingNumber: '091311229', // Reemplazar con routing real
+            bankName: 'Mercury',
+            bankSwiftCode: 'CHFGUS44021', // Reemplazar con SWIFT code real
+            bankAddress: ' 4501 23rd Avenue S Fargo, ND 58104',
+            description: 'International donations via SWIFT wire transfer through Mercury'
+        },
+        domestic: {
+            banks: [
+                {
+                    name: 'Mercury',
+                    method: 'Wire Transfer / ACH',
+                    accountName: 'AIGenomicResources LLC',
+                    accountNumber: '202315706652',
+                    routingNumber: '091311229',
+                    bankAddress: ' 30 North Gould Street, Ste R Sheridan, WY 82801'
+                },
+                {
+                    name: 'Bluevine',
+                    method: 'Wire Transfer / ACH',
+                    accountName: 'AIGenomicResources LLC',
+                    accountNumber: '875105077601',
+                    routingNumber: '125109019',
+                    bankAddress: 'Available via Bluevine'
+                }
+            ]
+        }
     };
     
     // Montos predefinidos disponibles
@@ -189,18 +216,174 @@ if (selectedPaymentMethod === 'stripe') {
         }
     });
     
-    // Show Bluevine instructions and redirect to payment
+    // Show bank transfer instructions
     function processBluevinePayment() {
-        const paymentUrl = getPaymentUrl('bluevine');
+        showBankTransferInstructions();
+    }
+    
+    // Show bank transfer options
+    function showBankTransferInstructions() {
+        let html = `
+            <div style="text-align: left;">
+                <p><strong>Select your location for bank transfer details:</strong></p>
+                <div class="bank-options" style="margin: 20px 0;">
+                    <div style="margin-bottom: 15px;">
+                        <button class="btn btn-outline-primary btn-block" id="btn-international" style="text-align: left;">
+                            <i class="bi bi-globe"></i> <strong>International (Outside USA)</strong>
+                            <br><small>SWIFT Wire Transfer via Mercury</small>
+                        </button>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-primary btn-block" id="btn-domestic" style="text-align: left;">
+                            <i class="bi bi-usa"></i> <strong>USA Domestic</strong>
+                            <br><small>Wire Transfer / ACH</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
         
         Swal.fire({
+            title: 'Bank Transfer Details',
+            html: html,
             icon: 'info',
-            title: 'Redirecting to Bluevine',
-            text: 'You will be redirected to complete your donation via Bluevine bank transfer.',
-            confirmButtonColor: '#667eea',
-            didClose: function() {
-                window.location.href = paymentUrl;
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: function() {
+                $('#btn-international').on('click', function() {
+                    showInternationalBankDetails();
+                });
+                $('#btn-domestic').on('click', function() {
+                    showDomesticBankDetails();
+                });
             }
+        });
+    }
+    
+    // Show international bank details (Mercury SWIFT)
+    function showInternationalBankDetails() {
+        const info = bankTransferInfo.international;
+        const html = `
+            <div style="text-align: left; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                <h5 style="color: #667eea; margin-bottom: 15px;">
+                    <i class="bi bi-bank"></i> International Wire Transfer (SWIFT)
+                </h5>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 10px; font-weight: 600; width: 40%;">Bank:</td>
+                        <td style="padding: 10px;">${info.bankName}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 10px; font-weight: 600;">Account Name:</td>
+                        <td style="padding: 10px;">${info.accountName}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 10px; font-weight: 600;">Account Number:</td>
+                        <td style="padding: 10px; font-family: monospace;">${info.accountNumber}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 10px; font-weight: 600;">Routing Number:</td>
+                        <td style="padding: 10px; font-family: monospace;">${info.routingNumber}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 10px; font-weight: 600;">SWIFT Code:</td>
+                        <td style="padding: 10px; font-family: monospace;">${info.bankSwiftCode}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 10px; font-weight: 600;">Bank Address:</td>
+                        <td style="padding: 10px;">${info.bankAddress}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; font-weight: 600;">Currency:</td>
+                        <td style="padding: 10px;">${info.currency}</td>
+                    </tr>
+                </table>
+                <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; padding: 12px; margin-top: 15px;">
+                    <i class="bi bi-info-circle"></i> <strong>Important:</strong> Please use your bank's international wire transfer service and provide the SWIFT code above.
+                </div>
+            </div>
+        `;
+        
+        Swal.fire({
+            title: 'International Bank Transfer',
+            html: html,
+            icon: 'info',
+            confirmButtonText: 'Got it',
+            confirmButtonColor: '#667eea'
+        });
+    }
+    
+    // Show domestic bank details (Wire / ACH)
+    function showDomesticBankDetails() {
+        const banks = bankTransferInfo.domestic.banks;
+        const html = `
+            <div style="text-align: left;">
+                <p><strong>Choose a bank for your domestic transfer:</strong></p>
+                <div style="margin-top: 15px;">
+                    ${banks.map((bank, idx) => `
+                        <button class="btn btn-outline-secondary btn-block" onclick="showBankDetails(${idx})" style="text-align: left; margin-bottom: 10px;">
+                            <i class="bi bi-bank"></i> <strong>${bank.name}</strong>
+                            <br><small>${bank.method}</small>
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        
+        window.showBankDetails = function(bankIdx) {
+            const bank = banks[bankIdx];
+            const detailsHtml = `
+                <div style="text-align: left; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h5 style="color: #667eea; margin-bottom: 15px;">
+                        <i class="bi bi-bank"></i> ${bank.name}
+                    </h5>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid #dee2e6;">
+                            <td style="padding: 10px; font-weight: 600; width: 40%;">Bank:</td>
+                            <td style="padding: 10px;">${bank.name}</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #dee2e6;">
+                            <td style="padding: 10px; font-weight: 600;">Method:</td>
+                            <td style="padding: 10px;">${bank.method}</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #dee2e6;">
+                            <td style="padding: 10px; font-weight: 600;">Account Name:</td>
+                            <td style="padding: 10px;">${bank.accountName}</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #dee2e6;">
+                            <td style="padding: 10px; font-weight: 600;">Account Number:</td>
+                            <td style="padding: 10px; font-family: monospace;">${bank.accountNumber}</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #dee2e6;">
+                            <td style="padding: 10px; font-weight: 600;">Routing Number:</td>
+                            <td style="padding: 10px; font-family: monospace;">${bank.routingNumber}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; font-weight: 600;">Bank Address:</td>
+                            <td style="padding: 10px;">${bank.bankAddress}</td>
+                        </tr>
+                    </table>
+                    <div style="background: #d1ecf1; border: 1px solid #0c5460; border-radius: 6px; padding: 12px; margin-top: 15px;">
+                        <i class="bi bi-info-circle"></i> <strong>Note:</strong> Both Wire Transfer and ACH methods are available.
+                    </div>
+                </div>
+            `;
+            
+            Swal.fire({
+                title: bank.name + ' - Bank Details',
+                html: detailsHtml,
+                icon: 'info',
+                confirmButtonText: 'Got it',
+                confirmButtonColor: '#667eea'
+            });
+        };
+        
+        Swal.fire({
+            title: 'USA Domestic Bank Transfer',
+            html: html,
+            icon: 'info',
+            showConfirmButton: false,
+            allowOutsideClick: false
         });
     }
     
@@ -231,21 +414,15 @@ if (selectedPaymentMethod === 'stripe') {
     
     // Get payment URL based on amount and payment method
     function getPaymentUrl(method) {
-        const links = method === 'stripe' ? stripePaymentLinks : bluevinePaymentLinks;
+        const links = method === 'stripe' ? stripePaymentLinks : stripePaymentLinks;
         
         // Check if amount matches a predefined amount
         if (links[selectedAmount]) {
             return links[selectedAmount];
         }
         
-        // For custom amounts, append to the custom link
-        if (method === 'stripe') {
-            // Stripe uses amount in cents
-            return `${links.custom}`;
-        } else {
-            // Bluevine appends amount directly
-            return `${links.custom}`;
-        }
+        // For custom amounts, use custom link
+        return links.custom;
     }
     
     // Email validation helper
