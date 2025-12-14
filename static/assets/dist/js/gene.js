@@ -2,8 +2,8 @@
 let geneGroupsOptions = [];
 let diseaseGroupsOptions = [];
 let diseaseSubgroupsOptions = [];
-let disorderOptions = [];
-// variable para gestionar los elementos seleccionados
+let allDisordersOptions = []; // Almacenar TODOS los disorders disponibles
+let selectedDisorders = []; // Almacenar las selecciones actuales de disorders
 let selected_id;
 const csrfToken = document.cookie
     .split(";")
@@ -55,64 +55,94 @@ async function loadDiseaseSubGroups(diseaseGroupId) {
     }
 }
 
-// Función para cargar Disorders basado en el DiseaseSubGroup seleccionado
-async function loadDisorders(diseaseSubgroupId, isEditMode = false, preselectedDisorders = []) {
+// Función para cargar TODOS los disorders una sola vez, pero con sus datos completos.
+async function loadAllDisorders() {
     try {
-        console.log('Loading disorders for subgroup:', diseaseSubgroupId, 'Edit mode:', isEditMode);
-        const response = await axios.get(`/business-gestion/disorder/?disease_subgroup=${diseaseSubgroupId}`);
-        const newDisorders = response.data.results;
-        console.log('Loaded disorders from subgroup:', newDisorders);
-
-        // Habilitar el selector de disorders
-        $('#disorders').prop('disabled', false);
-
-        // Obtener las selecciones actuales ANTES de hacer cambios
-        const currentSelections = $('#disorders').val() || [];
-        console.log('Current selections before loading:', currentSelections);
-
-        if (isEditMode) {
-            // En modo edición: Agregar nuevos disorders sin eliminar los existentes
-            const existingOptions = {};
-
-            // Mapear opciones existentes
-            $('#disorders option').each(function () {
-                if ($(this).val()) {
-                    existingOptions[$(this).val()] = true;
-                }
-            });
-
-            // Agregar solo los disorders que no existen
-            newDisorders.forEach(disorder => {
-                if (!existingOptions[disorder.id]) {
-                    $('#disorders').append(new Option(disorder.name, disorder.id, false, false));
-                }
-            });
-
-            console.log('Added new disorders, maintaining existing ones');
-
-        } else {
-            // En modo creación: Reemplazar completamente (comportamiento original)
-            $('#disorders').empty();
-            newDisorders.forEach(disorder => {
-                $('#disorders').append(new Option(disorder.name, disorder.id, false, false));
-            });
-
-            // En creación, establecer los valores del subgroup actual
-            if (newDisorders.length > 0) {
-                const newDisorderIds = newDisorders.map(d => d.id);
-                // Mantener solo las selecciones que están en el nuevo subgroup
-                const filteredSelections = currentSelections.filter(id =>
-                    newDisorderIds.includes(parseInt(id))
-                );
-                $('#disorders').val(filteredSelections).trigger('change');
-            }
+        // Usamos el endpoint principal en lugar de 'minimal-list' para obtener el campo 'disease_subgroup'
+        const response = await axios.get('/business-gestion/disorder/');
+        allDisordersOptions = response.data.results; // Asegúrate de acceder a .results si tu API está paginada
+        console.log('All disorders loaded with full data:', allDisordersOptions.length);
+        if (allDisordersOptions.length > 0) {
+            console.log('Sample disorder structure with full data:', allDisordersOptions[0]);
         }
-
-        console.log('Final selections:', $('#disorders').val());
-
+        return allDisordersOptions;
     } catch (error) {
-        console.error('Error loading disorders:', error);
+        console.error('Error loading all disorders:', error);
+        return [];
     }
+}
+
+// Función para actualizar el selector de disorders manteniendo las selecciones
+function updateDisordersSelector(filteredDisorders = null, preserveSelections = true) {
+    // Si no se proporcionan disorders filtrados, usar todos
+    const disordersToShow = filteredDisorders || allDisordersOptions;
+    
+    // Vaciar el selector
+    $('#disorders').empty();
+    
+    // Crear un mapa de disorders seleccionados para búsqueda rápida
+    const selectedMap = {};
+    if (preserveSelections && selectedDisorders.length > 0) {
+        selectedDisorders.forEach(id => {
+            selectedMap[id] = true;
+        });
+    }
+    
+    // Agregar opciones del subgrupo actual
+    disordersToShow.forEach(disorder => {
+        const isSelected = selectedMap[disorder.id] || false;
+        $('#disorders').append(new Option(disorder.name, disorder.id, isSelected, isSelected));
+    });
+    
+    // Agregar disorders seleccionados que no están en el subgrupo actual
+    if (preserveSelections && selectedDisorders.length > 0) {
+        selectedDisorders.forEach(id => {
+            // Verificar si el disorder ya está en la lista
+            const alreadyInList = disordersToShow.some(disorder => disorder.id == id);
+            
+            if (!alreadyInList) {
+                // Buscar el disorder en la lista completa
+                const disorder = allDisordersOptions.find(d => d.id == id);
+                if (disorder) {
+                    // Agregar como opción seleccionada
+                    $('#disorders').append(new Option(disorder.name, disorder.id, true, true));
+                }
+            }
+        });
+    }
+    
+    // Establecer las selecciones
+    if (preserveSelections && selectedDisorders.length > 0) {
+        $('#disorders').val(selectedDisorders).trigger('change');
+    }
+    
+    console.log('Disorders selector updated with', disordersToShow.length, 'options');
+    console.log('Selected disorders:', selectedDisorders);
+}
+
+// Función para filtrar disorders por subgrupo
+function filterDisordersBySubgroup(subgroupId) {
+    if (!subgroupId) {
+        return allDisordersOptions; // Devolver todos si no hay subgrupo seleccionado
+    }
+    
+    // Depuración: mostrar el subgrupo que estamos buscando
+    console.log('Filtering disorders for subgroup ID:', subgroupId);
+    
+    // Filtrar disorders - ahora esto funcionará porque los datos tienen el campo disease_subgroup
+    const filtered = allDisordersOptions.filter(disorder => {
+        // El campo disease_subgroup puede ser un objeto o solo el ID, manejamos ambos casos
+        if (disorder.disease_subgroup) {
+            const subgroupIdFromDisorder = typeof disorder.disease_subgroup === 'object' 
+                ? disorder.disease_subgroup.id 
+                : disorder.disease_subgroup;
+            return parseInt(subgroupIdFromDisorder) === parseInt(subgroupId);
+        }
+        return false;
+    });
+    
+    console.log('Filtered disorders:', filtered.length);
+    return filtered;
 }
 
 // Función para cargar todos los select options
@@ -124,6 +154,9 @@ async function loadSelectOptions() {
 
         // Cargar disease groups
         await loadDiseaseGroups();
+        
+        // Cargar TODOS los disorders una sola vez con datos completos
+        await loadAllDisorders();
 
         // Inicializar Select2 para grupos de genes
         $('#groups').select2({
@@ -147,6 +180,10 @@ async function loadSelectOptions() {
             theme: 'bootstrap4',
             placeholder: 'Select disorders',
             allowClear: true
+        }).on('change', function() {
+            // Actualizar la variable global de selecciones cuando cambia el selector
+            selectedDisorders = $(this).val() || [];
+            console.log('Updated selectedDisorders:', selectedDisorders);
         });
 
     } catch (error) {
@@ -163,15 +200,16 @@ function resetCascade() {
     $('#disease_group').val(null).trigger('change');
     $('#disease_subgroup').empty().append('<option value="">First select a disease group</option>')
         .prop('disabled', true).trigger('change');
-    // En reset, limpiar disorders solo si no estamos en modo edición
-    if (!edit_elemento) {
-        $('#disorders').empty().append('<option value="">First select a disease subgroup</option>')
-            .prop('disabled', true).trigger('change');
-    }
+    
+    // Resetear las selecciones de disorders
+    selectedDisorders = [];
+    
+    // En reset, mostrar todos los disorders pero sin selecciones
+    updateDisordersSelector(allDisordersOptions, false);
+    $('#disorders').prop('disabled', true);
 }
 
 // Función para determinar el disease group y subgroup de los disorders seleccionados
-// Versión simplificada y corregida
 async function determineDiseaseGroupsFromDisorders(disorderIds) {
     console.log('Starting determineDiseaseGroupsFromDisorders with:', disorderIds);
 
@@ -185,23 +223,37 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
         const firstDisorderId = disorderIds[0];
         const disorderResponse = await axios.get(`/business-gestion/disorder/${firstDisorderId}/`);
         const disorderData = disorderResponse.data;
+        
+        console.log('Disorder data:', disorderData);
 
-        const subgroupName = disorderData.disease_subgroup;
-        console.log('Subgroup Name (reference):', subgroupName);
+        // Obtener el ID del subgrupo (manejando diferentes estructuras)
+        let subgroupId;
+        if (disorderData.disease_subgroup && typeof disorderData.disease_subgroup === 'object') {
+            subgroupId = disorderData.disease_subgroup.id;
+        } else if (disorderData.disease_subgroup) {
+            subgroupId = disorderData.disease_subgroup;
+        }
+        
+        console.log('Subgroup ID (reference):', subgroupId);
 
-        // Buscar todos los subgroups para encontrar el que coincide con el nombre
-        const allSubgroupsResponse = await axios.get('/business-gestion/disease-subgroup/');
-        const allSubgroups = allSubgroupsResponse.data.results;
-
-        const foundSubgroup = allSubgroups.find(subgroup => subgroup.name === subgroupName);
-
-        if (!foundSubgroup) {
-            console.log('Subgroup not found for reference:', subgroupName);
+        if (!subgroupId) {
+            console.log('No subgroup found for reference');
             return;
         }
 
-        const subgroupId = foundSubgroup.id;
-        const groupId = foundSubgroup.disease_group;
+        // Obtener detalles del subgrupo
+        const subgroupResponse = await axios.get(`/business-gestion/disease-subgroup/${subgroupId}/`);
+        const subgroupData = subgroupResponse.data;
+        
+        console.log('Subgroup data:', subgroupData);
+
+        // Obtener el ID del grupo
+        let groupId;
+        if (subgroupData.disease_group && typeof subgroupData.disease_group === 'object') {
+            groupId = subgroupData.disease_group.id;
+        } else if (subgroupData.disease_group) {
+            groupId = subgroupData.disease_group;
+        }
 
         console.log('Setting reference - Group ID:', groupId, 'Subgroup ID:', subgroupId);
 
@@ -211,6 +263,10 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
         // Esperar y establecer el subgroup como referencia visual
         setTimeout(() => {
             $('#disease_subgroup').val(subgroupId).trigger('change');
+            
+            // Filtrar disorders por el subgrupo de referencia
+            const filteredDisorders = filterDisordersBySubgroup(subgroupId);
+            updateDisordersSelector(filteredDisorders, true);
         }, 800);
 
     } catch (error) {
@@ -218,7 +274,7 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
     }
 }
 
-$(document).ready(function () {
+ $(document).ready(function () {
     // Inicializar TODOS los select2
     $('#groups').select2({
         theme: 'bootstrap4',
@@ -240,6 +296,10 @@ $(document).ready(function () {
         theme: 'bootstrap4',
         placeholder: 'Select disorders',
         allowClear: true
+    }).on('change', function() {
+        // Actualizar la variable global de selecciones cuando cambia el selector
+        selectedDisorders = $(this).val() || [];
+        console.log('Updated selectedDisorders:', selectedDisorders);
     });
 
     // Event listeners para la cascada
@@ -250,24 +310,30 @@ $(document).ready(function () {
             loadDiseaseSubGroups(diseaseGroupId);
         } else {
             $('#disease_subgroup').val(null).trigger('change').prop('disabled', true);
-            // NO resetear disorders para mantener selecciones
+            // Mostrar todos los disorders pero mantener las selecciones
+            updateDisordersSelector(allDisordersOptions, true);
             $('#disorders').prop('disabled', true);
         }
     });
-
 
     $('#disease_subgroup').on('change', function () {
         const diseaseSubgroupId = $(this).val();
         console.log('Disease subgroup changed to:', diseaseSubgroupId);
+        
         if (diseaseSubgroupId) {
-            // En ambos modos, cargar disorders del subgroup seleccionado MANTENIENDO selecciones existentes
-            const currentDisorders = $('#disorders').val() || [];
-            loadDisorders(diseaseSubgroupId, edit_elemento, currentDisorders);
+            // Filtrar disorders por el subgrupo seleccionado
+            const filteredDisorders = filterDisordersBySubgroup(diseaseSubgroupId);
+            
+            // Actualizar el selector con los disorders filtrados pero manteniendo las selecciones
+            updateDisordersSelector(filteredDisorders, true);
+            $('#disorders').prop('disabled', false);
         } else {
-            // NO resetear disorders, solo deshabilitar
+            // Si no hay subgrupo seleccionado, mostrar todos los disorders
+            updateDisordersSelector(allDisordersOptions, true);
             $('#disorders').prop('disabled', true);
         }
     });
+    
     // DataTable initialization
     $("table")
         .addClass("table table-hover")
@@ -405,7 +471,7 @@ $(document).ready(function () {
         });
 });
 
-$("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
+ $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var dataName = button.data("name"); // Extract info from data-* attributes
     selected_id = button.data("id"); // Extract info from data-* attributes
@@ -435,8 +501,7 @@ function function_delete(selected_id) {
 }
 
 // Modificar el event handler del modal para resetear la cascada
-// Modificar el event handler del modal para resetear correctamente
-$("#modal-crear-elemento").on("hide.bs.modal", (event) => {
+ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
     const form = event.currentTarget.querySelector("form");
     form.reset();
 
@@ -450,9 +515,10 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
     const elements = [...form.elements];
     elements.forEach((elem) => elem.classList.remove("is-invalid"));
 });
+
 let edit_elemento = false;
 // Modificar el event handler del modal para manejar la edición
-$("#modal-crear-elemento").on("show.bs.modal", async function (event) {
+ $("#modal-crear-elemento").on("show.bs.modal", async function (event) {
     var button = $(event.relatedTarget);
     var modal = $(this);
     var form = modal.find("form")[0];
@@ -482,33 +548,17 @@ $("#modal-crear-elemento").on("show.bs.modal", async function (event) {
         // Establecer valores seleccionados en multiselects
         $('#groups').val(dataGroups).trigger('change');
 
-        // En modo edición, cargar TODOS los disorders disponibles
-        try {
-            console.log('Loading ALL disorders for edit mode...');
-            const disordersResponse = await axios.get('/business-gestion/disorder/minimal-list/');
-            disorderOptions = disordersResponse.data;
-            console.log('All disorders loaded:', disorderOptions.length);
+        // Establecer las selecciones de disorders
+        selectedDisorders = dataDisorders;
+        
+        // Mostrar todos los disorders con las selecciones preexistentes
+        updateDisordersSelector(allDisordersOptions, true);
+        $('#disorders').prop('disabled', false);
 
-            // Limpiar y cargar TODOS los disorders
-            $('#disorders').empty().prop('disabled', false);
-            disorderOptions.forEach(disorder => {
-                $('#disorders').append(new Option(disorder.name, disorder.id, false, false));
-            });
-
-            // Establecer los valores seleccionados del gen
-            $('#disorders').val(dataDisorders).trigger('change');
-            console.log('All disorders loaded and existing selections set:', dataDisorders);
-
-            // Establecer la cascada como REFERENCIA VISUAL del primer disorder
-            if (dataDisorders.length > 0) {
-                console.log('Setting cascade as VISUAL REFERENCE only...');
-                await determineDiseaseGroupsFromDisorders(dataDisorders);
-            }
-
-        } catch (error) {
-            console.error('Error in edit mode setup:', error);
-            // Si falla, al menos establecer los disorders
-            $('#disorders').val(dataDisorders).trigger('change');
+        // Establecer la cascada como REFERENCIA VISUAL del primer disorder
+        if (dataDisorders.length > 0) {
+            console.log('Setting cascade as VISUAL REFERENCE only...');
+            await determineDiseaseGroupsFromDisorders(dataDisorders);
         }
 
     } else {
@@ -516,26 +566,22 @@ $("#modal-crear-elemento").on("show.bs.modal", async function (event) {
         modal.find(".modal-title").text("Create Gene");
         form.reset();
         edit_elemento = false;
+        
+        // Resetear las selecciones de disorders
+        selectedDisorders = [];
+        
         // Limpiar multiselects y resetear cascada
         $('#groups').val(null).trigger('change');
         resetCascade();
     }
 });
 
-$(function () {
+ $(function () {
     bsCustomFileInput.init();
 });
 
-function resetCascadeOnly() {
-    $('#disease_group').val(null).trigger('change');
-    $('#disease_subgroup').empty().append('<option value="">First select a disease group</option>')
-        .prop('disabled', true).trigger('change');
-    // NO limpiar disorders - solo deshabilitar
-    $('#disorders').prop('disabled', true);
-}
-
 // form validator
-$(function () {
+ $(function () {
     $.validator.setDefaults({
         language: "en",
         submitHandler: function () {
@@ -586,7 +632,7 @@ form.addEventListener("submit", function (event) {
             name: form.elements.name.value,
             description: form.elements.description.value,
             groups: $('#groups').val() || [], // Array de IDs de grupos
-            disorders: $('#disorders').val() || [] // Array de IDs de desórdenes
+            disorders: selectedDisorders // Usar la variable global de selecciones
         };
 
         if (edit_elemento) {

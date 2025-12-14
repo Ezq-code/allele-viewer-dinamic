@@ -28,7 +28,6 @@ class DisorderViewSet(
     def get_serializer_class(self):
         if self.action == 'minimal_list':
             return DisorderMinimalSerializer
-        # CAMBIO: Usar DisorderTableSerializer para list
         elif self.action == 'list':
             return DisorderTableSerializer
         return DisorderSerializer

@@ -37,16 +37,17 @@
             <div class="card-header">
               <h3 class="card-title">Manage Genes</h3>
             </div>
-              <div class="modal-body">
-                  <table id="tabla-de-Datos" class="table table-bordered table-striped" style="width: 100%;">
-                  </table>
-              </div>
+            <div class="card-body">
+              <table id="tabla-de-Datos" class="table table-bordered table-striped" style="width: 100%;">
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 </div>
+
 <!-- Modal Delete Gene -->
 <div class="modal fade" id="modal-eliminar-elemento">
   <div class="modal-dialog">
@@ -68,14 +69,13 @@
     </div>
   </div>
 </div>
-<!-- Modal Create/Edit Gene -->
+    
 <!-- Modal Create/Edit Gene -->
 <div class="modal fade" id="modal-crear-elemento" data-backdrop="static" tabindex="-1" role="dialog"
   aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Create Gene</h4>
         <h4 class="modal-title">Create Gene</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -93,7 +93,7 @@
           </div>
           <div class="form-group col-md-12">
             <label for="groups">Groups</label>
-            <select class="form-control select2" id="groups" name="groups" multiple="multiple" style="width: 100%;">
+            <select class="form-control select2" id="groups" name="groups" multiple="multiple" data-placeholder="Select groups..." style="width: 100%;" >
               <!-- Options will be loaded dynamically -->
             </select>
           </div>
@@ -121,14 +121,13 @@
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary">Submit</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Submit</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 {% endblock %}
+
 {% block script %}
 <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
@@ -150,4 +149,3 @@
 <script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
 <script src="{% static 'assets/dist/js/gene.js' %}"></script>
 {% endblock %}
-

@@ -20,7 +20,7 @@ class DiseaseSubGroupSerializer(serializers.ModelSerializer):
         read_only_fields = ["disorders", "disease_group_name"]
 
 
-# Si necesitas un serializer minimalista para los selects
+# serializer minimalista para los selects
 class DiseaseSubGroupMinimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = DiseaseSubGroup

@@ -17,6 +17,9 @@ class GeneSerializer(serializers.ModelSerializer):
     groups_names = serializers.StringRelatedField(many=True, source="groups", read_only=True)
     disorders_names = serializers.StringRelatedField(many=True, source="disorders", read_only=True)
 
+    disease_subgroups = serializers.SerializerMethodField()
+    disease_groups = serializers.SerializerMethodField()
+
     # Campos para escritura (IDs)
     groups = serializers.PrimaryKeyRelatedField(
         many=True,
@@ -38,11 +41,31 @@ class GeneSerializer(serializers.ModelSerializer):
             "status",
             "groups_names",
             "disorders_names",
+            "disease_subgroups",
+            "disease_groups",
             "groups",
             "disorders",
             "gene_status_list",
         ]
         read_only_fields = ["status"]  # Status no editable
+
+    def get_disease_subgroups(self, obj):
+        """Retorna lista de nombres únicos de subgrupos"""
+        subgroups = set()
+        for disorder in obj.disorders.all():
+            if hasattr(disorder, 'disease_subgroup') and disorder.disease_subgroup:
+                subgroups.add(disorder.disease_subgroup.name)
+        return list(subgroups)
+
+    def get_disease_groups(self, obj):
+        """Retorna lista de nombres únicos de grupos"""
+        groups = set()
+        for disorder in obj.disorders.all():
+            if (hasattr(disorder, 'disease_subgroup') and disorder.disease_subgroup and
+                    hasattr(disorder.disease_subgroup, 'disease_group') and
+                    disorder.disease_subgroup.disease_group):
+                groups.add(disorder.disease_subgroup.disease_group.name)
+        return list(groups)
 
 
 class GeneGetAllInfoSerializer(serializers.ModelSerializer):
