@@ -18,10 +18,10 @@
             provider: 'Mercury',
             currency: 'USD',
             method: 'SWIFT International Wire',
-            accountName: 'AIGenomicResources LLC',
+            accountName: 'AIGenomicResources.com LLC',
             accountNumber: '202315706652', // Reemplazar con número real
             routingNumber: '091311229', // Reemplazar con routing real
-            bankName: 'Mercury',
+            bankName: 'Choice Financial Group',
             bankSwiftCode: 'CHFGUS44021', // Reemplazar con SWIFT code real
             bankAddress: ' 4501 23rd Avenue S Fargo, ND 58104',
             description: 'International donations via SWIFT wire transfer through Mercury'
@@ -29,17 +29,17 @@
         domestic: {
             banks: [
                 {
-                    name: 'Mercury',
+                    name: 'Choice Financial Group',
                     method: 'Wire Transfer / ACH',
-                    accountName: 'AIGenomicResources LLC',
+                    accountName: 'AIGenomicResources.com LLC',
                     accountNumber: '202315706652',
                     routingNumber: '091311229',
-                    bankAddress: ' 30 North Gould Street, Ste R Sheridan, WY 82801'
+                    bankAddress: ' 4501 23rd Avenue SFargo, ND 58104'
                 },
                 {
                     name: 'Bluevine',
                     method: 'Wire Transfer / ACH',
-                    accountName: 'AIGenomicResources LLC',
+                    accountName: 'AIGenomicResources.com LLC',
                     accountNumber: '875105077601',
                     routingNumber: '125109019',
                     bankAddress: 'Available via Bluevine'
