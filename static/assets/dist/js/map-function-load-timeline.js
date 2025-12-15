@@ -70,6 +70,13 @@ function createEventMarker(feature, latlng) {
         })
     });
 
+    marker.bindTooltip(feature.properties.name, {
+        permanent: true,
+        direction: 'left',
+        offset: [-6, -5],
+        className: 'marker-tooltip'
+    });
+
     // marker.bindPopup(feature.properties.popupContent);
     marker.on('click', () => this.showEventModal(event));
 
@@ -159,6 +166,27 @@ const allTimes = data.features
     // 2. Capa de destinos de las migraciones
     var pointLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
         filter: f => f.geometry.type === 'Point',
+        pointToLayer: (f, latlng) => {
+            var marker = L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: iconUrlpathDestinationMigrationHomoHeidel,
+                    iconSize: [45, 45],
+                    shadowSize: [45, 45],
+                    shadowAnchor: [17, 23]
+                })
+            });
+            // Bind a popup for click (if you still want it)
+            //marker.bindPopup(f.properties.title);
+            // Bind a tooltip to show the title permanently
+            marker.bindTooltip(f.properties.title, {
+                permanent: true,
+                direction: 'left',
+                offset: [-6, -5],
+                className: 'marker-tooltip'
+            });
+            return marker;
+        }
+        /*
         pointToLayer: (f, latlng) => L.marker(latlng, {
             icon:
                 L.icon({
@@ -168,6 +196,7 @@ const allTimes = data.features
                     shadowAnchor: [17, 23]
                 })
         }).bindPopup(f.properties.title)
+        */
     }), {
       updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
       duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
@@ -260,12 +289,16 @@ const allTimes = data.features
           var areaLayerPoblacion = L.timeDimension.layer.geoJson(L.geoJSON(data, {
             filter: f => f.properties.id === 20,
               style: function(feature) {
+
+                const currentTime = map.timeDimension.getCurrentTime();
+                const currentMag = getCurrentMag(currentTime, feature.properties.place);
+
                 if (feature.properties.mag === "-1")
                 {
                     return {
-                        fillColor: GetColorByPopulation(feature.properties.mag),
+                        fillColor: GetColorByPopulation(currentMag),
                         fillOpacity: 0.0,
-                        color: GetColorByPopulation(feature.properties.mag),
+                        color: GetColorByPopulation(currentMag),
                         weight: 2,
                         opacity: 0.0,
                         };
@@ -273,21 +306,24 @@ const allTimes = data.features
                else
                 {
                    return {
-                       color: GetColorByPopulation(feature.properties.mag),
+                       color: GetColorByPopulation(currentMag),
                        fillOpacity: 0.5,
-                       fillColor: GetColorByPopulation(feature.properties.mag),
+                       fillColor: GetColorByPopulation(currentMag),
                        weight: 2,
                        opacity: 0.5,
                    }
                }                
              },
              onEachFeature: function (feature, layer) {
+                const currentTime1 = map.timeDimension.getCurrentTime();
+                const currentMag1 = getCurrentMag(currentTime1, feature.properties.place);
                 let nf = new Intl.NumberFormat('en-US');
                 if (feature.properties.id == 20) {
                     layer.bindPopup(L.popup({
                         closeOnClick: false,
                         autoClose: false
-                    }).setContent(feature.properties.place+", "+nf.format(feature.properties.mag)+" people."));
+                    }).setContent(feature.properties.place+", "+currentMag1+" people."));
+                    //}).setContent(feature.properties.place+", "+nf.format(currentMag)+" people."));
                 }
             },
               }), {
@@ -296,7 +332,6 @@ const allTimes = data.features
                  timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
                  addlastPoint: false                  // Evita saltos al final
           });
-
 
 
         // 1. Configuración inicial de la capa de eventos (como en tu ejemplo que funciona)
