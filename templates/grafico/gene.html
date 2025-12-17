@@ -7,9 +7,31 @@
 <link rel="stylesheet" href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+<style>
+/* Para que dropdown ocupe toda la anchura del contenedor y esté alineado */
+.select2-dropdown-custom {
+    width: auto !important;
+    left: auto !important;
+    z-index: 99999 !important;
+}
+
+/* ajustar el tamaño y alineación del contenedor */
+.select2-container-custom {
+    width: auto !important;
+    left: auto !important;
+
+}
+
+.select2-dropdown {
+    left: auto;
+}
+
+</style>
 {% endblock %}
 
+
 {% block content %}
+
 <div class="content-wrapper">
   <section class="content-header">
     <div class="container-fluid">
@@ -97,7 +119,7 @@
               <!-- Options will be loaded dynamically -->
             </select>
           </div>
-          
+
           <!-- Selectores en cascada para Disorders -->
           <div class="form-group col-md-12">
             <label for="disease_group">Disease Group</label>

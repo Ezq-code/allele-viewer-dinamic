@@ -15,16 +15,6 @@ async function loadDiseaseSubgroups() {
     try {
         const response = await axios.get('/business-gestion/disease-subgroup/');
         diseaseSubgroupsOptions = response.data.results;
-
-        // Inicializar Select2 para disease subgroups
-        $('#disease_subgroup').select2({
-            theme: 'bootstrap4',
-            data: diseaseSubgroupsOptions.map(subgroup => ({
-                id: subgroup.id,
-                text: subgroup.name
-            })),
-            placeholder: 'Select a disease subgroup'
-        });
     } catch (error) {
         console.error('Error loading disease subgroups:', error);
     }
@@ -33,43 +23,53 @@ async function loadDiseaseSubgroups() {
 // Función para cargar genes
 async function loadGenes() {
     try {
-        const response = await axios.get('/business-gestion/gene/minimal-list/');
+        const response = await axios.get('/business-gestion/gene/');
         genesOptions = response.data;
-
-        // Inicializar Select2 para genes
-        // $('#genes').select2({
-        //     theme: 'bootstrap4',
-        //     data: genesOptions.map(gene => ({
-        //         id: gene.id,
-        //         text: gene.name
-        //     })),
-        //     placeholder: 'Select genes',
-        //     allowClear: true
-        // });
     } catch (error) {
         console.error('Error loading genes:', error);
     }
 }
 
-// Función para cargar todos los select options
-async function loadSelectOptions() {
-    await loadDiseaseSubgroups();
-    await loadGenes();
+// Función para inicializar Select2 en el modal
+function initializeSelect2InModal() {
+    // Inicializar Select2 para disease_subgroup
+    if ($('#disease_subgroup').hasClass('select2-hidden-accessible')) {
+        $('#disease_subgroup').select2('destroy');
+    }
+
+    $('#disease_subgroup').select2({
+        theme: 'bootstrap4',
+        data: diseaseSubgroupsOptions.map(subgroup => ({
+            id: subgroup.id,
+            text: subgroup.name
+        })),
+        placeholder: 'Select a disease subgroup',
+        dropdownParent: $('#modal-crear-elemento'),
+        width: '100%',
+        minimumResultsForSearch: 10
+    });
+
+    // Inicializar Select2 para genes (si está presente)
+    // if ($('#genes').length) {
+    //     if ($('#genes').hasClass('select2-hidden-accessible')) {
+    //         $('#genes').select2('destroy');
+    //     }
+    //     $('#genes').select2({
+    //         theme: 'bootstrap4',
+    //         data: genesOptions.map(gene => ({
+    //             id: gene.id,
+    //             text: gene.name
+    //         })),
+    //         placeholder: 'Select genes',
+    //         allowClear: true,
+    //         multiple: true,
+    //         dropdownParent: $('#modal-crear-elemento'),
+    //         width: '100%'
+    //     });
+    // }
 }
 
 $(document).ready(function () {
-    // Inicializar select2
-    $('#disease_subgroup').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Select a disease subgroup'
-    });
-
-    // $('#genes').select2({
-    //     theme: 'bootstrap4',
-    //     placeholder: 'Select genes',
-    //     allowClear: true
-    // });
-
     // DataTable initialization
     $("table")
         .addClass("table table-hover")
@@ -127,7 +127,6 @@ $(document).ready(function () {
                         alert(error);
                     });
             },
-            // En la configuración de DataTables, modifica las columns:
             columns: [
                 {data: "name", title: "Name"},
                 {data: "description", title: "Description"},
@@ -170,7 +169,6 @@ $(document).ready(function () {
                     },
                 },
             ],
-            // esto es para truncar el texto de las celdas
             columnDefs: [
                 {
                     targets: 1,
@@ -186,6 +184,23 @@ $(document).ready(function () {
                 },
             ],
         });
+});
+
+// ============ EVENTOS PARA SELECT2 EN MODALES ============
+
+// Cuando el modal se muestra completamente
+$('#modal-crear-elemento').on('shown.bs.modal', function() {
+    initializeSelect2InModal();
+});
+
+// Cuando el modal se cierra, destruir select2
+$('#modal-crear-elemento').on('hidden.bs.modal', function() {
+    if ($('#disease_subgroup').hasClass('select2-hidden-accessible')) {
+        $('#disease_subgroup').select2('destroy');
+    }
+    // if ($('#genes').length && $('#genes').hasClass('select2-hidden-accessible')) {
+    //     $('#genes').select2('destroy');
+    // }
 });
 
 $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
@@ -236,7 +251,8 @@ $("#modal-crear-elemento").on("show.bs.modal", async function (event) {
 
     // Cargar opciones si es la primera vez
     if (diseaseSubgroupsOptions.length === 0) {
-        await loadSelectOptions();
+        await loadDiseaseSubgroups();
+        await loadGenes();
     }
 
     if (button.data("type") == "edit") {
@@ -253,16 +269,20 @@ $("#modal-crear-elemento").on("show.bs.modal", async function (event) {
         form.elements.description.value = dataDescription;
 
         // Establecer disease subgroup
-        $('#disease_subgroup').val(dataDiseaseSubgroup).trigger('change');
+        if (dataDiseaseSubgroup) {
+            $('#disease_subgroup').val(dataDiseaseSubgroup).trigger('change');
+        }
 
         // Establecer genes
-        $('#genes').val(dataGenes).trigger('change');
+        // if (dataGenes && dataGenes.length > 0) {
+        //     $('#genes').val(dataGenes).trigger('change');
+        // }
 
     } else {
         modal.find(".modal-title").text("Create Disorder");
         form.reset();
         $('#disease_subgroup').val(null).trigger('change');
-        $('#genes').val(null).trigger('change');
+        // $('#genes').val(null).trigger('change');
     }
 });
 
@@ -322,7 +342,7 @@ form.addEventListener("submit", function (event) {
             name: form.elements.name.value,
             description: form.elements.description.value,
             disease_subgroup: $('#disease_subgroup').val(),
-            genes: $('#genes').val() || []
+            // genes: $('#genes').val() || []
         };
 
         if (edit_elemento) {
