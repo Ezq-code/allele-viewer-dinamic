@@ -16,7 +16,11 @@ var load = document.getElementById("load");
 // Función para cargar la lista de genes
 function loadGenes() {
   axios
-    .get(geneUrl)
+    .get(geneUrl, {
+            params: {
+              ordering: "name",
+            },
+          })
     .then((response) => {
       const geneSelect = document.getElementById("gene");
       geneSelect.innerHTML = '<option value="">Seleccione un gen</option>';
