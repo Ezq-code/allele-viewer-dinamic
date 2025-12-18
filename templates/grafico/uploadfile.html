@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -129,7 +131,7 @@
           
           <div class="form-group col-md-12">
             <label for="gene">Gen</label>
-            <select class="form-control" id="gene" name="gene" required>
+            <select class="form-control select2" id="gene" name="gene" required>
               <option value="">Seleccione un gen</option>
             </select>
           </div>
@@ -182,6 +184,7 @@
 <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
 <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
 <script src="{% static 'assets/dist/js/uploadfile.js' %}"></script>
+<script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
 
 <!-- Page specific script -->
 
