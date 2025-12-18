@@ -63,6 +63,21 @@ urlpatterns = [
         login_required(pages.gene, login_url="/login/"),
         name="gene",
     ),
+    path(
+        "disease-subgroup/",
+        login_required(pages.disease_subgroup, login_url="/login/"),
+        name="disease-subgroup",
+    ),
+    path(
+        "disease-group/",
+        login_required(pages.disease_group, login_url="/login/"),
+        name="disease-group",
+    ),
+    path(
+        "disorder/",
+        login_required(pages.disorder, login_url="/login/"),
+        name="disorder",
+    ),
     path("ancestral", pages.ancestral, name="ancestral"),
     path("alleleviewer", pages.alleleviewer, name="alleleviewer"),
     path("login/", pages.first_login, name="first_login"),

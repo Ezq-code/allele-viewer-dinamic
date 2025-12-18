@@ -505,6 +505,15 @@
     background: #555;
 }
 
+.marker-tooltip {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 3px;
+    border-radius: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
 /* Responsive: en pantallas pequeñas volver a una columna */
 @media (max-width: 768px) {
     .legend-columns-container {

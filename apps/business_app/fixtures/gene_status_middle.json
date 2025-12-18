@@ -16491,6 +16491,16 @@
     },
     {
         "model": "business_app.genestatusmiddle",
+        "pk": 2275,
+        "fields": {
+            "gene": 1653,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
         "pk": 2276,
         "fields": {
             "gene": 1654,
@@ -112934,6 +112944,1206 @@
         "pk": 11920,
         "fields": {
             "gene": 2262,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 627,
+        "fields": {
+            "gene": 2263,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 628,
+        "fields": {
+            "gene": 2263,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 629,
+        "fields": {
+            "gene": 2263,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 630,
+        "fields": {
+            "gene": 2263,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 631,
+        "fields": {
+            "gene": 2263,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 632,
+        "fields": {
+            "gene": 2264,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 633,
+        "fields": {
+            "gene": 2264,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 634,
+        "fields": {
+            "gene": 2264,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 635,
+        "fields": {
+            "gene": 2264,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 636,
+        "fields": {
+            "gene": 2264,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 637,
+        "fields": {
+            "gene": 2265,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 638,
+        "fields": {
+            "gene": 2265,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 639,
+        "fields": {
+            "gene": 2265,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 640,
+        "fields": {
+            "gene": 2265,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 641,
+        "fields": {
+            "gene": 2265,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 642,
+        "fields": {
+            "gene": 2266,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 643,
+        "fields": {
+            "gene": 2266,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 644,
+        "fields": {
+            "gene": 2266,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 645,
+        "fields": {
+            "gene": 2266,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 646,
+        "fields": {
+            "gene": 2266,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 647,
+        "fields": {
+            "gene": 2267,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 648,
+        "fields": {
+            "gene": 2267,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 649,
+        "fields": {
+            "gene": 2267,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 650,
+        "fields": {
+            "gene": 2267,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 651,
+        "fields": {
+            "gene": 2267,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 652,
+        "fields": {
+            "gene": 2268,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 653,
+        "fields": {
+            "gene": 2268,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 654,
+        "fields": {
+            "gene": 2268,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 655,
+        "fields": {
+            "gene": 2268,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 656,
+        "fields": {
+            "gene": 2268,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 657,
+        "fields": {
+            "gene": 2269,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 658,
+        "fields": {
+            "gene": 2269,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 659,
+        "fields": {
+            "gene": 2269,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 660,
+        "fields": {
+            "gene": 2269,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 661,
+        "fields": {
+            "gene": 2269,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 662,
+        "fields": {
+            "gene": 2270,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 663,
+        "fields": {
+            "gene": 2270,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 664,
+        "fields": {
+            "gene": 2270,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 665,
+        "fields": {
+            "gene": 2270,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 666,
+        "fields": {
+            "gene": 2270,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 667,
+        "fields": {
+            "gene": 2271,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 668,
+        "fields": {
+            "gene": 2271,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 669,
+        "fields": {
+            "gene": 2271,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 670,
+        "fields": {
+            "gene": 2271,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 671,
+        "fields": {
+            "gene": 2271,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 672,
+        "fields": {
+            "gene": 2272,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 673,
+        "fields": {
+            "gene": 2272,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 674,
+        "fields": {
+            "gene": 2272,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 675,
+        "fields": {
+            "gene": 2272,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 676,
+        "fields": {
+            "gene": 2272,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 677,
+        "fields": {
+            "gene": 2273,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 678,
+        "fields": {
+            "gene": 2273,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 679,
+        "fields": {
+            "gene": 2273,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 680,
+        "fields": {
+            "gene": 2273,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 681,
+        "fields": {
+            "gene": 2273,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 682,
+        "fields": {
+            "gene": 2274,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 683,
+        "fields": {
+            "gene": 2274,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 684,
+        "fields": {
+            "gene": 2274,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 685,
+        "fields": {
+            "gene": 2274,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 686,
+        "fields": {
+            "gene": 2274,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11921,
+        "fields": {
+            "gene": 2263,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11922,
+        "fields": {
+            "gene": 2263,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11923,
+        "fields": {
+            "gene": 2263,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11924,
+        "fields": {
+            "gene": 2263,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11925,
+        "fields": {
+            "gene": 2263,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11926,
+        "fields": {
+            "gene": 2264,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11927,
+        "fields": {
+            "gene": 2264,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11928,
+        "fields": {
+            "gene": 2264,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11929,
+        "fields": {
+            "gene": 2264,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11930,
+        "fields": {
+            "gene": 2264,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11931,
+        "fields": {
+            "gene": 2265,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11932,
+        "fields": {
+            "gene": 2265,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11933,
+        "fields": {
+            "gene": 2265,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11934,
+        "fields": {
+            "gene": 2265,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11935,
+        "fields": {
+            "gene": 2265,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11936,
+        "fields": {
+            "gene": 2266,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11937,
+        "fields": {
+            "gene": 2266,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11938,
+        "fields": {
+            "gene": 2266,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11939,
+        "fields": {
+            "gene": 2266,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11940,
+        "fields": {
+            "gene": 2266,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11941,
+        "fields": {
+            "gene": 2267,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11942,
+        "fields": {
+            "gene": 2267,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11943,
+        "fields": {
+            "gene": 2267,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11944,
+        "fields": {
+            "gene": 2267,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11945,
+        "fields": {
+            "gene": 2267,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11946,
+        "fields": {
+            "gene": 2268,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11947,
+        "fields": {
+            "gene": 2268,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11948,
+        "fields": {
+            "gene": 2268,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11949,
+        "fields": {
+            "gene": 2268,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11950,
+        "fields": {
+            "gene": 2268,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11951,
+        "fields": {
+            "gene": 2269,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11952,
+        "fields": {
+            "gene": 2269,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11953,
+        "fields": {
+            "gene": 2269,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11954,
+        "fields": {
+            "gene": 2269,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11955,
+        "fields": {
+            "gene": 2269,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11956,
+        "fields": {
+            "gene": 2270,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11957,
+        "fields": {
+            "gene": 2270,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11958,
+        "fields": {
+            "gene": 2270,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11959,
+        "fields": {
+            "gene": 2270,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11960,
+        "fields": {
+            "gene": 2270,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11961,
+        "fields": {
+            "gene": 2271,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11962,
+        "fields": {
+            "gene": 2271,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11963,
+        "fields": {
+            "gene": 2271,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11964,
+        "fields": {
+            "gene": 2271,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11965,
+        "fields": {
+            "gene": 2271,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11966,
+        "fields": {
+            "gene": 2272,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11967,
+        "fields": {
+            "gene": 2272,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11968,
+        "fields": {
+            "gene": 2272,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11969,
+        "fields": {
+            "gene": 2272,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11970,
+        "fields": {
+            "gene": 2272,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11971,
+        "fields": {
+            "gene": 2273,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11972,
+        "fields": {
+            "gene": 2273,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11973,
+        "fields": {
+            "gene": 2273,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11974,
+        "fields": {
+            "gene": 2273,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11975,
+        "fields": {
+            "gene": 2273,
+            "gene_status": 10,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11976,
+        "fields": {
+            "gene": 2274,
+            "gene_status": 6,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11977,
+        "fields": {
+            "gene": 2274,
+            "gene_status": 7,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11978,
+        "fields": {
+            "gene": 2274,
+            "gene_status": 8,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11979,
+        "fields": {
+            "gene": 2274,
+            "gene_status": 9,
+            "value": 1,
+            "evidence": ""
+        }
+    },
+    {
+        "model": "business_app.genestatusmiddle",
+        "pk": 11980,
+        "fields": {
+            "gene": 2274,
             "gene_status": 10,
             "value": 1,
             "evidence": ""

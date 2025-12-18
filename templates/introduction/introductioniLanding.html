@@ -171,6 +171,301 @@
     }
 }
 
+/* ==========================================
+   DONATION SECTION STYLES
+   ========================================== */
+
+.donation-info-card,
+.donation-form-card {
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.donation-info-card:hover,
+.donation-form-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.donation-info-card .card-header,
+.donation-form-card .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1.5rem;
+}
+
+.donation-info-card .card-header h3,
+.donation-form-card .card-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.donation-info-card .card-body,
+.donation-form-card .card-body {
+    padding: 2rem;
+}
+
+/* Amount buttons styling */
+.amount-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.amount-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 2px solid #667eea;
+    color: #667eea;
+}
+
+.amount-btn:hover {
+    background-color: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.amount-btn.active {
+    background-color: #667eea;
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.custom-amount-btn {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.custom-amount-btn:hover {
+    background-color: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+
+.custom-amount-btn.active {
+    background-color: #6c757d;
+    color: white;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
+/* Modal styling */
+.modal-content {
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+}
+
+.modal-header {
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.input-group-lg .form-control {
+    font-size: 1.2rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border: 2px solid #dee2e6;
+}
+
+.input-group-lg .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 1.5rem;
+}
+
+/* Payment method styling */
+.payment-methods .form-check {
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.payment-methods .form-check:hover {
+    background-color: #f8f9fa;
+    border-color: #667eea;
+}
+
+.payment-methods .form-check-input:checked {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+.payment-methods .form-check-label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+/* Crypto options styling */
+.crypto-options {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.crypto-address .alert-success {
+    background-color: #28a745;
+    border-color: #23923d;
+    border-radius: 8px;
+}
+
+
+
+
+
+.donation .address-text {
+    font-family: monospace;
+    font-size: 0.8rem;
+    background-color: #d8cdcd;
+    padding: 8px;
+    border-radius: 4px;
+    word-break: break-all;
+    flex-grow: 1;
+}
+
+.qr-code {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+/* Button styling */
+#donate-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+#donate-btn:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #6a3d91 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+#donate-btn:active {
+    transform: translateY(0);
+}
+
+/* Impact cards styling */
+.donation-impact {
+    margin-top: 3rem;
+    padding: 2rem 0;
+}
+
+.donation-impact h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.impact-card {
+    padding: 2rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #f0f3fa 100%);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.impact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.2);
+    background: linear-gradient(135deg, #e7ecff 0%, #f0e6ff 100%);
+}
+
+.impact-card i {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 1rem;
+}
+
+.impact-card h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.impact-card p {
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Form styling */
+.form-control,
+.form-check-input {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-check-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Responsive donation section */
+@media (max-width: 768px) {
+    .amount-options {
+        gap: 8px;
+    }
+
+    .amount-btn {
+        min-width: 70px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .donation-info-card .card-header,
+    .donation-form-card .card-header {
+        padding: 1rem;
+    }
+
+    .donation-info-card .card-body,
+    .donation-form-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .donation-impact h3 {
+        font-size: 1.5rem;
+    }
+
+    .impact-card {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+}
+
 </style>
   <!-- =======================================================
   * Template Name: iLanding
@@ -473,7 +768,7 @@
         </div>
 
       </div>
-
+  
     </section><!-- /Features Section -->
 
     
@@ -543,7 +838,7 @@
           </div>
         </div>
       </div>
-    </div>d
+    </div>
   </div>
 </section>
 
@@ -1013,7 +1308,61 @@
         </div>
 
     </section>
-    
+       <!-- Call To Action Section2 -->
+    <section id="contribution" class="call-to-action section">
+
+      <div class="container" data-aos="fade-up" style="background: #6f62c2 !important;" data-aos-delay="100">
+
+        <div class="row content justify-content-center align-items-center position-relative">
+          <div class="col-lg-8 mx-auto text-center">
+            <h2 class="display-4 mb-4">How can I Contribute the project?</h2>
+            <p class="mb-4">Review the web browsing data generated on our end Identify gaps in data, software, and current methodologies Develop effective solutions, Please contact us at info@pgxsoftware.com</p>
+            <a href="#faq" class="btn btn-cta">More Info</a>
+          </div>
+
+          <!-- Abstract Background Elements -->
+          <div class="shape shape-1">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <path d="M47.1,-57.1C59.9,-45.6,68.5,-28.9,71.4,-10.9C74.2,7.1,71.3,26.3,61.5,41.1C51.7,55.9,35,66.2,16.9,69.2C-1.3,72.2,-21,67.8,-36.9,57.9C-52.8,48,-64.9,32.6,-69.1,15.1C-73.3,-2.4,-69.5,-22,-59.4,-37.1C-49.3,-52.2,-32.8,-62.9,-15.7,-64.9C1.5,-67,34.3,-68.5,47.1,-57.1Z" transform="translate(100 100)"></path>
+            </svg>
+          </div>
+
+          <div class="shape shape-2">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <path d="M41.3,-49.1C54.4,-39.3,66.6,-27.2,71.1,-12.1C75.6,3,72.4,20.9,63.3,34.4C54.2,47.9,39.2,56.9,23.2,62.3C7.1,67.7,-10,69.4,-24.8,64.1C-39.7,58.8,-52.3,46.5,-60.1,31.5C-67.9,16.4,-70.9,-1.4,-66.3,-16.6C-61.8,-31.8,-49.7,-44.3,-36.3,-54C-22.9,-63.7,-8.2,-70.6,3.6,-75.1C15.4,-79.6,28.2,-58.9,41.3,-49.1Z" transform="translate(100 100)"></path>
+            </svg>
+          </div>
+
+          <!-- Dot Pattern Groups -->
+          <div class="dots dots-1">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <pattern id="dot-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="2" fill="currentColor"></circle>
+              </pattern>
+              <rect width="100" height="100" fill="url(#dot-pattern)"></rect>
+            </svg>
+          </div>
+
+          <div class="dots dots-2">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <pattern id="dot-pattern-2" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="2" fill="currentColor"></circle>
+              </pattern>
+              <rect width="100" height="100" fill="url(#dot-pattern-2)"></rect>
+            </svg>
+          </div>
+
+          <div class="shape shape-3">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <path d="M43.3,-57.1C57.4,-46.5,71.1,-32.6,75.3,-16.2C79.5,0.2,74.2,19.1,65.1,35.3C56,51.5,43.1,65,27.4,71.7C11.7,78.4,-6.8,78.3,-23.9,72.4C-41,66.5,-56.7,54.8,-65.4,39.2C-74.1,23.6,-75.8,4,-71.7,-13.2C-67.6,-30.4,-57.7,-45.2,-44.3,-56.1C-30.9,-67,-15.5,-74,0.7,-74.9C16.8,-75.8,33.7,-70.7,43.3,-57.1Z" transform="translate(100 100)"></path>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Call To Action Section -->
+    <!-- Features 2 Section -->
 <!-- Donation Section -->
 <section id="donation" class="donation section light-background">
   <div class="container section-title" data-aos="fade-up">
@@ -1068,51 +1417,44 @@
           <div class="card-body">
             <form id="donation-form">
               <div class="form-group mb-3">
-                <label for="donation-amount">Select Amount (USD)</label>
-                <div class="amount-options mt-2">
+                <label for="donation-amount" class="mb-2">Select Amount (USD)</label>
+                <div class="amount-options" id="amount-options-group">
                   <button type="button" class="btn btn-outline-primary amount-btn" data-amount="25">$25</button>
                   <button type="button" class="btn btn-outline-primary amount-btn" data-amount="50">$50</button>
                   <button type="button" class="btn btn-outline-primary amount-btn" data-amount="100">$100</button>
-                  <button type="button" class="btn btn-outline-primary amount-btn" data-amount="250">$250</button>
                   <button type="button" class="btn btn-outline-primary amount-btn" data-amount="500">$500</button>
+                  <button type="button" class="btn btn-outline-secondary amount-btn" id="custom-btn" data-amount="5">Custom</button>
                 </div>
-                <div class="input-group mt-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">$</span>
-                  </div>
-                  <input type="number" class="form-control" id="custom-amount" placeholder="Custom amount" min="1">
-                </div>
+                <small class="form-text text-muted d-block mt-2" id="amount-help-text">Select a preset amount or custom</small>
               </div>
 
               <div class="form-group mb-3">
                 <label for="donor-email">Email Address</label>
                 <input type="email" class="form-control" id="donor-email" placeholder="your@email.com" required>
-                <small class="form-text text-muted">For receipt purposes only</small>
+                <small class="form-text text-muted">For payment confirmation</small>
               </div>
 
-              <div class="form-group mb-3">
-                <label for="donor-message">Optional Message</label>
-                <textarea class="form-control" id="donor-message" rows="3" placeholder="Any message you'd like to share with our team..."></textarea>
-              </div>
-
-              <div class="payment-methods mb-3">
-                <label class="d-block mb-2">Choose Payment Method</label>
-                <div class="form-check">
+              <div class="payment-methods mb-4">
+                <label class="d-block mb-3 font-weight-bold">Choose Payment Method</label>
+                <div class="form-check mb-2">
                   <input class="form-check-input" type="radio" name="payment-method" id="stripe" value="stripe" checked>
                   <label class="form-check-label" for="stripe">
-                    <i class="bi bi-credit-card"></i> Credit/Debit Card (Stripe)
+                    <i class="bi bi-credit-card"></i> <strong>Credit/Debit Card (Stripe)</strong>
+                    <br><small class="text-muted">Fast and secure credit card payments</small>
                   </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check mb-2" >
                   <input class="form-check-input" type="radio" name="payment-method" id="bluevine" value="bluevine">
                   <label class="form-check-label" for="bluevine">
-                    <i class="bi bi-bank"></i> Bank Transfer (Bluevine)
+                    <i class="bi bi-bank"></i> <strong>Bank Transfer</strong>
+                    <br><small class="text-muted">Wire transfer or ACH (International & USA)</small>
                   </label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="payment-method" id="crypto" value="crypto">
                   <label class="form-check-label" for="crypto">
-                    <i class="bi bi-currency-bitcoin"></i> Cryptocurrency
+                    <i class="bi bi-currency-bitcoin"></i> <strong>Cryptocurrency</strong>
+                    <br><small class="text-muted">Support us with blockchain donations</small>
                   </label>
                 </div>
               </div>
@@ -1256,7 +1598,7 @@
               </div>
 
               <button type="submit" class="btn btn-primary btn-lg btn-block" id="donate-btn">
-                <i class="bi bi-heart"></i> Donate Now
+                <i class="bi bi-heart"></i> Proceed to Payment
               </button>
             </form>
 
@@ -1264,21 +1606,7 @@
               <div class="spinner-border text-primary" role="status">
                 <span class="sr-only">Processing...</span>
               </div>
-              <p class="mt-2">Processing your donation...</p>
-            </div>
-
-            <div id="bluevine-instructions" class="mt-3" style="display: none;">
-              <div class="alert alert-success">
-                <h5><i class="bi bi-bank"></i> Bank Transfer Instructions</h5>
-                <p>Please transfer your donation to:</p>
-                <ul class="list-unstyled">
-                  <li><strong>Bank:</strong> Bluevine</li>
-                  <li><strong>Account Name:</strong> AIGenomicResources.com LLC</li>
-                  <li><strong>Account Number:</strong> [875105077601]</li>
-                  <li><strong>Routing Number:</strong> [125109019]</li>
-                </ul>
-                <p class="mb-0">Reference: <code id="bluevine-reference">[REFERENCE]</code></p>
-              </div>
+              <p class="mt-2">Redirecting to payment gateway...</p>
             </div>
           </div>
         </div>
@@ -1287,49 +1615,81 @@
 
     <div class="row mt-5">
       <div class="col-12">
-        <div class="donation-impact text-center">
-          <h3>Research Impact</h3>
-          <div class="row mt-4">
-            <div class="col-md-3 mb-3">
-              <div class="impact-card">
-                <i class="bi bi-infinity"></i>
-                <h4>100+ Genes</h4>
-                <p>Processed with each $100 donation</p>
-              </div>
-            </div>
-            <div class="col-md-3 mb-3">
-              <div class="impact-card">
-                <i class="bi bi-people"></i>
-                <h4>50+ Researchers</h4>
-                <p>Benefit from free platform access</p>
-              </div>
-            </div>
-            <div class="col-md-3 mb-3">
-              <div class="impact-card">
-                <i class="bi bi-graph-up"></i>
-                <h4>30% Faster</h4>
-                <p>Research processing with donations</p>
-              </div>
-            </div>
-            <div class="col-md-3 mb-3">
-              <div class="impact-card">
-                <i class="bi bi-globe"></i>
-                <h4>Global Access</h4>
-                <p>Keeping data open and accessible</p>
-              </div>
-            </div>
+      <div class="donation-impact text-center">
+        <h3>Human Migration & Genomic Evolution</h3>
+        <p class="lead mb-4">How ancient migrations shaped the genomic diversity of modern humanity</p>
+        <div class="row mt-4">
+        <div class="col-md-3 mb-3">
+          <div class="impact-card">
+          <i class="bi bi-signpost-split"></i>
+          <h4>70,000 Years Ago</h4>
+          <p>Out of Africa migration triggered major genomic bottlenecks and adaptive changes</p>
           </div>
         </div>
+        <div class="col-md-3 mb-3">
+          <div class="impact-card">
+          <i class="bi bi-brightness-high"></i>
+          <h4>Skin Pigmentation</h4>
+          <p>Populations adapted to UV exposure with genomic variants in MC1R and SLC24A5 genes</p>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="impact-card">
+          <i class="bi bi-cup-straw"></i>
+          <h4>Lactase Persistence</h4>
+          <p>Arose independently in pastoral populations via MCM6 gene mutations within last 10,000 years</p>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="impact-card">
+          <i class="bi bi-snow"></i>
+          <h4>Cold Adaptation</h4>
+          <p>Arctic populations developed variants in FADS and CPT1A genes for efficient lipid metabolism</p>
+          </div>
+        </div>
+        </div>
+        <div class="row mt-4">
+        <div class="col-md-3 mb-3">
+          <div class="impact-card">
+         <i class="bi bi-globe-europe-africa"></i>
+          <h4>Neanderthal Introgression</h4>
+          <p>1-4% of non-African genomes contain Neanderthal DNA affecting immunity and metabolism</p>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="impact-card">
+          <i class="bi bi-map"></i>
+          <h4>Founder Effects</h4>
+          <p>Island and isolated populations show unique allele frequencies from small founding groups</p>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="impact-card">
+          <i class="bi bi-graph-up"></i>
+          <h4>Gene Flow Patterns</h4>
+          <p>Trade routes and population movements created clines of genomicvariation across continents</p>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div class="impact-card">
+          <i class="bi bi-hourglass-split"></i>
+          <h4>Recent Selection</h4>
+          <p>Agricultural transition drove rapid evolution in disease resistance and dietary genes</p>
+          </div>
+        </div>
+        </div>
+      </div>
       </div>
     </div>
-  </div>
-</section>
+    </div>
+  </section>
+
 
      <!-- Faq Section -->
     <section class="faq-9 faq section light-background" id="faq">
 
       <div class="container">
-        <div class="row">
+      <div class="row">
 
           <div class="col-lg-5" data-aos="fade-up">
             <h2 class="faq-title">Have a question? Check out the FAQ</h2>
@@ -1381,7 +1741,7 @@
               <div class="faq-item">
                 <h3>How can I support the project?</h3>
                 <div class="faq-content">
-                  <p>You can support our work via donations or by sharing anonymized datasets. Visit the Donation section or contact us via WhatsApp for collaboration opportunities.</p>
+                  <p>You can support our work via donations or by sharing anonymized datasets. Visit the Donation section or contact us via info@pgxsoftware.com for collaboration opportunities.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
               </div><!-- End Faq item-->
@@ -1392,6 +1752,7 @@
         </div>
       </div>
     </section>
+
     
     <!-- /Faq Section -->
 
@@ -1533,7 +1894,7 @@
 
         
 
-<div class="copyright">&copy; Genetic Ancestry Project. Designed by <strong>PGxSoftware.com</strong></div>
+<div class="copyright">&copy; Genomic Ancestry Project. Designed by <strong>PGxSoftware.com</strong></div>
       
   </footer>
 
