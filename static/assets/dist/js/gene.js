@@ -2,8 +2,8 @@
 let geneGroupsOptions = [];
 let diseaseGroupsOptions = [];
 let diseaseSubgroupsOptions = [];
-let allDisordersOptions = []; // Almacenar TODOS los disorders disponibles
-let selectedDisorders = []; // Almacenar las selecciones actuales de disorders
+let allDisordersOptions = [];
+let selectedDisorders = [];
 let selected_id;
 const csrfToken = document.cookie
     .split(";")
@@ -12,21 +12,51 @@ const csrfToken = document.cookie
 const url = "/business-gestion/gene/";
 var load = document.getElementById("load");
 
+// Función para inicializar Select2 con configuración correcta de posicionamiento
+function initSelect2WithFix(selector, options = {}) {
+    const defaultOptions = {
+        theme: 'bootstrap4',
+        allowClear: true,
+        width: '100%',
+        dropdownParent: $('#modal-crear-elemento'),
+        dropdownAutoWidth: true,
+        minimumResultsForSearch: 0,
+        // Añadir opciones para mejor posicionamiento
+        dropdownCssClass: 'select2-dropdown-custom',
+        containerCssClass: 'select2-container-custom',
+        // Evitar que el dropdown se cierre al hacer scroll
+        closeOnSelect: selector === '#disorders' ? false : true,
+        ...options
+    };
+
+    // Destruir si ya existe
+    if ($(selector).hasClass('select2-hidden-accessible')) {
+        $(selector).select2('destroy');
+    }
+
+    // Inicializar
+    return $(selector).select2(defaultOptions);
+}
+
 // Función para cargar DiseaseGroups
 async function loadDiseaseGroups() {
     try {
         const response = await axios.get('/business-gestion/disease-group/');
         diseaseGroupsOptions = response.data.results;
 
-        // Inicializar Select2 para disease groups
-        $('#disease_group').select2({
-            theme: 'bootstrap4',
-            data: diseaseGroupsOptions.map(group => ({
-                id: group.id,
-                text: group.name
-            })),
+        // Limpiar y llenar el select
+        $('#disease_group').empty();
+        $('#disease_group').append('<option value="">Select a disease group</option>');
+
+        diseaseGroupsOptions.forEach(group => {
+            $('#disease_group').append(new Option(group.name, group.id, false, false));
+        });
+
+        // Inicializar Select2 con fix de posicionamiento
+        initSelect2WithFix('#disease_group', {
             placeholder: 'Select a disease group'
         });
+
     } catch (error) {
         console.error('Error loading disease groups:', error);
     }
@@ -38,33 +68,32 @@ async function loadDiseaseSubGroups(diseaseGroupId) {
         console.log('Loading subgroups for group:', diseaseGroupId);
         const response = await axios.get(`/business-gestion/disease-subgroup/?disease_group=${diseaseGroupId}`);
         diseaseSubgroupsOptions = response.data.results;
-        console.log('Loaded subgroups:', diseaseSubgroupsOptions);
 
         // Habilitar y actualizar el selector de subgroups
         $('#disease_subgroup').prop('disabled', false);
-        $('#disease_subgroup').empty().append('<option value="">Select a disease subgroup</option>');
+        $('#disease_subgroup').empty();
+        $('#disease_subgroup').append('<option value="">Select a disease subgroup</option>');
 
         diseaseSubgroupsOptions.forEach(subgroup => {
             $('#disease_subgroup').append(new Option(subgroup.name, subgroup.id, false, false));
         });
 
-        console.log('Subgroups loaded and select updated');
+        // Inicializar Select2 con fix de posicionamiento
+        initSelect2WithFix('#disease_subgroup', {
+            placeholder: 'Select a disease subgroup'
+        });
 
     } catch (error) {
         console.error('Error loading disease subgroups:', error);
     }
 }
 
-// Función para cargar TODOS los disorders una sola vez, pero con sus datos completos.
+// Función para cargar TODOS los disorders
 async function loadAllDisorders() {
     try {
-        // Usamos el endpoint principal en lugar de 'minimal-list' para obtener el campo 'disease_subgroup'
         const response = await axios.get('/business-gestion/disorder/');
-        allDisordersOptions = response.data.results; // Asegúrate de acceder a .results si tu API está paginada
-        console.log('All disorders loaded with full data:', allDisordersOptions.length);
-        if (allDisordersOptions.length > 0) {
-            console.log('Sample disorder structure with full data:', allDisordersOptions[0]);
-        }
+        allDisordersOptions = response.data.results;
+        console.log('All disorders loaded:', allDisordersOptions.length);
         return allDisordersOptions;
     } catch (error) {
         console.error('Error loading all disorders:', error);
@@ -72,77 +101,67 @@ async function loadAllDisorders() {
     }
 }
 
-// Función para actualizar el selector de disorders manteniendo las selecciones
+// Función para actualizar el selector de disorders
 function updateDisordersSelector(filteredDisorders = null, preserveSelections = true) {
-    // Si no se proporcionan disorders filtrados, usar todos
     const disordersToShow = filteredDisorders || allDisordersOptions;
-    
+
     // Vaciar el selector
     $('#disorders').empty();
-    
-    // Crear un mapa de disorders seleccionados para búsqueda rápida
+
+    // Crear mapa de selecciones
     const selectedMap = {};
     if (preserveSelections && selectedDisorders.length > 0) {
         selectedDisorders.forEach(id => {
             selectedMap[id] = true;
         });
     }
-    
-    // Agregar opciones del subgrupo actual
+
+    // Agregar opciones
     disordersToShow.forEach(disorder => {
         const isSelected = selectedMap[disorder.id] || false;
         $('#disorders').append(new Option(disorder.name, disorder.id, isSelected, isSelected));
     });
-    
+
     // Agregar disorders seleccionados que no están en el subgrupo actual
     if (preserveSelections && selectedDisorders.length > 0) {
         selectedDisorders.forEach(id => {
-            // Verificar si el disorder ya está en la lista
             const alreadyInList = disordersToShow.some(disorder => disorder.id == id);
-            
             if (!alreadyInList) {
-                // Buscar el disorder en la lista completa
                 const disorder = allDisordersOptions.find(d => d.id == id);
                 if (disorder) {
-                    // Agregar como opción seleccionada
-                    $('#disorders').append(new Option(disorder.name, disorder.id, true, true));
+                    $('#disorders').append(new Option(disorder.name + ' (other subgroup)', disorder.id, true, true));
                 }
             }
         });
     }
-    
-    // Establecer las selecciones
+
+    // Establecer selecciones
     if (preserveSelections && selectedDisorders.length > 0) {
         $('#disorders').val(selectedDisorders).trigger('change');
     }
-    
-    console.log('Disorders selector updated with', disordersToShow.length, 'options');
-    console.log('Selected disorders:', selectedDisorders);
+
+    // Inicializar Select2 con fix de posicionamiento
+    initSelect2WithFix('#disorders', {
+        placeholder: 'Select disorders',
+        closeOnSelect: false
+    });
 }
 
 // Función para filtrar disorders por subgrupo
 function filterDisordersBySubgroup(subgroupId) {
     if (!subgroupId) {
-        return allDisordersOptions; // Devolver todos si no hay subgrupo seleccionado
+        return allDisordersOptions;
     }
-    
-    // Depuración: mostrar el subgrupo que estamos buscando
-    console.log('Filtering disorders for subgroup ID:', subgroupId);
-    
-    // Filtrar disorders - ahora esto funcionará porque los datos tienen el campo disease_subgroup
-    const filtered = allDisordersOptions.filter(disorder => {
-        // El campo disease_subgroup puede ser un objeto o solo el ID, manejamos ambos casos
+
+    return allDisordersOptions.filter(disorder => {
         if (disorder.disease_subgroup) {
-            const subgroupIdFromDisorder = typeof disorder.disease_subgroup === 'object' 
-                ? disorder.disease_subgroup.id 
+            const subgroupIdFromDisorder = typeof disorder.disease_subgroup === 'object'
+                ? disorder.disease_subgroup.id
                 : disorder.disease_subgroup;
             return parseInt(subgroupIdFromDisorder) === parseInt(subgroupId);
         }
         return false;
     });
-    
-    console.log('Filtered disorders:', filtered.length);
-    return filtered;
 }
 
 // Función para cargar todos los select options
@@ -152,38 +171,27 @@ async function loadSelectOptions() {
         const groupsResponse = await axios.get('/business-gestion/gene-groups/minimal-list/');
         geneGroupsOptions = groupsResponse.data;
 
+        // Limpiar y llenar grupos
+        $('#groups').empty();
+        geneGroupsOptions.forEach(group => {
+            $('#groups').append(new Option(group.name, group.id, false, false));
+        });
+
+        // Inicializar Select2 con fix de posicionamiento
+        initSelect2WithFix('#groups', {
+            placeholder: 'Select groups...'
+        });
+
         // Cargar disease groups
         await loadDiseaseGroups();
-        
-        // Cargar TODOS los disorders una sola vez con datos completos
+
+        // Cargar TODOS los disorders
         await loadAllDisorders();
 
-        // Inicializar Select2 para grupos de genes
-        $('#groups').select2({
-            theme: 'bootstrap4',
-            data: geneGroupsOptions.map(group => ({
-                id: group.id,
-                text: group.name
-            })),
-            placeholder: 'Select groups',
-            allowClear: true
-        });
-
-        // Inicializar Select2 para disease subgroups
-        $('#disease_subgroup').select2({
-            theme: 'bootstrap4',
-            placeholder: 'Select a disease subgroup'
-        });
-
         // Inicializar Select2 para disorders
-        $('#disorders').select2({
-            theme: 'bootstrap4',
+        initSelect2WithFix('#disorders', {
             placeholder: 'Select disorders',
-            allowClear: true
-        }).on('change', function() {
-            // Actualizar la variable global de selecciones cuando cambia el selector
-            selectedDisorders = $(this).val() || [];
-            console.log('Updated selectedDisorders:', selectedDisorders);
+            closeOnSelect: false
         });
 
     } catch (error) {
@@ -200,16 +208,13 @@ function resetCascade() {
     $('#disease_group').val(null).trigger('change');
     $('#disease_subgroup').empty().append('<option value="">First select a disease group</option>')
         .prop('disabled', true).trigger('change');
-    
-    // Resetear las selecciones de disorders
+
     selectedDisorders = [];
-    
-    // En reset, mostrar todos los disorders pero sin selecciones
     updateDisordersSelector(allDisordersOptions, false);
     $('#disorders').prop('disabled', true);
 }
 
-// Función para determinar el disease group y subgroup de los disorders seleccionados
+// Función para determinar el disease group y subgroup de referencia
 async function determineDiseaseGroupsFromDisorders(disorderIds) {
     console.log('Starting determineDiseaseGroupsFromDisorders with:', disorderIds);
 
@@ -219,35 +224,25 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
     }
 
     try {
-        // Obtener información del primer disorder solo como referencia visual
         const firstDisorderId = disorderIds[0];
         const disorderResponse = await axios.get(`/business-gestion/disorder/${firstDisorderId}/`);
         const disorderData = disorderResponse.data;
-        
-        console.log('Disorder data:', disorderData);
 
-        // Obtener el ID del subgrupo (manejando diferentes estructuras)
         let subgroupId;
         if (disorderData.disease_subgroup && typeof disorderData.disease_subgroup === 'object') {
             subgroupId = disorderData.disease_subgroup.id;
         } else if (disorderData.disease_subgroup) {
             subgroupId = disorderData.disease_subgroup;
         }
-        
-        console.log('Subgroup ID (reference):', subgroupId);
 
         if (!subgroupId) {
             console.log('No subgroup found for reference');
             return;
         }
 
-        // Obtener detalles del subgrupo
         const subgroupResponse = await axios.get(`/business-gestion/disease-subgroup/${subgroupId}/`);
         const subgroupData = subgroupResponse.data;
-        
-        console.log('Subgroup data:', subgroupData);
 
-        // Obtener el ID del grupo
         let groupId;
         if (subgroupData.disease_group && typeof subgroupData.disease_group === 'object') {
             groupId = subgroupData.disease_group.id;
@@ -257,14 +252,12 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
 
         console.log('Setting reference - Group ID:', groupId, 'Subgroup ID:', subgroupId);
 
-        // Establecer el disease group como referencia visual (pero no bloquear)
+        // Establecer el disease group como referencia
         $('#disease_group').val(groupId).trigger('change');
 
-        // Esperar y establecer el subgroup como referencia visual
+        // Esperar y establecer el subgroup
         setTimeout(() => {
             $('#disease_subgroup').val(subgroupId).trigger('change');
-            
-            // Filtrar disorders por el subgrupo de referencia
             const filteredDisorders = filterDisordersBySubgroup(subgroupId);
             updateDisordersSelector(filteredDisorders, true);
         }, 800);
@@ -274,30 +267,27 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
     }
 }
 
+// Evento para inicializar cuando el documento está listo
  $(document).ready(function () {
-    // Inicializar TODOS los select2
-    $('#groups').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Select groups',
-        allowClear: true
+    // Inicializar todos los Select2 con configuración de posicionamiento
+    initSelect2WithFix('#groups', {
+        placeholder: 'Select groups...'
     });
 
-    $('#disease_group').select2({
-        theme: 'bootstrap4',
+    initSelect2WithFix('#disease_group', {
         placeholder: 'Select a disease group'
     });
 
-    $('#disease_subgroup').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Select a disease subgroup'
+    initSelect2WithFix('#disease_subgroup', {
+        placeholder: 'First select a disease group',
+        disabled: true
     });
 
-    $('#disorders').select2({
-        theme: 'bootstrap4',
-        placeholder: 'Select disorders',
-        allowClear: true
+    initSelect2WithFix('#disorders', {
+        placeholder: 'First select a disease subgroup',
+        disabled: true,
+        closeOnSelect: false
     }).on('change', function() {
-        // Actualizar la variable global de selecciones cuando cambia el selector
         selectedDisorders = $(this).val() || [];
         console.log('Updated selectedDisorders:', selectedDisorders);
     });
@@ -310,7 +300,6 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
             loadDiseaseSubGroups(diseaseGroupId);
         } else {
             $('#disease_subgroup').val(null).trigger('change').prop('disabled', true);
-            // Mostrar todos los disorders pero mantener las selecciones
             updateDisordersSelector(allDisordersOptions, true);
             $('#disorders').prop('disabled', true);
         }
@@ -319,21 +308,17 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
     $('#disease_subgroup').on('change', function () {
         const diseaseSubgroupId = $(this).val();
         console.log('Disease subgroup changed to:', diseaseSubgroupId);
-        
+
         if (diseaseSubgroupId) {
-            // Filtrar disorders por el subgrupo seleccionado
             const filteredDisorders = filterDisordersBySubgroup(diseaseSubgroupId);
-            
-            // Actualizar el selector con los disorders filtrados pero manteniendo las selecciones
             updateDisordersSelector(filteredDisorders, true);
             $('#disorders').prop('disabled', false);
         } else {
-            // Si no hay subgrupo seleccionado, mostrar todos los disorders
             updateDisordersSelector(allDisordersOptions, true);
             $('#disorders').prop('disabled', true);
         }
     });
-    
+
     // DataTable initialization
     $("table")
         .addClass("table table-hover")
@@ -360,7 +345,6 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
                     text: "Print",
                 },
             ],
-            //Adding server-side processing
             serverSide: true,
             search: {
                 return: true,
@@ -453,7 +437,6 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
                     },
                 },
             ],
-            // esto es para truncar el texto de las celdas
             columnDefs: [
                 {
                     targets: 1,
@@ -470,6 +453,74 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
             ],
         });
 });
+
+// Refrescar Select2 cuando el modal se muestra con configuración de posicionamiento
+ $('#modal-crear-elemento').on('shown.bs.modal', function() {
+    // Función para forzar actualización del dropdown position
+    function refreshSelect2Dropdown(selector) {
+        const $select = $(selector);
+        if ($select.hasClass('select2-hidden-accessible')) {
+            const select2Instance = $select.data('select2');
+            if (select2Instance) {
+                // Forzar actualización del dropdown
+                select2Instance._positionDropdown();
+                select2Instance._resizeDropdown();
+            }
+        }
+    }
+
+    // Refrescar todos los dropdowns
+    refreshSelect2Dropdown('#groups');
+    refreshSelect2Dropdown('#disease_group');
+    refreshSelect2Dropdown('#disease_subgroup');
+    refreshSelect2Dropdown('#disorders');
+
+    // Asegurar que los z-index sean correctos
+    $('.select2-dropdown').css('z-index', '99999');
+});
+
+// Agregar estilos CSS personalizados para Select2
+ $('<style>')
+    .prop('type', 'text/css')
+    .html(`
+        .select2-dropdown-custom {
+            z-index: 99999 !important;
+            position: fixed !important;
+            left: auto;
+        }
+        
+        .select2-container-custom {
+            width: auto !important;
+            left: auto !important;
+
+        }
+        
+        .select2-container--bootstrap4 .select2-selection {
+            min-height: 38px;
+        }
+        
+        .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+            line-height: 38px;
+           
+        }
+        
+        .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow {
+            height: auto;
+        }
+        
+        .select2-container--bootstrap4 .select2-selection--multiple {
+            min-height: 38px;
+        }
+        
+        .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered {
+            padding: 5px 12px;
+        }
+        
+        .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+            margin-top: 3px;
+        }
+    `)
+    .appendTo('head');
 
  $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
@@ -550,7 +601,7 @@ let edit_elemento = false;
 
         // Establecer las selecciones de disorders
         selectedDisorders = dataDisorders;
-        
+
         // Mostrar todos los disorders con las selecciones preexistentes
         updateDisordersSelector(allDisordersOptions, true);
         $('#disorders').prop('disabled', false);
@@ -566,10 +617,10 @@ let edit_elemento = false;
         modal.find(".modal-title").text("Create Gene");
         form.reset();
         edit_elemento = false;
-        
+
         // Resetear las selecciones de disorders
         selectedDisorders = [];
-        
+
         // Limpiar multiselects y resetear cascada
         $('#groups').val(null).trigger('change');
         resetCascade();

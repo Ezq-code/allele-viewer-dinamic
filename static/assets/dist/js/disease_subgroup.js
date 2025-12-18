@@ -7,31 +7,62 @@ const csrfToken = document.cookie
 const url = "/business-gestion/disease-subgroup/";
 var load = document.getElementById("load");
 
+// Variable para almacenar disease groups
+let diseaseGroupsOptions = [];
+
 // Función para cargar disease groups
 async function loadDiseaseGroups() {
     try {
         const response = await axios.get('/business-gestion/disease-group/');
-        const diseaseGroupsOptions = response.data.results;
+        diseaseGroupsOptions = response.data.results;
 
-        // Inicializar Select2 para disease groups
-        $('#disease_group').select2({
-            theme: 'bootstrap4',
-            data: diseaseGroupsOptions.map(group => ({
-                id: group.id,
-                text: group.name
-            })),
-            placeholder: 'Select a disease group'
+        // Limpiar y llenar el select
+        $('#disease_group').empty();
+        $('#disease_group').append('<option value="">Select a disease group</option>');
+
+        diseaseGroupsOptions.forEach(group => {
+            $('#disease_group').append(new Option(group.name, group.id, false, false));
         });
+
     } catch (error) {
         console.error('Error loading disease groups:', error);
     }
 }
 
+// Función para inicializar Select2 correctamente en modales
+function initializeSelect2(selector, options = {}) {
+    const $select = $(selector);
+
+    // Destruir si ya está inicializado
+    if ($select.hasClass('select2-hidden-accessible')) {
+        $select.select2('destroy');
+    }
+
+    // Configuración base
+    const baseConfig = {
+        theme: 'bootstrap4',
+        width: '100%',
+        allowClear: true,
+        placeholder: options.placeholder || 'Select an option',
+        dropdownParent: $('#modal-crear-elemento'), // CLAVE: Esto hace que funcione en modales
+        minimumResultsForSearch: 0 // Muestra siempre el buscador
+    };
+
+    // Fusionar configuraciones
+    const finalConfig = $.extend({}, baseConfig, options);
+
+    // Inicializar
+    return $select.select2(finalConfig);
+}
+
+
 $(document).ready(function () {
-    // Inicializar select2 para disease_group
+    // Inicializar select2 para disease_group (configuración básica)
     $('#disease_group').select2({
         theme: 'bootstrap4',
-        placeholder: 'Select a disease group'
+        placeholder: 'Select a disease group',
+        allowClear: true,
+        width: '100%'
     });
 
     // DataTable initialization
@@ -140,6 +171,28 @@ $(document).ready(function () {
         });
 });
 
+// ============ EVENTOS CLAVE PARA SELECT2 EN MODALES ============
+
+// Cuando el modal se muestra completamente
+$('#modal-crear-elemento').on('shown.bs.modal', function() {
+    // Re-inicializar Select2 con la configuración correcta para modales
+    $('#disease_group').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Select a disease group',
+        allowClear: true,
+        width: '100%',
+        dropdownParent: $('#modal-crear-elemento'), // CLAVE: Esto hace que funcione
+        minimumResultsForSearch: 0 // Muestra siempre el buscador
+    });
+
+});
+
+// Cuando el modal se cierra, limpiar eventos
+$('#modal-crear-elemento').on('hidden.bs.modal', function() {
+    $(window).off('resize.select2-fix');
+});
+
+
 $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var dataName = button.data("name"); // Extract info from data-* attributes
@@ -187,8 +240,16 @@ $("#modal-crear-elemento").on("show.bs.modal", async function (event) {
     var form = modal.find("form")[0];
 
     // Cargar opciones si es la primera vez
-    if ($('#disease_group').has('option').length <= 1) {
+    if (diseaseGroupsOptions.length === 0) {
         await loadDiseaseGroups();
+    } else {
+        // Si ya tenemos los datos, actualizar el select
+        $('#disease_group').empty();
+        $('#disease_group').append('<option value="">Select a disease group</option>');
+
+        diseaseGroupsOptions.forEach(group => {
+            $('#disease_group').append(new Option(group.name, group.id, false, false));
+        });
     }
 
     if (button.data("type") == "edit") {
