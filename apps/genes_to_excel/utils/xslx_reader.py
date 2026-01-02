@@ -17,7 +17,7 @@ class XslxReader(ExcelStructureValidator):
     def __init__(self, origin_file) -> None:
         super().__init__(origin_file)
 
-    def proccess_initial_file_data(self, uploaded_file_id, gene):
+    def proccess_file(self, uploaded_file_id, gene):
         print("Proccessing file data...")
         # data_for_batch_crate = []
         # for index, row in self.input_df.iterrows():

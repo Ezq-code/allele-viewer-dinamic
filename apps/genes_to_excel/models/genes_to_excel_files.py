@@ -80,7 +80,7 @@ class GenesToExcelFiles(models.Model):
                 processor_object = XslxReader(
                     file
                 )
-                processor_object.proccess_initial_file_data(self.id, self.gene)
+                processor_object.proccess_file(self.id, self.gene)
                    
             except Exception as e:
                 print(e)
