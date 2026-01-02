@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     "apps.users_app",
     "apps.common",
     "apps.business_app",
+    "apps.genes_to_excel",
     "apps.allele_formation",
     "debug_toolbar",
     "django_extensions",
