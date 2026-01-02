@@ -4,7 +4,8 @@ import logging
 
 import pandas as pd
 
-from apps.genes_to_excel.utils.excel_reader import ExcelNomenclators, ExcelStructureValidator
+from apps.genes_to_excel.utils.excel_nomenclators import ExcelNomenclators
+from apps.genes_to_excel.utils.excel_structure_validator import ExcelStructureValidator
 from django.db import transaction
 from apps.business_app.models.gene import Gene
 

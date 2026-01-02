@@ -3,34 +3,28 @@ import logging
 from django.contrib import admin
 from solo.admin import SingletonModelAdmin
 
-from apps.genes_to_excel.models import UploadedFiles
+from apps.genes_to_excel.models.genes_to_excel_files import GenesToExcelFiles
 
 
 logger = logging.getLogger(__name__)
 
 # Register your models here.
 
-admin.site.register(SiteConfiguration, SingletonModelAdmin)
-admin.site.register(Layer)
-
-
-
-
-@admin.register(UploadedFiles)
-class UploadedFilesAdmin(admin.ModelAdmin):
+@admin.register(GenesToExcelFiles)
+class GenesToExcelFilesAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
     list_display = [
         "id",
         "custom_name",
         "description",
-        "original_file",
+        "file",
         "gene",
         "system_user",
     ]
     fields = [
         "custom_name",
         "description",
-        "original_file",
+        "file",
         "gene",
         "system_user",
     ]
