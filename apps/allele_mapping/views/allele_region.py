@@ -20,5 +20,5 @@ class AlleleRegionViewSet(viewsets.ModelViewSet):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    search_fields = []
+    search_fields = ["location", "population"]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
