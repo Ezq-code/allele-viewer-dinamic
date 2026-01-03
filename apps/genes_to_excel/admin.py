@@ -1,7 +1,6 @@
 import logging
 
 from django.contrib import admin
-from solo.admin import SingletonModelAdmin
 
 from apps.genes_to_excel.models.genes_to_excel_files import GenesToExcelFiles
 

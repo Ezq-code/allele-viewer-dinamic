@@ -1,10 +1,6 @@
-from rest_framework import viewsets, generics, status, parsers, renderers
-from rest_framework.decorators import action
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
-from django.db import transaction
-from django.shortcuts import get_object_or_404
 from django.http import StreamingHttpResponse
 
 import json

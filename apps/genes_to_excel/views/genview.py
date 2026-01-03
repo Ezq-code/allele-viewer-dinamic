@@ -1,10 +1,7 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework import generics
-from django.db import transaction
-from django.shortcuts import get_object_or_404
 
 from apps.business_app.models.gene import Gene
 from apps.business_app.serializers.gene_serializer import GeneSerializer

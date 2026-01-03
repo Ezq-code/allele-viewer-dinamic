@@ -1,10 +1,7 @@
 import logging
-import sys
 import pandas as pd
 
-import itertools
 
-from apps.business_app.models.pdb_files import PdbFiles
 from apps.genes_to_excel.utils.excel_nomenclators import ExcelNomenclators
 
 logger = logging.getLogger(__name__)

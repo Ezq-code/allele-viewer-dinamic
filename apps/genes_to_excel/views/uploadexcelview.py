@@ -1,11 +1,8 @@
 import pandas as pd
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from rest_framework import parsers, renderers
-from django.db import transaction
-from django.shortcuts import get_object_or_404
 
 from ..serializers.uploadexcelserializer import UploadExcelSerializer
 from ..utils.xslx_reader import XslxReader

@@ -6,9 +6,7 @@ from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 from apps.business_app.models import AllowedExtensions
 from apps.business_app.models.gene import Gene
-from apps.business_app.models.initial_file_data import InitialFileData
 from apps.genes_to_excel.utils.xslx_reader import XslxReader
-from django.core.cache import cache
 
 
 def user_directory_path(instance, filename):
