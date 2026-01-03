@@ -1,22 +1,17 @@
-import os
-
-from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
 
+
 class AlleleInfo(models.Model):
-   
     allele = models.ForeignKey(
-        AlleleToMap,
-        on_delete=models.CASCADE,
-        related_name="allele_info")
+        AlleleToMap, on_delete=models.CASCADE, related_name="allele_info"
+    )
     population = models.CharField(
         verbose_name=_("population"),
         max_length=100,
     )
-    percent_of_indivicuals = models.FloatField(
+    percent_of_individuals = models.FloatField(
         verbose_name=_("percent of individuals"),
         null=True,
         blank=True,
@@ -51,6 +46,6 @@ class AlleleInfo(models.Model):
     class Meta:
         verbose_name = _("Allele info")
         verbose_name_plural = _("Alleles info")
-    
+
     def __str__(self):
         return f"{self.allele.name} ({self.allele.gene.name})"

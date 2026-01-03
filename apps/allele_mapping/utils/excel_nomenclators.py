@@ -4,13 +4,11 @@ logger = logging.getLogger(__name__)
 
 
 class ExcelNomenclators:
-    gene_column_name = "Gene"
-    coord_column_name = "Cord"
-    valor_column_name = "Valor"
-    color_column_name = "Color"
-    protein_column_name = "Protein"
-    alleleasoc_column_name = "Alleleasoc"
-    species_column_name = "Species"
-    variant_column_name = "Variant"
-
-    input_sheet = "HLA-A"
+    allele_column_name = "Allele"
+    percent_of_individuals_column_name = "% of individuals that have the allele"
+    allele_frequency_column_name = "Allele Frequency"
+    sample_size_column_name = "Sample Size"
+    location_column_name = "Location"
+    latitud_column_name = "Latitud"
+    population_column_name = "Population"
+    longitud_column_name = "Longitud"

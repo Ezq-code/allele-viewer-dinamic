@@ -2,7 +2,10 @@ import logging
 
 
 from apps.allele_mapping.utils.excel_structure_validator import ExcelStructureValidator
-
+from apps.business_app.models.gene import Gene
+from apps.allele_mapping.utils.excel_nomenclators import ExcelNomenclators
+from apps.allele_mapping.models.allele_to_map import AlleleToMap
+from apps.allele_mapping.models.allele_info import AlleleInfo
 
 logger = logging.getLogger(__name__)
 
@@ -11,14 +14,33 @@ class XslxReader(ExcelStructureValidator):
     def __init__(self, origin_file) -> None:
         super().__init__(origin_file)
 
-    def proccess_file(self, uploaded_file_id, gene):
+    def proccess_file(self, uploaded_file_id):
         print("Proccessing file data...")
-        # data_for_batch_crate = []
-        # for index, row in self.input_df.iterrows():
-        #     # aquí supongo que sea lo del get_or_create (recuerda que eso devuelve una tupla)
-        #     data_for_batch_create.append(Model(
-        #         gene=gene, OJO AQUÍ COMO SUBES UN FICHERO ASOCIADO AL GEN LO PASO Y NO HAY QUE LEERLO DEL EXCEL
-        #         field2=row[ExcelNomenclators.coord_column_name],
-        #         field3=row[ExcelNomenclators.valor_column_name],
-        #         field4=row[ExcelNomenclators.color_column_name],))
-        # Model.objects.bulk_create(data_for_batch_create)
+
+        for sheet_name, df in self.sheets_data.items():
+            gene = Gene.objects.get(name=sheet_name)
+            data_for_batch_create = []
+            for _, row in df.iterrows():
+                allele_name = row[ExcelNomenclators.allele_column_name]
+                allele, _ = AlleleToMap.objects.get_or_create(
+                    name=allele_name,
+                    defaults={"gene": gene, "file_id": uploaded_file_id},
+                )
+
+                data_for_batch_create.append(
+                    AlleleInfo(
+                        allele=allele,
+                        population=row[ExcelNomenclators.population_column_name],
+                        percent_of_individuals=row[
+                            ExcelNomenclators.percent_of_individuals_column_name
+                        ],
+                        allele_frequency=row[
+                            ExcelNomenclators.allele_frequency_column_name
+                        ],
+                        sample_size=row[ExcelNomenclators.sample_size_column_name],
+                        location=row[ExcelNomenclators.location_column_name],
+                        lat=row[ExcelNomenclators.latitud_column_name],
+                        lon=row[ExcelNomenclators.longitud_column_name],
+                    )
+                )
+            AlleleInfo.objects.bulk_create(data_for_batch_create)
