@@ -21,7 +21,7 @@ class GeneGroupsViewSet(
 
     # Usar el serializer diferente según la acción
     def get_serializer_class(self):
-        if self.action == 'minimal_list':
+        if self.action == "minimal_list":
             return GeneGroupMinimalSerializer
         return GeneGroupsSerializer
 

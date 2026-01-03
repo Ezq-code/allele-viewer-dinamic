@@ -1,7 +1,7 @@
 import logging
 
 
-from apps.genes_to_excel.utils.excel_structure_validator import ExcelStructureValidator
+from apps.allele_mapping.utils.excel_structure_validator import ExcelStructureValidator
 
 
 logger = logging.getLogger(__name__)

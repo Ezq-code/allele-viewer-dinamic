@@ -5,18 +5,17 @@ from django.db import models
 from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 from apps.business_app.models import AllowedExtensions
-from apps.business_app.models.gene import Gene
-from apps.genes_to_excel.utils.xslx_reader import XslxReader
+from apps.allele_mapping.utils.xslx_reader import XslxReader
 
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return f"user_{instance.system_user.id}/genes_to_excel_files/{filename}"
+    return f"user_{instance.system_user.id}/allele_mapping_files/{filename}"
 
 
 def user_processed_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return f"user_{instance.system_user.id}/genes_to_excel_processed_files/{filename}"
+    return f"user_{instance.system_user.id}/allele_mapping_processed_files/{filename}"
 
 
 @deconstructible
@@ -28,11 +27,7 @@ class FileExtensionValidator:
             raise ValidationError(f"File type '{ext}' is not supported.")
 
 
-class GenesToExcelFiles(models.Model):
-    custom_name = models.CharField(
-        verbose_name=_("custom name"),
-        max_length=150,
-    )
+class AlleleMappingFiles(models.Model):
     description = models.TextField(
         verbose_name=_("description"),
         max_length=150,
@@ -47,25 +42,17 @@ class GenesToExcelFiles(models.Model):
     system_user = models.ForeignKey(
         "users_app.SystemUser",
         on_delete=models.CASCADE,
-        related_name="genes_to_excel_files",
+        related_name="allele_mapping_files",
     )
-    gene = models.ForeignKey(
-        Gene,
-        on_delete=models.CASCADE,
-        null=True,
-        related_name="genes_to_excel_files",
-    )
+
     created_at = models.DateTimeField(
         verbose_name=_("created at"),
         auto_now_add=True,  # Set the field to now every time the object is first created
     )
 
     class Meta:
-        verbose_name = _("Genes to excel uploaded File")
-        verbose_name_plural = _("Genes to excel uploaded Files")
-
-    def __str__(self):
-        return f"{self.gene.name} - {self.custom_name}"
+        verbose_name = _("Allele mapping uploaded File")
+        verbose_name_plural = _("Allele mapping uploaded Files")
 
     def save(self, *args, **kwargs):
         file = self.file
@@ -76,7 +63,7 @@ class GenesToExcelFiles(models.Model):
         if is_new and file:
             try:
                 processor_object = XslxReader(file)
-                processor_object.proccess_file(self.id, self.gene)
+                processor_object.proccess_file(self.id)
 
             except Exception as e:
                 print(e)

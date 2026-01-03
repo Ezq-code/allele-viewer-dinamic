@@ -2,7 +2,7 @@ import logging
 
 from django.contrib import admin
 
-from apps.genes_to_excel.models.genes_to_excel_files import GenesToExcelFiles
+from apps.allele_mapping.models.allele_mapping_files import AlleleMappingFiles
 
 
 logger = logging.getLogger(__name__)
@@ -10,22 +10,18 @@ logger = logging.getLogger(__name__)
 # Register your models here.
 
 
-@admin.register(GenesToExcelFiles)
-class GenesToExcelFilesAdmin(admin.ModelAdmin):
+@admin.register(AlleleMappingFiles)
+class AlleleMappingFilesAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
     list_display = [
         "id",
-        "custom_name",
         "description",
         "file",
-        "gene",
         "system_user",
     ]
     fields = [
-        "custom_name",
         "description",
         "file",
-        "gene",
         "system_user",
     ]
 

@@ -2,7 +2,7 @@ import logging
 import pandas as pd
 
 
-from apps.genes_to_excel.utils.excel_nomenclators import ExcelNomenclators
+from apps.allele_mapping.utils.excel_nomenclators import ExcelNomenclators
 
 logger = logging.getLogger(__name__)
 

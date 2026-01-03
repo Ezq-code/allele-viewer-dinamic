@@ -30,7 +30,6 @@ class GeneViewSet(
             "gene_status_list__gene_status",
             "disorders__disease_subgroup__disease_group",
         )
-
     )
 
     def get_queryset(self):
@@ -62,9 +61,11 @@ class GeneViewSet(
     # Sobrescribir create y update para manejar relaciones M2M
     def perform_create(self, serializer):
         instance = serializer.save()
+        return instance
 
     def perform_update(self, serializer):
         instance = serializer.save()
+        return instance
 
     @action(
         detail=False,
