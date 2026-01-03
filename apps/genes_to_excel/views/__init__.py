@@ -1,3 +1,3 @@
-__all__ = ['UploadExcelView']
+__all__ = ["UploadExcelView"]
 
 from .uploaded_files import UploadedFilesViewSet

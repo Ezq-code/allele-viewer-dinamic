@@ -3,14 +3,23 @@ from ..models.gen_data import CaracteristicaGen
 
 
 class GenDataSerializer(serializers.ModelSerializer):
+    gen_nombre = serializers.CharField(source="gen.name", read_only=True)
 
-    gen_nombre = serializers.CharField(source='gen.name', read_only=True)
-    
     class Meta:
         model = CaracteristicaGen
         fields = [
-            'id', 'gen', 'name', 'archivo_origen', 
-            'gene', 'cord', 'valor', 'color', 'protein', 
-            'alleleasoc', 'variant', 'species', 'fecha_creacion'
+            "id",
+            "gen",
+            "name",
+            "archivo_origen",
+            "gene",
+            "cord",
+            "valor",
+            "color",
+            "protein",
+            "alleleasoc",
+            "variant",
+            "species",
+            "fecha_creacion",
         ]
-        read_only_fields = ['fecha_creacion', 'fecha_actualizacion']
+        read_only_fields = ["fecha_creacion", "fecha_actualizacion"]

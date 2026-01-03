@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 # Register your models here.
 
+
 @admin.register(GenesToExcelFiles)
 class GenesToExcelFilesAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
@@ -36,4 +37,3 @@ class GenesToExcelFilesAdmin(admin.ModelAdmin):
             logger.error(f"{str(e)}")
             # Display the exception in the admin interface
             self.message_user(request, f"{str(e)}", level="error")
-

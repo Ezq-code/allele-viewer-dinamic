@@ -91,9 +91,8 @@ urlpatterns = [
     path("markers/list", pages.markers_list, name="markers-list"),
     path("events-gallery/list", pages.event_gallery, name="events-gallery-list"),
     # Mis urls
-    path('genes_to_excel/', include('apps.genes_to_excel.urls')),
+    path("genes_to_excel/", include("apps.genes_to_excel.urls")),
 ]
-
 
 
 # This is for serving media on development stages

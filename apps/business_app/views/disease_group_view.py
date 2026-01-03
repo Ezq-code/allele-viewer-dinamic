@@ -7,7 +7,9 @@ from rest_framework.viewsets import GenericViewSet
 from apps.business_app.serializers.disease_group_serializer import (
     DiseaseGroupSerializer,
 )
-from apps.business_app.serializers.minimal_serializers import DiseaseGroupMinimalSerializer
+from apps.business_app.serializers.minimal_serializers import (
+    DiseaseGroupMinimalSerializer,
+)
 
 from apps.common.pagination import AllResultsSetPagination
 
@@ -27,7 +29,7 @@ class DiseaseGroupViewSet(
     )
 
     def get_serializer_class(self):
-        if self.action == 'minimal_list':
+        if self.action == "minimal_list":
             return DiseaseGroupMinimalSerializer
         return DiseaseGroupSerializer
 
@@ -54,4 +56,3 @@ class DiseaseGroupViewSet(
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-

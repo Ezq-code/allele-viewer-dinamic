@@ -30,7 +30,6 @@ class GeneViewSet(
             "gene_status_list__gene_status",
             "disorders__disease_subgroup__disease_group",
         )
-
     )
 
     def get_queryset(self):

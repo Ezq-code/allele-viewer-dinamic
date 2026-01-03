@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 class ExcelStructureValidator:
     def __init__(self, origin_file) -> None:
         self.origin_file = origin_file
-       
 
         self._output_mandatory_columns_for_validation = (
             ExcelNomenclators.gene_column_name,
@@ -21,7 +20,7 @@ class ExcelStructureValidator:
             ExcelNomenclators.valor_column_name,
             ExcelNomenclators.color_column_name,
         )
-       
+
         self.df = pd.read_excel(
             self.origin_file,
             sheet_name=ExcelNomenclators.input_sheet,

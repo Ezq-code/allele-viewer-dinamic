@@ -15,25 +15,25 @@ class GenListView(generics.ListAPIView):
     """
     View para listar todos los genes con su ID y nombre
     """
-    queryset = Gene.objects.all().order_by('id')
+
+    queryset = Gene.objects.all().order_by("id")
     serializer_class = GeneSerializer
-    
+
     def list(self, request, *args, **kwargs):
         # Opción 1: Si quieres el formato completo del serializer
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
-    
+
+
 class GenViewSet(viewsets.ModelViewSet):
     queryset = Gene.objects.all()
     serializer_class = GeneSerializer
-    
-    @action(detail=True, methods=['get'])
+
+    @action(detail=True, methods=["get"])
     def caracteristicas(self, request, pk=None):
         """Obtiene todas las características de un gen específico"""
         gen = self.get_object()
         caracteristicas = gen.caracteristicas.all()
         serializer = GenDataSerializer(caracteristicas, many=True)
         return Response(serializer.data)
-

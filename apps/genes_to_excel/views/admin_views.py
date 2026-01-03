@@ -10,34 +10,39 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class ClearAppDataView(APIView):
     """
-    View para limpiar datos solo de las tablas de Características 
+    View para limpiar datos solo de las tablas de Características
     """
-    #permission_classes = [IsAdminUser]
-    
+
+    # permission_classes = [IsAdminUser]
+
     def delete(self, request):
         try:
             with transaction.atomic():
                 # Eliminar en orden correcto (primero las dependencias)
                 count_caracteristicas = CaracteristicaGen.objects.count()
                 count_genes = Gene.objects.count()
-                
+
                 # Eliminar características primero (dependen de genes)
                 CaracteristicaGen.objects.all().delete()
-                                
-                return Response({
-                    'message': 'Datos eliminados exitosamente',
-                    'deleted': {
-                        'CaracteristicaGen': count_caracteristicas,
-                        'Gen': count_genes
+
+                return Response(
+                    {
+                        "message": "Datos eliminados exitosamente",
+                        "deleted": {
+                            "CaracteristicaGen": count_caracteristicas,
+                            "Gen": count_genes,
+                        },
+                        "total_deleted": count_caracteristicas + count_genes,
                     },
-                    'total_deleted': count_caracteristicas + count_genes
-                }, status=status.HTTP_200_OK)
-                
+                    status=status.HTTP_200_OK,
+                )
+
         except Exception as e:
             logger.error(f"Error al eliminar datos: {str(e)}")
-            return Response({
-                'error': 'Error al eliminar datos',
-                'detail': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": "Error al eliminar datos", "detail": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

@@ -74,19 +74,16 @@ class GenesToExcelFiles(models.Model):
         is_new = self.pk is None
         file_name, extension = os.path.splitext(file.name)
         super().save(*args, **kwargs)  # Call the "real" save() method.
-        
+
         if is_new and file:
             try:
-                processor_object = XslxReader(
-                    file
-                )
+                processor_object = XslxReader(file)
                 processor_object.proccess_file(self.id, self.gene)
-                   
+
             except Exception as e:
                 print(e)
                 self.delete()
                 raise e
-        
 
     def delete(self, *args, **kwargs):
         # Delete the physical file before deleting the record

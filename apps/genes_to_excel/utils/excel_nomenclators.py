@@ -4,7 +4,6 @@ logger = logging.getLogger(__name__)
 
 
 class ExcelNomenclators:
-
     gene_column_name = "Gene"
     coord_column_name = "Cord"
     valor_column_name = "Valor"
@@ -15,5 +14,3 @@ class ExcelNomenclators:
     variant_column_name = "Variant"
 
     input_sheet = "HLA-A"
-
-
