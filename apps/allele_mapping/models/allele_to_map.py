@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from apps.business_app.models.gene import Gene
+from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
+from apps.allele_mapping.models.allele_region import AlleleRegion
 
 
 class AlleleToMap(models.Model):
@@ -9,13 +11,16 @@ class AlleleToMap(models.Model):
         max_length=50,
     )
     file = models.ForeignKey(
-        to="allele_mapping.AlleleMappingFiles", on_delete=models.CASCADE, related_name="alleles"
+        to="allele_mapping.AlleleMappingFiles",
+        on_delete=models.CASCADE,
+        related_name="alleles",
     )
     gene = models.ForeignKey(
         Gene,
         on_delete=models.CASCADE,
         related_name="allele_mapping_files",
     )
+    regions = models.ManyToManyField(to=AlleleRegion, through=AlleleRegionInfo)
 
     class Meta:
         verbose_name = _("Allele to map")

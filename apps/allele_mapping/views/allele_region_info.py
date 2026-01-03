@@ -2,17 +2,19 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 
 from apps.common.views import CommonOrderingFilter
-from apps.allele_mapping.models.allele_info import AlleleInfo
-from apps.allele_mapping.serializers.allele_info import AlleleInfoSerializer
+from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
+from apps.allele_mapping.serializers.allele_region_info import (
+    AlleleRegionInfoSerializer,
+)
 
 
-class AlleleInfoViewSet(viewsets.ModelViewSet):
+class AlleleRegionInfoViewSet(viewsets.ModelViewSet):
     """
     ViewSet for AlleleInfo
     """
 
-    queryset = AlleleInfo.objects.all()
-    serializer_class = AlleleInfoSerializer
+    queryset = AlleleRegionInfo.objects.all()
+    serializer_class = AlleleRegionInfoSerializer
 
     ordering_fields = "__all__"
     filter_backends = [
@@ -20,9 +22,5 @@ class AlleleInfoViewSet(viewsets.ModelViewSet):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    search_fields = [
-        "population",
-        "allele__name",
-        "allele__gene__name",
-    ]
+    search_fields = []
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]

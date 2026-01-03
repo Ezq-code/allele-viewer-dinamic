@@ -4,7 +4,8 @@ from django.contrib import admin
 
 from apps.allele_mapping.models.allele_mapping_files import AlleleMappingFiles
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
-from apps.allele_mapping.models.allele_info import AlleleInfo
+from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
+from apps.allele_mapping.models.allele_region import AlleleRegion
 
 
 logger = logging.getLogger(__name__)
@@ -52,22 +53,38 @@ class AlleleToMapAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(AlleleInfo)
-class AlleleInfoAdmin(admin.ModelAdmin):
+@admin.register(AlleleRegionInfo)
+class AlleleRegionInfoAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
     list_display = [
         "id",
         "allele",
-        "population",
+        "region",
+        "percent_of_individuals",
         "allele_frequency",
         "sample_size",
     ]
     fields = [
         "allele",
-        "population",
-        "percent_of_indivicuals",
+        "region",
+        "percent_of_individuals",
         "allele_frequency",
         "sample_size",
+    ]
+
+
+@admin.register(AlleleRegion)
+class AlleleRegionAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "population",
+        "location",
+        "lat",
+        "lon",
+    ]
+    fields = [
+        "population",
         "location",
         "lat",
         "lon",
