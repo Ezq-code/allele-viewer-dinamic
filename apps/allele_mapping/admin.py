@@ -3,6 +3,8 @@ import logging
 from django.contrib import admin
 
 from apps.allele_mapping.models.allele_mapping_files import AlleleMappingFiles
+from apps.allele_mapping.models.allele_to_map import AlleleToMap
+from apps.allele_mapping.models.allele_info import AlleleInfo
 
 
 logger = logging.getLogger(__name__)
@@ -32,3 +34,41 @@ class AlleleMappingFilesAdmin(admin.ModelAdmin):
             logger.error(f"{str(e)}")
             # Display the exception in the admin interface
             self.message_user(request, f"{str(e)}", level="error")
+
+
+@admin.register(AlleleToMap)
+class AlleleToMapAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "file",
+        "gene",
+    ]
+    fields = [
+        "name",
+        "file",
+        "gene",
+    ]
+
+
+@admin.register(AlleleInfo)
+class AlleleInfoAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "allele",
+        "population",
+        "allele_frequency",
+        "sample_size",
+    ]
+    fields = [
+        "allele",
+        "population",
+        "percent_of_indivicuals",
+        "allele_frequency",
+        "sample_size",
+        "location",
+        "lat",
+        "lon",
+    ]
