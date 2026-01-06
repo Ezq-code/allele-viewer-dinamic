@@ -4,7 +4,9 @@ from apps.business_app.models.disorder import Disorder
 
 
 class DisorderSerializer(serializers.ModelSerializer):
-    disease_subgroup_name = serializers.CharField(source='disease_subgroup.name', read_only=True)
+    disease_subgroup_name = serializers.CharField(
+        source="disease_subgroup.name", read_only=True
+    )
 
     # CAMBIO: Para genes, devolver los IDs y nombres
     genes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
@@ -28,7 +30,9 @@ class DisorderSerializer(serializers.ModelSerializer):
 
 class DisorderTableSerializer(serializers.ModelSerializer):
     disease_subgroup = serializers.PrimaryKeyRelatedField(read_only=True)
-    disease_subgroup_name = serializers.CharField(source='disease_subgroup.name', read_only=True)
+    disease_subgroup_name = serializers.CharField(
+        source="disease_subgroup.name", read_only=True
+    )
     disease_group = serializers.CharField(
         source="disease_subgroup.disease_group.name", read_only=True
     )

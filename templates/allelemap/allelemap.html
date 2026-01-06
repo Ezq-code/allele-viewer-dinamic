@@ -1,0 +1,372 @@
+{% extends "index.html" %} {% load static %} {% block head-extra %}
+<link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/dist/css/load.css' %}" />
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/bs-stepper/css/bs-stepper.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/toastr/toastr.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/ion-rangeslider/css/ion.rangeSlider.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/bootstrap-slider/css/bootstrap-slider.min.css' %}"
+/>
+
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/jvectormap/jquery-jvectormap.min.css' %}"
+/>
+
+<script src="{% static 'assets/plugins/jvectormap/jquery-1.11.2.min.js' %}"></script>
+
+<script src="{% static 'assets/plugins/jvectormap/jquery-jvectormap.min.js' %}"></script>
+
+<script src="{% static 'assets/plugins/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+
+<script src="{% static 'assets/plugins/jvectormap/jvectormapAlleleColors.js' %}"></script>
+
+<script src="{% static 'assets/dist/js/3Dmol-min.js' %}"></script>
+<script src="{% static 'assets/dist/js/3Dmol.ui-min.js' %}"></script>
+
+
+{% endblock %} {% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header"></section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+
+          <div class="card col-12 row">
+            <div class="card-header">
+              <h3 class="card-title">Allele Map</h3>
+              <div class="card-tools">
+                {% comment %} {% endcomment %}
+              </div>
+            </div>
+
+            <div class="card-body" style= "padding-top: 0.70rem; padding-bottom: 0.70rem; padding-left: 2rem; padding-right: 2rem;">
+              <div class="right-sidebar d-flex">
+                <div id="map" style="width:1280px; height:590px; position:relative;"></div>
+                <div id="tooltipCustom"></div>
+              </div>
+              </div>
+          </div>
+        </div>
+      </div>     
+    </div>
+  </section>
+  </div>
+
+  <style>
+    #tooltipCustom {
+      position: absolute;
+      display: none;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid #666;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 13px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      pointer-events: none;
+      z-index: 999999;
+      color: black;
+    }
+
+    .pie-slice {
+      transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+
+    .pie-slice:hover {
+      transform: scale(1.12);
+      opacity: 0.9;
+    }
+
+  </style>
+  
+
+  <script>
+    jQuery(function($) {
+    //jQuery(document).ready(function() {
+    
+    function obtenerColorPorResto(numero) {
+    const colores = [
+        "#00DF00", // 0
+        "#DF0000", // 1
+        "#DFDF00", // 2
+        "#00DFDF", // 3
+        "#000088", // 4
+        "#880000", // 5
+        "#DF00DF", // 6
+        "#FFFF00", // 7
+        "#FFA500", // 8
+        "#A020F0"  // 9
+    ];
+    // Obtener el resto de la división por 10
+    const resto = Math.abs(numero) % 10;
+    // Retornar el color correspondiente
+    return colores[resto];
+}
+
+      const LOADER_DURATION = 10000;
+      // 1. Mostrar el loader en cuanto el DOM esté listo.
+      Swal.fire({
+        title: 'Updating TimeLine Data...',
+        html: 'Please wait a few seconds...',
+        timer: LOADER_DURATION,
+        timerProgressBar: true, // barra de progreso del tiempo
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+    var  geneId = "SLC2A4";
+    var mapPoints = [];  
+    let regionAllele = {};
+    let alleleInfo = {};
+      $.ajax({
+            type: 'GET',            
+            url: '/allele-mapping/alleles-region/by-gene/?gene_id=1',
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    title: "No se pudieron cargar los datos.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            },
+            dataType: 'json',
+            success: function (response) {
+                //var data = response.results;
+                var data = response;
+
+                data.forEach(function (region) {
+              
+                    regionAlele = {
+                        name: region.population,
+                        latLng: [region.lat, region.lon],
+                      pie: []
+                    };
+ 
+                    // Procesar cada marcador del evento
+                    region.alleles.forEach(function (allele) {                  
+                        alleleInfo = {
+                          color: obtenerColorPorResto(allele.id),
+                          label: allele.allele_name,
+                          value: allele.allele_frequency
+                        }
+
+                        regionAlele.pie.push(alleleInfo);
+                    });
+                    
+                    mapPoints.push(regionAlele);
+
+                });
+
+                // Si necesitas manejar el tiempo, puedes usar esto:
+                if (data.length > 0 && data[0].start_date) {
+                    // Configurar el control de tiempo si es necesario
+                    // timeDimension.setCurrentTime(new Date(data[0].start_date));
+                }
+            }
+        }); 
+          
+
+setTimeout(function () {
+
+  const $tooltip = $("#tooltipCustom");
+    
+  function createPieGroup(parts, name, index) {
+  const size = 50, cx = size / 2, cy = size / 2;
+  const pieRadius = 12;
+  const total = parts.reduce((sum, p) => sum + p.value, 0);
+
+  const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  group.dataset.index = index;
+  group.style.cursor = "pointer";
+
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  defs.innerHTML = `
+    <filter id="shadow-${index}" x="-20%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="1.5" dy="1.5" stdDeviation="1.2" flood-color="rgba(0,0,0,0.4)" />
+    </filter>`;
+  group.appendChild(defs);
+
+  let startAngle = -Math.PI / 2;
+
+  const sliceElements = []; // Guardar referencias de cada slice
+  parts.forEach((slice, sliceIndex) => {
+    const sliceAngle = (slice.value / total) * Math.PI * 2;
+    const endAngle = startAngle + sliceAngle;
+    const x1 = cx + pieRadius * Math.cos(startAngle);
+    const y1 = cy + pieRadius * Math.sin(startAngle);
+    const x2 = cx + pieRadius * Math.cos(endAngle);
+    const y2 = cy + pieRadius * Math.sin(endAngle);
+    const large = sliceAngle > Math.PI ? 1 : 0;
+    const d = `M${cx},${cy} L${x1},${y1} A${pieRadius},${pieRadius} 0 ${large},1 ${x2},${y2} Z`;
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", d);
+    path.setAttribute("fill", slice.color);
+    path.setAttribute("stroke", "rgba(255,255,255,0.9)");
+    path.setAttribute("stroke-width", "0.8");
+    path.setAttribute("filter", `url(#shadow-${index})`);
+    path.classList.add("pie-slice");
+    group.appendChild(path);
+
+    // Guardamos referencia con su label
+    sliceElements.push({ path, label: slice.label });
+    startAngle = endAngle;
+  });
+
+  // Tooltip dinámico
+  group.addEventListener("mouseenter", () => {
+    let html = `<b>${name}</b><br><ul id="tooltip-list" style="margin:0;padding-left:16px;">`;
+    parts.forEach(p => {
+      html += `<li data-label="${p.label}"><span style="display:inline-block;width:10px;height:10px;background:${p.color};margin-right:5px;"></span>${p.label}: ${p.value}%</li>`;
+    });
+    html += "</ul>";
+    $("#tooltipCustom").html(html).show();
+  });
+
+  group.addEventListener("mousemove", e => {
+    const mapOffset = $("#map").offset();
+    $("#tooltipCustom").css({
+      left: e.pageX - mapOffset.left + 10 + "px",
+      top: e.pageY - mapOffset.top + 70 + "px"
+    });
+  });
+
+  group.addEventListener("mouseleave", () => $("#tooltipCustom").hide());
+
+  // Eventos por slice (interacción individual)
+  sliceElements.forEach(({ path, label }) => {
+    path.addEventListener("mouseenter", () => {
+      $("#tooltipCustom li").css("font-weight", "normal").css("background", "transparent");
+      $(`#tooltipCustom li[data-label='${label}']`)
+        .css("font-weight", "bold")
+        .css("background", "rgba(0,0,0,0.05)");
+    });
+
+    path.addEventListener("mouseleave", () => {
+      $("#tooltipCustom li").css("font-weight", "normal").css("background", "transparent");
+    });
+  });
+
+  return group;
+}
+    
+      function addPieMarkers(map) {
+        const mapObj = $(map).vectorMap('get', 'mapObject');
+        const svgRoot = mapObj.canvas.node;
+        mapObj.pieMarkers = [];
+    
+        mapPoints.forEach((pt, i) => {
+          mapObj.addMarker(i, { latLng: pt.latLng, name: pt.name }, []);
+          const pieGroup = createPieGroup(pt.pie, pt.name, i);
+          svgRoot.appendChild(pieGroup);
+          mapObj.pieMarkers.push(pieGroup);
+        });
+    
+        reposition(map);
+      }
+    
+      function reposition(map) {
+        const mapObj = $(map).vectorMap('get', 'mapObject');
+        if (!mapObj.pieMarkers) return;
+    
+        const markers = mapObj.markers;
+        mapPoints.forEach((_, i) => {
+          const el = markers[i].element;
+          const cx = el.shape.node.getAttribute("cx");
+          const cy = el.shape.node.getAttribute("cy");
+          const g = mapObj.pieMarkers[i];
+          if (!g) return;
+          const x = parseFloat(cx) - 20;
+          const y = parseFloat(cy) - 20;
+          g.setAttribute("transform", `translate(${x},${y})`);
+        });
+      }
+    
+      // Inicializa el mapa
+      $('#map').vectorMap({
+      //$('#map').vectorMap({
+        map: 'world_mill_en',
+        backgroundColor: 'aliceblue',
+        //regioncolor: '#229922',
+        regionStyle: { initial: { fill: '#F2E0D4' } },
+        markers: mapPoints.map(p => ({ latLng: p.latLng, name: p.name })),
+        markerStyle: {
+          initial: { r: 8, fill: 'transparent', stroke: 'transparent' },
+          hover:   { fill: 'transparent' }
+        },
+        onViewportChange: () => reposition('#map')
+      });
+    
+      setTimeout(() => addPieMarkers('#map'), 300);
+
+    }, 10000);
+
+
+    });
+
+
+    </script>
+  
+            <!-- /.card-body -->
+
+
+{% endblock %} 
+{% block script %}
+<!-- DataTables & Plugins -->
+<script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+
+
+<script src="{% static 'assets/plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
+<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bs-stepper/js/bs-stepper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-slider/bootstrap-slider.min.js' %}"></script>
+<script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+
+{% comment %}  {% endcomment %}
+
+
+{% endblock %}
