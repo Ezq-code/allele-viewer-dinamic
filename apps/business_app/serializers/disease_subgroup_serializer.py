@@ -5,7 +5,9 @@ from apps.business_app.models.disease_subgroup import DiseaseSubGroup
 
 class DiseaseSubGroupSerializer(serializers.ModelSerializer):
     disorders = serializers.StringRelatedField(many=True, read_only=True)
-    disease_group_name = serializers.CharField(source='disease_group.name', read_only=True)
+    disease_group_name = serializers.CharField(
+        source="disease_group.name", read_only=True
+    )
 
     class Meta:
         model = DiseaseSubGroup

@@ -14,22 +14,22 @@ class GeneSerializer(serializers.ModelSerializer):
     gene_status_list = GeneStatusMiddleReadSerializer(many=True, read_only=True)
 
     # Campos de solo lectura para mostrar nombres
-    groups_names = serializers.StringRelatedField(many=True, source="groups", read_only=True)
-    disorders_names = serializers.StringRelatedField(many=True, source="disorders", read_only=True)
+    groups_names = serializers.StringRelatedField(
+        many=True, source="groups", read_only=True
+    )
+    disorders_names = serializers.StringRelatedField(
+        many=True, source="disorders", read_only=True
+    )
 
     disease_subgroups = serializers.SerializerMethodField()
     disease_groups = serializers.SerializerMethodField()
 
     # Campos para escritura (IDs)
     groups = serializers.PrimaryKeyRelatedField(
-        many=True,
-        queryset=GeneGroups.objects.all(),
-        required=False
+        many=True, queryset=GeneGroups.objects.all(), required=False
     )
     disorders = serializers.PrimaryKeyRelatedField(
-        many=True,
-        queryset=Disorder.objects.all(),
-        required=False
+        many=True, queryset=Disorder.objects.all(), required=False
     )
 
     class Meta:
@@ -53,7 +53,7 @@ class GeneSerializer(serializers.ModelSerializer):
         """Retorna lista de nombres únicos de subgrupos"""
         subgroups = set()
         for disorder in obj.disorders.all():
-            if hasattr(disorder, 'disease_subgroup') and disorder.disease_subgroup:
+            if hasattr(disorder, "disease_subgroup") and disorder.disease_subgroup:
                 subgroups.add(disorder.disease_subgroup.name)
         return list(subgroups)
 
@@ -61,9 +61,12 @@ class GeneSerializer(serializers.ModelSerializer):
         """Retorna lista de nombres únicos de grupos"""
         groups = set()
         for disorder in obj.disorders.all():
-            if (hasattr(disorder, 'disease_subgroup') and disorder.disease_subgroup and
-                    hasattr(disorder.disease_subgroup, 'disease_group') and
-                    disorder.disease_subgroup.disease_group):
+            if (
+                hasattr(disorder, "disease_subgroup")
+                and disorder.disease_subgroup
+                and hasattr(disorder.disease_subgroup, "disease_group")
+                and disorder.disease_subgroup.disease_group
+            ):
                 groups.add(disorder.disease_subgroup.disease_group.name)
         return list(groups)
 

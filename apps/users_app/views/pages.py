@@ -54,6 +54,7 @@ def gene(request):
 def disease_subgroup(request):
     return render(request, "grafico/disease_subgroup.html")
 
+
 @cache_page(60 * 15)
 def disease_group(request):
     return render(request, "grafico/disease_group.html")
@@ -62,7 +63,6 @@ def disease_group(request):
 @cache_page(60 * 15)
 def disorder(request):
     return render(request, "grafico/disorder.html")
-
 
 
 @cache_page(60 * 15)
@@ -75,6 +75,10 @@ def mapgeneral(request):
     events_types = EventType.objects.all()
     return render(request, "map/mapgeneral.html", {"events_types": events_types})
 
+@cache_page(60 * 15)
+def allelemap(request):
+    events_types = EventType.objects.all()
+    return render(request, "allelemap/allelemap.html", {"events_types": events_types})    
 
 @cache_page(60 * 15)
 def human_migrations(request):
