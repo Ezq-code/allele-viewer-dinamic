@@ -151,7 +151,8 @@
     let alleleInfo = {};
       $.ajax({
             type: 'GET',            
-            url: '/allele-mapping/alleles-region/by-gene/?gene_id=1',
+            url: '/allele-mapping/alleles-region/by-gene/?gene_name=HLA-A',
+
             error: function () {
                 Swal.fire({
                     icon: "error",
@@ -317,9 +318,13 @@ setTimeout(function () {
       $('#map').vectorMap({
       //$('#map').vectorMap({
         map: 'world_mill_en',
-        backgroundColor: 'aliceblue',
+
+        //backgroundColor: 'aliceblue',
+        backgroundColor: '#eff7ff', 
         //regioncolor: '#229922',
-        regionStyle: { initial: { fill: '#F2E0D4' } },
+        regionStyle: { initial: { fill: '#F3D1A2', stroke: '#d2a679'} },
+
+    
         markers: mapPoints.map(p => ({ latLng: p.latLng, name: p.name })),
         markerStyle: {
           initial: { r: 8, fill: 'transparent', stroke: 'transparent' },
