@@ -42,6 +42,7 @@ urlpatterns = [
     path("user-gestion/", include("apps.users_app.urls")),
     path("business-gestion/", include("apps.business_app.urls")),
     path("allele-formation/", include("apps.allele_formation.urls")),
+    path("allele-mapping/", include("apps.allele_mapping.urls")),
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
@@ -85,12 +86,16 @@ urlpatterns = [
     path("register/", pages.register, name="register"),
     path("index/", pages.index, name="index"),
     path("mapgeneral/", pages.mapgeneral, name="mapgeneral"),
+    path("allelemap/", pages.allelemap, name="allelemap"),
     path("event-type/list", pages.events_types, name="events-type"),
     path("events/list", pages.events, name="events-list"),
     path("features/list", pages.human_migrations, name="features"),
     path("markers/list", pages.markers_list, name="markers-list"),
     path("events-gallery/list", pages.event_gallery, name="events-gallery-list"),
+    # Mis urls
+    path("genes_to_excel/", include("apps.genes_to_excel.urls")),
 ]
+
 
 # This is for serving media on development stages
 if settings.DEBUG:

@@ -8,22 +8,22 @@ from apps.business_app.models.disease_subgroup import DiseaseSubGroup
 class GeneGroupMinimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = GeneGroups
-        fields = ['id', 'name']
+        fields = ["id", "name"]
 
 
 class DisorderMinimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Disorder
-        fields = ['id', 'name']
+        fields = ["id", "name"]
 
 
 class DiseaseGroupMinimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = DiseaseGroup
-        fields = ['id', 'name']
+        fields = ["id", "name"]
 
 
 class DiseaseSubGroupMinimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = DiseaseSubGroup
-        fields = ['id', 'name']
+        fields = ["id", "name"]
