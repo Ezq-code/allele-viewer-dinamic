@@ -7,6 +7,8 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework_extensions.mixins import NestedViewSetMixin
 from apps.common.pagination import AllResultsSetPagination
 from django.core.cache import cache
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.types import OpenApiTypes
 
 
 from rest_framework.response import Response
@@ -15,6 +17,16 @@ from apps.common.views import CommonOrderingFilter
 
 
 # Create your views here.
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="parent_lookup_uploaded_file",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.PATH,
+            description="ID of the uploaded file"
+        )
+    ]
+)
 class AlleleNodeViewSet(
     NestedViewSetMixin,
     mixins.RetrieveModelMixin,
