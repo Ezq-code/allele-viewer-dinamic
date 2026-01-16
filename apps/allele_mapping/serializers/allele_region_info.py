@@ -46,3 +46,4 @@ class AlleleRegionInfoWithRegionSerializer(serializers.ModelSerializer):
             'region_lat',
             'region_lon'
         ]
+        read_only_fields = ['id', 'allele_frequency', 'percent_of_individuals', 'sample_size']
