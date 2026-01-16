@@ -7,7 +7,8 @@ from django.views.decorators.cache import cache_page
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.allele_mapping.serializers.allele_region_info import (
-    AlleleRegionInfoSerializer, AlleleRegionInfoWithRegionSerializer,
+    AlleleRegionInfoSerializer,
+    AlleleRegionInfoWithRegionSerializer,
 )
 
 
@@ -16,9 +17,9 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
     ViewSet for AlleleInfo
     """
 
-    queryset = AlleleRegionInfo.objects.filter(percent_of_individuals__isnull=False, percent_of_individuals__gt=0).select_related(
-        'allele', 'allele__gene', 'region'
-    )
+    queryset = AlleleRegionInfo.objects.filter(
+        percent_of_individuals__isnull=False, percent_of_individuals__gt=0
+    ).select_related("allele", "allele__gene", "region")
     serializer_class = AlleleRegionInfoWithRegionSerializer
 
     ordering_fields = "__all__"
@@ -28,20 +29,19 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
         CommonOrderingFilter,
     ]
     search_fields = {
-        'region__population': ['icontains'],
-        'allele__name': ['icontains'],
-        'allele__gene__name': ['iexact'],
+        "region__population": ["icontains"],
+        "allele__name": ["icontains"],
+        "allele__gene__name": ["iexact"],
     }
     filterset_fields = {
-        'region': ['exact'],
-        'allele': ['exact'],
-        'allele__gene': ['exact'],
-        'sample_size': ['gte', 'lte'],
-        'allele_frequency': ['gte', 'lte'],
-        'percent_of_individuals': ['gte', 'lte'],
+        "region": ["exact"],
+        "allele": ["exact"],
+        "allele__gene": ["exact"],
+        "sample_size": ["gte", "lte"],
+        "allele_frequency": ["gte", "lte"],
+        "percent_of_individuals": ["gte", "lte"],
     }
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
 
     @method_decorator(cache_page(timeout=None))  # Cache por 15 minutos
     def list(self, request, *args, **kwargs):
@@ -51,7 +51,7 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
         return super().list(request, *args, **kwargs)
 
     @method_decorator(cache_page(60 * 15))  # Cache por 15 minutos
-    @action(detail=False, methods=['get'], url_path='by-region')
+    @action(detail=False, methods=["get"], url_path="by-region")
     def by_region(self, request):
         """
         Endpoint para obtener alelos de una región específica
@@ -59,21 +59,19 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
         - region_id (ID numérico) o population (nombre de población) - REQUERIDO
         - gene_id (ID del gen) o gene_name (nombre del gen) - OPCIONAL
         """
-        region_id = request.query_params.get('region_id')
-        population = request.query_params.get('population')
-        gene_id = request.query_params.get('gene_id')
-        gene_name = request.query_params.get('gene_name')
+        region_id = request.query_params.get("region_id")
+        population = request.query_params.get("population")
+        gene_id = request.query_params.get("gene_id")
+        gene_name = request.query_params.get("gene_name")
 
         if not region_id and not population:
             return Response(
-                {"error": "You must provide region_id or population"},
-                status=400
+                {"error": "You must provide region_id or population"}, status=400
             )
 
         queryset = AlleleRegionInfo.objects.filter(
-            allele_frequency__isnull=False,
-            allele_frequency__gt=0
-        ).select_related('allele', 'allele__gene', 'region')
+            allele_frequency__isnull=False, allele_frequency__gt=0
+        ).select_related("allele", "allele__gene", "region")
 
         # filtro de región según parámetro recibido
         if region_id:

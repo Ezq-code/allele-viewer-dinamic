@@ -18,6 +18,8 @@ class RegionSerializer(serializers.ModelSerializer):
         )
 
     def get_countries(self, obj) -> List[str]:
-        return list(RegionCountry.objects.filter(region=obj.id).values_list(
-            "country__code", flat=True
-        ))
+        return list(
+            RegionCountry.objects.filter(region=obj.id).values_list(
+                "country__code", flat=True
+            )
+        )

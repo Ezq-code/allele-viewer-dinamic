@@ -23,7 +23,7 @@ from apps.common.views import CommonOrderingFilter
             name="parent_lookup_uploaded_file",
             type=OpenApiTypes.INT,
             location=OpenApiParameter.PATH,
-            description="ID of the uploaded file"
+            description="ID of the uploaded file",
         )
     ]
 )
