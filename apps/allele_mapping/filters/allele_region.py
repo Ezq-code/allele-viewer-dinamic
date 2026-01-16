@@ -63,7 +63,7 @@ class AlleleRegionFilter(django_filters.FilterSet):
             Prefetch(
                 "alleles",
                 queryset=AlleleRegionInfo.objects.filter(
-                    allele_id__in=allele_list
+                    allele_id__in=allele_list, percent_of_individuals__isnull=False, percent_of_individuals__gt=0
                 ).select_related("allele", "allele__gene"),
                 to_attr="filtered_alleles",
             )
