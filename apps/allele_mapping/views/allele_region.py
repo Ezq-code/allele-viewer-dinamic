@@ -33,7 +33,7 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = AlleleRegionFilter
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    # @method_decorator(cache_page(timeout=None)) 
+    @method_decorator(cache_page(timeout=None))
     def list(self, request, *args, **kwargs):
         """
         Lista todos los AlleleRegion con filtros aplicados

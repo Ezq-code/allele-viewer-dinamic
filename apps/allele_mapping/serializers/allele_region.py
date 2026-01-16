@@ -12,7 +12,7 @@ class AlleleRegionSerializer(serializers.ModelSerializer):
 
 
 class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
-    alleles = AlleleRegionInfoDetailSerializer( many=True)
+    alleles = serializers.SerializerMethodField()
 
     class Meta:
         model = AlleleRegion
@@ -25,6 +25,16 @@ class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
             "lon",
             "alleles",
         ]
+
+    def get_alleles(self, obj):
+        # Usar filtered_alleles si existe (cuando se aplica filtro por gen)
+        if hasattr(obj, "filtered_alleles"):
+            allele_infos = obj.filtered_alleles
+        else:
+            # Caso por defecto: todos los alelos
+            allele_infos = obj.alleles.all()
+
+        return AlleleRegionInfoDetailSerializer(allele_infos, many=True).data
 
     # def get_alleles(self, obj):
     #     # Usar el to_attr 'filtered_alleles'
