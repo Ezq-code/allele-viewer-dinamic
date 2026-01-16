@@ -30,7 +30,7 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = {
         'region__population': ['icontains'],
         'allele__name': ['icontains'],
-        'allele__gene__name': ['icontains'],
+        'allele__gene__name': ['iexact'],
     }
     filterset_fields = {
         'region': ['exact'],
