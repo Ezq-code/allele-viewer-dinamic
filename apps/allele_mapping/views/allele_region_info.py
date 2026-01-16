@@ -11,13 +11,15 @@ from apps.allele_mapping.serializers.allele_region_info import (
 )
 
 
-class AlleleRegionInfoViewSet(viewsets.ModelViewSet):
+class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet for AlleleInfo
     """
 
-    queryset = AlleleRegionInfo.objects.all()
-    serializer_class = AlleleRegionInfoSerializer
+    queryset = AlleleRegionInfo.objects.filter(percent_of_individuals__isnull=False, percent_of_individuals__gt=0).select_related(
+        'allele', 'allele__gene', 'region'
+    )
+    serializer_class = AlleleRegionInfoWithRegionSerializer
 
     ordering_fields = "__all__"
     filter_backends = [
@@ -25,9 +27,28 @@ class AlleleRegionInfoViewSet(viewsets.ModelViewSet):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    search_fields = ["region__population", "allele__name"]
-    filterset_fields = ["region", "allele"]
+    search_fields = {
+        'region__population': ['icontains'],
+        'allele__name': ['icontains'],
+        'allele__gene__name': ['icontains'],
+    }
+    filterset_fields = {
+        'region': ['exact'],
+        'allele': ['exact'],
+        'allele__gene': ['exact'],
+        'sample_size': ['gte', 'lte'],
+        'allele_frequency': ['gte', 'lte'],
+        'percent_of_individuals': ['gte', 'lte'],
+    }
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+    @method_decorator(cache_page(timeout=None))  # Cache por 15 minutos
+    def list(self, request, *args, **kwargs):
+        """
+        Lista todos los AlleleRegionInfo con filtros aplicados
+        """
+        return super().list(request, *args, **kwargs)
 
     @method_decorator(cache_page(60 * 15))  # Cache por 15 minutos
     @action(detail=False, methods=['get'], url_path='by-region')
