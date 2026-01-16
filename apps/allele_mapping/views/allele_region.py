@@ -21,16 +21,7 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
     ViewSet for AlleleInfo
     """
 
-    queryset = AlleleRegion.objects.prefetch_related(
-        Prefetch(
-            "alleles",
-            queryset=AlleleRegionInfo.objects.filter(
-                percent_of_individuals__isnull=False,
-                percent_of_individuals__gt=0,
-            ).select_related("allele", "allele__gene"),
-            to_attr="filtered_alleles"  # Usado en el serializer
-        )
-    )
+    queryset = AlleleRegion.objects.prefetch_related("alleles", "alleles__allele__gene")
     serializer_class = AlleleRegionWithAllelesSerializer
     ordering_fields = "__all__"
     filter_backends = [

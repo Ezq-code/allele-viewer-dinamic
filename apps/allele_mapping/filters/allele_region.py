@@ -2,6 +2,8 @@ import django_filters
 from django.db.models import Q
 from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
+from apps.business_app.models.gene import Gene
+from apps.allele_mapping.models.allele_to_map import AlleleToMap
 
 
 class AlleleRegionFilter(django_filters.FilterSet):
@@ -30,8 +32,10 @@ class AlleleRegionFilter(django_filters.FilterSet):
             return queryset
         
         # Obtener los IDs de las regiones que tienen alelos del gen buscado
+        gene_list=Gene.objects.filter(name=value).values_list('id', flat=True)
+        allele_list = AlleleToMap.objects.filter(gene_id__in=gene_list).values_list('id', flat=True)
         region_ids = AlleleRegionInfo.objects.filter(
-            allele__gene__name=value
+            allele_id__in=allele_list
         ).values_list('region_id', flat=True).distinct()
         
         return queryset.filter(id__in=region_ids)
