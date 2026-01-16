@@ -11,6 +11,7 @@ from apps.allele_mapping.serializers.allele_region import (
     AlleleRegionSerializer,
     AlleleRegionWithAllelesSerializer,
 )
+from apps.allele_mapping.filters.allele_region import AlleleRegionFilter
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
@@ -26,8 +27,8 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
             queryset=AlleleRegionInfo.objects.filter(
                 percent_of_individuals__isnull=False,
                 percent_of_individuals__gt=0,
-                region_id=OuterRef("id"),
             ).select_related("allele", "allele__gene"),
+            to_attr="filtered_alleles"  # Usado en el serializer
         )
     )
     serializer_class = AlleleRegionWithAllelesSerializer
@@ -37,22 +38,11 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    search_fields = {
-        # "population": ["icontains"],
-        # "location": ["icontains"],
-        "alleles__allele__gene__name": ["iexact"],
-    }
-    filterset_fields = {
-        "id": ["exact", "in"],
-        "lat": ["gte", "lte"],
-        "lon": ["gte", "lte"],
-        "alleles__sample_size": ["gte", "lte"],
-        "alleles__allele_frequency": ["gte", "lte"],
-        "alleles__percent_of_individuals": ["gte", "lte"],
-    }
+    search_fields = ("alleles__allele__gene__name", "population", "location")
+    filterset_class = AlleleRegionFilter
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @method_decorator(cache_page(timeout=None)) 
+    # @method_decorator(cache_page(timeout=None)) 
     def list(self, request, *args, **kwargs):
         """
         Lista todos los AlleleRegion con filtros aplicados

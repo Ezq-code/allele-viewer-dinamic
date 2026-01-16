@@ -12,7 +12,7 @@ class AlleleRegionSerializer(serializers.ModelSerializer):
 
 
 class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
-    alleles = AlleleRegionInfoDetailSerializer(many=True)
+    alleles = AlleleRegionInfoDetailSerializer(source="filtered_alleles", many=True)
 
     class Meta:
         model = AlleleRegion
