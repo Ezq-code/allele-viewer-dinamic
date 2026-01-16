@@ -4,6 +4,7 @@ from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.business_app.models.gene import Gene
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
+from django.core.cache import cache
 
 
 class AlleleRegionFilter(django_filters.FilterSet):
@@ -34,16 +35,28 @@ class AlleleRegionFilter(django_filters.FilterSet):
         if not value:
             return queryset
 
-        # Obtener los IDs de genes, alelos y regiones que coinciden
-        gene_list = Gene.objects.filter(name=value).values_list("id", flat=True)
-        allele_list = AlleleToMap.objects.filter(gene_id__in=gene_list).values_list(
-            "id", flat=True
-        )
-        region_ids = (
-            AlleleRegionInfo.objects.filter(allele_id__in=allele_list)
-            .values_list("region_id", flat=True)
-            .distinct()
-        )
+        
+        # Generar clave de caché única
+        cache_key = f"gene_filter_{value}"
+        
+        # Intentar obtener del caché
+        cached_data = cache.get(cache_key)
+        
+        if cached_data:
+            region_ids = cached_data
+        else:
+            # Obtener los IDs de genes, alelos y regiones que coinciden
+            gene_list = list(Gene.objects.filter(name=value).values_list("id", flat=True))
+            allele_list = list(AlleleToMap.objects.filter(gene_id__in=gene_list).values_list(
+                "id", flat=True
+            ))
+            region_ids = list(
+                AlleleRegionInfo.objects.filter(allele_id__in=allele_list)
+                .values_list("region_id", flat=True)
+                .distinct()
+            )
+            
+            cache.set(cache_key, region_ids, None)
 
         # Aplicar Prefetch para filtrar también los alelos relacionados
         filtered_queryset = queryset.filter(id__in=region_ids).prefetch_related(
