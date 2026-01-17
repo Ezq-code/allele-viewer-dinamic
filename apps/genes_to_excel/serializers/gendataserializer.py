@@ -3,7 +3,7 @@ from ..models.gen_data import CaracteristicaGen
 
 
 class GenDataSerializer(serializers.ModelSerializer):
-    gen_nombre = serializers.CharField(source="gen.name", read_only=True)
+    name = serializers.CharField(source="gen.name", read_only=True)
 
     class Meta:
         model = CaracteristicaGen

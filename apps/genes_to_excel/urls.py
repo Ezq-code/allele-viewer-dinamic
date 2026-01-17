@@ -1,5 +1,6 @@
 # from rest_framework import routers
-from rest_framework_extensions.routers import ExtendedSimpleRouter
+#from rest_framework_extensions.routers import ExtendedSimpleRouter
+from rest_framework.routers import DefaultRouter
 from django.urls import path
 
 from apps.genes_to_excel.views import (
@@ -11,15 +12,13 @@ from apps.genes_to_excel.views import (
 )
 
 
+router = DefaultRouter() #ExtendedSimpleRouter()
 
-
-router = ExtendedSimpleRouter()
-
-uploaded_files_router = router.register(
-    "uploaded-files",
-    UploadedFilesViewSet,
-    basename="uploaded-files",
-)
+#uploaded_files_router = router.register(
+#    "uploaded-files",
+#    UploadedFilesViewSet,
+#    basename="uploaded-files",
+#)
 
 urlpatterns = []
 

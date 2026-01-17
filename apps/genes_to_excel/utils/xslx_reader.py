@@ -19,7 +19,9 @@ class XslxReader(ExcelStructureValidator):
     # def proccess_file(self, uploaded_file_id, gene):
     #    print("Proccessing file data...")
 
-    def proccess_file(self, df, nombre_archivo):
+    #@staticmethod
+    @staticmethod
+    def proccess_file(df, nombre_archivo):
         print("Proccessing file data...")
         resultados = {
             "genes_procesados": 0,
@@ -35,48 +37,51 @@ class XslxReader(ExcelStructureValidator):
                         continue
 
                     # Crear o obtener el gen
-                    gen, created = Gene.objects.get_or_create(nombre=gene_nombre)
+                    gen, gen_created = Gene.objects.get_or_create(name=gene_nombre)
 
-                    if created:
-                        print(f"{gene_nombre}")
+                    if gen_created:
+                        print(f"Nuevo gen: {gene_nombre}")
                         resultados["genes_procesados"] += 1
 
-                    # Crear la característica
-                    caracteristica = CaracteristicaGen(
+                    # Preparar datos para CaracteristicaGen
+                    defaults = {
+                        'archivo_origen': nombre_archivo,
+                        'gene': gene_nombre,
+                        'valor': str(row["Valor"]).strip() if pd.notna(row["Valor"]) else "",
+                        'color': str(row["Color"]).strip() if pd.notna(row["Color"]) else "",
+                        'protein': str(row["Protein"]).strip() if pd.notna(row["Protein"]) else "",
+                        'alleleasoc': str(row["Alleleasoc"]).strip() if pd.notna(row["Alleleasoc"]) else "",
+                        'species': str(row["Species"]).strip() if pd.notna(row["Species"]) else "",
+                        'variant': str(row["Variant"]).strip() if pd.notna(row["Variant"]) else "",
+                    }
+                    
+                    cord_valor = str(row["Cord"]).strip() if pd.notna(row["Cord"]) else ""
+                    
+                    # Usar get_or_create para evitar errores de unicidad
+                    caracteristica, creada = CaracteristicaGen.objects.get_or_create(
                         gen=gen,
-                        archivo_origen=nombre_archivo,
-                        gene=gene_nombre,
-                        cord=str(row["Cord"]).strip() if pd.notna(row["Cord"]) else "",
-                        valor=str(row["Valor"]).strip()
-                        if pd.notna(row["Valor"])
-                        else "",
-                        color=str(row["Color"]).strip()
-                        if pd.notna(row["Color"])
-                        else "",
-                        protein=str(row["Protein"]).strip()
-                        if pd.notna(row["Protein"])
-                        else "",
-                        alleleasoc=str(row["Alleleasoc"]).strip()
-                        if pd.notna(row["Alleleasoc"])
-                        else "",
-                        species=str(row["Species"]).strip()
-                        if pd.notna(row["Species"])
-                        else "",
-                        variant=str(row["Variant"]).strip()
-                        if pd.notna(row["Variant"])
-                        else "",
+                        cord=cord_valor,
+                        defaults=defaults
                     )
-                    print(f"Save.....{index}")
-                    caracteristica.save()
+                    
+                    if not creada:
+                        # Si ya existe, actualizar los campos
+                        for key, value in defaults.items():
+                            setattr(caracteristica, key, value)
+                        caracteristica.save()
+                        print(f"Actualizado.....{index}")
+                    else:
+                        print(f"Guardado.....{index}")
+                    
                     resultados["caracteristicas_guardadas"] += 1
 
                 except Exception as e:
-                    resultados["errores"].append(
-                        {
-                            "fila": index
-                            + 2,  # +2 porque Excel empieza en 1 y tiene encabezado
-                            "error": str(e),
-                        }
-                    )
+                    resultados["errores"].append({
+                        "fila": index + 2,
+                        "error": str(e),
+                        "gene": gene_nombre if 'gene_nombre' in locals() else "N/A"
+                    })
+                    # Continuar con la siguiente fila
+                    continue
 
         return resultados

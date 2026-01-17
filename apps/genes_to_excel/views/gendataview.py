@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import StreamingHttpResponse
+from rest_framework import permissions
 
 import json
 import time
@@ -15,6 +16,8 @@ class GetGenCharacteristicsView(APIView):
     View optimizada para obtener características de un gen
     Construye el JSON manualmente para mejor rendimiento
     """
+    serializer_class = None 
+    permission_classes = [permissions.AllowAny] 
 
     def get(self, request, gene_code):
         start_time = time.time()
@@ -22,7 +25,7 @@ class GetGenCharacteristicsView(APIView):
         try:
             # Buscar el gen (case-sensitive o case-insensitive según necesites)
             # Opción 1: Exact match (más rápido)
-            gen = Gene.objects.filter(nombre=gene_code).first()
+            gen = Gene.objects.filter(name=gene_code).first()
 
             # Opción 2: Si necesitas case-insensitive
             # gen = Gen.objects.filter(nombre__iexact=gene_code).first()
@@ -30,7 +33,7 @@ class GetGenCharacteristicsView(APIView):
             if not gen:
                 # Sugerir genes similares
                 similar_genes = Gene.objects.filter(
-                    nombre__icontains=gene_code
+                    name__icontains=gene_code
                 ).values_list("nombre", flat=True)[:5]
 
                 return Response(
@@ -66,7 +69,7 @@ class GetGenCharacteristicsView(APIView):
             data_list = list(caracteristicas)
 
             # Agregar el nombre del gen a cada registro
-            gen_nombre = gen.nombre
+            gen_nombre = gen.name
             for item in data_list:
                 item["gen_nombre"] = gen_nombre
 
@@ -94,11 +97,13 @@ class GetGenCharacteristicsStreamingView(APIView):
     """
     View que streamea los datos en formato JSON para evitar memory issues
     """
+    serializer_class = None 
+    permission_classes = [permissions.AllowAny] 
 
     def get(self, request, gene_code):
         try:
             # Buscar el gen
-            gen = Gene.objects.filter(nombre=gene_code).first()
+            gen = Gene.objects.filter(name=gene_code).first()
             if not gen:
                 return Response(
                     {"error": f"Gen '{gene_code}' no encontrado"},
@@ -140,7 +145,7 @@ class GetGenCharacteristicsStreamingView(APIView):
                         first = False
 
                     # Agregar nombre del gen
-                    item["gen_nombre"] = gen.nombre
+                    item["gen_nombre"] = gen.name
 
                     # Convertir a JSON
                     yield json.dumps(item, default=str)
@@ -163,16 +168,19 @@ class GetGenCharacteristicsStreamingView(APIView):
             )
 
 
+#Funciona
 class CoordinateValuesView(APIView):
     """
     View simplificada para obtener Valor, Color, Protein, Alleleasoc, Species
     de un gen específico en una coordenada específica.
     """
-
+    serializer_class = None 
+    permission_classes = [permissions.AllowAny] 
+    
     def get(self, request, gene_code, cord):
         try:
             # 1. Buscar el gen
-            gen = Gene.objects.get(nombre=gene_code)
+            gen = Gene.objects.get(name=gene_code)
 
             # 2. Buscar las características para ese gen y coordenada
             caracteristicas = CaracteristicaGen.objects.filter(gen=gen, cord=cord)

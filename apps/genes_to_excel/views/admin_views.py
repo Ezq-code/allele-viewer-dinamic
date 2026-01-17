@@ -6,6 +6,7 @@ from django.db import transaction
 from apps.business_app.models.gene import Gene
 from ..models.gen_data import CaracteristicaGen
 import logging
+from rest_framework import permissions
 
 logger = logging.getLogger(__name__)
 
@@ -14,8 +15,8 @@ class ClearAppDataView(APIView):
     """
     View para limpiar datos solo de las tablas de Características
     """
-
-    # permission_classes = [IsAdminUser]
+    serializer_class = None 
+    permission_classes = [permissions.AllowAny] 
 
     def delete(self, request):
         try:
