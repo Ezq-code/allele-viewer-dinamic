@@ -84,7 +84,7 @@
     "model": "business_app.gene",
     "pk": 10,
     "fields": {
-      "name": "HLAA",
+      "name": "HLA-A",
       "description": "",
       "status": 0
     }
@@ -93,7 +93,7 @@
     "model": "business_app.gene",
     "pk": 11,
     "fields": {
-      "name": "HLAB",
+      "name": "HLA-B",
       "description": "",
       "status": 0
     }
@@ -102,7 +102,7 @@
     "model": "business_app.gene",
     "pk": 12,
     "fields": {
-      "name": "HLAC",
+      "name": "HLA-C",
       "description": "",
       "status": 0
     }
@@ -111,7 +111,7 @@
     "model": "business_app.gene",
     "pk": 13,
     "fields": {
-      "name": "HLADRB1",
+      "name": "HLA-DRB1",
       "description": "",
       "status": 0
     }
@@ -120,7 +120,7 @@
     "model": "business_app.gene",
     "pk": 14,
     "fields": {
-      "name": "HLADRP1",
+      "name": "HLA-DRP1",
       "description": "",
       "status": 0
     }
@@ -129,7 +129,7 @@
     "model": "business_app.gene",
     "pk": 15,
     "fields": {
-      "name": "HLADRQ1",
+      "name": "HLA-DRQ1",
       "description": "",
       "status": 0
     }
@@ -20334,7 +20334,7 @@
     "model": "business_app.gene",
     "pk": 2263,
     "fields": {
-      "name": "HLAE",
+      "name": "HLA-E",
       "description": "",
       "status": 0
     }
@@ -20343,7 +20343,7 @@
     "model": "business_app.gene",
     "pk": 2264,
     "fields": {
-      "name": "HLAF",
+      "name": "HLA-F",
       "description": "",
       "status": 0
     }
@@ -20352,7 +20352,7 @@
     "model": "business_app.gene",
     "pk": 2265,
     "fields": {
-      "name": "HLAG",
+      "name": "HLA-G",
       "description": "",
       "status": 0
     }
@@ -20361,7 +20361,7 @@
     "model": "business_app.gene",
     "pk": 2266,
     "fields": {
-      "name": "HLADRB3",
+      "name": "HLA-DRB3",
       "description": "",
       "status": 0
     }
@@ -20370,7 +20370,7 @@
     "model": "business_app.gene",
     "pk": 2267,
     "fields": {
-      "name": "HLADRB5",
+      "name": "HLA-DRB5",
       "description": "",
       "status": 0
     }
@@ -20379,7 +20379,7 @@
     "model": "business_app.gene",
     "pk": 2268,
     "fields": {
-      "name": "HLADRA",
+      "name": "HLA-DRA",
       "description": "",
       "status": 0
     }
@@ -20388,7 +20388,7 @@
     "model": "business_app.gene",
     "pk": 2269,
     "fields": {
-      "name": "HLADQA1",
+      "name": "HLA-DQA1",
       "description": "",
       "status": 0
     }
@@ -20397,7 +20397,7 @@
     "model": "business_app.gene",
     "pk": 2270,
     "fields": {
-      "name": "HLADPA1",
+      "name": "HLA-DPA1",
       "description": "",
       "status": 0
     }
