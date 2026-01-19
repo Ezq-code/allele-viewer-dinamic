@@ -64,6 +64,35 @@
             <div class="card-header">
               <h3 class="card-title">Allele Map</h3>
               <div class="card-tools">
+                <div class="d-inline-block">                  
+                  <select class="form-control form-control-sm" name="sampleSize"
+                          id="sampleSize" style="width:210px;">
+                      <option value="10001-4000000">Sample Size: More Than 10001</option>
+                      <option value="1001-10000">Sample Size: 1001-10000</option>
+                      <option value="201-1000">Sample Size: 201-1000</option>
+                      <option value="101-200">Sample Size: 101-200</option>
+                      <option value="51-100">Sample Size: 51-100</option>
+                      <option value="1-50">Sample Size: 1-50</option>
+                  </select>
+                </div>                  
+                <div class="d-inline-block">
+                  <select class="form-control form-control-sm" name="genes"
+                          id="genes" style="width:140px;">
+                 <!--     <option value="HLA-A">HLA-A</option>
+                      <option value="HLA-B">HLA-B</option>
+                      <option value="HLA-C">HLA-C</option>
+                      <option value="HLA-DRB1">HLA-DRB1</option>
+                      <option value="HLA-DPB1">HLA-DPB1</option>
+                      <option value="HLA-DQB1">HLA-DQB1</option>
+                      <option value="HLA-DPA1">HLA-DPA1</option>
+                      <option value="HLA-DQA1">HLA-DQA1</option>  -->
+                  </select>
+              </div>
+
+              <div class="d-inline-block">
+                  <button class="btnok btn-primary btn-sm border-right" id="btreloadgene">Load
+                  </button>
+              </div>
                 {% comment %} {% endcomment %}
               </div>
             </div>
@@ -82,51 +111,145 @@
   </div>
 
   <style>
-    #tooltipCustom {
-      position: absolute;
-      display: none;
-      background: rgba(255,255,255,0.95);
-      border: 1px solid #666;
-      border-radius: 4px;
-      padding: 6px 8px;
-      font-size: 13px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      pointer-events: none;
-      z-index: 999999;
-      color: black;
-    }
+#tooltipCustom {
+  position: absolute;
+  display: none;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid #666;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  pointer-events: auto;
+  z-index: 999999;
+  color: black;
+  max-width: none;
+}
 
-    .pie-slice {
-      transition: transform 0.25s ease, opacity 0.2s ease;
-    }
+/* Contenedor principal: pastel izquierda, lista derecha */
+#tooltipCustom .tooltip-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
 
-    .pie-slice:hover {
-      transform: scale(1.12);
-      opacity: 0.9;
-    }
+/* Columna del pastel */
+#tooltipCustom .tooltip-pie {
+  flex: 0 0 auto;
+}
+
+/* Columna de las listas (una o varias columnas de 17) */
+#tooltipCustom .allele-columns {
+  display: flex;
+  gap: 16px;
+}
+
+#tooltipCustom .allele-col {
+  min-width: 120px;
+}
+
+#tooltipCustom .allele-col ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+#tooltipCustom .allele-col li {
+  list-style: none;
+}
+
+#tooltipCustom .allele-col li.highlighted {
+  font-weight: bold;
+  background: rgba(0,0,0,0.05);
+}
+
+
+#tooltipCustom .tooltip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+#tooltipCustom .tooltip-close {
+  cursor: pointer;
+  padding: 0 4px;
+  font-weight: bold;
+}
 
   </style>
   
 
   <script>
+
+    if (!sessionStorage.getItem('inicializado')) {
+      // Código que solo se ejecuta en la primera carga
+      sessionStorage.setItem('gene', 'HLA-A');
+      sessionStorage.setItem('minSampleSize', '10000');
+      sessionStorage.setItem('maxSampleSize', '4000000');
+      sessionStorage.setItem('inicializado', 'true');
+    }
+
+ function buildPieSVGForTooltip(parts) {
+  const size = 140;
+  const cx = size / 2;
+  const cy = size / 2;
+  const pieRadius = 45;
+  const total = parts.reduce((sum, p) => sum + p.value, 0);
+
+  let startAngle = -Math.PI / 2;
+  let paths = "";
+
+  parts.forEach((slice, idx) => {
+    const sliceAngle = (slice.value / total) * Math.PI * 2;
+    const endAngle = startAngle + sliceAngle;
+
+    const x1 = cx + pieRadius * Math.cos(startAngle);
+    const y1 = cy + pieRadius * Math.sin(startAngle);
+    const x2 = cx + pieRadius * Math.cos(endAngle);
+    const y2 = cy + pieRadius * Math.sin(endAngle);
+    const large = sliceAngle > Math.PI ? 1 : 0;
+    const d = `M${cx},${cy} L${x1},${y1} A${pieRadius},${pieRadius} 0 ${large},1 ${x2},${y2} Z`;
+
+    paths += `
+      <path class="pie-slice"
+            data-label="${slice.label}"
+            d="${d}"
+            fill="${slice.color}"
+            stroke="rgba(255,255,255,0.9)"
+            stroke-width="0.8"></path>`;
+    startAngle = endAngle;
+  });
+
+  return `
+    <svg class="pie-svg-tooltip" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      ${paths}
+    </svg>`;
+}
+
     jQuery(function($) {
     //jQuery(document).ready(function() {
     
     function obtenerColorPorResto(numero) {
     const colores = [
-        "#00DF00", // 0
-        "#DF0000", // 1
-        "#DFDF00", // 2
-        "#00DFDF", // 3
-        "#000088", // 4
-        "#880000", // 5
-        "#DF00DF", // 6
-        "#FFFF00", // 7
-        "#FFA500", // 8
-        "#A020F0"  // 9
+        "#FF0000", // 0
+        "#00FF00", // 1
+        "#0000FF", // 2
+        "#FFFF00", // 3
+        "#FF00FF", // 4
+        "#00FFFF", // 5
+        "#FFA500", // 6
+        "#A020F0", // 7
+        "#FF7F00", // 8
+        "#228B22", // 9
+        "#800080", // 10
+        "#40E0D0", // 11
+        "#DAA520", // 12
+        "#4B0082", // 13
+        "#FF6F61", // 14
+        "#98FF98" // 15
     ];
     // Obtener el resto de la división por 10
-    const resto = Math.abs(numero) % 10;
+    const resto = Math.abs(numero) % 16;
     // Retornar el color correspondiente
     return colores[resto];
 }
@@ -145,13 +268,40 @@
         }
       });
 
-    var  geneId = "SLC2A4";
+    var  gene_name =  sessionStorage.getItem('gene');
+    var  min_Sample_Size =  sessionStorage.getItem('minSampleSize');
+    var  max_Sample_Size =  sessionStorage.getItem('maxSampleSize');
+
+    $.ajax({
+            type: 'GET',
+            url: '/allele-mapping/alleles-to-map/genes/',            
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    title: "No se pudieron cargar los datos.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            },
+            dataType: 'json',
+            success: function (response) {
+                var data = response;
+                selectGenes = document.getElementById('genes');
+                data.forEach(function (genes) {
+                  var opt = document.createElement('option');
+                  opt.value = genes.name;
+                  opt.innerHTML = genes.name;
+                  selectGenes.appendChild(opt);
+                });
+            }
+        });
+
     var mapPoints = [];  
     let regionAllele = {};
     let alleleInfo = {};
       $.ajax({
             type: 'GET',
-            url: '/allele-mapping/alleles-region/by-gene/?gene_name=HLA-A&min_sample_size=10000&max_sample_size=4000000',            
+            url: '/allele-mapping/alleles-region/by-gene/?gene_name='+gene_name+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size,            
             //url: '/allele-mapping/alleles-region/by-gene/?gene_name=HLA-A',
             error: function () {
                 Swal.fire({
@@ -197,11 +347,18 @@
             }
         }); 
           
-
 setTimeout(function () {
 
   const $tooltip = $("#tooltipCustom");
-    
+  
+  function chunkArray(arr, size) {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
+
   function createPieGroup(parts, name, index) {
   const size = 50, cx = size / 2, cy = size / 2;
   const pieRadius = 12;
@@ -219,9 +376,7 @@ setTimeout(function () {
   group.appendChild(defs);
 
   let startAngle = -Math.PI / 2;
-
-  const sliceElements = []; // Guardar referencias de cada slice
-  parts.forEach((slice, sliceIndex) => {
+  parts.forEach(slice => {
     const sliceAngle = (slice.value / total) * Math.PI * 2;
     const endAngle = startAngle + sliceAngle;
     const x1 = cx + pieRadius * Math.cos(startAngle);
@@ -240,47 +395,83 @@ setTimeout(function () {
     path.classList.add("pie-slice");
     group.appendChild(path);
 
-    // Guardamos referencia con su label
-    sliceElements.push({ path, label: slice.label });
     startAngle = endAngle;
   });
 
-  // Tooltip dinámico
-  group.addEventListener("mouseenter", () => {
-    let html = `<b>${name}</b><br><ul id="tooltip-list" style="margin:0;padding-left:16px;">`;
-    parts.forEach(p => {
-      html += `<li data-label="${p.label}"><span style="display:inline-block;width:10px;height:10px;background:${p.color};margin-right:5px;"></span>${p.label}: ${p.value}%</li>`;
+  // IMPORTANTE: quitar tooltip por hover y usar solo click
+  // Quitar mouseenter/mousemove/mouseleave y usar solo click
+  group.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const $tooltip = $("#tooltipCustom");
+
+  const columns = chunkArray(parts, 17); // tu función para partir el array
+
+  let html = `
+    <div class="tooltip-header">
+      <b>${name}</b>
+      <span class="tooltip-close">&times;</span>
+    </div>
+    <div class="tooltip-body">
+      <div class="tooltip-pie">
+        ${buildPieSVGForTooltip(parts)}
+      </div>
+      <div class="allele-columns">
+  `;
+
+  columns.forEach(col => {
+    html += `<div class="allele-col"><ul>`;
+    col.forEach(p => {
+      html += `
+        <li data-label="${p.label}">
+          <span style="display:inline-block;width:10px;height:10px;background:${p.color};margin-right:5px;"></span>
+          ${p.label}: ${p.value.toFixed(4)}%
+        </li>`;
     });
-    html += "</ul>";
-    $("#tooltipCustom").html(html).show();
+    html += `</ul></div>`;
   });
 
-  group.addEventListener("mousemove", e => {
-    const mapOffset = $("#map").offset();
-    $("#tooltipCustom").css({
-      left: e.pageX - mapOffset.left + 10 + "px",
-      top: e.pageY - mapOffset.top + 70 + "px"
-    });
+  html += `
+      </div> <!-- cierre allele-columns -->
+    </div>   <!-- cierre tooltip-body -->
+  `;
+
+  $tooltip.html(html).show();
+
+  // Posicionamiento del tooltip (puedes dejar tu código actual)
+  const mapOffset = $("#map").offset();
+  const mapBox = document.getElementById("map").getBoundingClientRect();
+  const gBox = group.getBoundingClientRect();
+
+  const left = mapOffset.left + (gBox.left - mapBox.left);
+  const top  = mapOffset.top  + (gBox.top  - mapBox.top) - 5;
+
+  $tooltip.css({ left: left - 40 + "px", top: top - 60 + "px" });
+
+  // Cerrar con la X
+  $tooltip.find(".tooltip-close").on("click", function() {
+    $tooltip.hide();
   });
 
-  group.addEventListener("mouseleave", () => $("#tooltipCustom").hide());
-
-  // Eventos por slice (interacción individual)
-  sliceElements.forEach(({ path, label }) => {
-    path.addEventListener("mouseenter", () => {
-      $("#tooltipCustom li").css("font-weight", "normal").css("background", "transparent");
-      $(`#tooltipCustom li[data-label='${label}']`)
-        .css("font-weight", "bold")
-        .css("background", "rgba(0,0,0,0.05)");
-    });
-
-    path.addEventListener("mouseleave", () => {
-      $("#tooltipCustom li").css("font-weight", "normal").css("background", "transparent");
-    });
+  // Hover en cuñas del pastel DEL TOOLTIP para resaltar en la lista
+  const $svgTooltip = $tooltip.find('.pie-svg-tooltip');
+  $svgTooltip.find('.pie-slice').on('mouseenter', function() {
+    const label = $(this).data('label');
+    const $lis = $tooltip.find('.allele-col li');
+    $lis.removeClass('highlighted');
+    $lis.filter(`[data-label="${label}"]`).addClass('highlighted');
   });
-
+  $svgTooltip.find('.pie-slice').on('mouseleave', function() {
+    $tooltip.find('.allele-col li').removeClass('highlighted');
+  });
+});
   return group;
 }
+
+$(document).on('click', function(e) {
+  if (!$(e.target).closest('#tooltipCustom, #map').length) {
+    $("#tooltipCustom").hide();
+  }
+});
     
       function addPieMarkers(map) {
         const mapObj = $(map).vectorMap('get', 'mapObject');
@@ -334,14 +525,29 @@ setTimeout(function () {
 
     }, 14000);
 
-
     });
 
+    document.getElementById('btreloadgene').addEventListener('click', function() {   
 
-    </script>
-  
-            <!-- /.card-body -->
+        var aGene = document.getElementById("genes");
+        sessionStorage.setItem('gene', aGene.value);
 
+        var aSampleSize = document.getElementById("sampleSize");
+        var aPosition = aSampleSize.value.indexOf("-");
+        var aBegin = aSampleSize.value.substring(0,aPosition);
+        var anEnd = aSampleSize.value.substring(aPosition+1);
+
+        sessionStorage.setItem('minSampleSize', parseInt(aBegin));
+        sessionStorage.setItem('maxSampleSize', parseInt(anEnd));
+                                         
+        // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
+        setTimeout(function () {
+        location.reload()
+        }, 500);
+    });    
+
+    </script>  
+    <!-- /.card-body -->
 
 {% endblock %} 
 {% block script %}
@@ -352,7 +558,6 @@ setTimeout(function () {
 <script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
-
 
 <script src="{% static 'assets/plugins/pdfmake/vfs_fonts.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
@@ -369,6 +574,5 @@ setTimeout(function () {
 <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
 
 {% comment %}  {% endcomment %}
-
 
 {% endblock %}
