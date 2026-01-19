@@ -33,11 +33,11 @@ Thumbs.db
 *.sqlite3
 db.sqlite3
 
-# Media files - no copiar en build
+# Media files - no copiar en build (se genera en runtime)
 media/
 
-# Static files - no copiar en build
-static/
+# Static output - no copiar en build (se genera con collectstatic)
+staticfiles/
 static_output/
 
 # Logs
@@ -50,11 +50,7 @@ htmlcov/
 .pytest_cache/
 
 # Documentation - no necesaria en contenedor
-*.md
 docs/
-
-# Templates y assets - no necesarios para Celery
-templates/
 
 # Fixtures - no necesarios para Celery
 **/fixtures/

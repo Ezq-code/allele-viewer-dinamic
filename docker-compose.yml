@@ -1,5 +1,5 @@
-# Docker Compose para desarrollo con Celery
-# Configuración optimizada para desarrollo local
+# Docker Compose para producción con Nginx + Gunicorn + Celery
+# Configuración completa para despliegue
 
 services:
   # PostgreSQL - Base de datos
@@ -20,6 +20,8 @@ services:
       timeout: 3s
       retries: 5
     restart: unless-stopped
+    networks:
+      - app-network
 
   # Redis - Broker para Celery
   redis:
@@ -36,25 +38,25 @@ services:
       timeout: 3s
       retries: 5
     restart: unless-stopped
+    networks:
+      - app-network
 
-  # Celery Worker - Procesa tareas asíncronas
-  celery_worker:
-    container_name: allele_dinamic_celery_worker
+  # Django Web Application - Servida con Gunicorn
+  web:
+    container_name: allele_dinamic_web
     build:
       context: .
       dockerfile: Dockerfile
-    command: celery -A project_site worker --loglevel=info
     volumes:
-      # Montar código fuente para hot-reload en desarrollo
-      - ./project_site:/app/project_site
-      - ./apps:/app/apps
-      - ./manage.py:/app/manage.py
+      - static_volume:/app/static_output
+      - media_volume:/app/media
     environment:
       - DJANGO_SETTINGS_MODULE=project_site.settings
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=django-db
       - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG:-True}
+      - DEBUG=${DEBUG:-False}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
       - EMAIL_HOST_USER=${EMAIL_HOST_USER}
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
@@ -82,6 +84,72 @@ services:
       postgres:
         condition: service_healthy
     restart: unless-stopped
+    networks:
+      - app-network
+    expose:
+      - "8000"
+
+  # Nginx - Servidor web y proxy reverso
+  nginx:
+    container_name: allele_dinamic_nginx
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    volumes:
+      - static_volume:/app/static_output:ro
+      - media_volume:/app/media:ro
+    depends_on:
+      - web
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # Celery Worker - Procesa tareas asíncronas
+  celery_worker:
+    container_name: allele_dinamic_celery_worker
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A project_site worker --loglevel=info --concurrency=4
+    volumes:
+      - media_volume:/app/media
+    environment:
+      - DJANGO_SETTINGS_MODULE=project_site.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=django-db
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG:-False}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
+      - EMAIL_PORT=${EMAIL_PORT:-587}
+      - SESSION_EXPIRE_SECONDS=${SESSION_EXPIRE_SECONDS:-600}
+      - DB_REMOTE_ENGINE=django.db.backends.postgresql
+      - DB_REMOTE_NAME=${DB_REMOTE_NAME:-allele_viewer}
+      - DB_REMOTE_USER=${DB_REMOTE_USER:-postgres}
+      - DB_REMOTE_PASSWORD=${DB_REMOTE_PASSWORD:-postgres}
+      - DB_REMOTE_HOST=postgres
+      - DB_REMOTE_PORT=5432
+      - SPREADSHEET_ID=${SPREADSHEET_ID}
+      - CREDENTIAL_FILE_NAME=${CREDENTIAL_FILE_NAME:-google_sheet_auth_credentials.json}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - SENTRY_SAMPLE_RATE=${SENTRY_SAMPLE_RATE:-0.2}
+      - CACHE_DEFAULT_TIMEOUT=${CACHE_DEFAULT_TIMEOUT:-3600}
+      - STRIPE_PUBLIC_KEY=${STRIPE_PUBLIC_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - REDIS_PORT=6379
+      - CELERY_BASE_REDIS_URL=${CELERY_BASE_REDIS_URL:-redis://redis:}
+      - RUNNING_FROM=remote
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
 
   # Celery Beat - Scheduler para tareas periódicas
   celery_beat:
@@ -91,16 +159,13 @@ services:
       dockerfile: Dockerfile
     command: celery -A project_site beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
-      # Montar código fuente para hot-reload en desarrollo
-      - ./project_site:/app/project_site
-      - ./apps:/app/apps
-      - ./manage.py:/app/manage.py
+      - media_volume:/app/media
     environment:
       - DJANGO_SETTINGS_MODULE=project_site.settings
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=django-db
       - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG:-True}
+      - DEBUG=${DEBUG:-False}
       - EMAIL_HOST_USER=${EMAIL_HOST_USER}
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
@@ -128,7 +193,15 @@ services:
       postgres:
         condition: service_healthy
     restart: unless-stopped
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
   redis_data:
+  static_volume:
+  media_volume:
+
+networks:
+  app-network:
+    driver: bridge
