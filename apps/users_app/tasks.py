@@ -82,7 +82,7 @@ def example_periodic_task():
     Returns:
         str: Mensaje de confirmación
     """
-    logger.info("Ejecutando tarea periódica de ejemplo")
+    print("Ejecutando tarea periódica de ejemplo")
     # Aquí puedes agregar la lógica que necesites ejecutar periódicamente
     return "Tarea periódica ejecutada exitosamente"
 
