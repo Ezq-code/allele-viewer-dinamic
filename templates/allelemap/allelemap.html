@@ -131,10 +131,10 @@
     return colores[resto];
 }
 
-      const LOADER_DURATION = 10000;
+      const LOADER_DURATION = 18000;
       // 1. Mostrar el loader en cuanto el DOM esté listo.
       Swal.fire({
-        title: 'Updating TimeLine Data...',
+        title: 'Updating Allele Map Data...',
         html: 'Please wait a few seconds...',
         timer: LOADER_DURATION,
         timerProgressBar: true, // barra de progreso del tiempo
@@ -150,9 +150,9 @@
     let regionAllele = {};
     let alleleInfo = {};
       $.ajax({
-            type: 'GET',            
-            url: '/allele-mapping/alleles-region/by-gene/?gene_name=HLA-A',
-
+            type: 'GET',
+            url: '/allele-mapping/alleles-region/by-gene/?gene_name=HLA-A&min_sample_size=10000&max_sample_size=4000000',            
+            //url: '/allele-mapping/alleles-region/by-gene/?gene_name=HLA-A',
             error: function () {
                 Swal.fire({
                     icon: "error",
@@ -318,13 +318,10 @@ setTimeout(function () {
       $('#map').vectorMap({
       //$('#map').vectorMap({
         map: 'world_mill_en',
-
         //backgroundColor: 'aliceblue',
         backgroundColor: '#eff7ff', 
         //regioncolor: '#229922',
         regionStyle: { initial: { fill: '#F3D1A2', stroke: '#d2a679'} },
-
-    
         markers: mapPoints.map(p => ({ latLng: p.latLng, name: p.name })),
         markerStyle: {
           initial: { r: 8, fill: 'transparent', stroke: 'transparent' },
@@ -335,7 +332,7 @@ setTimeout(function () {
     
       setTimeout(() => addPieMarkers('#map'), 300);
 
-    }, 10000);
+    }, 14000);
 
 
     });
