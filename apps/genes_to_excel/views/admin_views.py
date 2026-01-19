@@ -15,8 +15,9 @@ class ClearAppDataView(APIView):
     """
     View para limpiar datos solo de las tablas de Características
     """
-    serializer_class = None 
-    permission_classes = [permissions.AllowAny] 
+
+    serializer_class = None
+    permission_classes = [permissions.AllowAny]
 
     def delete(self, request):
         try:

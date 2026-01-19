@@ -9,8 +9,8 @@ class AlleleToMapSerializer(serializers.ModelSerializer):
 
 
 class AlleleToMapDetailSerializer(serializers.ModelSerializer):
-    gene_name = serializers.CharField(source='gene.name', read_only=True)
+    gene_name = serializers.CharField(source="gene.name", read_only=True)
 
     class Meta:
         model = AlleleToMap
-        fields = ['id', 'name', 'gene_name']
+        fields = ["id", "name", "gene_name"]

@@ -16,8 +16,9 @@ class GetGenCharacteristicsView(APIView):
     View optimizada para obtener características de un gen
     Construye el JSON manualmente para mejor rendimiento
     """
-    serializer_class = None 
-    permission_classes = [permissions.AllowAny] 
+
+    serializer_class = None
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, gene_code):
         start_time = time.time()
@@ -97,8 +98,9 @@ class GetGenCharacteristicsStreamingView(APIView):
     """
     View que streamea los datos en formato JSON para evitar memory issues
     """
-    serializer_class = None 
-    permission_classes = [permissions.AllowAny] 
+
+    serializer_class = None
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, gene_code):
         try:
@@ -168,15 +170,16 @@ class GetGenCharacteristicsStreamingView(APIView):
             )
 
 
-#Funciona
+# Funciona
 class CoordinateValuesView(APIView):
     """
     View simplificada para obtener Valor, Color, Protein, Alleleasoc, Species
     de un gen específico en una coordenada específica.
     """
-    serializer_class = None 
-    permission_classes = [permissions.AllowAny] 
-    
+
+    serializer_class = None
+    permission_classes = [permissions.AllowAny]
+
     def get(self, request, gene_code, cord):
         try:
             # 1. Buscar el gen
