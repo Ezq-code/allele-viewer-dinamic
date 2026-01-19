@@ -1,7 +1,6 @@
 import pandas as pd
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView
 from rest_framework import parsers, renderers
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions
@@ -12,7 +11,6 @@ from ..utils.xslx_reader import XslxReader
 from rest_framework.views import APIView
 
 # Nuevo
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 
 
 # Decorador personalizado mejorado
