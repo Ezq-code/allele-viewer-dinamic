@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# Media files - no copiar en build
+media/
+
+# Static files - no copiar en build
+static/
+static_output/
+
+# Logs
+*.log
+registered_warnings_and_errors.log
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Documentation - no necesaria en contenedor
+*.md
+docs/
+
+# Templates y assets - no necesarios para Celery
+templates/
+
+# Fixtures - no necesarios para Celery
+**/fixtures/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Backup files
+*.bak
+*.patch
+mypatch.patch
+
+# Temporary files
+*.tmp
+temp/
+tmp/
+
+# Archivos de configuración de desarrollo
+google_sheet_auth_credentials.json
+test.txt
+
+# Deploy requirements (no necesario para imagen de desarrollo)
+deploy_requirements.txt

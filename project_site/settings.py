@@ -89,6 +89,8 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_spectacular_sidecar",  # required for Django collectstatic discovery
     "colorfield",
+    "django_celery_beat",
+    "django_celery_results",
 ]
 SPECTACULAR_SETTINGS = {
     "SWAGGER_UI_DIST": "SIDECAR",  # shorthand to use the sidecar instead
@@ -332,3 +334,18 @@ else:
     }
 
 CACHES = {"default": cache_backend}
+
+REDIS_PORT = env.int("REDIS_PORT", default=6379)
+CELERY_BASE_REDIS_URL = env.str("CELERY_BASE_REDIS_URL", default="redis://localhost:")
+CELERY_BROKER_REDIS_URL = CELERY_BASE_REDIS_URL + str(REDIS_PORT)
+CELERY_BROKER_URL = CELERY_BASE_REDIS_URL + str(REDIS_PORT) + "/0"
+CELERY_RESULT_BACKEND = "django-db"
+
+
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60

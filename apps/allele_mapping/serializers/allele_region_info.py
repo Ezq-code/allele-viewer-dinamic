@@ -9,16 +9,16 @@ class AlleleRegionInfoSerializer(serializers.ModelSerializer):
 
 
 class AlleleRegionInfoDetailSerializer(serializers.ModelSerializer):
-    allele_name = serializers.CharField(source='allele.name', read_only=True)
-    gene_name = serializers.CharField(source='allele.gene.name', read_only=True)
+    allele_name = serializers.CharField(source="allele.name", read_only=True)
+    gene_name = serializers.CharField(source="allele.gene.name", read_only=True)
 
     class Meta:
         model = AlleleRegionInfo
         fields = [
-            'id',
-            'allele_name',
-            'gene_name',
-            'allele_frequency',
-            'percent_of_individuals',
-            'sample_size'
+            "id",
+            "allele_name",
+            "gene_name",
+            "allele_frequency",
+            "percent_of_individuals",
+            "sample_size",
         ]

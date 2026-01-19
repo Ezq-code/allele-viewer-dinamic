@@ -14,7 +14,7 @@ class AlleleRegionInfoViewSet(viewsets.ModelViewSet):
     """
 
     queryset = AlleleRegionInfo.objects.all()
-    
+
     serializer_class = AlleleRegionInfoSerializer
 
     ordering_fields = "__all__"
@@ -24,5 +24,5 @@ class AlleleRegionInfoViewSet(viewsets.ModelViewSet):
         CommonOrderingFilter,
     ]
     search_fields = ["region__population", "allele__name"]
-    filterset_fields= ["region", "allele"]
+    filterset_fields = ["region", "allele"]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
