@@ -60,7 +60,6 @@ def excel_upload_schema():
 
 class UploadExcelView(APIView):
     throttle_classes = ()
-    permission_classes = ()
     parser_classes = (
         parsers.FormParser,
         parsers.MultiPartParser,
