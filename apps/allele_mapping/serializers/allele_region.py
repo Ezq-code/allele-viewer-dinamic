@@ -19,10 +19,15 @@ class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
         fields = ["id", "population", "location", "lat", "lon", "alleles"]
 
     def get_alleles(self, obj):
-        allele_infos = (
-            obj.alleles.filter(allele_frequency__isnull=False)
-            .exclude(allele_frequency=0)
-            .select_related("allele", "allele__gene")
-        )
+        # Usar el to_attr 'filtered_alleles'
+        if hasattr(obj, "filtered_alleles"):
+            allele_infos = obj.filtered_alleles
+        else:
+            # Fallback por si no se usó prefetch
+            allele_infos = (
+                obj.alleles.filter(allele_frequency__isnull=False)
+                .exclude(allele_frequency=0)
+                .select_related("allele", "allele__gene")
+            )
 
         return AlleleRegionInfoDetailSerializer(allele_infos, many=True).data

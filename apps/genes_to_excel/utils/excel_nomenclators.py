@@ -13,4 +13,4 @@ class ExcelNomenclators:
     species_column_name = "Species"
     variant_column_name = "Variant"
 
-    input_sheet = "HLA-A"
+    # input_sheet = "HLA-A"
