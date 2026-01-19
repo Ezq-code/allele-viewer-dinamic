@@ -293,6 +293,8 @@
                   opt.innerHTML = genes.name;
                   selectGenes.appendChild(opt);
                 });
+                var aGene = document.getElementById("genes");
+                aGene.value = sessionStorage.getItem('gene');   
             }
         });
 
