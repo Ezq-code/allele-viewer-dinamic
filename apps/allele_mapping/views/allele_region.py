@@ -35,7 +35,7 @@ class AlleleRegionViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="with-allele-info")
     def with_allele_info(self, request):
         """
-        Endpoint PAGINADO para todas las regiones con sus alelos
+        Endpoint para todas las regiones con sus alelos
         """
         # se agrega filtro por sample_size aquí si fuera necesario
         min_sample_size = request.query_params.get("min_sample_size")
@@ -69,11 +69,15 @@ class AlleleRegionViewSet(viewsets.ModelViewSet):
         # Prefetch relacionado
         regions = regions.prefetch_related(
             Prefetch(
-                "alleles",
-                queryset=AlleleRegionInfo.objects.filter(allele_frequency__isnull=False)
-                .exclude(allele_frequency=0)
-                .select_related("allele", "allele__gene"),
-                to_attr="filtered_alleles",
+
+                'alleles',
+                queryset=AlleleRegionInfo.objects.filter(
+                    allele_frequency__isnull=False
+                ).exclude(
+                    allele_frequency=0
+                ).select_related('allele', 'allele__gene').order_by('-allele_frequency'),
+                to_attr='filtered_alleles'
+
             )
         )
 
@@ -150,8 +154,10 @@ class AlleleRegionViewSet(viewsets.ModelViewSet):
                 "alleles",
                 queryset=AlleleRegionInfo.objects.filter(
                     allele_info_filter
-                ).select_related("allele", "allele__gene"),
-                to_attr="filtered_alleles",
+
+                ).select_related('allele', 'allele__gene').order_by('-allele_frequency'),
+                to_attr='filtered_alleles'
+
             )
         )
 

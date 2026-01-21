@@ -64,6 +64,6 @@ class AlleleRegionInfoViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(allele__gene_id=gene_id)
         elif gene_name:
             queryset = queryset.filter(allele__gene__name__icontains=gene_name)
-
+        queryset = queryset.order_by('-allele_frequency')
         serializer = AlleleRegionInfoWithRegionSerializer(queryset, many=True)
         return Response(serializer.data)
