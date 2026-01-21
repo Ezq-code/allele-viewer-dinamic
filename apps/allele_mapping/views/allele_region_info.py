@@ -7,7 +7,8 @@ from django.views.decorators.cache import cache_page
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.allele_mapping.serializers.allele_region_info import (
-    AlleleRegionInfoSerializer, AlleleRegionInfoWithRegionSerializer,
+    AlleleRegionInfoSerializer,
+    AlleleRegionInfoWithRegionSerializer,
 )
 
 
@@ -30,7 +31,7 @@ class AlleleRegionInfoViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @method_decorator(cache_page(60 * 15))  # Cache por 15 minutos
-    @action(detail=False, methods=['get'], url_path='by-region')
+    @action(detail=False, methods=["get"], url_path="by-region")
     def by_region(self, request):
         """
         Endpoint para obtener alelos de una región específica
@@ -38,21 +39,19 @@ class AlleleRegionInfoViewSet(viewsets.ModelViewSet):
         - region_id (ID numérico) o population (nombre de población) - REQUERIDO
         - gene_id (ID del gen) o gene_name (nombre del gen) - OPCIONAL
         """
-        region_id = request.query_params.get('region_id')
-        population = request.query_params.get('population')
-        gene_id = request.query_params.get('gene_id')
-        gene_name = request.query_params.get('gene_name')
+        region_id = request.query_params.get("region_id")
+        population = request.query_params.get("population")
+        gene_id = request.query_params.get("gene_id")
+        gene_name = request.query_params.get("gene_name")
 
         if not region_id and not population:
             return Response(
-                {"error": "You must provide region_id or population"},
-                status=400
+                {"error": "You must provide region_id or population"}, status=400
             )
 
         queryset = AlleleRegionInfo.objects.filter(
-            allele_frequency__isnull=False,
-            allele_frequency__gt=0
-        ).select_related('allele', 'allele__gene', 'region')
+            allele_frequency__isnull=False, allele_frequency__gt=0
+        ).select_related("allele", "allele__gene", "region")
 
         # filtro de región según parámetro recibido
         if region_id:

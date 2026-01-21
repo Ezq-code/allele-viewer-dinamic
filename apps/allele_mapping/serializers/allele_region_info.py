@@ -9,19 +9,21 @@ class AlleleRegionInfoSerializer(serializers.ModelSerializer):
 
 
 class AlleleRegionInfoDetailSerializer(serializers.ModelSerializer):
+
     allele_name = serializers.CharField(source='allele.name', read_only=True)
     gene_name = serializers.CharField(source='allele.gene.name', read_only=True)
     allele_frequency = serializers.SerializerMethodField()
 
+
     class Meta:
         model = AlleleRegionInfo
         fields = [
-            'id',
-            'allele_name',
-            'gene_name',
-            'allele_frequency',
-            'percent_of_individuals',
-            'sample_size'
+            "id",
+            "allele_name",
+            "gene_name",
+            "allele_frequency",
+            "percent_of_individuals",
+            "sample_size",
         ]
 
     def get_allele_frequency(self, obj):
@@ -32,6 +34,7 @@ class AlleleRegionInfoDetailSerializer(serializers.ModelSerializer):
 
 
 class AlleleRegionInfoWithRegionSerializer(serializers.ModelSerializer):
+
     allele_name = serializers.CharField(source='allele.name', read_only=True)
     gene_name = serializers.CharField(source='allele.gene.name', read_only=True)
     region_name = serializers.CharField(source='region.population', read_only=True)
@@ -40,9 +43,11 @@ class AlleleRegionInfoWithRegionSerializer(serializers.ModelSerializer):
     region_lon = serializers.FloatField(source='region.lon', read_only=True)
     allele_frequency = serializers.SerializerMethodField()
 
+
     class Meta:
         model = AlleleRegionInfo
         fields = [
+
             'id',
             'allele_name',
             'gene_name',
@@ -60,3 +65,4 @@ class AlleleRegionInfoWithRegionSerializer(serializers.ModelSerializer):
         if obj.allele_frequency is not None:
             return obj.allele_frequency * 100
         return None
+
