@@ -29,34 +29,35 @@
             border-radius: 20%;
             object-fit: cover;
         }
+
         /* static/css/event_gallery.css */
-.preview-item {
-    position: relative;
-    display: inline-block;
-    margin: 5px;
-    transition: all 0.3s ease;
-}
+        .preview-item {
+            position: relative;
+            display: inline-block;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
 
-.preview-item:hover {
-    transform: scale(1.05);
-}
+        .preview-item:hover {
+            transform: scale(1.05);
+        }
 
-.remove-image {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 2px 5px;
-    opacity: 0.7;
-    transition: opacity 0.3s;
-}
+        .remove-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 2px 5px;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
 
-.remove-image:hover {
-    opacity: 1;
-}
+        .remove-image:hover {
+            opacity: 1;
+        }
 
-.custom-file-label::after {
-    content: "Examinar";
-}
+        .custom-file-label::after {
+            content: "Examinar";
+        }
     </style>
 {% endblock %}
 
@@ -117,10 +118,8 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="event-type">Event Type:</label>
-                                                                <select class="form-control" id="event-type"
-                                                                        name="event_type"
-                                                                        required>
-                                                                    <!-- Aquí cargamos dinámicamente los tipos de eventos disponibles -->
+                                                                <select class="form-control select2" id="event-type"
+                                                                        name="event_type" required style="width: 100%;">
                                                                     {% for type in events_type %}
                                                                         <option value="{{ type.id }}">{{ type.name }}</option>
                                                                     {% endfor %}
@@ -292,6 +291,9 @@
                                                data-event-icon="
 
 
+                                                       
+                                                       
+                                                       
                                                        {% if event.event_icon and event.event_icon.file %}{{ event.event_icon.url }}{% else %}{{ event.event_type.icon.url }}{% endif %}"> <i
                                                     class="fa fa-edit"></i> </a>
 
@@ -322,10 +324,11 @@
                                                                        name="event_name" required>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="event-type">Event Type:</label>
-                                                                <select class="form-control" id="event-type"
-                                                                        name="event_type"
-                                                                        required>
+                                                                <label for="event-type-{{ event.id }}">Event
+                                                                    Type:</label>
+                                                                <select class="form-control select2"
+                                                                        id="event-type-{{ event.id }}" name="event_type"
+                                                                        required style="width: 100%;">
                                                                     {% for type in events_type %}
                                                                         <option value="{{ type.id }}">{{ type.name }}</option>
                                                                     {% endfor %}
@@ -409,9 +412,7 @@
                                             <!-- /.modal-dialog -->
                                         </div>
                                         <!-- End /.modal-Edit-Event -->
-
-
-
+                                        
                                     {% endfor %}
                                     <!-- Modal- Delete- Event -->
                                     <div class="modal fade" id="modal-delete-event">
@@ -494,10 +495,6 @@
     <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
     <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
     <script src="{% static 'assets/dist/js/crud_events/event.crud.js' %}"></script>
-    <script src="{% static 'assets/dist/js/crud_events/event-gallery.crud.js' %}"></script>
     <script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
-
     <!-- Page specific script -->
-
-
 {% endblock %}
