@@ -69,11 +69,15 @@ class AlleleRegionViewSet(viewsets.ModelViewSet):
         # Prefetch relacionado
         regions = regions.prefetch_related(
             Prefetch(
-                "alleles",
-                queryset=AlleleRegionInfo.objects.filter(allele_frequency__isnull=False)
-                .exclude(allele_frequency=0)
-                .select_related("allele", "allele__gene"),
-                to_attr="filtered_alleles",
+
+                'alleles',
+                queryset=AlleleRegionInfo.objects.filter(
+                    allele_frequency__isnull=False
+                ).exclude(
+                    allele_frequency=0
+                ).select_related('allele', 'allele__gene').order_by('-allele_frequency'),
+                to_attr='filtered_alleles'
+
             )
         )
 
@@ -150,8 +154,10 @@ class AlleleRegionViewSet(viewsets.ModelViewSet):
                 "alleles",
                 queryset=AlleleRegionInfo.objects.filter(
                     allele_info_filter
-                ).select_related("allele", "allele__gene"),
-                to_attr="filtered_alleles",
+
+                ).select_related('allele', 'allele__gene').order_by('-allele_frequency'),
+                to_attr='filtered_alleles'
+
             )
         )
 
