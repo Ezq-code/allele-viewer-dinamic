@@ -20,7 +20,7 @@ class ExcelStructureValidator:
 
         self.df = pd.read_excel(
             self.origin_file,
-            sheet_name=ExcelNomenclators.input_sheet,
+            # sheet_name=ExcelNomenclators.input_sheet,
             engine="openpyxl",
         )
         self._validate_sheet_file_structure()

@@ -23,6 +23,12 @@ class AlleleRegionInfoDetailSerializer(serializers.ModelSerializer):
             "sample_size",
         ]
 
+    def get_allele_frequency(self, obj):
+        # Multiplicar por 100 para convertir a porcentaje
+        if obj.allele_frequency is not None:
+            return obj.allele_frequency * 100
+        return None
+
 
 class AlleleRegionInfoWithRegionSerializer(serializers.ModelSerializer):
     allele_name = serializers.CharField(source="allele.name", read_only=True)

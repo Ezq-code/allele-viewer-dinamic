@@ -91,6 +91,7 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
 
     @method_decorator(cache_page(60 * 15))  # Cache por 15 minutos
     @action(detail=False, methods=["get"], url_path="by-gene")
+    @action(detail=False, methods=["get"], url_path="by-gene")
     def by_gene(self, request):
         """
         Endpoint con filtros:
@@ -102,13 +103,19 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
         gene_name = request.query_params.get("gene_name")
         min_sample_size = request.query_params.get("min_sample_size")
         max_sample_size = request.query_params.get("max_sample_size")
+        gene_id = request.query_params.get("gene_id")
+        gene_name = request.query_params.get("gene_name")
+        min_sample_size = request.query_params.get("min_sample_size")
+        max_sample_size = request.query_params.get("max_sample_size")
 
         if not gene_id and not gene_name:
             return Response(
                 {"error": "You must provide gene_id or gene_name"}, status=400
+                {"error": "You must provide gene_id or gene_name"}, status=400
             )
 
         # filtro base para allele_info
+        allele_info_filter = Q(allele_frequency__isnull=False, allele_frequency__gt=0)
         allele_info_filter = Q(allele_frequency__isnull=False, allele_frequency__gt=0)
 
         # filtro por gen
@@ -125,6 +132,7 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
             except ValueError:
                 return Response(
                     {"error": "min_sample_size must be an integer"}, status=400
+                    {"error": "min_sample_size must be an integer"}, status=400
                 )
         if max_sample_size:
             try:
@@ -133,6 +141,7 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
             except ValueError:
                 return Response(
                     {"error": "max_sample_size must be an integer"}, status=400
+                    {"error": "max_sample_size must be an integer"}, status=400
                 )
 
         # Validar que min no sea mayor que max
@@ -140,9 +149,15 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
             return Response(
                 {"error": "min_sample_size cannot be greater than max_sample_size"},
                 status=400,
+                status=400,
             )
 
         # Obtener solo los IDs de regiones que tienen al menos un alelo que cumple el filtro
+        region_ids = (
+            AlleleRegionInfo.objects.filter(allele_info_filter)
+            .values_list("region_id", flat=True)
+            .distinct()
+        )
         region_ids = (
             AlleleRegionInfo.objects.filter(allele_info_filter)
             .values_list("region_id", flat=True)

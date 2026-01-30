@@ -46,7 +46,8 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">{% blocktranslate %}Event-Gallery{% endblocktranslate %}</li>
+                            <li class="breadcrumb-item active">{% blocktranslate %}
+                                Event-Gallery{% endblocktranslate %}</li>
                         </ol>
                     </div>
                 </div>
@@ -93,12 +94,11 @@
                                                                        name="name" required>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="event">Event:</label>
-                                                                <select class="form-control" id="event" name="event"
-                                                                        required>
-                                                                    <!-- Aquí puedes cargar dinámicamente los marcadores disponibles -->
+                                                                <label for="event">Event Name:</label>
+                                                                <select class="form-control select2" id="event"
+                                                                        name="event" required style="width: 100%;">
                                                                     {% for event in event_all %}
-                                                                        <option value="{{ event.id }}">{{ event.id }}-{{ event.event_name}}</option>
+                                                                        <option value="{{ event.id }}">{{ event.id }}-{{ event.event_name }}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </div>
@@ -176,13 +176,16 @@
                                                         <form id="edit-gallery-form">
                                                             <div class="form-group">
                                                                 <label for="gallery-name">Image Name:</label>
-                                                                <input type="text" class="form-control" id="gallery-name"
+                                                                <input type="text" class="form-control"
+                                                                       id="gallery-name"
                                                                        name="gallery_name" required>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="gallery-event">Event Name:</label>
-                                                                <select class="form-control" id="gallery-event"
-                                                                        name="gallery_event">
+                                                                <label for="gallery-event-{{ gal.id }}">Event
+                                                                    Name:</label>
+                                                                <select class="form-control select2"
+                                                                        id="gallery-event-{{ gal.id }}"
+                                                                        name="gallery_event" style="width: 100%;">
                                                                     {% for event in event_all %}
                                                                         <option value="{{ event.id }}">{{ event.id }}-{{ event.event_name }}</option>
                                                                     {% endfor %}
@@ -195,7 +198,8 @@
                                                                 <img id="gallery-image-preview"
                                                                      class="form-control circular-icon-preview"
                                                                      alt="Image" src="">
-                                                                <input type="file" class="form-control" id="gallery-image"
+                                                                <input type="file" class="form-control"
+                                                                       id="gallery-image"
                                                                        name="gallery_image">
                                                             </div>
                                                         </form>

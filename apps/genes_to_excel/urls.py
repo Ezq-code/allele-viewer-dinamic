@@ -1,7 +1,10 @@
 # from rest_framework import routers
+
+# from rest_framework_extensions.routers import ExtendedSimpleRouter
+
 from rest_framework_extensions.routers import ExtendedSimpleRouter
 
-from apps.genes_to_excel.views import (
+from apps.genes_to_excel.views.uploaded_files import (
     UploadedFilesViewSet,
 )
 
