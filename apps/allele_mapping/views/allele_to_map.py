@@ -3,11 +3,7 @@ from rest_framework import filters, permissions, viewsets
 
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
-from apps.business_app.models.gene import Gene
 from apps.allele_mapping.serializers.allele_to_map import AlleleToMapSerializer
-
-from rest_framework.decorators import action
-from rest_framework.response import Response
 
 
 class AlleleToMapViewSet(viewsets.ModelViewSet):

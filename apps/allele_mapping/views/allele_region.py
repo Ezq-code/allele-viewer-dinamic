@@ -2,13 +2,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.db.models import Q, Prefetch, OuterRef
+from django.db.models import Q, Prefetch
 
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.allele_mapping.serializers.allele_region import (
-    AlleleRegionSerializer,
     AlleleRegionWithAllelesSerializer,
 )
 from apps.allele_mapping.filters.allele_region import AlleleRegionFilter

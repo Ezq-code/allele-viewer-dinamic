@@ -7,7 +7,6 @@ from django.views.decorators.cache import cache_page
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.allele_mapping.serializers.allele_region_info import (
-    AlleleRegionInfoSerializer,
     AlleleRegionInfoWithRegionSerializer,
 )
 
@@ -84,6 +83,6 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(allele__gene_id=gene_id)
         elif gene_name:
             queryset = queryset.filter(allele__gene__name__icontains=gene_name)
-        queryset = queryset.order_by('-allele_frequency')
+        queryset = queryset.order_by("-allele_frequency")
         serializer = AlleleRegionInfoWithRegionSerializer(queryset, many=True)
         return Response(serializer.data)

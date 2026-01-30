@@ -1,5 +1,5 @@
 import django_filters
-from django.db.models import Q, Prefetch
+from django.db.models import Prefetch
 from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.business_app.models.gene import Gene
@@ -35,27 +35,30 @@ class AlleleRegionFilter(django_filters.FilterSet):
         if not value:
             return queryset
 
-        
         # Generar clave de caché única
         cache_key = f"gene_filter_{value}"
-        
+
         # Intentar obtener del caché
         cached_data = cache.get(cache_key)
-        
+
         if cached_data:
             region_ids = cached_data
         else:
             # Obtener los IDs de genes, alelos y regiones que coinciden
-            gene_list = list(Gene.objects.filter(name=value).values_list("id", flat=True))
-            allele_list = list(AlleleToMap.objects.filter(gene_id__in=gene_list).values_list(
-                "id", flat=True
-            ))
+            gene_list = list(
+                Gene.objects.filter(name=value).values_list("id", flat=True)
+            )
+            allele_list = list(
+                AlleleToMap.objects.filter(gene_id__in=gene_list).values_list(
+                    "id", flat=True
+                )
+            )
             region_ids = list(
                 AlleleRegionInfo.objects.filter(allele_id__in=allele_list)
                 .values_list("region_id", flat=True)
                 .distinct()
             )
-            
+
             cache.set(cache_key, region_ids, None)
 
         # Aplicar Prefetch para filtrar también los alelos relacionados
@@ -63,7 +66,9 @@ class AlleleRegionFilter(django_filters.FilterSet):
             Prefetch(
                 "alleles",
                 queryset=AlleleRegionInfo.objects.filter(
-                    allele_id__in=allele_list, percent_of_individuals__isnull=False, percent_of_individuals__gt=0
+                    allele_id__in=allele_list,
+                    percent_of_individuals__isnull=False,
+                    percent_of_individuals__gt=0,
                 ).select_related("allele", "allele__gene"),
                 to_attr="filtered_alleles",
             )

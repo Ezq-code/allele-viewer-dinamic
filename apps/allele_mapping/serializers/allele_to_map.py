@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
-from apps.business_app.models.gene import Gene
 
 
 class AlleleToMapSerializer(serializers.ModelSerializer):
