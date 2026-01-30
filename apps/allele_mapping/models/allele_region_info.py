@@ -15,16 +15,19 @@ class AlleleRegionInfo(models.Model):
         verbose_name=_("percent of individuals"),
         null=True,
         blank=True,
+        db_index=True,
     )
     allele_frequency = models.FloatField(
         verbose_name=_("allele frequency"),
         null=True,
         blank=True,
+        db_index=True,
     )
     sample_size = models.IntegerField(
         verbose_name=_("sample size"),
         null=True,
         blank=True,
+        db_index=True,
     )
 
     class Meta:

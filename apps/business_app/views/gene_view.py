@@ -10,6 +10,7 @@ from apps.business_app.serializers.gene_serializer import (
 from apps.common.pagination import AllResultsSetPagination
 from rest_framework.decorators import action
 from django.db.models import Exists, OuterRef
+from ..filters.gene_filter import GeneFilter
 
 
 from apps.common.views import CommonOrderingFilter
@@ -29,6 +30,7 @@ class GeneViewSet(
             "disorders",
             "gene_status_list__gene_status",
             "disorders__disease_subgroup__disease_group",
+            "allele_mapping_files__file",
         )
     )
 
@@ -55,7 +57,7 @@ class GeneViewSet(
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    filterset_fields = ("status", "groups", "disorders")
+    filterset_class = GeneFilter
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     # Sobrescribir create y update para manejar relaciones M2M

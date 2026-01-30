@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Gene(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, db_index=True,)
     description = models.TextField(null=True, blank=True)
     status = models.SmallIntegerField(default=0)
 
