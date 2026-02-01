@@ -8,7 +8,7 @@ from apps.business_app.models.uploaded_files import UploadedFiles
 from apps.business_app.serializers.gene_serializer import (
     GeneGetAllInfoSerializer,
     GeneSerializer,
-    GeneSimpleSerializer
+    GeneSimpleSerializer,
 )
 from apps.common.pagination import AllResultsSetPagination
 from rest_framework.decorators import action
@@ -122,29 +122,24 @@ class GeneViewSet(
         Endpoint para obtener los grupos alélicos únicos de un gen específico
         Parámetros: gene_name (REQUERIDO)
         """
-        gene_name = request.query_params.get('gene_name')
+        gene_name = request.query_params.get("gene_name")
 
         if not gene_name:
-            return Response(
-                {"error": "You must provide gene_name"},
-                status=400
-            )
+            return Response({"error": "You must provide gene_name"}, status=400)
 
         # Filtrar alelos del gen especificado
-        alleles = AlleleToMap.objects.filter(
-            gene__isnull=False
-        )
+        alleles = AlleleToMap.objects.filter(gene__isnull=False)
 
         if gene_name:
             alleles = alleles.filter(gene__name__icontains=gene_name)
 
         # Obtener nombres únicos de alelos
-        allele_names = alleles.values_list('name', flat=True).distinct()
+        allele_names = alleles.values_list("name", flat=True).distinct()
 
         # Extraer grupos alélicos usando regex
         # Ejemplo: de "A*01:01" extraemos "A*01"
         allelic_groups = set()
-        pattern = r'^([A-Za-z\*]+[\d]+[\w]*)'  # Capturar hasta el primer ':'
+        pattern = r"^([A-Za-z\*]+[\d]+[\w]*)"  # Capturar hasta el primer ':'
 
         for allele_name in allele_names:
             match = re.match(pattern, allele_name)
@@ -156,7 +151,4 @@ class GeneViewSet(
         # Convertir a lista ordenada
         sorted_groups = sorted(list(allelic_groups))
 
-        return Response({
-            "gene_name": gene_name,
-            "allelic_groups": sorted_groups
-        })
+        return Response({"gene_name": gene_name, "allelic_groups": sorted_groups})

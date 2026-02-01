@@ -19,6 +19,7 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet for AlleleInfo
     """
+
     pagination_class = AllResultsSetPagination
     queryset = AlleleRegion.objects.prefetch_related("alleles", "alleles__allele__gene")
     serializer_class = AlleleRegionWithAllelesSerializer
@@ -89,7 +90,7 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
     #     return Response(serializer.data)
 
     @method_decorator(cache_page(timeout=None))
-    @action(detail=False, methods=['get'], url_path='by-gene')
+    @action(detail=False, methods=["get"], url_path="by-gene")
     def by_gene(self, request):
         """
         Endpoint optimizado con filtros:
@@ -99,29 +100,23 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
         """
         # gene_id = request.query_params.get('gene_id')
         # gene_name = request.query_params.get('gene_name')
-        allelic_group = request.query_params.get('allelic_group')
-        min_sample_size = request.query_params.get('min_sample_size')
-        max_sample_size = request.query_params.get('max_sample_size')
+        allelic_group = request.query_params.get("allelic_group")
+        min_sample_size = request.query_params.get("min_sample_size")
+        max_sample_size = request.query_params.get("max_sample_size")
 
         if not allelic_group:
-            return Response(
-                {"error": "You must provide allelic_group"},
-                status=400
-            )
+            return Response({"error": "You must provide allelic_group"}, status=400)
 
         # Construir el filtro base para allele_info
-        allele_info_filter = Q(
-            allele_frequency__isnull=False,
-            allele_frequency__gt=0
-        )
+        allele_info_filter = Q(allele_frequency__isnull=False, allele_frequency__gt=0)
 
         # Agregar filtro por grupo alélico si se proporciona
         if allelic_group:
             # Asegurarnos de que el grupo alélico tenga el formato correcto
             # Puede venir como "A*01" o "A*01:*" - normalizamos
-            if ':' not in allelic_group:
+            if ":" not in allelic_group:
                 # Si no tiene ":", buscamos alelos que comiencen con ese grupo
-                allele_info_filter &= Q(allele__name__startswith=allelic_group + ':')
+                allele_info_filter &= Q(allele__name__startswith=allelic_group + ":")
             else:
                 # Si ya tiene ":", buscamos exactamente ese grupo
                 allele_info_filter &= Q(allele__name__startswith=allelic_group)
@@ -133,8 +128,7 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
                 allele_info_filter &= Q(sample_size__gte=min_sample_size)
             except ValueError:
                 return Response(
-                    {"error": "min_sample_size must be an integer"},
-                    status=400
+                    {"error": "min_sample_size must be an integer"}, status=400
                 )
         if max_sample_size:
             try:
@@ -142,21 +136,22 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
                 allele_info_filter &= Q(sample_size__lte=max_sample_size)
             except ValueError:
                 return Response(
-                    {"error": "max_sample_size must be an integer"},
-                    status=400
+                    {"error": "max_sample_size must be an integer"}, status=400
                 )
 
         # Validar que min no sea mayor que max
         if min_sample_size and max_sample_size and min_sample_size > max_sample_size:
             return Response(
                 {"error": "min_sample_size cannot be greater than max_sample_size"},
-                status=400
+                status=400,
             )
 
         # Obtener solo los IDs de regiones que tienen al menos un alelo que cumple el filtro
-        region_ids = AlleleRegionInfo.objects.filter(
-            allele_info_filter
-        ).values_list('region_id', flat=True).distinct()
+        region_ids = (
+            AlleleRegionInfo.objects.filter(allele_info_filter)
+            .values_list("region_id", flat=True)
+            .distinct()
+        )
 
         # Si no hay regiones que cumplan, devolver vacío inmediatamente
         if not region_ids:
@@ -165,12 +160,11 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
         # Obtener las regiones con prefetch, aplicando el mismo filtro a los alelos
         regions = AlleleRegion.objects.filter(id__in=region_ids).prefetch_related(
             Prefetch(
-                'alleles',
-                queryset=AlleleRegionInfo.objects.filter(
-                    allele_info_filter
-                ).select_related('allele', 'allele__gene')
-                .order_by('-allele_frequency'),
-                to_attr='filtered_alleles'
+                "alleles",
+                queryset=AlleleRegionInfo.objects.filter(allele_info_filter)
+                .select_related("allele", "allele__gene")
+                .order_by("-allele_frequency"),
+                to_attr="filtered_alleles",
             )
         )
 

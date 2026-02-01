@@ -10,11 +10,19 @@ class AlleleRegionFilter(django_filters.FilterSet):
     """
     Filtro personalizado para AlleleRegion
     """
+
     gene_name = django_filters.CharFilter(
         method="filter_by_gene_name", label="Gene Name"
     )
     allelic_group = django_filters.CharFilter(
         method="filter_by_allelic_group", label="Allelic Group"
+    )
+    # sample_size = django_filters.NumericRangeFilter(field_name="alleles__sample_size")
+    min_allele_frequency = django_filters.NumberFilter(
+        method="filter_by_min_allele_frequency", label="Min Allele Frequency"
+    )
+    max_allele_frequency = django_filters.NumberFilter(
+        method="filter_by_max_allele_frequency", label="Max Allele Frequency"
     )
 
     class Meta:
@@ -24,7 +32,6 @@ class AlleleRegionFilter(django_filters.FilterSet):
             "lat": ["gte", "lte"],
             "lon": ["gte", "lte"],
             "alleles__sample_size": ["gte", "lte"],
-            "alleles__allele_frequency": ["gte", "lte"],
             "alleles__percent_of_individuals": ["gte", "lte"],
         }
 
@@ -33,10 +40,40 @@ class AlleleRegionFilter(django_filters.FilterSet):
         Método auxiliar para obtener IDs de alelos por grupo alélico
         """
         # Normalizar el grupo alélico (ej: "A*01" -> "A*01:")
-        search_pattern = allelic_group if ':' in allelic_group else f"{allelic_group}:"
-        return AlleleToMap.objects.filter(
-            name__startswith=search_pattern
-        ).values_list("id", flat=True)
+        search_pattern = allelic_group if ":" in allelic_group else f"{allelic_group}:"
+        return AlleleToMap.objects.filter(name__startswith=search_pattern).values_list(
+            "id", flat=True
+        )
+
+    def filter_by_min_allele_frequency(self, queryset, name, value):
+        """
+        Filtra las regiones con alelos que tienen al menos la frecuencia alélica dada
+        """
+        if value is None:
+            return queryset
+        cache_key = f"filter_by_min_allele_frequency_{value}"
+        alleles_id = cache.get(cache_key)
+        if not alleles_id:
+            alleles_id = AlleleRegionInfo.objects.filter(
+                allele_frequency__gte=value
+            ).values_list("region_id", flat=True)
+            cache.set(cache_key, list(alleles_id), None)
+        return queryset.filter(id__in=alleles_id)
+
+    def filter_by_max_allele_frequency(self, queryset, name, value):
+        """
+        Filtra las regiones con alelos que tienen como máximo la frecuencia alélica dada
+        """
+        if value is None:
+            return queryset
+        cache_key = f"filter_by_max_allele_frequency_{value}"
+        alleles_id = cache.get(cache_key)
+        if not alleles_id:
+            alleles_id = AlleleRegionInfo.objects.filter(
+                allele_frequency__lte=value
+            ).values_list("region_id", flat=True)
+            cache.set(cache_key, list(alleles_id), None)
+        return queryset.filter(id__in=alleles_id)
 
     def filter_by_allelic_group(self, queryset, name, value):
         """
@@ -131,61 +168,61 @@ class AlleleRegionFilter(django_filters.FilterSet):
 
         return filtered_queryset
 
-    def filter_queryset(self, queryset):
-        """
-        Sobrescribir para manejar múltiples filtros combinados
-        """
-        # Aplicar filtros base primero
-        queryset = super().filter_queryset(queryset)
+    # def filter_queryset(self, queryset):
+    #     """
+    #     Sobrescribir para manejar múltiples filtros combinados
+    #     """
+    #     # Aplicar filtros base primero
+    #     queryset = super().filter_queryset(queryset)
 
-        # Verificar si tenemos filtros combinados (gene_name + allelic_group)
-        gene_name = self.data.get('gene_name')
-        allelic_group = self.data.get('allelic_group')
+    #     # Verificar si tenemos filtros combinados (gene_name + allelic_group)
+    #     gene_name = self.data.get('gene_name')
+    #     allelic_group = self.data.get('allelic_group')
 
-        if gene_name and allelic_group:
-            # Caso especial: filtro combinado
-            cache_key = f"combined_filter_{gene_name}_{allelic_group}"
+    #     if gene_name and allelic_group:
+    #         # Caso especial: filtro combinado
+    #         cache_key = f"combined_filter_{gene_name}_{allelic_group}"
 
-            cached_data = cache.get(cache_key)
+    #         cached_data = cache.get(cache_key)
 
-            if cached_data:
-                allele_list, region_ids = cached_data
-            else:
-                # Obtener alelos del gen específico
-                gene_allele_list = list(
-                    AlleleToMap.objects.filter(gene__name=gene_name)
-                    .values_list("id", flat=True)
-                )
+    #         if cached_data:
+    #             allele_list, region_ids = cached_data
+    #         else:
+    #             # Obtener alelos del gen específico
+    #             gene_allele_list = list(
+    #                 AlleleToMap.objects.filter(gene__name=gene_name)
+    #                 .values_list("id", flat=True)
+    #             )
 
-                # Obtener alelos del grupo alélico
-                allelic_group_ids = self._get_allele_ids_by_allelic_group(allelic_group)
+    #             # Obtener alelos del grupo alélico
+    #             allelic_group_ids = self._get_allele_ids_by_allelic_group(allelic_group)
 
-                # Intersección: alelos que pertenecen tanto al gen como al grupo alélico
-                combined_allele_list = list(set(gene_allele_list) & set(allelic_group_ids))
+    #             # Intersección: alelos que pertenecen tanto al gen como al grupo alélico
+    #             combined_allele_list = list(set(gene_allele_list) & set(allelic_group_ids))
 
-                if not combined_allele_list:
-                    return queryset.none()
+    #             if not combined_allele_list:
+    #                 return queryset.none()
 
-                # Obtener regiones
-                region_ids = list(
-                    AlleleRegionInfo.objects.filter(allele_id__in=combined_allele_list)
-                    .values_list("region_id", flat=True)
-                    .distinct()
-                )
+    #             # Obtener regiones
+    #             region_ids = list(
+    #                 AlleleRegionInfo.objects.filter(allele_id__in=combined_allele_list)
+    #                 .values_list("region_id", flat=True)
+    #                 .distinct()
+    #             )
 
-                cache.set(cache_key, (combined_allele_list, region_ids), None)
+    #             cache.set(cache_key, (combined_allele_list, region_ids), None)
 
-            # Aplicar Prefetch con la combinación
-            queryset = queryset.filter(id__in=region_ids).prefetch_related(
-                Prefetch(
-                    "alleles",
-                    queryset=AlleleRegionInfo.objects.filter(
-                        allele_id__in=combined_allele_list,
-                        allele_frequency__isnull=False,
-                        allele_frequency__gt=0,
-                    ).select_related("allele", "allele__gene"),
-                    to_attr="filtered_alleles",
-                )
-            )
+    #         # Aplicar Prefetch con la combinación
+    #         queryset = queryset.filter(id__in=region_ids).prefetch_related(
+    #             Prefetch(
+    #                 "alleles",
+    #                 queryset=AlleleRegionInfo.objects.filter(
+    #                     allele_id__in=combined_allele_list,
+    #                     allele_frequency__isnull=False,
+    #                     allele_frequency__gt=0,
+    #                 ).select_related("allele", "allele__gene"),
+    #                 to_attr="filtered_alleles",
+    #             )
+    #         )
 
-        return queryset
+    #     return queryset
