@@ -33,19 +33,10 @@ class AlleleRegionFilter(django_filters.FilterSet):
         Método auxiliar para obtener IDs de alelos por grupo alélico
         """
         # Normalizar el grupo alélico (ej: "A*01" -> "A*01:")
-        if ':' not in allelic_group:
-            search_pattern = f"{allelic_group}:"
-        else:
-            search_pattern = allelic_group
-
-        # Buscar alelos que empiecen con el patrón
-        allele_ids = list(
-            AlleleToMap.objects.filter(
-                name__startswith=search_pattern
-            ).values_list("id", flat=True)
-        )
-
-        return allele_ids
+        search_pattern = allelic_group if ':' in allelic_group else f"{allelic_group}:"
+        return AlleleToMap.objects.filter(
+            name__startswith=search_pattern
+        ).values_list("id", flat=True)
 
     def filter_by_allelic_group(self, queryset, name, value):
         """
@@ -67,7 +58,7 @@ class AlleleRegionFilter(django_filters.FilterSet):
             allele_list = self._get_allele_ids_by_allelic_group(value)
 
             if not allele_list:
-                return queryset.none()
+                return None
 
             # Obtener regiones que tienen esos alelos
             region_ids = list(
