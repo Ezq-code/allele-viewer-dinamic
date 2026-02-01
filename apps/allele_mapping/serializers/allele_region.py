@@ -25,11 +25,11 @@ class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
         else:
             # Fallback por si no se usó prefetch
 
-            allele_infos = obj.alleles.filter(
-                allele_frequency__isnull=False
-            ).exclude(
-                allele_frequency=0
-            ).select_related('allele', 'allele__gene').order_by('-allele_frequency')
-
+            allele_infos = (
+                obj.alleles.filter(allele_frequency__isnull=False)
+                .exclude(allele_frequency=0)
+                .select_related("allele", "allele__gene")
+                .order_by("-allele_frequency")
+            )
 
         return AlleleRegionInfoDetailSerializer(allele_infos, many=True).data

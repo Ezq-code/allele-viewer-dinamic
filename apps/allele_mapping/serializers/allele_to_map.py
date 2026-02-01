@@ -15,14 +15,14 @@ class AlleleToMapDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = AlleleToMap
 
-        fields = ['id', 'name', 'gene_name']
+        fields = ["id", "name", "gene_name"]
 
 
 class GeneListSerializer(serializers.ModelSerializer):
     """
     Serializer para listar genes
     """
+
     class Meta:
         model = Gene  # Asegúrate de importar el modelo Gene
-        fields = ['id', 'name']
-
+        fields = ["id", "name"]
