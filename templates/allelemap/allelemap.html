@@ -252,11 +252,89 @@ function buildPieSVGForModal(parts, size = 200) {
     return colores[resto];
 }
 
-/*function Coordenadas(){
-  mapPoints.forEach(function (regionPoint) {
-    regionPoint.latLng
-                });
-};*/
+
+function buildOffsets() {
+  const offsets = [];
+  const ds = [1, 2, 3]; // puedes ampliar si algún día necesitas más
+
+  for (const d of ds) {
+    offsets.push(
+      [ d,  0],  // +d lat,  0 lon
+      [-d,  0],  // -d lat,  0 lon
+      [ 0,  d],  //  0 lat, +d lon
+      [ 0, -d],  //  0 lat, -d lon
+      [ d,  d],  // +d lat, +d lon
+      [ d, -d],  // +d lat, -d lon
+      [-d,  d],  // -d lat, +d lon
+      [-d, -d],  // -d lat, -d lon
+    );
+  }
+
+  return offsets;
+}
+
+const OFFSETS = buildOffsets();
+
+// Convierte una coordenada en clave de Set/Map
+function coordKey(lat, lon) {
+  // Si quieres controlar el redondeo usa toFixed
+  return `${lat},${lon}`;
+}
+
+/**
+ * Ajusta las coordenadas de `element` para que no repita (lat, lon) en MapPoint,
+ * siguiendo el patrón de offsets descrito.
+ *
+ * MapPoint: array de objetos { id, population, location, latLng: [lat, lon], ... }
+ * element: objeto a insertar, con latLng: [lat, lon]
+ */
+ function adjustLatLngForNewElement(MapPoint, element) {
+  if (!element.latLng || element.latLng.length !== 2) {
+    throw new Error("element.latLng debe ser un array [lat, lon]");
+  }
+
+  let [baseLat, baseLon] = element.latLng;
+
+  // Construimos el conjunto de coordenadas ya usadas
+  const used = new Set(
+    MapPoint
+      .filter(p => Array.isArray(p.latLng) && p.latLng.length === 2)
+      .map(p => coordKey(p.latLng[0], p.latLng[1]))
+  );
+
+  // Si no está usada, no hay nada que hacer
+  if (!used.has(coordKey(baseLat, baseLon))) {
+    return element; // sin cambios
+  }
+
+  // Buscamos la primera combinación libre siguiendo el patrón
+  let newLat = baseLat;
+  let newLon = baseLon;
+  let found = false;
+
+  for (const [dLat, dLon] of OFFSETS) {
+    const candLat = baseLat + dLat;
+    const candLon = baseLon + dLon;
+    const key = coordKey(candLat, candLon);
+
+    if (!used.has(key)) {
+      newLat = candLat;
+      newLon = candLon;
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    // Opcional: si quieres un fallback más allá de 3 grados:
+    // por ejemplo seguir creciendo d = 4,5,6...
+    // o lanzar un error porque dices que no habrá > 25 coincidencias.
+    console.warn("No se encontró posición libre dentro de ±3 grados para", baseLat, baseLon);
+  }
+
+  element.latLng = [newLat, newLon];
+  return element;
+}
 
       const LOADER_DURATION = 18000;
       Swal.fire({
@@ -362,11 +440,13 @@ function buildPieSVGForModal(parts, size = 200) {
                         alleleInfo = {
                           color: obtenerColorPorResto(allele.id),
                           label: allele.allele_name,
-                          value: allele.allele_frequency*100
+                          value: allele.allele_frequency
                         }
                         regionAlele.pie.push(alleleInfo);
                     });
                     
+                    regionAlele = adjustLatLngForNewElement(mapPoints, regionAlele)
+
                     mapPoints.push(regionAlele);
                 });
             }
@@ -402,7 +482,7 @@ setTimeout(function () {
         columnsHTML += `
           <li data-label="${p.label}">
             <span style="display:inline-block;width:12px;height:12px;background:${p.color};margin-right:8px;border-radius:2px;"></span>
-            <strong>${p.label}:</strong> ${p.value.toFixed(4)}%
+            <strong>${p.label}:</strong> ${p.value.toFixed(2)}%
           </li>`;
       });
       columnsHTML += `</ul></div>`;
