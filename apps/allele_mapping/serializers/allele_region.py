@@ -13,45 +13,61 @@ class AlleleRegionSerializer(serializers.ModelSerializer):
 
 class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
     alleles = serializers.SerializerMethodField()
+    allelic_groups = serializers.SerializerMethodField()
 
     class Meta:
         model = AlleleRegion
-        fields = ["id", "population", "location", "lat", "lon", "alleles"]
-        read_only_fields = [
-            "id",
-            "population",
-            "location",
-            "lat",
-            "lon",
-            "alleles",
+        fields = [
+            'id',
+            'population',
+            'location',
+            'lat',
+            'lon',
+            'allelic_groups',
+            'alleles'
         ]
 
-    def get_alleles(self, obj):
-        # Usar filtered_alleles si existe (cuando se aplica filtro por gen)
-        if hasattr(obj, "filtered_alleles"):
+    def get_allelic_groups(self, obj):
+        """
+        Extraer grupos alélicos únicos de los alelos de esta región
+        """
+        if hasattr(obj, 'filtered_alleles'):
             allele_infos = obj.filtered_alleles
         else:
-            # Fallback por si no se usó prefetch
+            # Si no hay filtered_alleles, usar todos los alelos
+            allele_infos = obj.alleles.all()
 
-            allele_infos = (
-                obj.alleles.filter(allele_frequency__isnull=False)
-                .exclude(allele_frequency=0)
-                .select_related("allele", "allele__gene")
-                .order_by("-allele_frequency")
-            )
+        groups = set()
+        for info in allele_infos:
+            if info.allele and info.allele.name:
+                # Extraer grupo alélico (ej: de "A*01:01" extraer "A*01")
+                # Patrón: todo hasta el segundo ":"
+                parts = info.allele.name.split(':')
+                if len(parts) >= 2:
+                    # Tomar la primera parte (gen + grupo)
+                    group = parts[0]
+                    groups.add(group)
+
+        return sorted(list(groups))
+
+    def get_alleles(self, obj):
+        """
+        Obtener alelos, priorizando los filtrados si existen
+        """
+        if hasattr(obj, 'filtered_alleles'):
+            allele_infos = obj.filtered_alleles
+        else:
+            # Fallback: obtener todos los alelos con frecuencia > 0
+            allele_infos = obj.alleles.filter(
+                allele_frequency__isnull=False,
+                allele_frequency__gt=0
+            ).select_related('allele', 'allele__gene')
+
+        # Ordenar por frecuencia descendente
+        allele_infos = sorted(
+            allele_infos,
+            key=lambda x: x.allele_frequency if x.allele_frequency else 0,
+            reverse=True
+        )
 
         return AlleleRegionInfoDetailSerializer(allele_infos, many=True).data
-
-    # def get_alleles(self, obj):
-    #     # Usar el to_attr 'filtered_alleles'
-    #     if hasattr(obj, "filtered_alleles"):
-    #         allele_infos = obj.filtered_alleles
-    #     else:
-    #         # Fallback por si no se usó prefetch
-    #         allele_infos = (
-    #             obj.alleles.filter(allele_frequency__isnull=False)
-    #             .exclude(allele_frequency=0)
-    #             .select_related("allele", "allele__gene")
-    #         )
-
-    #     return AlleleRegionInfoDetailSerializer(allele_infos, many=True).data

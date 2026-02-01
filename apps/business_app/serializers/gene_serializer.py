@@ -81,3 +81,9 @@ class GeneGetAllInfoSerializer(serializers.ModelSerializer):
             "name",
             "disorders",
         ]
+
+
+class GeneSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gene
+        fields = ['id', 'name']
