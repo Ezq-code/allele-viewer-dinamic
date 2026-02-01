@@ -17,12 +17,17 @@ class AlleleRegionFilter(django_filters.FilterSet):
     allelic_group = django_filters.CharFilter(
         method="filter_by_allelic_group", label="Allelic Group"
     )
-    # sample_size = django_filters.NumericRangeFilter(field_name="alleles__sample_size")
     min_allele_frequency = django_filters.NumberFilter(
         method="filter_by_min_allele_frequency", label="Min Allele Frequency"
     )
     max_allele_frequency = django_filters.NumberFilter(
         method="filter_by_max_allele_frequency", label="Max Allele Frequency"
+    )
+    min_sample_size = django_filters.NumberFilter(
+        method="filter_by_min_sample_size", label="Min Sample Size"
+    )
+    max_sample_size = django_filters.NumberFilter(
+        method="filter_by_max_sample_size", label="Max Sample Size"
     )
 
     class Meta:
@@ -31,7 +36,6 @@ class AlleleRegionFilter(django_filters.FilterSet):
             "id": ["exact", "in"],
             "lat": ["gte", "lte"],
             "lon": ["gte", "lte"],
-            "alleles__sample_size": ["gte", "lte"],
             "alleles__percent_of_individuals": ["gte", "lte"],
         }
 
@@ -44,6 +48,36 @@ class AlleleRegionFilter(django_filters.FilterSet):
         return AlleleToMap.objects.filter(name__startswith=search_pattern).values_list(
             "id", flat=True
         )
+
+    def filter_by_min_sample_size(self, queryset, name, value):
+        """
+        Filtra las regiones con alelos que tienen al menos el tamaño de muestra dado
+        """
+        if value is None:
+            return queryset
+        cache_key = f"filter_by_min_sample_size_{value}"
+        alleles_id = cache.get(cache_key)
+        if not alleles_id:
+            alleles_id = AlleleRegionInfo.objects.filter(
+                sample_size__gte=value
+            ).values_list("region_id", flat=True)
+            cache.set(cache_key, list(alleles_id), None)
+        return queryset.filter(id__in=alleles_id)
+
+    def filter_by_max_sample_size(self, queryset, name, value):
+        """
+        Filtra las regiones con alelos que tienen como máximo el tamaño de muestra dado
+        """
+        if value is None:
+            return queryset
+        cache_key = f"filter_by_max_sample_size_{value}"
+        alleles_id = cache.get(cache_key)
+        if not alleles_id:
+            alleles_id = AlleleRegionInfo.objects.filter(
+                sample_size__lte=value
+            ).values_list("region_id", flat=True)
+            cache.set(cache_key, list(alleles_id), None)
+        return queryset.filter(id__in=alleles_id)
 
     def filter_by_min_allele_frequency(self, queryset, name, value):
         """
