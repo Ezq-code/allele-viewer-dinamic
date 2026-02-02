@@ -15,7 +15,8 @@ from rest_framework.decorators import action
 from django.db.models import Exists, OuterRef
 from ..filters.gene_filter import GeneFilter
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from apps.common.views import CommonOrderingFilter
 import re
@@ -117,6 +118,7 @@ class GeneViewSet(
         url_path="allelic-groups",
         url_name="allelic-groups",
     )
+    @method_decorator(cache_page(timeout=None))
     def get_allelic_groups(self, request):
         """
         Endpoint para obtener los grupos alélicos únicos de un gen específico

@@ -137,7 +137,7 @@ class AlleleRegionFilter(django_filters.FilterSet):
             allele_list = self._get_allele_ids_by_allelic_group(value)
 
             if not allele_list:
-                return None
+                return queryset.none()
 
             # Obtener regiones que tienen esos alelos
             region_ids = list(
