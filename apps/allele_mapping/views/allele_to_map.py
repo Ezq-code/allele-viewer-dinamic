@@ -13,7 +13,7 @@ class AlleleToMapViewSet(viewsets.ModelViewSet):
     ViewSet for AlleleToMap
     """
 
-    queryset = AlleleToMap.objects.filter(gene__isnull=False)
+    queryset = AlleleToMap.objects.select_related("gene").filter(gene__isnull=False)
     serializer_class = AlleleToMapSerializer
 
     ordering_fields = "__all__"
