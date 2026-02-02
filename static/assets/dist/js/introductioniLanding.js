@@ -5,6 +5,7 @@ let activeGroupIdForCharts = null;
 let chartsSearchQuery = '';
 let geneChartInstance = null;
 let geneStatusData = [];
+let statusSummaryCharts = [];
 
 // Función loadGeneStatusData (sin cambios)
 async function loadGeneStatusData() {
@@ -14,7 +15,10 @@ async function loadGeneStatusData() {
         const data = await response.json();
         geneStatusData = data.results.map(status => ({
             label: status.name,
-            color: status.color || '#808080'
+            color: status.color || '#808080',
+            description: status.description || '',
+            type: status.type || '',
+            requires_evidence: !!status.requires_evidence
         }));
         return true;
     } catch (error) {
@@ -114,6 +118,10 @@ document.addEventListener("DOMContentLoaded", function () {
             // Como no estamos seguros, simplemente la anulamos.
             geneChartInstance = null;
         }
+        if (typeof window.clearRadialStatusCharts === 'function') {
+            window.clearRadialStatusCharts();
+        }
+        toggleStatusSummarySection(false);
         // Limpiamos el contenedor HTML para empezar de cero.
         document.getElementById('gene-charts-container').innerHTML = '';
     }
@@ -137,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     updatePaginationControls(data);
                 } else {
                     document.getElementById('gene-charts-container').innerHTML = `<p class="text-muted w-100 text-center">No se encontraron genes para visualizar.</p>`;
+                    toggleStatusSummarySection(false);
                     updatePaginationControls({ count: 0, next: null, previous: null });
                 }
             })
@@ -145,7 +154,31 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('loading-spinner').classList.add('d-none');
                 document.getElementById('error-message').classList.remove('d-none');
                 document.getElementById('error-message').textContent = `Error: ${error.message || 'Unknown error'}`;
+                toggleStatusSummarySection(false);
             });
+    }
+
+    function toggleStatusSummarySection(show) {
+        const section = document.getElementById('gene-status-summary-section');
+        if (!section) return;
+        section.hidden = !show;
+    }
+
+    function renderStatusSummaryChart(genes, statusColorMap, statusMetaMap) {
+        if (typeof window.renderRadialStatusCharts !== 'function') {
+            console.error('❌ renderRadialStatusCharts no está disponible.');
+            toggleStatusSummarySection(false);
+            return;
+        }
+
+        const hasData = genes && genes.length > 0 && statusColorMap && Object.keys(statusColorMap).length > 0;
+        if (!hasData) {
+            toggleStatusSummarySection(false);
+            return;
+        }
+
+        window.renderRadialStatusCharts(genes, statusColorMap, statusMetaMap);
+        toggleStatusSummarySection(true);
     }
 
     // --- CAMBIO CLAVE 2: Lógica más robusta para obtener los datos ---
@@ -172,11 +205,11 @@ function processAndRenderCharts(genes) {
         });
         // 2. Definir una paleta de colores amplia y variada
         const colorPalette = [
-            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD',
-            '#FFD93D', '#6C5B7B', '#C06C84', '#F67280', '#355C7D',
-            '#6C5CE7', '#A29BFE', '#FD79A8', '#FDCB6E', '#6C63FF',
-            '#00B894', '#00CEC9', '#0984E3', '#EE5A24', '#F79F1F',
-            '#A3CB38', '#1289A7', '#D980FA', '#B53471', '#30336B'
+            '#FF1744', '#FF9100', '#FFD600', '#00E676', '#00B0FF',
+            '#2979FF', '#651FFF', '#D500F9', '#F50057', '#FF5252',
+            '#FF6D00', '#C6FF00', '#1DE9B6', '#00E5FF', '#448AFF',
+            '#7C4DFF', '#E040FB', '#FF4081', '#FF8A80', '#FFD180',
+            '#FFFF8D', '#B9F6CA', '#80D8FF', '#82B1FF', '#B388FF'
         ];
 
         // 3. Crear el mapa de colores asignando un color a cada estado único
@@ -236,6 +269,17 @@ function processAndRenderCharts(genes) {
             geneData.map(g => g.name),
             geneData.map(g => g.statusData)
         );
+
+        const statusMetaMap = {};
+        geneStatusData.forEach(status => {
+            statusMetaMap[status.label] = {
+                description: status.description || '',
+                type: status.type || '',
+                requires_evidence: !!status.requires_evidence
+            };
+        });
+
+        renderStatusSummaryChart(genes, statusColorMap, statusMetaMap);
         // 7. Configurar listeners para botones y gráficas
         const chartsContainer = document.getElementById('gene-charts-container');
         
