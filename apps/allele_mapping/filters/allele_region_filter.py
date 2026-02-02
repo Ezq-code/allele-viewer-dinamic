@@ -44,17 +44,10 @@ class AlleleRegionFilter(django_filters.FilterSet):
         Método auxiliar para obtener IDs de alelos por grupo alélico
         """
         # Normalizar el grupo alélico (ej: "A*01" -> "A*01:")
-        cache_key = f"allelic_group_{allelic_group}"
-        result = cache.get(cache_key)
-        if not result:
-            search_pattern = (
-                allelic_group if ":" in allelic_group else f"{allelic_group}:"
-            )
-            result = AlleleToMap.objects.filter(
-                name__startswith=search_pattern
-            ).values_list("id", flat=True)
-            cache.set(cache_key, result, None)
-        return result
+        search_pattern = allelic_group if ":" in allelic_group else f"{allelic_group}:"
+        return AlleleToMap.objects.filter(name__startswith=search_pattern).values_list(
+            "id", flat=True
+        )
 
     def filter_by_min_sample_size(self, queryset, name, value):
         """
@@ -63,14 +56,13 @@ class AlleleRegionFilter(django_filters.FilterSet):
         if value is None:
             return queryset
         cache_key = f"filter_by_min_sample_size_{value}"
-        result = cache.get(cache_key)
-        if not result:
+        alleles_id = cache.get(cache_key)
+        if not alleles_id:
             alleles_id = AlleleRegionInfo.objects.filter(
                 sample_size__gte=value
             ).values_list("region_id", flat=True)
-            result = queryset.filter(id__in=alleles_id)
-            cache.set(cache_key, result, None)
-        return result
+            cache.set(cache_key, list(alleles_id), None)
+        return queryset.filter(id__in=alleles_id)
 
     def filter_by_max_sample_size(self, queryset, name, value):
         """
@@ -79,14 +71,13 @@ class AlleleRegionFilter(django_filters.FilterSet):
         if value is None:
             return queryset
         cache_key = f"filter_by_max_sample_size_{value}"
-        result = cache.get(cache_key)
-        if not result:
+        alleles_id = cache.get(cache_key)
+        if not alleles_id:
             alleles_id = AlleleRegionInfo.objects.filter(
                 sample_size__lte=value
             ).values_list("region_id", flat=True)
-            result = queryset.filter(id__in=alleles_id)
-            cache.set(cache_key, result, None)
-        return result
+            cache.set(cache_key, list(alleles_id), None)
+        return queryset.filter(id__in=alleles_id)
 
     def filter_by_min_allele_frequency(self, queryset, name, value):
         """
@@ -95,14 +86,13 @@ class AlleleRegionFilter(django_filters.FilterSet):
         if value is None:
             return queryset
         cache_key = f"filter_by_min_allele_frequency_{value}"
-        result = cache.get(cache_key)
-        if not result:
+        alleles_id = cache.get(cache_key)
+        if not alleles_id:
             alleles_id = AlleleRegionInfo.objects.filter(
                 allele_frequency__gte=value
             ).values_list("region_id", flat=True)
-            result = queryset.filter(id__in=alleles_id)
-            cache.set(cache_key, result, None)
-        return result
+            cache.set(cache_key, list(alleles_id), None)
+        return queryset.filter(id__in=alleles_id)
 
     def filter_by_max_allele_frequency(self, queryset, name, value):
         """
@@ -111,14 +101,13 @@ class AlleleRegionFilter(django_filters.FilterSet):
         if value is None:
             return queryset
         cache_key = f"filter_by_max_allele_frequency_{value}"
-        result = cache.get(cache_key)
-        if not result:
+        alleles_id = cache.get(cache_key)
+        if not alleles_id:
             alleles_id = AlleleRegionInfo.objects.filter(
                 allele_frequency__lte=value
             ).values_list("region_id", flat=True)
-            result = queryset.filter(id__in=alleles_id)
-            cache.set(cache_key, result, None)
-        return result
+            cache.set(cache_key, list(alleles_id), None)
+        return queryset.filter(id__in=alleles_id)
 
     def filter_by_allelic_group(self, queryset, name, value):
         """
@@ -131,11 +120,16 @@ class AlleleRegionFilter(django_filters.FilterSet):
         cache_key = f"allelic_group_filter_{value}"
 
         # Intentar obtener del caché
-        result = cache.get(cache_key)
-        if not result:
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            allele_list, region_ids = cached_data
+        else:
+            # Obtener los IDs de alelos del grupo alélico
             allele_list = self._get_allele_ids_by_allelic_group(value)
+
             if not allele_list:
-                return queryset.none()
+                return None
 
             # Obtener regiones que tienen esos alelos
             region_ids = list(
@@ -144,22 +138,23 @@ class AlleleRegionFilter(django_filters.FilterSet):
                 .distinct()
             )
 
-            # Aplicar Prefetch para filtrar también los alelos relacionados
-            result = queryset.filter(id__in=region_ids).prefetch_related(
-                Prefetch(
-                    "alleles",
-                    queryset=AlleleRegionInfo.objects.filter(
-                        allele_id__in=allele_list,
-                        allele_frequency__isnull=False,
-                        allele_frequency__gt=0,
-                    ).select_related("allele", "allele__gene"),
-                    to_attr="filtered_alleles",
-                )
-            )
-
             # Guardar en caché
-            cache.set(cache_key, result, None)
-        return result
+            cache.set(cache_key, (allele_list, region_ids), None)
+
+        # Aplicar Prefetch para filtrar también los alelos relacionados
+        filtered_queryset = queryset.filter(id__in=region_ids).prefetch_related(
+            Prefetch(
+                "alleles",
+                queryset=AlleleRegionInfo.objects.filter(
+                    allele_id__in=allele_list,
+                    allele_frequency__isnull=False,
+                    allele_frequency__gt=0,
+                ).select_related("allele", "allele__gene"),
+                to_attr="filtered_alleles",
+            )
+        )
+
+        return filtered_queryset
 
     def filter_by_gene_name(self, queryset, name, value):
         """
