@@ -33,6 +33,16 @@ class AlleleRegionInfo(models.Model):
     class Meta:
         verbose_name = _("Allele region info")
         verbose_name_plural = _("Alleles region info")
+        indexes = [
+            models.Index(
+                fields=["allele_frequency", "sample_size"], name="idx_freq_sample"
+            ),
+            models.Index(fields=["region", "allele_frequency"], name="idx_region_freq"),
+            models.Index(
+                fields=["allele", "allele_frequency", "sample_size"],
+                name="idx_allele_freq_sample",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.allele.name} ({self.region.population})"

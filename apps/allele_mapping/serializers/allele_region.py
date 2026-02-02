@@ -30,6 +30,7 @@ class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
     def get_allelic_groups(self, obj):
         """
         Extraer grupos alélicos únicos de los alelos de esta región
+        Optimizado para reducir procesamiento en Python
         """
         if hasattr(obj, "filtered_alleles"):
             allele_infos = obj.filtered_alleles
@@ -41,32 +42,31 @@ class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
         for info in allele_infos:
             if info.allele and info.allele.name:
                 # Extraer grupo alélico (ej: de "A*01:01" extraer "A*01")
-                # Patrón: todo hasta el segundo ":"
-                parts = info.allele.name.split(":")
-                if len(parts) >= 2:
-                    # Tomar la primera parte (gen + grupo)
-                    group = parts[0]
-                    groups.add(group)
+                name = info.allele.name
+                colon_pos = name.find(":")
+                if colon_pos > 0:
+                    groups.add(name[:colon_pos])
+
+        return sorted(list(groups))
 
         return sorted(list(groups))
 
     def get_alleles(self, obj):
         """
         Obtener alelos, priorizando los filtrados si existen
+        Optimizado para ordenar en base de datos en lugar de Python
         """
         if hasattr(obj, "filtered_alleles"):
+            # Ya están ordenados por el Prefetch con order_by
             allele_infos = obj.filtered_alleles
         else:
-            # Fallback: obtener todos los alelos con frecuencia > 0
-            allele_infos = obj.alleles.filter(
-                allele_frequency__isnull=False, allele_frequency__gt=0
-            ).select_related("allele", "allele__gene")
-
-        # Ordenar por frecuencia descendente
-        allele_infos = sorted(
-            allele_infos,
-            key=lambda x: x.allele_frequency if x.allele_frequency else 0,
-            reverse=True,
-        )
+            # Fallback: obtener todos los alelos con frecuencia > 0 y ordenar en DB
+            allele_infos = (
+                obj.alleles.filter(
+                    allele_frequency__isnull=False, allele_frequency__gt=0
+                )
+                .select_related("allele", "allele__gene")
+                .order_by("-allele_frequency")
+            )
 
         return AlleleRegionInfoDetailSerializer(allele_infos, many=True).data
