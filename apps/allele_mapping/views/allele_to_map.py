@@ -42,14 +42,13 @@ class AlleleToMapViewSet(viewsets.ModelViewSet):
         Parámetros: gene_name (REQUERIDO)
         """
 
-        # Obtener nombres únicos de alelos y extraer grupos en una sola pasada
-        allele_names = self.filter_queryset(self.get_queryset()).values_list("name", flat=True).distinct().order_by("name").distinct()
-
-        allelic_groups = [name.split(":")[0] for name in allele_names if ":" in name]
-            
-
+        # Obtener nombres únicos de alelos y extraer grupos alélicos únicos
+        allele_names = self.filter_queryset(self.get_queryset()).values_list("name", flat=True).distinct()
+        
+        # Extraer grupos alélicos únicos usando set comprehension
+        allelic_groups = sorted({name.split(":")[0] for name in allele_names if ":" in name})
+        
         # Retornar respuesta ordenada
         return Response({
             "allelic_groups": allelic_groups
         })
-
