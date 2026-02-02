@@ -28,8 +28,6 @@ class AlleleToMapViewSet(viewsets.ModelViewSet):
     ]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-
-    
     @action(
         detail=False,
         methods=["GET"],
@@ -43,12 +41,16 @@ class AlleleToMapViewSet(viewsets.ModelViewSet):
         """
 
         # Obtener nombres únicos de alelos y extraer grupos alélicos únicos
-        allele_names = self.filter_queryset(self.get_queryset()).values_list("name", flat=True).distinct()
-        
+        allele_names = (
+            self.filter_queryset(self.get_queryset())
+            .values_list("name", flat=True)
+            .distinct()
+        )
+
         # Extraer grupos alélicos únicos usando set comprehension
-        allelic_groups = sorted({name.split(":")[0] for name in allele_names if ":" in name})
-        
+        allelic_groups = sorted(
+            {name.split(":")[0] for name in allele_names if ":" in name}
+        )
+
         # Retornar respuesta ordenada
-        return Response({
-            "allelic_groups": allelic_groups
-        })
+        return Response({"allelic_groups": allelic_groups})

@@ -29,6 +29,9 @@ class AlleleRegionFilter(django_filters.FilterSet):
     max_sample_size = django_filters.NumberFilter(
         method="filter_by_max_sample_size", label="Max Sample Size"
     )
+    allele_region_info = AlleleRegionInfo.objects.filter(
+        allele_frequency__isnull=False
+    ).exclude(allele_frequency=0)
 
     class Meta:
         model = AlleleRegion
@@ -58,12 +61,12 @@ class AlleleRegionFilter(django_filters.FilterSet):
         cache_key = f"filter_by_min_sample_size_{value}"
         alleles_id = cache.get(cache_key)
         if alleles_id is None:
-            alleles_id = list(
-                AlleleRegionInfo.objects.filter(sample_size__gte=value).values_list(
-                    "region_id", flat=True
-                )
+            self.allele_region_info = self.allele_region_info.filter(
+                sample_size__gte=value
             )
-            cache.set(cache_key, alleles_id, timeout=3600)  # 1 hora
+            alleles_id = self.allele_region_info.values_list("region_id", flat=True)
+
+            cache.set(cache_key, alleles_id, timeout=None)
         return queryset.filter(id__in=alleles_id)
 
     def filter_by_max_sample_size(self, queryset, name, value):
@@ -75,12 +78,12 @@ class AlleleRegionFilter(django_filters.FilterSet):
         cache_key = f"filter_by_max_sample_size_{value}"
         alleles_id = cache.get(cache_key)
         if alleles_id is None:
-            alleles_id = list(
-                AlleleRegionInfo.objects.filter(sample_size__lte=value).values_list(
-                    "region_id", flat=True
-                )
+            self.allele_region_info = self.allele_region_info.filter(
+                sample_size__lte=value
             )
-            cache.set(cache_key, alleles_id, timeout=3600)  # 1 hora
+
+            alleles_id = self.allele_region_info.values_list("region_id", flat=True)
+            cache.set(cache_key, alleles_id, timeout=None)
         return queryset.filter(id__in=alleles_id)
 
     def filter_by_min_allele_frequency(self, queryset, name, value):
@@ -92,12 +95,12 @@ class AlleleRegionFilter(django_filters.FilterSet):
         cache_key = f"filter_by_min_allele_frequency_{value}"
         alleles_id = cache.get(cache_key)
         if alleles_id is None:
-            alleles_id = list(
-                AlleleRegionInfo.objects.filter(
-                    allele_frequency__gte=value
-                ).values_list("region_id", flat=True)
+            self.allele_region_info = self.allele_region_info.filter(
+                allele_frequency__gte=value
             )
-            cache.set(cache_key, alleles_id, timeout=3600)  # 1 hora
+
+            alleles_id = self.allele_region_info.values_list("region_id", flat=True)
+            cache.set(cache_key, alleles_id, timeout=None)
         return queryset.filter(id__in=alleles_id)
 
     def filter_by_max_allele_frequency(self, queryset, name, value):
@@ -109,12 +112,11 @@ class AlleleRegionFilter(django_filters.FilterSet):
         cache_key = f"filter_by_max_allele_frequency_{value}"
         alleles_id = cache.get(cache_key)
         if alleles_id is None:
-            alleles_id = list(
-                AlleleRegionInfo.objects.filter(
-                    allele_frequency__lte=value
-                ).values_list("region_id", flat=True)
+            self.allele_region_info = self.allele_region_info.filter(
+                allele_frequency__lte=value
             )
-            cache.set(cache_key, alleles_id, timeout=3600)  # 1 hora
+            alleles_id = self.allele_region_info.values_list("region_id", flat=True)
+            cache.set(cache_key, alleles_id, timeout=None)
         return queryset.filter(id__in=alleles_id)
 
     def filter_by_allelic_group(self, queryset, name, value):
@@ -140,14 +142,14 @@ class AlleleRegionFilter(django_filters.FilterSet):
                 return queryset.none()
 
             # Obtener regiones que tienen esos alelos
-            region_ids = list(
-                AlleleRegionInfo.objects.filter(allele_id__in=allele_list)
+            region_ids = (
+                self.allele_region_info.filter(allele_id__in=allele_list)
                 .values_list("region_id", flat=True)
                 .distinct()
             )
 
             # Guardar en caché por 1 hora
-            cache.set(cache_key, (allele_list, region_ids), timeout=3600)
+            cache.set(cache_key, (allele_list, region_ids), timeout=None)
 
         # Aplicar Prefetch para filtrar también los alelos relacionados
         filtered_queryset = queryset.filter(id__in=region_ids).prefetch_related(
