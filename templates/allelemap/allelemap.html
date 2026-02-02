@@ -337,7 +337,7 @@ function coordKey(lat, lon) {
 }
 
       const LOADER_DURATION = 18000;
-      Swal.fire({
+     /* Swal.fire({
         title: 'Updating Allele Map Data...',
         html: 'Please wait a few seconds...',
         timer: LOADER_DURATION,
@@ -348,6 +348,17 @@ function coordKey(lat, lon) {
           Swal.showLoading();
         }
       });
+     */
+
+  Swal.fire({
+  title: 'Updating Allele Map Data...',
+  html: 'Please wait a few seconds...',
+  allowOutsideClick: false,
+  allowEscapeKey: false,
+  didOpen: () => {
+    Swal.showLoading();
+  }
+});
 
     var loadedData = false;
     var  gene_name =  sessionStorage.getItem('gene');
@@ -415,9 +426,54 @@ function coordKey(lat, lon) {
     var mapPoints = [];  
     let regionAlele = {};
     let alleleInfo = {};
+ 
+ 
+    axios
+    //.get('/allele-mapping/alleles-region/by-gene/?allelic_group='+group_allele+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size)
+    .get('/allele-mapping/alleles-region/?allelic_group='+group_allele+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size)
+    .then(function (response) {
+      //globalData = response.data.results;
+      //data = response.data;
+      data = response.data.results;
+      //localStorage.setItem("globalData", globalData);
+      //console.log("✌️response.data.results --->", response.data.results);
+      //console.log("✌️globalData --->", globalData);
+      response.data.results.forEach(function (region) {
+
+        regionAlele = {
+                        name: region.population,
+                        latLng: [region.lat, region.lon],
+                        pie: []
+                    };
+
+                    region.alleles.forEach(function (allele) {                  
+                        alleleInfo = {
+                          color: obtenerColorPorResto(allele.id),
+                          label: allele.allele_name,
+                          value: allele.allele_frequency
+                        }
+                        regionAlele.pie.push(alleleInfo);
+                    });
+                    
+                    regionAlele = adjustLatLngForNewElement(mapPoints, regionAlele)
+
+                    mapPoints.push(regionAlele);
+
+        //const option = document.createElement("option");
+        //option.value = file.id;
+        //option.textContent = file.custom_name;
+        //selectfile.appendChild(option);
+      });
+      // Si hay archivos, poblar los pdb del primero
+      if (response.data.results.length > 0) {
+
+
+
+    /*
       $.ajax({
             type: 'GET',
             url: '/allele-mapping/alleles-region/by-gene/?allelic_group='+group_allele+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size,            
+            //url: '/allele-mapping/alleles-region/?allelic_group='+group_allele+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size,    
             error: function () {
                 Swal.fire({
                     icon: "error",
@@ -429,7 +485,7 @@ function coordKey(lat, lon) {
             dataType: 'json',
             success: function (response) {
                 var data = response;
-
+                //var data = response.results;
                 data.forEach(function (region) {
                     regionAlele = {
                         name: region.population,
@@ -452,9 +508,11 @@ function coordKey(lat, lon) {
                 });
             }
         });
+*/
+
 
           
-setTimeout(function () {
+//setTimeout(function () {
 
   // Función para dividir el array en columnas
   function chunkArray(arr, size) {
@@ -585,6 +643,7 @@ setTimeout(function () {
     });
   }
 
+
   // Inicializa el mapa
   $('#map').vectorMap({
     map: 'world_mill_en',
@@ -602,7 +661,16 @@ setTimeout(function () {
   
   loadedData = true;
 
-}, 14000);
+  Swal.close();  
+}
+else
+{
+  Swal.close();
+}  
+});
+
+
+//}, 14000);
 
 });
 
@@ -687,6 +755,8 @@ document.getElementById('btreloadgene').addEventListener('click', function() {
 <script src="{% static 'assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script>
 <script src="{% static 'assets/plugins/bootstrap-slider/bootstrap-slider.min.js' %}"></script>
 <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+
+<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
 
 
 
