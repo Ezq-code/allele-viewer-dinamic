@@ -3,9 +3,7 @@ let chartsCurrentPage = 1;
 const chartsItemsPerPage = 12;
 let activeGroupIdForCharts = null;
 let chartsSearchQuery = '';
-let geneChartInstance = null;
 let geneStatusData = [];
-let statusSummaryCharts = [];
 
 // Función loadGeneStatusData (sin cambios)
 async function loadGeneStatusData() {
@@ -53,7 +51,7 @@ function handleGeneButtonClick(event) {
 
 document.addEventListener("DOMContentLoaded", function () {
     loadGeneStatusData();
-    initializeGeneChartsSection();
+     initializeGeneChartsSection();
     
     const loadButtons = document.querySelectorAll('.load-genes-btn');
     loadButtons.forEach(button => {
@@ -112,18 +110,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // --- CAMBIO CLAVE 1: Limpiar la instancia de forma más segura ---
     function clearCharts() {
-        if (geneChartInstance) {
-            // Si la librería tuviera un método destroy, lo llamaríamos aquí.
-            // Por ejemplo: geneChartInstance.destroy();
-            // Como no estamos seguros, simplemente la anulamos.
-            geneChartInstance = null;
-        }
         if (typeof window.clearRadialStatusCharts === 'function') {
             window.clearRadialStatusCharts();
         }
         toggleStatusSummarySection(false);
-        // Limpiamos el contenedor HTML para empezar de cero.
-        document.getElementById('gene-charts-container').innerHTML = '';
     }
 
     function fetchAndRenderCharts() {
@@ -144,7 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     processAndRenderCharts(data.results);
                     updatePaginationControls(data);
                 } else {
-                    document.getElementById('gene-charts-container').innerHTML = `<p class="text-muted w-100 text-center">No se encontraron genes para visualizar.</p>`;
                     toggleStatusSummarySection(false);
                     updatePaginationControls({ count: 0, next: null, previous: null });
                 }
@@ -219,57 +208,7 @@ function processAndRenderCharts(genes) {
         });
         // --- FIN DE LA LÓGICA DE COLORES DINÁMICOS ---
 
-        // 4. Preparar los datos para cada gen usando el mapa de colores
-        const geneData = genes.map(gene => {
-            // Procesar los estados para este gen específico
-            const statusData = (gene.gene_status_list || [])
-                .map(status => {
-                    const v = parseFloat(status.value);                    
-                    // NOTA: Se reemplaza la lógica anterior de colores fijos.
-                    // Ahora se busca directamente en nuestro mapa dinámico.
-                    // Si por alguna razón un estado no está en el mapa, se usa un color gris por defecto.
-                    const color = statusColorMap[status.gene_status] || '#CCCCCC';
-
-                    const updated_since =status.updated_since;
-
-                    
-                    return {
-                        label: status.gene_status,
-                        value: v,
-                        color: color,
-                        updated_since: updated_since
-                    };
-                })
-                .filter(item => !isNaN(item.value));
-
-            return {
-                name: gene.name,
-                statusData: statusData
-            };
-        });
-
-        // 5. Asegurarse de que la instancia de la librería existe
-        if (!geneChartInstance) {
-            if (typeof GeneDonutChart !== 'undefined') {
-                geneChartInstance = new GeneDonutChart({
-                    containerId: 'gene-charts-container',
-                    chartWidth: 237,
-                    chartHeight: 237,
-                    legendTitle: 'Estados de Genes 222',
-                    showLegend: false
-                });
-              } else {
-                console.error("❌ GeneDonutChart library is not loaded.");
-                return;
-            }
-        }
-
-        // 6. Renderizar con los datos específicos de cada gen
-        geneChartInstance.render(
-            geneData.map(g => g.name),
-            geneData.map(g => g.statusData)
-        );
-
+        // 4. Preparar metadatos para tooltips de D3
         const statusMetaMap = {};
         geneStatusData.forEach(status => {
             statusMetaMap[status.label] = {
@@ -280,26 +219,6 @@ function processAndRenderCharts(genes) {
         });
 
         renderStatusSummaryChart(genes, statusColorMap, statusMetaMap);
-        // 7. Configurar listeners para botones y gráficas
-        const chartsContainer = document.getElementById('gene-charts-container');
-        
-        // Remover listeners previos para evitar duplicados
-        chartsContainer.removeEventListener('click', handleGeneButtonClick);
-        chartsContainer.removeEventListener('gene-chart-click', handleChartClick);
-        
-        // Función para manejar clics en la gráfica
-        function handleChartClick(event) {
-            const geneName = event.detail.geneName;            
-            const targetGene = genes.find(g => g.name === geneName);
-            if (targetGene) {
-                showGeneDetails(targetGene);
-                $('#genesModal').modal('show');
-            }
-        }
-        
-        // Agregar los nuevos listeners
-        chartsContainer.addEventListener('click', handleGeneButtonClick);
-        chartsContainer.addEventListener('gene-chart-click', handleChartClick);
 
         
     } catch (error) {
@@ -449,32 +368,11 @@ function showGeneDetails(gene) {
                     </div>
             </div>`;
 
-    // Status section with donut chart
+    // Status section
     dashboardHtml += `<div class="row">`;
     const statusList = gene.gene_status_list || [];
     
     if (statusList.length > 0) {
-        // Add donut chart container
-        dashboardHtml += `
-            <div class="col-12 mb-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Status Overview</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <canvas id="geneStatusChart" width="400" height="400"></canvas>
-                            </div>
-                            <div class="col-md-6">
-                                <div id="chartLegend" class="mt-4"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
         // Individual status items with knobs
         statusList.forEach((status) => {
             const percent = parseFloat(status.value);
@@ -556,99 +454,5 @@ function showGeneDetails(gene) {
     $('#genesModal').on('shown.bs.modal', function () {
         $('.knob').knob();
         $('[data-toggle="tooltip"]').tooltip();
-        
-        // Create donut chart if there's status data
-        if (statusList.length > 0) {
-            try {
-                // Prepare data for the chart
-                const labels = statusList.map(s => s.gene_status || '');
-                const data = statusList.map(s => {
-                    const v = parseFloat(s.value);
-                    return isNaN(v) ? 0 : v;
-                });
-                const backgroundColors = statusList.map(s => {
-                    const v = parseFloat(s.value);
-                    if (isNaN(v)) return '#6c757d';
-                    if (v <= 25) return '#dc3545';
-                    if (v <= 50) return '#ffc107';
-                    if (v <= 75) return '#17a2b8';
-                    return '#28a745';
-                });
-                
-                // Create the chart (Chart.js)
-                const ctx = document.getElementById('geneStatusChart').getContext('2d');
-                const geneStatusChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: data,
-                            backgroundColor: backgroundColors,
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '60%',
-                         plugins: {
-      legend: {
-        display: false // Oculta la leyenda (colores y etiquetas)
-      },
-      tooltip: {
-        enabled: false // Desactiva los tooltips al pasar el ratón
-      },
-      title: {
-        display: false // Desactiva el título del gráfico si lo hubiera
-      }
-    }
-                    }
-                });
-                
-                // Create custom legend
-                const legendContainer = document.getElementById('chartLegend');
-                let legendHtml = '<h5>Status Breakdown</h5><div class="mt-3">';
-                
-                statusList.forEach((status, index) => {
-                    const percent = parseFloat(status.value);
-                    let color = "#6c757d";
-                    if (!isNaN(percent)) {
-                        if (percent >= 0 && percent <= 25) color = "#dc3545";
-                        else if (percent >= 26 && percent <= 50) color = "#ffc107";
-                        else if (percent >= 51 && percent <= 75) color = "#17a2b8";
-                        else if (percent > 75 && percent <= 100) color = "#28a745";
-                    }
-                    
-                    legendHtml += `
-                        <div class="d-flex align-items-center mb-2">
-                            <div style="width: 20px; height: 20px; background-color: ${color}; margin-right: 10px; border-radius: 3px;"></div>
-                            <span>${status.gene_status}: ${status.value}%</span>
-                        </div>
-                    `;
-                });
-                
-                legendHtml += '</div>';
-                legendContainer.innerHTML = legendHtml;
-                
-                // Store chart reference for cleanup
-                if (!window._modalChartsRegistry) {
-                    window._modalChartsRegistry = {};
-                }
-                window._modalChartsRegistry['geneStatusChart'] = geneStatusChart;
-                
-            } catch (err) {
-                console.error('Error creating gene status chart', err);
-            }
-        }
-    });
-    
-    // Clean up charts when modal is hidden
-    $('#genesModal').on('hidden.bs.modal', function () {
-        if (window._modalChartsRegistry) {
-            Object.values(window._modalChartsRegistry).forEach(chart => {
-                try { chart.destroy(); } catch (e) {}
-            });
-            window._modalChartsRegistry = {};
-        }
     });
 }

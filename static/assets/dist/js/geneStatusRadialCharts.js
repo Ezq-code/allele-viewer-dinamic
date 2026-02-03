@@ -74,7 +74,7 @@
             .style('opacity', 0.95)
             .attr('d', arc)
             .on('mousemove', function (event, d) {
-                const meta = (statusData && statusData[d]) || {};
+                const meta = (statusMetaMap && statusMetaMap[d.name]) || {};
                 const description = meta.description || 'N/D';
                 const type = meta.type || 'N/D';
                 const requiresEvidence = meta.requires_evidence ? 'Sí' : 'No';
@@ -83,7 +83,7 @@
                 tooltip.style.left = `${pageX + 10}px`;
                 tooltip.style.top = `${pageY - 25}px`;
                 tooltip.style.display = 'inline-block';
-                tooltip.innerHTML = `${geneName}<br>${meta.name}: ${meta.value}%<br>Last Updated: ${meta.last_release} days ago`;
+                tooltip.innerHTML = `${geneName}<br>${statusData[d].name}: ${statusData[d].value}%<br>Last update: ${statusData[d].last_release} days ago`;
             })
             .on('mouseout', function () {
                 tooltip.style.display = 'none';
@@ -111,8 +111,6 @@
                     last_release: status.updated_since   
                 }))
                 .filter(item => item.name);
-
-console.log('✌️statusData --->', statusData);
             const wrapper = document.createElement('div');
             wrapper.className = 'gene-chart-item radial-chart-item';
 

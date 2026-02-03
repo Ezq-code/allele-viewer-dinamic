@@ -194,11 +194,6 @@
     margin-top: 30px;
 }
 
-#gene-charts-container {
-    min-height: 300px;
-    margin-bottom: 20px;
-}
-
 /* Personalización de la paginación */
 .pagination .page-link {
     color: #007bff;
@@ -841,10 +836,6 @@
             </div>
           </div>
           
-          <!-- Contenedor flexible para las gráficas de dona -->
-          <div id="gene-charts-container" class="d-flex flex-wrap justify-content-center gap-4 mt-4">
-            <!-- Las gráficas se insertarán aquí dinámicamente -->
-          </div>
           <!-- Template para las gráficas de dona -->
           <template id="gene-chart-template">
             <div class="gene-chart-item">
@@ -1989,8 +1980,6 @@
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
 
 <!-- Chart libraries (load before app scripts) -->
-<script src="{% static 'assets/plugins/chart.js/Chart.min.js' %}"></script>
-<script src="{% static 'assets/plugins/gene-donut-chart/gene-donut-chart.js' %}"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 
 <!-- Application scripts -->
