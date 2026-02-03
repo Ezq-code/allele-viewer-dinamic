@@ -7,6 +7,8 @@ from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.gene_group import GeneGroups
 from django.core.management import call_command
 
+logger = logging.getLogger(__name__)
+
 
 class Command(BaseCommand):
     help = "Loads initial fixtures"
@@ -13834,11 +13836,17 @@ class Command(BaseCommand):
         )  # The key 3 corresponds to The Concice Enciclopedia of Genomic Diseases
         for line in raw_info:
             disease_subgroup_name, disorder_name, gene_name = line
-            disease_subgroup = DiseaseSubGroup.objects.get(name=disease_subgroup_name)
-            disorder, _ = Disorder.objects.get_or_create(
-                name=disorder_name, defaults={"disease_subgroup": disease_subgroup}
-            )
+            try:
+                disease_subgroup = DiseaseSubGroup.objects.filter(
+                    name=disease_subgroup_name
+                )
+                disorder, _ = Disorder.objects.get_or_create(
+                    name=disorder_name, defaults={"disease_subgroup": disease_subgroup}
+                )
 
-            gene, _ = Gene.objects.get_or_create(name=gene_name)
-            disorder.genes.add(gene)
-            gene_group.genes.add(gene)
+                gene, _ = Gene.objects.get_or_create(name=gene_name)
+                disorder.genes.add(gene)
+                gene_group.genes.add(gene)
+            except Exception as ex:
+                logger.error(f"Error processing line {line}: {ex}")
+                continue
