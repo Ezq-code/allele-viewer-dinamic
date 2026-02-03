@@ -9,6 +9,7 @@ class AlleleToMap(models.Model):
     name = models.CharField(
         verbose_name=_("name"),
         max_length=50,
+        db_index=True,
     )
     file = models.ForeignKey(
         to="allele_mapping.AlleleMappingFiles",

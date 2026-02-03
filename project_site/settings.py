@@ -168,7 +168,10 @@ else:
     }
 
 DATABASES = {
-    "default": conexion,
+    "default": {
+        **conexion,
+        "CONN_MAX_AGE": 600,  # Reutilizar conexiones por 10 minutos para mejor rendimiento
+    },
 }
 
 # Password validation
