@@ -138,7 +138,7 @@
             }
             
             .gene-donut-chart-center-name {
-                font-size: 18px;
+                font-size: 12px;
                 font-weight: bold;
                 color: #2c3e50;
                 margin: 0;
