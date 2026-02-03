@@ -6,6 +6,7 @@ from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.gene_group import GeneGroups
 from django.core.management import call_command
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -13845,8 +13846,11 @@ class Command(BaseCommand):
                 )
 
                 gene, _ = Gene.objects.get_or_create(name=gene_name)
-                disorder.genes.add(gene)
-                gene_group.genes.add(gene)
+                if gene not in disorder.genes:
+                    disorder.genes.add(gene)
+                if gene not in gene_group.genes:
+                    gene_group.genes.add(gene)
             except Exception as ex:
                 logger.error(f"Error processing line {line}: {ex}")
                 continue
+        logger.info("Successfully loaded gene-disorder associations.")
