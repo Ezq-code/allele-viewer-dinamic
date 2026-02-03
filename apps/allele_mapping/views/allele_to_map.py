@@ -1,16 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
+from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
-from apps.business_app.models.gene import Gene
-from apps.allele_mapping.serializers.allele_to_map import (
-    AlleleToMapSerializer,
-    GeneListSerializer,
-)
-
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from apps.allele_mapping.serializers.allele_to_map import AlleleToMapSerializer
 
 
 class AlleleToMapViewSet(viewsets.ModelViewSet):
@@ -18,7 +13,7 @@ class AlleleToMapViewSet(viewsets.ModelViewSet):
     ViewSet for AlleleToMap
     """
 
-    queryset = AlleleToMap.objects.all()
+    queryset = AlleleToMap.objects.select_related("gene").filter(gene__isnull=False)
     serializer_class = AlleleToMapSerializer
 
     ordering_fields = "__all__"
@@ -33,24 +28,29 @@ class AlleleToMapViewSet(viewsets.ModelViewSet):
     ]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @action(detail=False, methods=["get"], url_path="genes")
-    def get_genes(self, request):
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="allelic-groups",
+        url_name="allelic-groups",
+    )
+    def get_allelic_groups(self, request):
         """
-        Endpoint para obtener la lista de genes únicos que tienen alelos en AlleleToMap
+        Endpoint para obtener los grupos alélicos únicos de un gen específico
+        Parámetros: gene_name (REQUERIDO)
         """
-        # Filtrar solo genes que tienen al menos un alelo en AlleleToMap
-        genes = (
-            Gene.objects.filter(
-                allele_mapping_files__isnull=False  # Este es el related_name de AlleleToMap
-            )
+
+        # Obtener nombres únicos de alelos y extraer grupos alélicos únicos
+        allele_names = (
+            self.filter_queryset(self.get_queryset())
+            .values_list("name", flat=True)
             .distinct()
-            .order_by("name")
         )
 
-        # Opcional: Podemos agregar filtro por nombre de gen
-        search = request.query_params.get("search")
-        if search:
-            genes = genes.filter(name__icontains=search)
+        # Extraer grupos alélicos únicos usando set comprehension
+        allelic_groups = sorted(
+            {name.split(":")[0] for name in allele_names if ":" in name}
+        )
 
-        serializer = GeneListSerializer(genes, many=True)
-        return Response(serializer.data)
+        # Retornar respuesta ordenada
+        return Response({"allelic_groups": allelic_groups})
