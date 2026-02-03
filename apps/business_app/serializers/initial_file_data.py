@@ -22,7 +22,7 @@ class InitialFileDataSerializer(serializers.ModelSerializer):
             "current_percent",
         ]
 
-    def get_current_percent(self, obj):
+    def get_current_percent(self, obj) -> float:
         return (
             (obj.original_value - obj.min_value) * 100 / (obj.max_value - obj.min_value)
         )

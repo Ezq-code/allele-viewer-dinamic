@@ -1072,33 +1072,6 @@
   },
   {
     "model": "business_app.gene",
-    "pk": 123,
-    "fields": {
-      "name": "VEGFR 1",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
-    "pk": 124,
-    "fields": {
-      "name": "VEGFR 2",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
-    "pk": 125,
-    "fields": {
-      "name": "VEGFR 3",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
     "pk": 126,
     "fields": {
       "name": "VKORC1",
@@ -20332,109 +20305,496 @@
   },
   {
     "model": "business_app.gene",
-    "pk": 2263,
-    "fields": {
-      "name": "HLA-E",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
-    "pk": 2264,
-    "fields": {
-      "name": "HLA-F",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
-    "pk": 2265,
-    "fields": {
-      "name": "HLA-G",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
-    "pk": 2266,
-    "fields": {
-      "name": "HLA-DRB3",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
-    "pk": 2267,
-    "fields": {
-      "name": "HLA-DRB5",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
-    "pk": 2268,
-    "fields": {
-      "name": "HLA-DRA",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
-    "pk": 2269,
-    "fields": {
-      "name": "HLA-DQA1",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
-    "pk": 2270,
-    "fields": {
-      "name": "HLA-DPA1",
-      "description": "",
-      "status": 0
-    }
-  },
-  {
-    "model": "business_app.gene",
-    "pk": 2271,
+    "pk": 2275,
     "fields": {
       "name": "TLR1",
-      "description": "",
+      "description": null,
       "status": 0
     }
   },
   {
     "model": "business_app.gene",
-    "pk": 2272,
+    "pk": 2276,
     "fields": {
       "name": "TLR6",
-      "description": "",
+      "description": null,
       "status": 0
     }
   },
   {
     "model": "business_app.gene",
-    "pk": 2273,
+    "pk": 2277,
     "fields": {
       "name": "TLR10",
-      "description": "",
+      "description": null,
       "status": 0
     }
   },
   {
     "model": "business_app.gene",
-    "pk": 2274,
+    "pk": 2278,
     "fields": {
       "name": "OAS1",
-      "description": "",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2279,
+    "fields": {
+      "name": "VEGFR1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2280,
+    "fields": {
+      "name": "VEGFR2",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2281,
+    "fields": {
+      "name": "VEGFR3",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2282,
+    "fields": {
+      "name": "CYP2C19",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2283,
+    "fields": {
+      "name": "CYP2D6",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2284,
+    "fields": {
+      "name": "NAT2",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2285,
+    "fields": {
+      "name": "CYP1A1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2286,
+    "fields": {
+      "name": "CYP1A2",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2287,
+    "fields": {
+      "name": "CYP2A6",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2288,
+    "fields": {
+      "name": "CYP2B6",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2289,
+    "fields": {
+      "name": "CYP2C8",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2290,
+    "fields": {
+      "name": "CYP2C9",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2291,
+    "fields": {
+      "name": "CYP2E1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2292,
+    "fields": {
+      "name": "CYP2J2",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2293,
+    "fields": {
+      "name": "CYP3A4",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2294,
+    "fields": {
+      "name": "CYP3A5",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2295,
+    "fields": {
+      "name": "CYP4F2",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2296,
+    "fields": {
+      "name": "ABCG2",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2297,
+    "fields": {
+      "name": "ADH1B",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2298,
+    "fields": {
+      "name": "BCHE",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2299,
+    "fields": {
+      "name": "GSTM1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2300,
+    "fields": {
+      "name": "GSTP1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2301,
+    "fields": {
+      "name": "GSTT1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2302,
+    "fields": {
+      "name": "GSTT2B",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2303,
+    "fields": {
+      "name": "NAT1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2304,
+    "fields": {
+      "name": "NUDT15",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2305,
+    "fields": {
+      "name": "SLC15A2",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2306,
+    "fields": {
+      "name": "SLC22A1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2307,
+    "fields": {
+      "name": "SLC22A2",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2308,
+    "fields": {
+      "name": "SLC22A6",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2309,
+    "fields": {
+      "name": "SLCO1B1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2310,
+    "fields": {
+      "name": "SLCO1B3",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2311,
+    "fields": {
+      "name": "SLCO2B1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2312,
+    "fields": {
+      "name": "SULT1A1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2313,
+    "fields": {
+      "name": "TPMT",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2314,
+    "fields": {
+      "name": "UGT1A3",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2315,
+    "fields": {
+      "name": "UGT1A4",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2316,
+    "fields": {
+      "name": "UGT1A6",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2317,
+    "fields": {
+      "name": "UGT1A8",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2318,
+    "fields": {
+      "name": "UGT1A9",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2319,
+    "fields": {
+      "name": "UGT2B15",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2320,
+    "fields": {
+      "name": "UGT2B17",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2321,
+    "fields": {
+      "name": "UGT2B7",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2336,
+    "fields": {
+      "name": "HLA-F",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2337,
+    "fields": {
+      "name": "HLA-DQA1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2338,
+    "fields": {
+      "name": "HLA-DRB3",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2339,
+    "fields": {
+      "name": "HLA-DRA",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2340,
+    "fields": {
+      "name": "HLA-G",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2341,
+    "fields": {
+      "name": "HLA-E",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2342,
+    "fields": {
+      "name": "HLA-DPA1",
+      "description": null,
+      "status": 0
+    }
+  },
+  {
+    "model": "business_app.gene",
+    "pk": 2343,
+    "fields": {
+      "name": "HLA-DRB5",
+      "description": null,
       "status": 0
     }
   }
