@@ -9,12 +9,12 @@ def update_gene_list(apps, schema_editor):
 
     dict_for_update = {
         1: [  # The key 1 corresponds to Pharmacodynamic GeneGroup
-            "HLAA",
-            "HLAB",
-            "HLAC",
-            "HLAE",
-            "HLAF",
-            "HLAG",
+            "HLA-A",
+            "HLA-B",
+            "HLA-C",
+            "HLA-E",
+            "HLA-F",
+            "HLA-G",
             "HLADRB1",
             "HLADRB3",
             "HLADRB5",
