@@ -258,13 +258,13 @@ def populate_countries(apps, schema_editor):
         {"Code": "ZM", "Name": "Zambia"},
         {"Code": "ZW", "Name": "Zimbabwe"},
     ]
-    
+
     # Usar bulk_create para optimizar la creación de registros
     countries_to_create = [
         Country(code=item["Code"], name=item["Name"]) for item in data
     ]
     Country.objects.bulk_create(countries_to_create)
-    
+
     print()
     print(
         colored(
