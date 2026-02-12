@@ -16,9 +16,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.update_gene_list_for_groups()
-        self.add_deseases()
+        self.add_diseases()
 
     def update_gene_list_for_groups(self):
+        call_command("loaddata", "genegroups_empty.json")
+
         dict_for_update = {
             1: [  # The key 1 corresponds to Pharmacodynamic GeneGroup
                 "HLA-A",
@@ -277,7 +279,7 @@ class Command(BaseCommand):
         # Esta línea elimina genes huérfanos, lo cual es una buena práctica
         Gene.objects.filter(groups__isnull=True).delete()
 
-    def add_deseases(self):
+    def add_diseases(self):
         raw_info = [
             ("Nutritional Anemias", "Atransferrinemia", "TF"),
             ("Nutritional Anemias", "Hypochromic microcytic anemia", "SLC11A2"),
@@ -13840,16 +13842,14 @@ class Command(BaseCommand):
             try:
                 disease_subgroup = DiseaseSubGroup.objects.filter(
                     name=disease_subgroup_name
-                )
+                ).first()
                 disorder, _ = Disorder.objects.get_or_create(
                     name=disorder_name, defaults={"disease_subgroup": disease_subgroup}
                 )
 
                 gene, _ = Gene.objects.get_or_create(name=gene_name)
-                if gene not in disorder.genes:
-                    disorder.genes.add(gene)
-                if gene not in gene_group.genes:
-                    gene_group.genes.add(gene)
+                disorder.genes.add(gene)
+                gene_group.genes.add(gene)
             except Exception as ex:
                 logger.error(f"Error processing line {line}: {ex}")
                 continue

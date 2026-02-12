@@ -1,0 +1,38 @@
+[
+  {
+    "model": "business_app.genegroups",
+    "pk": 1,
+    "fields": {
+      "name": "Pharmacodynamic Genes",
+      "description": "",
+      "genes": []
+    }
+  },
+  {
+    "model": "business_app.genegroups",
+    "pk": 2,
+    "fields": {
+      "name": "Pharmacokinetic Genes",
+      "description": "",
+      "genes": []
+    }
+  },
+  {
+    "model": "business_app.genegroups",
+    "pk": 3,
+    "fields": {
+      "name": "The Concice Enciclopedia of Genomic Diseases",
+      "description": "",
+      "genes": []
+    }
+  },
+  {
+    "model": "business_app.genegroups",
+    "pk": 4,
+    "fields": {
+      "name": "Prioritized Gene",
+      "description": "",
+      "genes": []
+    }
+  }
+]
