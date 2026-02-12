@@ -17,8 +17,8 @@ Esta configuración permite desplegar la aplicación Django con Nginx, Gunicorn,
 - `Dockerfile.nginx`: Imagen personalizada de Nginx
 - `nginx.conf`: Configuración de Nginx con proxy reverso
 - `entrypoint.sh`: Script de inicialización (migraciones, collectstatic, gunicorn)
-- `docker-compose.yml`: Configuración para producción
-- `docker-compose-dev.yml`: Configuración para desarrollo (si existe)
+- `docker compose.yml`: Configuración para producción
+- `docker compose-dev.yml`: Configuración para desarrollo (si existe)
 
 ## Despliegue en Producción
 
@@ -58,17 +58,17 @@ RUNNING_FROM=remote
 
 ```bash
 # Construir las imágenes
-docker-compose build
+docker compose build
 
 # Levantar todos los servicios
-docker-compose up -d
+docker compose up -d
 
 # Ver los logs
-docker-compose logs -f
+docker compose logs -f
 
 # Ver logs de un servicio específico
-docker-compose logs -f web
-docker-compose logs -f nginx
+docker compose logs -f web
+docker compose logs -f nginx
 ```
 
 ### 3. Verificar el despliegue
@@ -81,44 +81,44 @@ docker-compose logs -f nginx
 
 ```bash
 # Ver el estado de los servicios
-docker-compose ps
+docker compose ps
 
 # Detener los servicios
-docker-compose down
+docker compose down
 
 # Detener y eliminar volúmenes
-docker-compose down -v
+docker compose down -v
 
 # Reiniciar un servicio específico
-docker-compose restart web
-docker-compose restart nginx
+docker compose restart web
+docker compose restart nginx
 
 # Ejecutar migraciones manualmente
-docker-compose exec web python manage.py migrate
+docker compose exec web python manage.py migrate
 
 # Crear superusuario
-docker-compose exec web python manage.py createsuperuser
+docker compose exec web python manage.py createsuperuser
 
 # Acceder al shell de Django
-docker-compose exec web python manage.py shell
+docker compose exec web python manage.py shell
 
 # Ver logs en tiempo real
-docker-compose logs -f --tail=100
+docker compose logs -f --tail=100
 ```
 
 ## Desarrollo Local
 
-Para desarrollo, usa el archivo `docker-compose-dev.yml` si existe:
+Para desarrollo, usa el archivo `docker compose-dev.yml` si existe:
 
 ```bash
-docker-compose -f docker-compose-dev.yml up
+docker compose -f docker compose-dev.yml up
 ```
 
 O ejecuta Django localmente y solo los servicios auxiliares en Docker:
 
 ```bash
 # Solo PostgreSQL y Redis
-docker-compose up postgres redis -d
+docker compose up postgres redis -d
 
 # Django en local
 python manage.py runserver
@@ -175,7 +175,7 @@ server {
 }
 ```
 
-3. Monta los certificados en el contenedor de Nginx en `docker-compose.yml`:
+3. Monta los certificados en el contenedor de Nginx en `docker compose.yml`:
 
 ```yaml
 nginx:
@@ -189,16 +189,16 @@ nginx:
 
 ```bash
 # Todos los servicios
-docker-compose logs -f
+docker compose logs -f
 
 # Solo errores
-docker-compose logs -f | grep -i error
+docker compose logs -f | grep -i error
 
 # Logs de Nginx
-docker-compose logs -f nginx
+docker compose logs -f nginx
 
 # Logs de Celery
-docker-compose logs -f celery_worker
+docker compose logs -f celery_worker
 ```
 
 ### Recursos
@@ -208,7 +208,7 @@ docker-compose logs -f celery_worker
 docker stats
 
 # Ver procesos
-docker-compose top
+docker compose top
 ```
 
 ## Troubleshooting
@@ -217,36 +217,36 @@ docker-compose top
 
 ```bash
 # Ver logs detallados
-docker-compose logs web
+docker compose logs web
 
 # Verificar que PostgreSQL está listo
-docker-compose exec postgres pg_isready
+docker compose exec postgres pg_isready
 
 # Reiniciar el servicio web
-docker-compose restart web
+docker compose restart web
 ```
 
 ### Archivos estáticos no se muestran
 
 ```bash
 # Recolectar archivos estáticos manualmente
-docker-compose exec web python manage.py collectstatic --noinput
+docker compose exec web python manage.py collectstatic --noinput
 
 # Verificar permisos
-docker-compose exec web ls -la /app/static_output
+docker compose exec web ls -la /app/static_output
 ```
 
 ### Celery no procesa tareas
 
 ```bash
 # Ver logs de Celery
-docker-compose logs celery_worker
+docker compose logs celery_worker
 
 # Verificar conexión a Redis
-docker-compose exec redis redis-cli ping
+docker compose exec redis redis-cli ping
 
 # Reiniciar worker
-docker-compose restart celery_worker
+docker compose restart celery_worker
 ```
 
 ## Backup y Restauración
@@ -255,20 +255,20 @@ docker-compose restart celery_worker
 
 ```bash
 # Crear backup
-docker-compose exec postgres pg_dump -U postgres allele_viewer > backup_$(date +%Y%m%d).sql
+docker compose exec postgres pg_dump -U postgres allele_viewer > backup_$(date +%Y%m%d).sql
 
 # Con compresión
-docker-compose exec postgres pg_dump -U postgres allele_viewer | gzip > backup_$(date +%Y%m%d).sql.gz
+docker compose exec postgres pg_dump -U postgres allele_viewer | gzip > backup_$(date +%Y%m%d).sql.gz
 ```
 
 ### Restaurar base de datos
 
 ```bash
 # Desde SQL plano
-docker-compose exec -T postgres psql -U postgres allele_viewer < backup_20260119.sql
+docker compose exec -T postgres psql -U postgres allele_viewer < backup_20260119.sql
 
 # Desde archivo comprimido
-gunzip -c backup_20260119.sql.gz | docker-compose exec -T postgres psql -U postgres allele_viewer
+gunzip -c backup_20260119.sql.gz | docker compose exec -T postgres psql -U postgres allele_viewer
 ```
 
 ## Actualización
@@ -280,16 +280,16 @@ Para actualizar la aplicación:
 git pull origin main
 
 # 2. Reconstruir imágenes
-docker-compose build
+docker compose build
 
 # 3. Detener servicios
-docker-compose down
+docker compose down
 
 # 4. Levantar con nuevas imágenes
-docker-compose up -d
+docker compose up -d
 
 # 5. Verificar logs
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ## Seguridad

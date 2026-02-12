@@ -11,21 +11,21 @@ logger = logging.getLogger(__name__)
 def send_email_task(subject, message, html_message, recipient_list, from_email=None):
     """
     Tarea asíncrona para enviar correos electrónicos.
-    
+
     Args:
         subject: Asunto del correo
         message: Mensaje en texto plano
         html_message: Mensaje en HTML
         recipient_list: Lista de destinatarios
         from_email: Correo del remitente (opcional)
-    
+
     Returns:
         int: Número de correos enviados exitosamente
     """
     try:
         if from_email is None:
             from_email = settings.DEFAULT_FROM_EMAIL
-        
+
         result = send_mail(
             subject=subject,
             message=message,
@@ -45,13 +45,13 @@ def send_email_task(subject, message, html_message, recipient_list, from_email=N
 def send_email_to_client_task(req_srv, email, textmail, time_to_complete):
     """
     Tarea asíncrona para enviar correo de notificación al cliente.
-    
+
     Args:
         req_srv: Servicio solicitado
         email: Correo del destinatario
         textmail: Texto del mensaje
         time_to_complete: Tiempo estimado para completar
-    
+
     Returns:
         int: Número de correos enviados exitosamente
     """
@@ -63,7 +63,7 @@ def send_email_to_client_task(req_srv, email, textmail, time_to_complete):
     }
     body = render_to_string(template_name="email/generic.html", context=ctx)
     html = render_to_string(template_name="email/service_requested.html", context=ctx)
-    
+
     return send_email_task.delay(
         subject=f"Nuevo servicio de <{req_srv}> solicitado",
         message=body,
@@ -78,7 +78,7 @@ def example_periodic_task():
     """
     Tarea de ejemplo para ser ejecutada periódicamente con Celery Beat.
     Esta tarea puede ser programada desde el admin de Django en django_celery_beat.
-    
+
     Returns:
         str: Mensaje de confirmación
     """
@@ -92,11 +92,10 @@ def cleanup_old_data_task():
     """
     Tarea de ejemplo para limpieza de datos antiguos.
     Esta tarea puede ser programada para ejecutarse periódicamente.
-    
+
     Returns:
         str: Mensaje de confirmación
     """
     logger.info("Ejecutando tarea de limpieza de datos")
     # Aquí puedes agregar la lógica para limpiar datos antiguos
     return "Limpieza de datos completada"
-
