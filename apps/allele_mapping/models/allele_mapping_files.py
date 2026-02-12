@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 from apps.business_app.models import AllowedExtensions
-from apps.allele_mapping.utils.xslx_reader import XslxReader
+from apps.allele_mapping.tasks import process_allele_mapping_file
 
 
 def user_directory_path(instance, filename):
@@ -62,8 +62,8 @@ class AlleleMappingFiles(models.Model):
 
         if is_new and file:
             try:
-                processor_object = XslxReader(file)
-                processor_object.proccess_file(self.id)
+                # Ejecutar procesamiento asíncrono con Celery
+                process_allele_mapping_file.delay(file.path, self.id)
 
             except Exception as e:
                 print(e)

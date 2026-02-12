@@ -81,6 +81,10 @@ docker compose up -d redis
 
 📚 **Documentación completa:** Ver [`CELERY.md`](./CELERY.md) para guía detallada, ejemplos y troubleshooting.
 
+
+```powershell
+docker compose exec web python manage.py load_gene_data
+```
 ---
 
 ## Development Tips
