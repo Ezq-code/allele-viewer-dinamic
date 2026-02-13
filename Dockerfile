@@ -25,6 +25,7 @@ COPY project_site/ /app/project_site/
 COPY apps/ /app/apps/
 COPY manage.py /app/
 COPY entrypoint.sh /app/
+COPY supervisord.conf /app/
 
 # Copiar archivos estáticos y templates (si existen)
 COPY static/ /app/static/

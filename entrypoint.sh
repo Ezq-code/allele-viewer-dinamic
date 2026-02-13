@@ -50,13 +50,6 @@ else:
     print("Superusuario admin ya existe")
 END
 
-# Iniciar gunicorn
-echo "Iniciando servidor Gunicorn..."
-exec gunicorn project_site.wsgi:application \
-    --bind 0.0.0.0:8000 \
-    --workers 4 \
-    --threads 2 \
-    --timeout 120 \
-    --access-logfile - \
-    --error-logfile - \
-    --log-level info
+# Iniciar supervisord que manejará Gunicorn, Celery Worker y Celery Beat
+echo "Iniciando Supervisord (Gunicorn + Celery Worker + Celery Beat)..."
+exec supervisord -c /app/supervisord.conf
