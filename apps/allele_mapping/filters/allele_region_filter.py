@@ -10,12 +10,14 @@ class AlleleRegionFilter(django_filters.FilterSet):
     """
     Filtro personalizado para AlleleRegion
     """
-
     gene_name = django_filters.CharFilter(
         method="filter_by_gene_name", label="Gene Name"
     )
-    allelic_group = django_filters.CharFilter(
-        method="filter_by_allelic_group", label="Allelic Group"
+    alleles_list = django_filters.CharFilter(
+        method="filter_by_alleles_list", label="Alleles List (comma separated)"
+    )
+    country = django_filters.CharFilter(
+        method="filter_by_country", label="Country (first word of population)"
     )
     min_allele_frequency = django_filters.NumberFilter(
         method="filter_by_min_allele_frequency", label="Min Allele Frequency"
@@ -29,9 +31,12 @@ class AlleleRegionFilter(django_filters.FilterSet):
     max_sample_size = django_filters.NumberFilter(
         method="filter_by_max_sample_size", label="Max Sample Size"
     )
+
+    # Base queryset para AlleleRegionInfo (frecuencias válidas)
     allele_region_info = AlleleRegionInfo.objects.filter(
-        allele_frequency__isnull=False
-    ).exclude(allele_frequency=0)
+        allele_frequency__isnull=False,
+        allele_frequency__gt=0
+    )
 
     class Meta:
         model = AlleleRegion
@@ -41,16 +46,6 @@ class AlleleRegionFilter(django_filters.FilterSet):
             "lon": ["gte", "lte"],
             "alleles__percent_of_individuals": ["gte", "lte"],
         }
-
-    def _get_allele_ids_by_allelic_group(self, allelic_group):
-        """
-        Método auxiliar para obtener IDs de alelos por grupo alélico
-        """
-        # Normalizar el grupo alélico (ej: "A*01" -> "A*01:")
-        search_pattern = allelic_group if ":" in allelic_group else f"{allelic_group}:"
-        return AlleleToMap.objects.filter(name__startswith=search_pattern).values_list(
-            "id", flat=True
-        )
 
     def filter_by_min_sample_size(self, queryset, name, value):
         """
@@ -119,98 +114,101 @@ class AlleleRegionFilter(django_filters.FilterSet):
             cache.set(cache_key, alleles_id, timeout=None)
         return queryset.filter(id__in=alleles_id)
 
-    def filter_by_allelic_group(self, queryset, name, value):
+    def filter_by_country(self, queryset, name, value):
+        """Filtra regiones cuyo campo 'population' comienza con el país indicado."""
+        if not value:
+            return queryset
+        # Búsqueda insensible a mayúsculas al inicio del string
+        return queryset.filter(population__istartswith=value)
+
+    def filter_by_alleles_list(self, queryset, name, value):
         """
-        Filtra las regiones que tienen alelos del grupo alélico especificado
+        Filtra regiones que contienen al menos uno de los alelos especificados.
+        El parámetro 'value' es una cadena con nombres de alelos separados por comas.
+        Ejemplo: ?alleles_list=A*01:01,A*02:01,B*07:02
         """
         if not value:
             return queryset
 
-        # Generar clave de caché única
-        cache_key = f"allelic_group_filter_{value}"
+        # Dividir y limpiar la lista de alelos
+        allele_names = [name.strip() for name in value.split(",") if name.strip()]
+        if not allele_names:
+            return queryset
 
-        # Intentar obtener del caché
+        cache_key = f"alleles_list_filter_{'_'.join(sorted(allele_names))}"
         cached_data = cache.get(cache_key)
 
         if cached_data:
-            allele_list, region_ids = cached_data
+            allele_ids, region_ids = cached_data
         else:
-            # Obtener los IDs de alelos del grupo alélico
-            allele_list = self._get_allele_ids_by_allelic_group(value)
-
-            if not allele_list:
+            # Obtener IDs de los alelos exactos
+            allele_ids = list(
+                AlleleToMap.objects.filter(name__in=allele_names)
+                .values_list("id", flat=True)
+                .distinct()
+            )
+            if not allele_ids:
                 return queryset.none()
 
-            # Obtener regiones que tienen esos alelos
-            region_ids = (
-                self.allele_region_info.filter(allele_id__in=allele_list)
+            # Obtener regiones que tienen esos alelos (con frecuencias válidas)
+            region_ids = list(
+                self.allele_region_info.filter(allele_id__in=allele_ids)
                 .values_list("region_id", flat=True)
                 .distinct()
             )
+            cache.set(cache_key, (allele_ids, region_ids), timeout=None)
 
-            # Guardar en caché por 1 hora
-            cache.set(cache_key, (allele_list, region_ids), timeout=None)
-
-        # Aplicar Prefetch para filtrar también los alelos relacionados
+        # Prefetch para traer SOLO los alelos de la lista
         filtered_queryset = queryset.filter(id__in=region_ids).prefetch_related(
             Prefetch(
                 "alleles",
                 queryset=AlleleRegionInfo.objects.filter(
-                    allele_id__in=allele_list,
+                    allele_id__in=allele_ids,
                     allele_frequency__isnull=False,
                     allele_frequency__gt=0,
-                ).select_related("allele", "allele__gene"),
+                )
+                .select_related("allele", "allele__gene")
+                .order_by("-allele_frequency"),
                 to_attr="filtered_alleles",
             )
         )
-
         return filtered_queryset
 
     def filter_by_gene_name(self, queryset, name, value):
-        """
-        Filtra las regiones que tienen alelos del gen especificado
-        y aplica un Prefetch para mostrar solo los alelos de ese gen
-        """
         if not value:
             return queryset
-
-        # Generar clave de caché única
         cache_key = f"gene_filter_{value}"
-
-        # Intentar obtener del caché
         cached_data = cache.get(cache_key)
-
         if cached_data:
-            allele_list, region_ids = cached_data
+            allele_ids, region_ids = cached_data
         else:
-            # Obtener los IDs de genes, alelos y regiones que coinciden
-            allele_list = list(
-                AlleleToMap.objects.filter(gene__name=value).values_list(
-                    "id", flat=True
-                )
+            allele_ids = list(
+                AlleleToMap.objects.filter(gene__name=value)
+                .values_list("id", flat=True)
+                .distinct()
             )
             region_ids = list(
-                AlleleRegionInfo.objects.filter(allele_id__in=allele_list)
+                self.allele_region_info.filter(allele_id__in=allele_ids)
                 .values_list("region_id", flat=True)
                 .distinct()
             )
+            cache.set(cache_key, (allele_ids, region_ids), timeout=3600)
 
-            cache.set(cache_key, (allele_list, region_ids), timeout=3600)
-
-        # Aplicar Prefetch para filtrar también los alelos relacionados
         filtered_queryset = queryset.filter(id__in=region_ids).prefetch_related(
             Prefetch(
                 "alleles",
                 queryset=AlleleRegionInfo.objects.filter(
-                    allele_id__in=allele_list,
+                    allele_id__in=allele_ids,
                     allele_frequency__isnull=False,
                     allele_frequency__gt=0,
-                ).select_related("allele", "allele__gene"),
+                )
+                .select_related("allele", "allele__gene")
+                .order_by("-allele_frequency"),
                 to_attr="filtered_alleles",
             )
         )
-
         return filtered_queryset
+
 
     # def filter_queryset(self, queryset):
     #     """

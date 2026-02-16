@@ -115,42 +115,41 @@ class GeneViewSet(
     @action(
         detail=False,
         methods=["GET"],
-        url_path="allelic-groups",
-        url_name="allelic-groups",
+        url_path="alleles-by-gene",
+        url_name="alleles-by-gene",
     )
     @method_decorator(cache_page(timeout=None))
-    def get_allelic_groups(self, request):
+    def get_alleles_by_gene(self, request):
         """
-        Endpoint para obtener los grupos alélicos únicos de un gen específico
+        DEVUELVE LA LISTA COMPLETA DE ALELOS DE UN GEN ESPECÍFICO.
         Parámetros: gene_name (REQUERIDO)
+        Retorna:
+        {
+            "gene_name": "HLA-A",
+            "alleles": ["A*01:01", "A*01:02", "A*02:01", ...]
+        }
         """
         gene_name = request.query_params.get("gene_name")
 
         if not gene_name:
             return Response({"error": "You must provide gene_name"}, status=400)
 
-        # Filtrar alelos del gen especificado
-        alleles = AlleleToMap.objects.filter(gene__isnull=False)
+        # Filtrar alelos del gen especificado (búsqueda exacta, no icontains)
+        alleles_qs = AlleleToMap.objects.filter(
+            gene__name=gene_name  # Cambiado a búsqueda exacta
+        ).values_list("name", flat=True).distinct()
 
-        if gene_name:
-            alleles = alleles.filter(gene__name__icontains=gene_name)
+        # Si no hay alelos, devolver lista vacía
+        if not alleles_qs:
+            return Response({
+                "gene_name": gene_name,
+                "alleles": []
+            })
 
-        # Obtener nombres únicos de alelos
-        allele_names = alleles.values_list("name", flat=True).distinct()
+        # Convertir a lista y ordenar alfabéticamente
+        allele_list = sorted(list(alleles_qs))
 
-        # Extraer grupos alélicos usando regex
-        # Ejemplo: de "A*01:01" extraemos "A*01"
-        allelic_groups = set()
-        pattern = r"^([A-Za-z\*]+[\d]+[\w]*)"  # Capturar hasta el primer ':'
-
-        for allele_name in allele_names:
-            match = re.match(pattern, allele_name)
-            if match:
-                # Extraer el grupo alélico (sin el alelo específico)
-                base_group = match.group(1)
-                allelic_groups.add(base_group)
-
-        # Convertir a lista ordenada
-        sorted_groups = sorted(list(allelic_groups))
-
-        return Response({"gene_name": gene_name, "allelic_groups": sorted_groups})
+        return Response({
+            "gene_name": gene_name,
+            "alleles": allele_list
+        })

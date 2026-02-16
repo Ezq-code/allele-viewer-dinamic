@@ -13,7 +13,6 @@ class AlleleRegionSerializer(serializers.ModelSerializer):
 
 class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
     alleles = serializers.SerializerMethodField()
-    allelic_groups = serializers.SerializerMethodField()
 
     class Meta:
         model = AlleleRegion
@@ -23,33 +22,8 @@ class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
             "location",
             "lat",
             "lon",
-            "allelic_groups",
             "alleles",
         ]
-
-    def get_allelic_groups(self, obj):
-        """
-        Extraer grupos alélicos únicos de los alelos de esta región
-        Optimizado para reducir procesamiento en Python
-        """
-        if hasattr(obj, "filtered_alleles"):
-            allele_infos = obj.filtered_alleles
-        else:
-            # Si no hay filtered_alleles, usar todos los alelos
-            allele_infos = obj.alleles.all()
-
-        groups = set()
-        for info in allele_infos:
-            if info.allele and info.allele.name:
-                # Extraer grupo alélico (ej: de "A*01:01" extraer "A*01")
-                name = info.allele.name
-                colon_pos = name.find(":")
-                if colon_pos > 0:
-                    groups.add(name[:colon_pos])
-
-        return sorted(list(groups))
-
-        return sorted(list(groups))
 
     def get_alleles(self, obj):
         """

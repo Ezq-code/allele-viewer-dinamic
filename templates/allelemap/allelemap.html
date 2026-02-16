@@ -35,6 +35,12 @@
   href="{% static 'assets/plugins/jvectormap/jquery-jvectormap.min.css' %}"
 />
 
+<link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+<link rel="stylesheet"
+      href="{% static 'assets/plugins/bootstrap-slider/css/bootstrap-slider.min.css' %}">
+
 <script src="{% static 'assets/plugins/jvectormap/jquery-1.11.2.min.js' %}"></script>
 
 <script src="{% static 'assets/plugins/jvectormap/jquery-jvectormap.min.js' %}"></script>
@@ -46,6 +52,8 @@
 <script src="{% static 'assets/dist/js/3Dmol-min.js' %}"></script>
 <script src="{% static 'assets/dist/js/3Dmol.ui-min.js' %}"></script>
 <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<script src="{% static 'assets/plugins/bootstrap-slider/bootstrap-slider.min.js' %}"></script>
 
 
 {% endblock %} {% block content %}
@@ -65,6 +73,25 @@
             <div class="card-header">
               <h3 class="card-title">Allele Map</h3>
               <div class="card-tools">
+
+                <div class="d-inline-block align-middle" style="width:210px; margin-right: 15px;">
+                  <label for="sampleSizeRange" class="mb-0" style="font-size:.75rem;">
+                    Sample size
+                    <span id="sampleSizeRangeLabel" class="text-muted">
+                      (10001 – 4,000,000)
+                    </span>
+                  </label>
+                
+                  <input
+                    id="sampleSizeRange"
+                    type="text"           
+                    data-slider-min="1"
+                    data-slider-max="4000000"
+                    data-slider-step="1"
+                    data-slider-value="[10001,4000000]"
+                  />
+                </div>
+                <!--
                 <div class="d-inline-block">
                   <select class="form-control form-control-sm" name="sampleSize"
                           id="sampleSize" style="width:210px;">
@@ -76,26 +103,21 @@
                       <option value="1-50">Sample Size: 1-50</option>
                   </select>
                 </div>
-                <div class="d-inline-block">
+                -->
+                <div class="d-inline-block" style="margin-right: 8px; height: 45px;">
                   <select class="form-control form-control-sm"
                           id="genes" style="width:140px;">
-                 <!--     <option value="HLA-A">HLA-A</option>
-                      <option value="HLA-B">HLA-B</option>
-                      <option value="HLA-C">HLA-C</option>
-                      <option value="HLA-DRB1">HLA-DRB1</option>
-                      <option value="HLA-DPB1">HLA-DPB1</option>
-                      <option value="HLA-DQB1">HLA-DQB1</option>
-                      <option value="HLA-DPA1">HLA-DPA1</option>
-                      <option value="HLA-DQA1">HLA-DQA1</option>  -->
                   </select>
               </div>
-              <div class="d-inline-block">
-                <select class="form-control form-control-sm" name="allelic_group"
-                        id="allelic_group" style="width:140px;">
-                </select>
-            </div>
 
-              <div class="d-inline-block">
+              <div class="d-inline-block" style="margin-right: 8px;">
+                <select class="form-control form-control-sm select2 select2-sm-custom" id="allele-list" name="allele-list" multiple="multiple" data-placeholder="Select allele..." style="width: 100%;" >
+                  <option value="51-100">Sample Size: 51-100</option>
+                  <option value="1-50">Sample Size: 1-50</option>
+                </select>
+              </div>
+
+              <div class="d-inline-block" style="height: 45px;">
                   <button class="btnok btn-primary btn-sm border-right" id="btreloadgene">Load
                   </button>
               </div>
@@ -145,6 +167,46 @@
   </div>
 
   <style>
+
+/* Que el contenedor de Select2 use la misma altura que form-control-sm */
+.select2-container--bootstrap4 .select2-selection--multiple {
+  min-height: calc(1.8125rem + 2px);  /* altura aproximada de .form-control-sm en Bootstrap 4 */
+  padding-top: .15rem;
+  padding-bottom: .15rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Evitar que crezca demasiado cuando hay varios tags */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+/* Chips un poco más compactos */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+  min-height: 25px !important; /*calc(1.8125rem + 2px); */ /* altura aproximada de .form-control-sm en Bootstrap 4 */
+  height: 25px !important;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: .75rem;
+}
+
+/* Si quieres forzar exactamente la misma altura que el resto */
+.select2-sm-custom + .select2-container--bootstrap4 .select2-selection--multiple {
+  height: 30px !important; /*  calc(1.8125rem + 2px); */
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  
+}
+
+.select2-sm-custom + .select2-container--bootstrap4 {
+  width: 6.5rem;       /* ancho fijo ~9 caracteres */
+  min-width: 6.5rem;
+}
+
+
 /* Estilos para las columnas de alelos en el modal */
 .allele-col {
   min-width: 150px;
@@ -182,50 +244,102 @@
 
 <script>
 
-    if (!sessionStorage.getItem('inicializado')) {
+if (!sessionStorage.getItem('inicializado')) {
       sessionStorage.setItem('gene', 'HLA-A');
-      sessionStorage.setItem('group_allele', 'A*01');
-      sessionStorage.setItem('minSampleSize', '10000');
+      sessionStorage.setItem('group_allele', JSON.stringify(["A*01:01"]));
+      sessionStorage.setItem('minSampleSize', '10001');
       sessionStorage.setItem('maxSampleSize', '4000000');
       sessionStorage.setItem('inicializado', 'true');
     }
 
-function buildPieSVGForModal(parts, size = 200) {
-  const cx = size / 2;
-  const cy = size / 2;
-  const pieRadius = (size * 0.35);
-  const total = parts.reduce((sum, p) => sum + p.value, 0);
+$(function () {
 
-  let startAngle = -Math.PI / 2;
-  let paths = "";
+    $('.select2').select2({
+      theme: 'bootstrap4'
+    });
 
-  parts.forEach((slice, idx) => {
-    const sliceAngle = (slice.value / total) * Math.PI * 2;
-    const endAngle = startAngle + sliceAngle;
-
-    const x1 = cx + pieRadius * Math.cos(startAngle);
-    const y1 = cy + pieRadius * Math.sin(startAngle);
-    const x2 = cx + pieRadius * Math.cos(endAngle);
-    const y2 = cy + pieRadius * Math.sin(endAngle);
-    const large = sliceAngle > Math.PI ? 1 : 0;
-    const d = `M${cx},${cy} L${x1},${y1} A${pieRadius},${pieRadius} 0 ${large},1 ${x2},${y2} Z`;
-
-    paths += `
-      <path class="pie-slice"
-            data-label="${slice.label}"
-            d="${d}"
-            fill="${slice.color}"
-            stroke="rgba(255,255,255,0.9)"
-            stroke-width="1.5"
-            style="cursor: pointer;"></path>`;
-    startAngle = endAngle;
   });
 
-  return `
-    <svg class="pie-svg-modal" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-      ${paths}
-    </svg>`;
+  $(function () {
+    var $slider = $('#sampleSizeRange').bootstrapSlider({
+      range: true,          // rango doble
+      tooltip: 'hide',       // oculta tooltip nativo si no lo quieres
+      min: 1,
+      max: 4000000,
+      step: 1,
+      value: [parseInt(sessionStorage.getItem('minSampleSize'), 10), parseInt(sessionStorage.getItem('maxSampleSize'), 10)]  // rango inicial
+    });
+
+
+    var $label = $('#sampleSizeRangeLabel');
+
+    function format(n) {
+      return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function updateLabel(values) {
+      var min = values[0];
+      var max = values[1];
+      $label.text('(' + format(min) + ' – ' + format(max) + ')');
+    }
+
+    // Valores iniciales
+    updateLabel($slider.bootstrapSlider('getValue'));
+
+    // Cuando el usuario mueva el slider
+    $slider.on('change', function (e) {
+      // e.value.newValue es un array [min, max]
+      updateLabel(e.value.newValue);
+    });
+  });
+
+
+    function buildPieSVGForModal(parts, size = 200) {
+    const cx = size / 2;
+    const cy = size / 2;
+    const pieRadius = (size * 0.35);
+    const total = parts.reduce((sum, p) => sum + p.value, 0);
+
+    let paths = "";
+
+    if (parts.length === 1) {
+        // Dibuja un círculo completo si hay solo un alelo
+        const singleSlice = parts[0];
+        paths += `
+            <circle cx="${cx}" cy="${cy}" r="${pieRadius}" fill="${singleSlice.color}" />
+        `;
+    } else {
+        let startAngle = -Math.PI / 2;
+
+        parts.forEach((slice) => {
+            const sliceAngle = (slice.value / total) * Math.PI * 2;
+            const endAngle = startAngle + sliceAngle;
+
+            const x1 = cx + pieRadius * Math.cos(startAngle);
+            const y1 = cy + pieRadius * Math.sin(startAngle);
+            const x2 = cx + pieRadius * Math.cos(endAngle);
+            const y2 = cy + pieRadius * Math.sin(endAngle);
+            const large = sliceAngle > Math.PI ? 1 : 0;
+            const d = `M${cx},${cy} L${x1},${y1} A${pieRadius},${pieRadius} 0 ${large},1 ${x2},${y2} Z`;
+
+            paths += `
+                <path class="pie-slice"
+                      data-label="${slice.label}"
+                      d="${d}"
+                      fill="${slice.color}"
+                      stroke="rgba(255,255,255,0.9)"
+                      stroke-width="1.5"
+                      style="cursor: pointer;"></path>`;
+            startAngle = endAngle;
+        });
+    }
+
+    return `
+        <svg class="pie-svg-modal" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+            ${paths}
+        </svg>`;
 }
+
 
     jQuery(function($) {
     
@@ -362,7 +476,7 @@ function coordKey(lat, lon) {
 
     var loadedData = false;
     var  gene_name =  sessionStorage.getItem('gene');
-    var  group_allele =   sessionStorage.getItem('group_allele');
+    var  group_allele =   JSON.parse(sessionStorage.getItem('group_allele'));
     var  min_Sample_Size =  sessionStorage.getItem('minSampleSize');
     var  max_Sample_Size =  sessionStorage.getItem('maxSampleSize');
 
@@ -396,9 +510,10 @@ function coordKey(lat, lon) {
 
     function LoadAlleleGroup() {
 
-        $.ajax({
+      $.ajax({
             type: 'GET',
-            url: '/business-gestion/gene/allelic-groups/?gene_name='+gene_name,            
+            //url: '/business-gestion/gene/allelic-groups/?gene_name='+gene_name, 
+            url: '/business-gestion/gene/alleles-by-gene/?gene_name='+gene_name,          
             error: function () {
                 Swal.fire({
                     icon: "error",
@@ -410,18 +525,27 @@ function coordKey(lat, lon) {
             dataType: 'json',
             success: function (response) {
                 var data = response;
-                selectGroupAllele = document.getElementById('allelic_group');
+                //selectGroupAllele = document.getElementById('allelic_group');
+                selectGroupAllele = document.getElementById('allele-list');
                 selectGroupAllele.innerHTML = ''; 
-                data.allelic_groups.forEach(function (alele_group) {
+                data.alleles.forEach(function (alele_group) {
                   var opt = document.createElement('option');
                   opt.value = alele_group;
                   opt.innerHTML = alele_group;
                   selectGroupAllele.appendChild(opt);
                 });
-                var aAllele_Group = document.getElementById("allelic_group");
-                aAllele_Group.value = sessionStorage.getItem("group_allele");      
+                //var aAllele_Group = document.getElementById("allele-list");
+                //aAllele_Group.value = sessionStorage.getItem("group_allele");      
+
+                //var aAllele_Group = document.getElementById("allele-list");
+                //$(aAllele_Group).val() = JSON.parse(sessionStorage.getItem("group_allele"));
+
+                var aAllele_Group = document.getElementById("allele-list");
+                var storedValues = JSON.parse(sessionStorage.getItem("group_allele"));
+                $(aAllele_Group).val(storedValues);
+
             }
-        }); 
+        });
     }   
     var mapPoints = [];  
     let regionAlele = {};
@@ -430,14 +554,12 @@ function coordKey(lat, lon) {
  
     axios
     //.get('/allele-mapping/alleles-region/by-gene/?allelic_group='+group_allele+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size)
-    .get('/allele-mapping/alleles-region/?allelic_group='+group_allele+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size)
+    //.get('/allele-mapping/alleles-region/?allelic_group='+group_allele+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size)
+    .get('/allele-mapping/alleles-region/?alleles_list='+group_allele+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size)
+    //.get('/allele-mapping/alleles-region/?alleles_list=A*01:01,A*02:01&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size)
+    //allele-mapping/alleles-region/?alleles_list=A*01:01,A*02:01,B*07:02&min_sample_size=1000&max_sample_size=400000
     .then(function (response) {
-      //globalData = response.data.results;
-      //data = response.data;
       data = response.data.results;
-      //localStorage.setItem("globalData", globalData);
-      //console.log("✌️response.data.results --->", response.data.results);
-      //console.log("✌️globalData --->", globalData);
       response.data.results.forEach(function (region) {
 
         regionAlele = {
@@ -466,50 +588,6 @@ function coordKey(lat, lon) {
       });
       // Si hay archivos, poblar los pdb del primero
       if (response.data.results.length > 0) {
-
-
-
-    /*
-      $.ajax({
-            type: 'GET',
-            url: '/allele-mapping/alleles-region/by-gene/?allelic_group='+group_allele+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size,            
-            //url: '/allele-mapping/alleles-region/?allelic_group='+group_allele+'&min_sample_size='+min_Sample_Size+'&max_sample_size='+max_Sample_Size,    
-            error: function () {
-                Swal.fire({
-                    icon: "error",
-                    title: "No se pudieron cargar los datos.",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            },
-            dataType: 'json',
-            success: function (response) {
-                var data = response;
-                //var data = response.results;
-                data.forEach(function (region) {
-                    regionAlele = {
-                        name: region.population,
-                        latLng: [region.lat, region.lon],
-                        pie: []
-                    };
-
-                    region.alleles.forEach(function (allele) {                  
-                        alleleInfo = {
-                          color: obtenerColorPorResto(allele.id),
-                          label: allele.allele_name,
-                          value: allele.allele_frequency
-                        }
-                        regionAlele.pie.push(alleleInfo);
-                    });
-                    
-                    regionAlele = adjustLatLngForNewElement(mapPoints, regionAlele)
-
-                    mapPoints.push(regionAlele);
-                });
-            }
-        });
-*/
-
 
           
 //setTimeout(function () {
@@ -563,6 +641,7 @@ function coordKey(lat, lon) {
     $('#alleleModal').modal('show');
   }
 
+
   function createPieGroup(parts, name, index) {
     const size = 50, cx = size / 2, cy = size / 2;
     const pieRadius = 12;
@@ -579,37 +658,48 @@ function coordKey(lat, lon) {
       </filter>`;
     group.appendChild(defs);
 
-    let startAngle = -Math.PI / 2;
-    parts.forEach(slice => {
-      const sliceAngle = (slice.value / total) * Math.PI * 2;
-      const endAngle = startAngle + sliceAngle;
-      const x1 = cx + pieRadius * Math.cos(startAngle);
-      const y1 = cy + pieRadius * Math.sin(startAngle);
-      const x2 = cx + pieRadius * Math.cos(endAngle);
-      const y2 = cy + pieRadius * Math.sin(endAngle);
-      const large = sliceAngle > Math.PI ? 1 : 0;
-      const d = `M${cx},${cy} L${x1},${y1} A${pieRadius},${pieRadius} 0 ${large},1 ${x2},${y2} Z`;
+    if (parts.length === 1) {
+        // Dibuja un círculo completo si hay solo un alelo
+        const singleSlice = parts[0];
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", cx);
+        circle.setAttribute("cy", cy);
+        circle.setAttribute("r", pieRadius);
+        circle.setAttribute("fill", singleSlice.color);
+        group.appendChild(circle);
+    } else {
+        let startAngle = -Math.PI / 2;
+        parts.forEach(slice => {
+            const sliceAngle = (slice.value / total) * Math.PI * 2;
+            const endAngle = startAngle + sliceAngle;
+            const x1 = cx + pieRadius * Math.cos(startAngle);
+            const y1 = cy + pieRadius * Math.sin(startAngle);
+            const x2 = cx + pieRadius * Math.cos(endAngle);
+            const y2 = cy + pieRadius * Math.sin(endAngle);
+            const large = sliceAngle > Math.PI ? 1 : 0;
+            const d = `M${cx},${cy} L${x1},${y1} A${pieRadius},${pieRadius} 0 ${large},1 ${x2},${y2} Z`;
 
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("d", d);
-      path.setAttribute("fill", slice.color);
-      path.setAttribute("stroke", "rgba(255,255,255,0.9)");
-      path.setAttribute("stroke-width", "0.8");
-      path.setAttribute("filter", `url(#shadow-${index})`);
-      path.classList.add("pie-slice");
-      group.appendChild(path);
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", d);
+            path.setAttribute("fill", slice.color);
+            path.setAttribute("stroke", "rgba(255,255,255,0.9)");
+            path.setAttribute("stroke-width", "0.8");
+            path.setAttribute("filter", `url(#shadow-${index})`);
+            path.classList.add("pie-slice");
+            group.appendChild(path);
 
-      startAngle = endAngle;
-    });
+            startAngle = endAngle;
+        });
+    }
 
     // Evento click para mostrar el modal
     group.addEventListener("click", (e) => {
-      e.stopPropagation();
-      showModal(name, parts);
+        e.stopPropagation();
+        showModal(name, parts);
     });
     
     return group;
-  }
+}
 
   function addPieMarkers(map) {
     const mapObj = $(map).vectorMap('get', 'mapObject');
@@ -669,7 +759,6 @@ else
 }  
 });
 
-
 //}, 14000);
 
 });
@@ -678,13 +767,26 @@ document.getElementById('btreloadgene').addEventListener('click', function() {
     var aGene = document.getElementById("genes");
     sessionStorage.setItem('gene', aGene.value);
 
-    var aGroupAllele = document.getElementById("allelic_group");
-    sessionStorage.setItem('group_allele', aGroupAllele.value);
+    var aGroupAllele = document.getElementById("allele-list");
+    var selectedValues = $(aGroupAllele).val();
 
+    if (selectedValues) {
+     sessionStorage.setItem('group_allele', JSON.stringify(selectedValues));
+    }
+
+    /*
     var aSampleSize = document.getElementById("sampleSize");
     var aPosition = aSampleSize.value.indexOf("-");
     var aBegin = aSampleSize.value.substring(0,aPosition);
     var anEnd = aSampleSize.value.substring(aPosition+1);
+    */
+
+    var aRange = document.getElementById('sampleSizeRange')
+    .getAttribute('data-value');
+    var aPositionRange = aRange.indexOf(",");
+    var aBegin = aRange.substring(0,aPositionRange);
+    var anEnd = aRange.substring(aPositionRange+1);
+
 
     sessionStorage.setItem('minSampleSize', parseInt(aBegin));
     sessionStorage.setItem('maxSampleSize', parseInt(anEnd));
@@ -702,7 +804,8 @@ document.getElementById('btreloadgene').addEventListener('click', function() {
 
   $.ajax({
             type: 'GET',
-            url: '/business-gestion/gene/allelic-groups/?gene_name='+gene_name,            
+            //url: '/business-gestion/gene/allelic-groups/?gene_name='+gene_name, 
+            url: '/business-gestion/gene/alleles-by-gene/?gene_name='+gene_name,          
             error: function () {
                 Swal.fire({
                     icon: "error",
@@ -714,16 +817,25 @@ document.getElementById('btreloadgene').addEventListener('click', function() {
             dataType: 'json',
             success: function (response) {
                 var data = response;
-                selectGroupAllele = document.getElementById('allelic_group');
+                //selectGroupAllele = document.getElementById('allelic_group');
+                selectGroupAllele = document.getElementById('allele-list');
                 selectGroupAllele.innerHTML = ''; 
-                data.allelic_groups.forEach(function (alele_group) {
+                data.alleles.forEach(function (alele_group) {
                   var opt = document.createElement('option');
                   opt.value = alele_group;
                   opt.innerHTML = alele_group;
                   selectGroupAllele.appendChild(opt);
                 });
-                var aAllele_Group = document.getElementById("allelic_group");
-                aAllele_Group.value = sessionStorage.getItem("group_allele");      
+                //var aAllele_Group = document.getElementById("allele-list");
+                //aAllele_Group.value = sessionStorage.getItem("group_allele"); 
+               
+                //var aAllele_Group = document.getElementById("allele-list");
+                //$(aAllele_Group).val() = JSON.parse(sessionStorage.getItem("group_allele"));
+
+                var aAllele_Group = document.getElementById("allele-list");
+                var storedValues = JSON.parse(sessionStorage.getItem("group_allele"));
+                $(aAllele_Group).val(storedValues);
+
             }
         });
          
@@ -734,6 +846,8 @@ document.getElementById('btreloadgene').addEventListener('click', function() {
 
 {% endblock %}
 {% block script %}
+
+
 <!-- DataTables & Plugins -->
 <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
@@ -757,6 +871,9 @@ document.getElementById('btreloadgene').addEventListener('click', function() {
 <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
 
 <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
+
+<script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
+
 
 
 
