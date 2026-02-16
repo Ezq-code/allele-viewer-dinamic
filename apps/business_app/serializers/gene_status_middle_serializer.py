@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from datetime import datetime
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
+from typing import Optional
 
 
 class GeneStatusMiddleReadSerializer(serializers.ModelSerializer):
@@ -26,7 +27,7 @@ class GeneStatusMiddleReadSerializer(serializers.ModelSerializer):
             "updated_since",
         ]
 
-    def get_updated_since(self, obj):
+    def get_updated_since(self, obj) -> Optional[int]:
         last_updated = obj.updated_timestamp or obj.created_timestamp
         if not last_updated:
             return None

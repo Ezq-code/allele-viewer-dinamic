@@ -3,116 +3,154 @@ from rest_framework import filters, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Q, Prefetch
-
+from apps.common.pagination import AllResultsSetPagination
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.allele_mapping.serializers.allele_region import (
-    AlleleRegionSerializer,
     AlleleRegionWithAllelesSerializer,
 )
+from apps.allele_mapping.filters.allele_region_filter import AlleleRegionFilter
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
-
-class AlleleRegionViewSet(viewsets.ModelViewSet):
+class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet for AlleleInfo
     """
 
-    queryset = AlleleRegion.objects.all()
-    serializer_class = AlleleRegionSerializer
+    pagination_class = AllResultsSetPagination
+    queryset = AlleleRegion.objects.prefetch_related("alleles", "alleles__allele__gene")
+    serializer_class = AlleleRegionWithAllelesSerializer
     ordering_fields = "__all__"
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    search_fields = ["location", "population"]
+    search_fields = ("alleles__allele__gene__name", "population", "location")
+    filterset_class = AlleleRegionFilter
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @method_decorator(cache_page(60 * 15))  # Cache por 15 minutos
-    @action(detail=False, methods=["get"], url_path="with-allele-info")
-    def with_allele_info(self, request):
+    @method_decorator(cache_page(timeout=None))
+    def list(self, request, *args, **kwargs):
         """
-        Endpoint para todas las regiones con sus alelos
+        Lista todos los AlleleRegion con filtros aplicados
         """
-        # se agrega filtro por sample_size aquí si fuera necesario
-        min_sample_size = request.query_params.get("min_sample_size")
-        max_sample_size = request.query_params.get("max_sample_size")
+        return super().list(request, *args, **kwargs)
 
-        regions = (
-            AlleleRegion.objects.filter(alleles__allele_frequency__isnull=False)
-            .exclude(alleles__allele_frequency=0)
-            .distinct()
-        )
-
-        # filtro por sample_size si se proporciona
-        if min_sample_size or max_sample_size:
-            # filtro para allele_info
-            allele_filter = Q(allele_frequency__isnull=False) & ~Q(allele_frequency=0)
-
-            if min_sample_size:
-                allele_filter &= Q(sample_size__gte=int(min_sample_size))
-            if max_sample_size:
-                allele_filter &= Q(sample_size__lte=int(max_sample_size))
-
-            # Filtrar regiones que tienen alelos que cumplen el filtro
-            region_ids = (
-                AlleleRegionInfo.objects.filter(allele_filter)
-                .values_list("region_id", flat=True)
+    @action(detail=False, methods=["get"], url_path="countries")
+    @method_decorator(cache_page(timeout=None))
+    def list_countries(self, request):
+        """
+        Endpoint para obtener la lista de países únicos.
+        El país se extrae como la primera palabra del campo 'population'.
+        Ejemplo: "Spain", "Germany", "United States" (devuelve "United")
+        """
+        cache_key = "allele_region_countries_list"
+        countries = cache.get(cache_key)
+        if countries is None:
+            # Extraer primera palabra de cada population no nulo
+            populations = (
+                AlleleRegion.objects.exclude(population__isnull=True)
+                .exclude(population__exact="")
+                .values_list("population", flat=True)
                 .distinct()
             )
+            countries = set()
+            for pop in populations:
+                if pop and isinstance(pop, str):
+                    # Tomar primera palabra
+                    first_word = pop.split()[0] if pop.split() else pop
+                    countries.add(first_word)
+            countries = sorted(list(countries))
+            cache.set(cache_key, countries, timeout=None)
 
-            regions = regions.filter(id__in=region_ids)
+        return Response({"countries": countries})
 
-        # Prefetch relacionado
-        regions = regions.prefetch_related(
-            Prefetch(
+    # @method_decorator(cache_page(60 * 15))  # Cache por 15 minutos
+    # @action(detail=False, methods=['get'], url_path='with-allele-info')
+    # def with_allele_info(self, request):
+    #     """
+    #     Endpoint PAGINADO para todas las regiones con sus alelos
+    #     """
+    #     # se agrega filtro por sample_size aquí si fuera necesario
+    #     min_sample_size = request.query_params.get('min_sample_size')
+    #     max_sample_size = request.query_params.get('max_sample_size')
 
-                'alleles',
-                queryset=AlleleRegionInfo.objects.filter(
-                    allele_frequency__isnull=False
-                ).exclude(
-                    allele_frequency=0
-                ).select_related('allele', 'allele__gene').order_by('-allele_frequency'),
-                to_attr='filtered_alleles'
+    #     regions = AlleleRegion.objects.filter(
+    #         alleles__allele_frequency__isnull=False
+    #     ).exclude(
+    #         alleles__allele_frequency=0
+    #     ).distinct()
 
-            )
-        )
+    #     # filtro por sample_size si se proporciona
+    #     if min_sample_size or max_sample_size:
+    #         # filtro para allele_info
+    #         allele_filter = Q(allele_frequency__isnull=False) & ~Q(allele_frequency=0)
 
-        serializer = AlleleRegionWithAllelesSerializer(regions, many=True)
-        return Response(serializer.data)
+    #         if min_sample_size:
+    #             allele_filter &= Q(sample_size__gte=int(min_sample_size))
+    #         if max_sample_size:
+    #             allele_filter &= Q(sample_size__lte=int(max_sample_size))
 
-    @method_decorator(cache_page(60 * 15))  # Cache por 15 minutos
+    #         # Filtrar regiones que tienen alelos que cumplen el filtro
+    #         region_ids = AlleleRegionInfo.objects.filter(
+    #             allele_filter
+    #         ).values_list('region_id', flat=True).distinct()
+
+    #         regions = regions.filter(id__in=region_ids)
+
+    #     # Prefetch relacionado
+    #     regions = regions.prefetch_related(
+    #         Prefetch(
+    #             'alleles',
+    #             queryset=AlleleRegionInfo.objects.filter(
+    #                 allele_frequency__isnull=False
+    #             ).exclude(
+    #                 allele_frequency=0
+    #             ).select_related('allele', 'allele__gene'),
+    #             to_attr='filtered_alleles'
+    #         )
+    #     )
+
+    #     serializer = AlleleRegionWithAllelesSerializer(regions, many=True)
+    #     return Response(serializer.data)
+
+    @method_decorator(cache_page(timeout=None))
     @action(detail=False, methods=["get"], url_path="by-gene")
     def by_gene(self, request):
         """
-        Endpoint con filtros:
-        - gene_id o gene_name (REQUERIDO)
+        Endpoint optimizado con filtros:
+        - allelic_group (REQUERIDO): Grupo alélico (ej: "A*01", "B*15")
         - min_sample_size (OPCIONAL): límite inferior del rango
         - max_sample_size (OPCIONAL): límite superior del rango
         """
-        gene_id = request.query_params.get("gene_id")
-        gene_name = request.query_params.get("gene_name")
+        # gene_id = request.query_params.get('gene_id')
+        # gene_name = request.query_params.get('gene_name')
+        allelic_group = request.query_params.get("allelic_group")
         min_sample_size = request.query_params.get("min_sample_size")
         max_sample_size = request.query_params.get("max_sample_size")
 
-        if not gene_id and not gene_name:
-            return Response(
-                {"error": "You must provide gene_id or gene_name"}, status=400
-            )
+        if not allelic_group:
+            return Response({"error": "You must provide allelic_group"}, status=400)
 
-        # filtro base para allele_info
+        # Construir el filtro base para allele_info
         allele_info_filter = Q(allele_frequency__isnull=False, allele_frequency__gt=0)
 
-        # filtro por gen
-        if gene_id:
-            allele_info_filter &= Q(allele__gene_id=gene_id)
-        elif gene_name:
-            allele_info_filter &= Q(allele__gene__name__icontains=gene_name)
+        # Agregar filtro por grupo alélico si se proporciona
+        if allelic_group:
+            # Asegurarnos de que el grupo alélico tenga el formato correcto
+            # Puede venir como "A*01" o "A*01:*" - normalizamos
+            if ":" not in allelic_group:
+                # Si no tiene ":", buscamos alelos que comiencen con ese grupo
+                allele_info_filter &= Q(allele__name__startswith=allelic_group + ":")
+            else:
+                # Si ya tiene ":", buscamos exactamente ese grupo
+                allele_info_filter &= Q(allele__name__startswith=allelic_group)
 
-        # filtro por rango de sample_size si se proporciona
+        # Agregar filtro por rango de sample_size si se proporciona
         if min_sample_size:
             try:
                 min_sample_size = int(min_sample_size)
@@ -152,12 +190,10 @@ class AlleleRegionViewSet(viewsets.ModelViewSet):
         regions = AlleleRegion.objects.filter(id__in=region_ids).prefetch_related(
             Prefetch(
                 "alleles",
-                queryset=AlleleRegionInfo.objects.filter(
-                    allele_info_filter
-
-                ).select_related('allele', 'allele__gene').order_by('-allele_frequency'),
-                to_attr='filtered_alleles'
-
+                queryset=AlleleRegionInfo.objects.filter(allele_info_filter)
+                .select_related("allele", "allele__gene")
+                .order_by("-allele_frequency"),
+                to_attr="filtered_alleles",
             )
         )
 

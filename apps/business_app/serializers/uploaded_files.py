@@ -6,6 +6,7 @@ import logging
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from apps.business_app.serializers.pdb_files import PdbFilesSerializer
 from django.core.cache import cache
+from typing import List, Dict, Any
 
 
 logger = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
             logger.error(f"{str(e)}")
             raise serializers.ValidationError(e) from e
 
-    def get_allele_nodes(self, obj):
+    def get_allele_nodes(self, obj) -> List[Dict[str, Any]]:
         allele_nodes_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
             uploaded_file_id=obj.id
         )
