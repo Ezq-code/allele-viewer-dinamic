@@ -31,13 +31,14 @@ COPY supervisord.conf /app/
 COPY static/ /app/static/
 COPY templates/ /app/templates/
 
-# Crear directorios necesarios
-RUN mkdir -p /app/static_output /app/media
-
 # Crear usuario no-root para ejecutar la aplicación
-RUN useradd -m -u 1000 appuser && \
+RUN useradd -m -u 1000 appuser
+
+# Crear directorios necesarios y dar permisos
+RUN mkdir -p /app/static_output /app/media && \
     chown -R appuser:appuser /app && \
-    chmod +x /app/entrypoint.sh
+    chmod +x /app/entrypoint.sh && \
+    chmod -R 755 /app/media
 
 USER appuser
 
