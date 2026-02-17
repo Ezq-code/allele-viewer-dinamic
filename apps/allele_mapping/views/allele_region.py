@@ -15,6 +15,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
+
 class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet for AlleleInfo

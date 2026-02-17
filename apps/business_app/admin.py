@@ -27,6 +27,7 @@ from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.region import Region
 from apps.business_app.models.region_county import RegionCountry
+from apps.business_app.models.sub_country import SubCountry
 
 logger = logging.getLogger(__name__)
 
@@ -445,3 +446,19 @@ class GeneStatusMiddleAdmin(admin.ModelAdmin):
         "gene_status",
         "value",
     ]
+
+
+@admin.register(SubCountry)
+class SubCountryAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "name",
+        "country",
+    ]
+    fields = [
+        "name",
+        "country",
+    ]
+    search_fields = ("name",)
+    list_filter = ("country",)

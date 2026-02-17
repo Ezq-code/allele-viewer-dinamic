@@ -10,6 +10,7 @@ class AlleleRegionFilter(django_filters.FilterSet):
     """
     Filtro personalizado para AlleleRegion
     """
+
     gene_name = django_filters.CharFilter(
         method="filter_by_gene_name", label="Gene Name"
     )
@@ -34,8 +35,7 @@ class AlleleRegionFilter(django_filters.FilterSet):
 
     # Base queryset para AlleleRegionInfo (frecuencias válidas)
     allele_region_info = AlleleRegionInfo.objects.filter(
-        allele_frequency__isnull=False,
-        allele_frequency__gt=0
+        allele_frequency__isnull=False, allele_frequency__gt=0
     )
 
     class Meta:
@@ -208,7 +208,6 @@ class AlleleRegionFilter(django_filters.FilterSet):
             )
         )
         return filtered_queryset
-
 
     # def filter_queryset(self, queryset):
     #     """

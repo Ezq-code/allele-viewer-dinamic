@@ -135,21 +135,19 @@ class GeneViewSet(
             return Response({"error": "You must provide gene_name"}, status=400)
 
         # Filtrar alelos del gen especificado (búsqueda exacta, no icontains)
-        alleles_qs = AlleleToMap.objects.filter(
-            gene__name=gene_name  # Cambiado a búsqueda exacta
-        ).values_list("name", flat=True).distinct()
+        alleles_qs = (
+            AlleleToMap.objects.filter(
+                gene__name=gene_name  # Cambiado a búsqueda exacta
+            )
+            .values_list("name", flat=True)
+            .distinct()
+        )
 
         # Si no hay alelos, devolver lista vacía
         if not alleles_qs:
-            return Response({
-                "gene_name": gene_name,
-                "alleles": []
-            })
+            return Response({"gene_name": gene_name, "alleles": []})
 
         # Convertir a lista y ordenar alfabéticamente
         allele_list = sorted(list(alleles_qs))
 
-        return Response({
-            "gene_name": gene_name,
-            "alleles": allele_list
-        })
+        return Response({"gene_name": gene_name, "alleles": allele_list})
