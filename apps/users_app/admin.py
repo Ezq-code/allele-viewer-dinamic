@@ -38,3 +38,4 @@ class CountryAdmin(admin.ModelAdmin):
         "code",
         "enabled",
     ]
+    search_fields = ["name", "code"]

@@ -24,10 +24,10 @@ class AlleleRegion(models.Model):
         null=True,
         blank=True,
     )
-    sub_region = models.ForeignKey(
+    sub_country = models.ForeignKey(
         to=SubCountry,
         on_delete=models.SET_NULL,
-        related_name="allele_regions",
+        related_name="allele_countries",
         null=True,
         blank=True,
     )

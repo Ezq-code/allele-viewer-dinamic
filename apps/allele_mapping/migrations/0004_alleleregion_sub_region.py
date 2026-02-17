@@ -4,6 +4,86 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 
+def populate_sub_country(apps, schema_editor):
+    """Populate sub_country field based on population field.
+    The sub_country name should be at the beginning of the population string.
+    Special cases:
+    - "USA" -> United States
+    - "England", "Wales", "Scotland" -> United Kingdom"""
+    AlleleRegion = apps.get_model("allele_mapping", "AlleleRegion")
+    SubCountry = apps.get_model("business_app", "SubCountry")
+
+    # Get all SubCountry objects sorted by name length (descending)
+    all_subcountries = list(SubCountry.objects.all().order_by("-name"))
+
+    # Special mappings for regions within countries
+    special_mappings = {
+        "england": "United Kingdom",
+        "wales": "United Kingdom",
+        "scotland": "United Kingdom",
+        "usa": "United States",
+        "russia": "Russian Federation",
+        "venezuela": "Venezuela, Bolivarian Republic of",
+        "vietnam": "Viet Nam",
+        "bolivia": "Bolivia, Plurinational State of",
+        "iran": "Iran, Islamic Republic of",
+        "taiwan": "Taiwan, Province of China",
+        "south korea": "Korea, Republic of",
+        "azores": "Portugal",
+        "madeira": "Portugal",
+        "gaza": "Palestine, State of",
+        "kosovo": "Albania",
+        "sao tome": "Sao Tome and Principe",
+        "macedonia": "Macedonia, the Former Yugoslav Republic of",
+        "tanzania": "Tanzania, United Republic of",
+        "borneo": "Malaysia",
+    }
+
+    # Collect AlleleRegion objects to update
+    allele_regions_to_update = []
+
+    for allele_region in AlleleRegion.objects.all():
+        if not allele_region.population:
+            continue
+
+        population_value = allele_region.population.strip()
+        sub_country = None
+
+        # Check special mappings first
+        population_lower = population_value.lower()
+        for key, country_name in special_mappings.items():
+            if population_lower.startswith(key):
+                sub_country = next(
+                    (sc for sc in all_subcountries if sc.name.startswith(country_name)),
+                    None,
+                )
+                if sub_country:
+                    break
+
+        # If no special mapping matched, try to match SubCountry names at the beginning
+        if not sub_country:
+            for sc in all_subcountries:
+                if population_lower.startswith(sc.name.lower()):
+                    sub_country = sc
+                    break
+
+        if sub_country:
+            allele_region.sub_country = sub_country
+            allele_regions_to_update.append(allele_region)
+
+    # Update all in a single batch operation
+    if allele_regions_to_update:
+        AlleleRegion.objects.bulk_update(
+            allele_regions_to_update, ["sub_country"], batch_size=1000
+        )
+
+
+def reverse_populate_sub_country(apps, schema_editor):
+    """Reverse operation: clear all sub_country values."""
+    AlleleRegion = apps.get_model("allele_mapping", "AlleleRegion")
+    AlleleRegion.objects.all().update(sub_country=None)
+
+
 class Migration(migrations.Migration):
     dependencies = [
         ("allele_mapping", "0003_add_composite_indexes"),
@@ -13,13 +93,14 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name="alleleregion",
-            name="sub_region",
+            name="sub_country",
             field=models.ForeignKey(
                 blank=True,
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
-                related_name="allele_regions",
+                related_name="allele_countries",
                 to="business_app.subcountry",
             ),
         ),
+        migrations.RunPython(populate_sub_country, reverse_populate_sub_country),
     ]

@@ -79,12 +79,14 @@ class AlleleRegionAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "population",
+        "sub_country",
         "location",
         "lat",
         "lon",
     ]
     fields = [
         "population",
+        "sub_country",
         "location",
         "lat",
         "lon",
