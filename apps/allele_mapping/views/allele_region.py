@@ -13,7 +13,7 @@ from apps.allele_mapping.serializers.allele_region import (
 from apps.allele_mapping.filters.allele_region_filter import AlleleRegionFilter
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-
+from django.core.cache import cache
 
 class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -39,6 +39,35 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
         Lista todos los AlleleRegion con filtros aplicados
         """
         return super().list(request, *args, **kwargs)
+
+    @action(detail=False, methods=["get"], url_path="countries")
+    @method_decorator(cache_page(timeout=None))
+    def list_countries(self, request):
+        """
+        Endpoint para obtener la lista de países únicos.
+        El país se extrae como la primera palabra del campo 'population'.
+        Ejemplo: "Spain", "Germany", "United States" (devuelve "United")
+        """
+        cache_key = "allele_region_countries_list"
+        countries = cache.get(cache_key)
+        if countries is None:
+            # Extraer primera palabra de cada population no nulo
+            populations = (
+                AlleleRegion.objects.exclude(population__isnull=True)
+                .exclude(population__exact="")
+                .values_list("population", flat=True)
+                .distinct()
+            )
+            countries = set()
+            for pop in populations:
+                if pop and isinstance(pop, str):
+                    # Tomar primera palabra
+                    first_word = pop.split()[0] if pop.split() else pop
+                    countries.add(first_word)
+            countries = sorted(list(countries))
+            cache.set(cache_key, countries, timeout=None)
+
+        return Response({"countries": countries})
 
     # @method_decorator(cache_page(60 * 15))  # Cache por 15 minutos
     # @action(detail=False, methods=['get'], url_path='with-allele-info')
