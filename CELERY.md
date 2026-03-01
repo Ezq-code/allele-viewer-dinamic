@@ -58,18 +58,26 @@ python manage.py migrate
 .\start_celery_beat.ps1
 ```
 
+**Linux/macOS (con scripts):**
+```bash
+# Terminal 1 - Worker
+./start_celery_worker.sh
+
+# Terminal 2 - Beat Scheduler
+./start_celery_beat.sh
+```
+
 **Manualmente:**
 ```powershell
-# Terminal 1 - Worker
+# Windows - Terminal 1 - Worker
 celery -A project_site worker --loglevel=info --pool=solo
 
-# Terminal 2 - Beat
+# Windows - Terminal 2 - Beat
 celery -A project_site beat --loglevel=info
 ```
 
-**Linux/macOS:**
 ```bash
-# Todo junto (desarrollo)
+# Linux/macOS - Todo junto (desarrollo)
 celery -A project_site worker --beat --loglevel=info
 
 # O separado (producción)
@@ -111,20 +119,6 @@ docker compose exec celery_worker python manage.py migrate
 
 ### Configuración de .env
 
-**Para desarrollo local:**
-```env
-REDIS_PORT=6379
-CELERY_BASE_REDIS_URL=redis://localhost:
-RUNNING_FROM=local
-```
-
-**Para Docker:**
-```env
-REDIS_PORT=6379
-CELERY_BASE_REDIS_URL=redis://redis:
-RUNNING_FROM=remote
-DB_REMOTE_HOST=postgres
-```
 
 ---
 
