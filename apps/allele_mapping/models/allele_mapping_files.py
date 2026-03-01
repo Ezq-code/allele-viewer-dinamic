@@ -73,6 +73,7 @@ class AlleleMappingFiles(models.Model):
     def delete(self, *args, **kwargs):
         # Delete the physical file before deleting the record
         self.delete_physical_file(self.file)
+        print("Borrando allelemapping con id ", self.id)
         super().delete(*args, **kwargs)
 
     def delete_physical_file(self, file_field):

@@ -3,6 +3,7 @@ import logging
 
 from apps.allele_mapping.utils.xslx_reader import XslxReader
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -39,4 +40,6 @@ def process_allele_mapping_file(file_path, uploaded_file_id):
 
     except Exception as e:
         logger.error(f"Error processing file {file_path}: {str(e)}")
+        from apps.allele_mapping.models.allele_mapping_files import AlleleMappingFiles
+        AlleleMappingFiles.objects.filter(id=uploaded_file_id).delete()
         raise
