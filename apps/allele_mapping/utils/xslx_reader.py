@@ -8,6 +8,7 @@ from apps.allele_mapping.models.allele_to_map import AlleleToMap
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.allele_mapping.models.allele_region import AlleleRegion
 import pandas as pd
+
 logger = logging.getLogger(__name__)
 
 
@@ -27,19 +28,17 @@ class XslxReader(ExcelStructureValidator):
             gene = Gene.objects.get(name=sheet_name)
             data_for_batch_create = []
             for _, row in df.iterrows():
-                percent_of_individuals=row[
-                            ExcelNomenclators.percent_of_individuals_column_name
-                        ]
+                percent_of_individuals = row[
+                    ExcelNomenclators.percent_of_individuals_column_name
+                ]
                 if pd.isna(percent_of_individuals) or not percent_of_individuals:
                     continue
-                allele_frequency=row[
-                            ExcelNomenclators.allele_frequency_column_name
-                        ]
+                allele_frequency = row[ExcelNomenclators.allele_frequency_column_name]
                 if pd.isna(allele_frequency) or not allele_frequency:
-                    continue               
-                sample_size=row[ExcelNomenclators.sample_size_column_name]
+                    continue
+                sample_size = row[ExcelNomenclators.sample_size_column_name]
                 if pd.isna(sample_size) or not sample_size:
-                    continue      
+                    continue
 
                 allele, _ = AlleleToMap.objects.get_or_create(
                     name=row[ExcelNomenclators.allele_column_name],
@@ -53,7 +52,7 @@ class XslxReader(ExcelStructureValidator):
                         "lon": row[ExcelNomenclators.longitud_column_name],
                     },
                 )
-                
+
                 data_for_batch_create.append(
                     AlleleRegionInfo(
                         allele=allele,
@@ -67,4 +66,3 @@ class XslxReader(ExcelStructureValidator):
 
             AlleleRegionInfo.objects.bulk_create(data_for_batch_create)
             logger.info("Insertions completed")
-

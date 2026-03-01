@@ -9,15 +9,16 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import JsonResponse
 from celery.result import AsyncResult
+from project_site.celery import app as celery_app
+from datetime import datetime, timedelta
+from celery import chain
 
 from apps.users_app.tasks import (
     send_email_task,
-    send_email_to_client_task,
     example_periodic_task,
-    cleanup_old_data_task,
 )
+from celery import group
 
 
 # =============================================================================
@@ -123,8 +124,6 @@ def process_file_async(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    uploaded_file = request.FILES["file"]
-
     # Aquí podrías guardar el archivo y pasar su ruta a la tarea
     # Por ejemplo: file_path = save_uploaded_file(uploaded_file)
 
@@ -143,8 +142,6 @@ def process_file_async(request):
 # =============================================================================
 # EJEMPLO 4: Vista que ejecuta múltiples tareas en paralelo
 # =============================================================================
-
-from celery import group
 
 
 @api_view(["POST"])
@@ -197,8 +194,6 @@ def send_bulk_emails(request):
 # =============================================================================
 # EJEMPLO 5: Vista que encadena tareas (una después de otra)
 # =============================================================================
-
-from celery import chain
 
 
 @api_view(["POST"])
@@ -273,8 +268,6 @@ def process_with_callback(request):
 # =============================================================================
 # EJEMPLO 7: Vista que programa una tarea para el futuro
 # =============================================================================
-
-from datetime import datetime, timedelta
 
 
 @api_view(["POST"])
@@ -401,8 +394,6 @@ def cancel_task(request, task_id):
 # =============================================================================
 # EJEMPLO 10: Vista que obtiene todas las tareas activas
 # =============================================================================
-
-from project_site.celery import app as celery_app
 
 
 @api_view(["GET"])
