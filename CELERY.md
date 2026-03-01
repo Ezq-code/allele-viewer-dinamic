@@ -89,33 +89,59 @@ celery -A project_site beat --loglevel=info     # Terminal 2
 
 ## 🐳 Configuración Docker
 
-### Opción 1: Solo Redis en Docker (Recomendado para desarrollo)
+### Arquitectura de Desarrollo (Recomendado)
 
+**Servicios en Docker:**
+- PostgreSQL (puerto 5432)
+- Redis (puerto 6379)
+
+**Servicios locales:**
+- Celery Worker (ejecutado con scripts)
+- Celery Beat (ejecutado con scripts)
+- Django runserver
+
+**Windows - Inicio rápido:**
 ```powershell
-# Iniciar solo Redis
-docker compose up -d redis
+# Opción 1: Todo en uno (recomendado)
+.\start_dev.ps1
 
-# Ejecutar Celery localmente
-.\start_celery_worker.ps1
-.\start_celery_beat.ps1
+# Opción 2: Manual
+docker compose -f docker-compose-dev.yml up -d  # PostgreSQL + Redis
+.\start_celery_worker.ps1                       # Terminal 2
+.\start_celery_beat.ps1                         # Terminal 3
+python manage.py runserver                      # Terminal 1
 ```
 
-**Ventajas:** Rápido, fácil debugging, hot-reload funciona
+**Linux/macOS - Inicio rápido:**
+```bash
+# Opción 1: Todo en uno (recomendado)
+./start_dev.sh
 
-### Opción 2: Todo en Docker
+# Opción 2: Manual
+docker compose -f docker-compose-dev.yml up -d  # PostgreSQL + Redis
+./start_celery_worker.sh                        # Terminal 2
+./start_celery_beat.sh                          # Terminal 3
+python manage.py runserver                      # Terminal 1
+```
 
-```powershell
-# Iniciar todos los servicios
+**Ventajas de esta arquitectura:**
+- ✓ Rápido, fácil debugging
+- ✓ Hot-reload funciona perfectamente
+- ✓ Logs visibles directamente en terminal
+- ✓ No requiere reconstruir imágenes Docker
+
+### Producción con Docker Completo
+
+```bash
+# Iniciar todos los servicios en Docker (incluye Nginx + Gunicorn)
 docker compose up -d
 
 # Ver logs
-docker compose logs -f celery_worker celery_beat
+docker compose logs -f web
 
-# Ejecutar migraciones (primera vez)
-docker compose exec celery_worker python manage.py migrate
+# Ejecutar migraciones
+docker compose exec web python manage.py migrate
 ```
-
-**Ventajas:** Entorno aislado, similar a producción
 
 ### Configuración de .env
 
@@ -325,18 +351,22 @@ celery -A project_site flower
 
 ### Docker
 
-```powershell
-# Ver logs en tiempo real
-docker compose logs -f celery_worker celery_beat
+```bash
+# Ver logs de servicios Docker (PostgreSQL + Redis)
+docker compose -f docker-compose-dev.yml logs -f postgres redis
 
-# Reiniciar worker
-docker compose restart celery_worker
+# Reiniciar Redis
+docker compose -f docker-compose-dev.yml restart redis
 
-# Reconstruir imagen
-docker compose build celery_worker
+# Verificar estado de contenedores
+docker compose -f docker-compose-dev.yml ps
 
-# Ejecutar comando en contenedor
-docker compose exec celery_worker python manage.py shell
+# Detener servicios Docker
+docker compose -f docker-compose-dev.yml down
+
+# Ver logs de Celery (si usas scripts .sh en Linux/macOS)
+tail -f /tmp/celery_worker.log
+tail -f /tmp/celery_beat.log
 ```
 
 ---
@@ -345,18 +375,18 @@ docker compose exec celery_worker python manage.py shell
 
 ### Redis no conecta
 
-```powershell
-# Verificar Redis
-redis-cli ping  # Debe responder: PONG
+```bash
+# Verificar Redis en Docker
+docker exec allele_dinamic_redis redis-cli ping  # Debe responder: PONG
 
-# Iniciar Redis (Windows WSL)
-wsl sudo service redis-server start
+# Iniciar contenedor de Redis
+docker compose -f docker-compose-dev.yml up -d redis
 
-# Iniciar Redis (Linux)
-sudo systemctl start redis-server
+# Ver logs de Redis
+docker compose -f docker-compose-dev.yml logs redis
 
-# Ver logs de Redis (Docker)
-docker compose logs redis
+# Verificar que el puerto está accesible
+docker ps --filter "name=allele_dinamic_redis"
 ```
 
 ### Worker no encuentra tareas
@@ -377,10 +407,7 @@ REDIS_PORT=6379
 CELERY_BASE_REDIS_URL=redis://localhost:
 ```
 
-Si usas Docker:
-```env
-CELERY_BASE_REDIS_URL=redis://redis:
-```
+**Nota:** Como Celery corre localmente (no en Docker), usa `localhost`, no `redis` como host.
 
 ### Tareas no se ejecutan
 
@@ -401,13 +428,20 @@ pip install gevent
 celery -A project_site worker --loglevel=info --pool=gevent
 ```
 
-### Docker: Imagen tarda mucho en construir
+### PostgreSQL no conecta
 
-```powershell
-# Usar requirements_celery.txt (solo dependencias esenciales)
-docker compose build --no-cache
+```bash
+# Verificar PostgreSQL en Docker
+docker exec allele_dinamic_postgres pg_isready -U postgres
 
-# Verificar que .dockerignore excluye venv/ y __pycache__/
+# Iniciar contenedor de PostgreSQL
+docker compose -f docker-compose-dev.yml up -d postgres
+
+# Ver logs de PostgreSQL
+docker compose -f docker-compose-dev.yml logs postgres
+
+# Conectar manualmente para debugging
+docker exec -it allele_dinamic_postgres psql -U postgres -d allele_viewer
 ```
 
 ---
@@ -428,11 +462,14 @@ apps/users_app/
     └── cleanup_old_data_task
 
 Archivos de configuración:
-├── requirements_celery.txt    # Deps mínimas para Docker
-├── start_celery_worker.ps1    # Script de inicio (Windows)
-├── start_celery_beat.ps1      # Script de inicio (Windows)
-├── Dockerfile                 # Imagen Docker de Celery
-└── docker-compose.yml         # Servicios Docker
+├── start_dev.ps1              # Inicio completo (Windows)
+├── start_dev.sh               # Inicio completo (Linux/macOS)
+├── start_celery_worker.ps1    # Script Worker (Windows)
+├── start_celery_worker.sh     # Script Worker (Linux/macOS)
+├── start_celery_beat.ps1      # Script Beat (Windows)
+├── start_celery_beat.sh       # Script Beat (Linux/macOS)
+├── docker-compose-dev.yml     # Docker para desarrollo (PostgreSQL + Redis)
+└── docker-compose.yml         # Docker para producción (completo)
 ```
 
 ---
@@ -456,7 +493,9 @@ Archivos de configuración:
 
 - `celery_examples.py` - 10 ejemplos completos de integración en vistas
 - `apps/users_app/tasks.py` - Tareas de ejemplo funcionales
-- `DOCKER_CELERY_SETUP.md` - Instrucciones detalladas de Docker
+- `start_dev.ps1` / `start_dev.sh` - Scripts de inicio completo del entorno
+- `docker-compose-dev.yml` - Configuración Docker para desarrollo
+- `docker-compose.yml` - Configuración Docker para producción
 
 ---
 
