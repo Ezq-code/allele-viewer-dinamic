@@ -49,7 +49,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - static_volume:/app/static_output
-      - ./media:/app/media
+      - media_volume:/app/media
     environment:
       - DJANGO_SETTINGS_MODULE=project_site.settings
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -110,6 +110,7 @@ volumes:
   postgres_data:
   redis_data:
   static_volume:
+  media_volume:
 
 networks:
   app-network:
