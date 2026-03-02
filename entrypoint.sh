@@ -35,7 +35,7 @@ END
 echo "Ejecutando migraciones..."
 python manage.py migrate --noinput
 
-# Recolectar archivos estáticos
+# Recolectar archivos estáticos.
 echo "Recolectando archivos estáticos..."
 python manage.py collectstatic --noinput --clear
 
