@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Script de inicio para la aplicación Django
 set -e

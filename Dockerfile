@@ -36,6 +36,7 @@ RUN useradd -m -u 1000 appuser
 
 # Crear directorios necesarios y dar permisos
 RUN mkdir -p /app/static_output /app/media && \
+    sed -i 's/\r$//' /app/entrypoint.sh && \
     chown -R appuser:appuser /app && \
     chmod +x /app/entrypoint.sh && \
     chmod -R 755 /app/media
