@@ -52,6 +52,31 @@ function handleGeneButtonClick(event) {
 document.addEventListener("DOMContentLoaded", function () {
     loadGeneStatusData();
      initializeGeneChartsSection();
+
+    const geneStatusSummaryContainer = document.getElementById('gene-status-summary-container');
+    if (geneStatusSummaryContainer) {
+        geneStatusSummaryContainer.addEventListener('click', function(event) {
+            const geneElement = event.target.closest('.gene-donut-chart-center, .radial-chart-item');
+            if (!geneElement) return;
+
+            const geneName = geneElement.getAttribute('data-gene-name');
+            if (!geneName) return;
+
+            const genes = window.currentGenes || [];
+            const targetGene = genes.find(g => g.name === geneName);
+            if (!targetGene) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: `No gene information found for ${geneName}`
+                });
+                return;
+            }
+
+            showGeneDetails(targetGene);
+            $('#genesModal').modal('show');
+        });
+    }
     
     const loadButtons = document.querySelectorAll('.load-genes-btn');
     loadButtons.forEach(button => {
@@ -361,97 +386,121 @@ function showGeneDetails(gene) {
     dashboardContainer.innerHTML = '';
     modalTitle.textContent = `Details for ${gene.name}`;
 
-    let dashboardHtml = `
-            <div class="row mb-4">
-                    <div class="col-md-12">
-                            ${gene.description ? `<p>${gene.description}</p>` : ''}
-                    </div>
-            </div>`;
-
-    // Status section
-    dashboardHtml += `<div class="row">`;
     const statusList = gene.gene_status_list || [];
-    
+    const disorders = Array.isArray(gene.disorders_names) && gene.disorders_names.length > 0
+        ? gene.disorders_names
+        : (Array.isArray(gene.disorders) ? gene.disorders : []);
+
+    let dashboardHtml = `
+        <div class="card card-outline card-primary mb-4">
+            <div class="card-body">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                    <div>
+                        <h4 class="mb-1">${gene.name}</h4>
+                        <p class="text-muted mb-2 mb-md-0">${gene.description || 'No description available for this gene.'}</p>
+                    </div>
+                    <div class="d-flex mt-2 mt-md-0">
+                        <span class="badge badge-info mr-2 p-2">Statuses: ${statusList.length}</span>
+                        <span class="badge badge-primary p-2">Disorders: ${disorders.length}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-outline card-secondary mb-4">
+            <div class="card-header">
+                <h3 class="card-title mb-0"><i class="bi bi-activity mr-2"></i>Gene Status Overview</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+    `;
+
     if (statusList.length > 0) {
-        // Individual status items with knobs
         statusList.forEach((status) => {
             const percent = parseFloat(status.value);
-            let knobColor = "#6c757d";
+            let knobColor = '#6c757d';
             if (!isNaN(percent)) {
-                if (percent >= 0 && percent <= 25) knobColor = "#dc3545";
-                else if (percent >= 26 && percent <= 50) knobColor = "#ffc107";
-                else if (percent >= 51 && percent <= 75) knobColor = "#17a2b8";
-                else if (percent > 75 && percent <= 100) knobColor = "#28a745";
+                if (percent >= 0 && percent <= 25) knobColor = '#dc3545';
+                else if (percent >= 26 && percent <= 50) knobColor = '#ffc107';
+                else if (percent >= 51 && percent <= 75) knobColor = '#17a2b8';
+                else if (percent > 75 && percent <= 100) knobColor = '#28a745';
             }
 
             dashboardHtml += `
-                    <div class="col-md-6 col-lg-4 mb-4 text-center">
-                            <input type="text" class="knob mb-2" value="${status.value}" 
-                                         data-width="100" data-height="100" data-fgColor="${knobColor}" 
-                                         data-thickness=".2" data-readOnly="true" data-angleOffset="-125" data-angleArc="250">
-                            <h6 class="mb-1">${status.gene_status}</h6>
-                            ${status.evidence ? `
-                                    <button class="btn btn-sm btn-outline-secondary" data-toggle="tooltip" data-placement="top" 
-                                                    title="Download Evidence" 
-                                                    onclick="downloadEvidence('${encodeURIComponent(status.evidence)}')">
-                                            <i class="bi bi-download"></i>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <input type="text" class="knob mb-2" value="${status.value}"
+                                    data-width="110" data-height="110" data-fgColor="${knobColor}"
+                                    data-thickness=".2" data-readOnly="true" data-angleOffset="-125" data-angleArc="250">
+                                <h6 class="mb-1 font-weight-bold">${status.gene_status}</h6>
+                            </div>
+                            <div class="mt-2">
+                                ${status.evidence ? `
+                                    <button class="btn btn-sm btn-outline-primary" data-toggle="tooltip" data-placement="top"
+                                        title="Download Evidence"
+                                        onclick="downloadEvidence('${encodeURIComponent(status.evidence)}')">
+                                        <i class="bi bi-download mr-1"></i>Evidence
                                     </button>
-                            ` : ''}
+                                ` : '<span class="text-muted small">No evidence file</span>'}
+                            </div>
+                        </div>
                     </div>
+                </div>
             `;
         });
     } else {
         dashboardHtml += `
-                <div class="col-12">
-                        <p class="text-muted">No status information available for this gene.</p>
+            <div class="col-12">
+                <div class="alert alert-light border text-center mb-0">
+                    No status information available for this gene.
                 </div>
+            </div>
         `;
     }
-    
-    // Add disorders section if they exist
-    if (gene.disorders && gene.disorders.length > 0) {
-        dashboardHtml += `
-        <div class="row mb-4">
-                <div class="col-12">
-                        <div class="card card-primary">
-                                <div class="card-header">
-                                        <h3 class="card-title">Associated Disorders</h3>
-                                </div>
-                                <div class="card-body">
-                                        <div class="row">
-                                                ${gene.disorders.map((disorder, index) => {
-                                                    // Array of Bootstrap background classes
-                                                    const bgColors = ['bg-info', 'bg-success', 'bg-warning', 'bg-danger', 'bg-primary', 'bg-secondary'];
-                                                    // Get color by index, cycling through the array
-                                                    const bgColor = bgColors[index % bgColors.length];
-                                                    
-                                                    return `
-                                                        <div class="col-md-4">
-                                                                <div class="info-box ${bgColor}">
-                                                                        <span class="info-box-icon">
-                                                                                <i class="bi bi-clipboard2-pulse"></i>
-                                                                        </span>
-                                                                        <div class="info-box-content">
-                                                                                ${disorder ? 
-                                                                                    `<span class="info-box-number">${disorder}</span>` : 
-                                                                                    ''}
-                                                                        </div>
-                                                                </div>
-                                                        </div>
-                                                    `;
-                                                }).join('')}
-                                        </div>
-                                </div>
-                        </div>
+
+    dashboardHtml += `
                 </div>
-        </div>`;
+            </div>
+        </div>
+    `;
+
+    if (disorders.length > 0) {
+        dashboardHtml += `
+            <div class="card card-outline card-primary mb-2">
+                <div class="card-header">
+                    <h3 class="card-title mb-0"><i class="bi bi-clipboard2-pulse mr-2"></i>Associated Disorders</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap">
+                        ${disorders.map((disorder, index) => {
+                            const badgeClasses = ['badge-info', 'badge-success', 'badge-warning', 'badge-danger', 'badge-primary', 'badge-secondary'];
+                            const badgeClass = badgeClasses[index % badgeClasses.length];
+                            return `
+                                <span class="badge ${badgeClass} mr-2 mb-2 p-2" style="font-size: 0.85rem;">
+                                    ${disorder || 'Unnamed disorder'}
+                                </span>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+    } else {
+        dashboardHtml += `
+            <div class="card card-outline card-secondary mb-2">
+                <div class="card-body text-center text-muted">
+                    No associated disorders reported for this gene.
+                </div>
+            </div>
+        `;
     }
-    dashboardHtml += `</div>`;
 
     dashboardContainer.innerHTML = dashboardHtml;
     $('#genesModal').modal('show');
 
-    $('#genesModal').on('shown.bs.modal', function () {
+    $('#genesModal').off('shown.bs.modal').on('shown.bs.modal', function () {
         $('.knob').knob();
         $('[data-toggle="tooltip"]').tooltip();
     });
