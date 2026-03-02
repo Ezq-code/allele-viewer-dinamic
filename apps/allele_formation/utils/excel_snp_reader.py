@@ -16,6 +16,8 @@ class ExcelSNPReader:
     def __init__(self, origin_file) -> None:
         self.origin_file = origin_file
         self.max_allowed_empty_rows = 1
+        # TODO: Transition fue removida del formato actual del Excel.
+        # Si vuelve a incluirse, descomentar validación/lectura/asignación relacionadas.
         self._output_mandatory_columns_for_sheet_allele_validation = (
             ExcelSNPNomenclators.sheet_allele_column_allele,
             ExcelSNPNomenclators.sheet_allele_column_parent,
@@ -23,7 +25,7 @@ class ExcelSNPReader:
             ExcelSNPNomenclators.sheet_allele_column_increment_location_snp,
             ExcelSNPNomenclators.sheet_allele_column_loss_ancesters_snp,
             ExcelSNPNomenclators.sheet_allele_column_loss_location_snp,
-            ExcelSNPNomenclators.sheet_allele_column_transition,
+            # ExcelSNPNomenclators.sheet_allele_column_transition,
         )
 
         self.sheet_allele_df = pd.read_excel(
@@ -127,11 +129,12 @@ class ExcelSNPReader:
             increment_location_snp = row[
                 ExcelSNPNomenclators.sheet_allele_column_increment_location_snp
             ]
-            transition = row[ExcelSNPNomenclators.sheet_allele_column_transition]
+            # transition = row[ExcelSNPNomenclators.sheet_allele_column_transition]
             data.append(
                 AlleleSNPInfo(
                     allele=allele,
-                    transition=transition,
+                    transition=None,
+                    # transition=transition,
                     parents_info=parents_info if not pd.isna(parents_info) else None,
                     loss_ancesters_snp=loss_ancesters_snp
                     if not pd.isna(loss_ancesters_snp)
