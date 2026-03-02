@@ -13,7 +13,8 @@
   rel="stylesheet"
   href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}"
 />
-<link
+<!-- Commented out: Not used in this file -->
+<!-- <link
   rel="stylesheet"
   href="{% static 'assets/plugins/bs-stepper/css/bs-stepper.min.css' %}"
 />
@@ -28,7 +29,7 @@
 <link
   rel="stylesheet"
   href="{% static 'assets/plugins/bootstrap-slider/css/bootstrap-slider.min.css' %}"
-/>
+/> -->
 
 <link
   rel="stylesheet"
@@ -46,7 +47,21 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
-  <section class="content-header"></section>
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Allele Viewer</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'alleleviewer' %}">Home</a></li>
+            <li class="breadcrumb-item active">Allele Viewer</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Main content -->
   <section class="content">
@@ -81,7 +96,7 @@
                   </div>
                
                   <select class="form-control select2" id="selectGene" name="selectGene" tabindex="-1">
-                     {% comment %} <option value="">Selec gen</option> {% endcomment %}
+                     {% comment %} <option value="">Select gene</option> {% endcomment %}
                    </select>
                  
                   <select
@@ -91,7 +106,7 @@
                     tabindex="-1"
                     onchange="selectPdbContainer()"
                   ></select>
-                  <!-- poner esto arriba para llenar esta lista onchange="selectPdbContainer()" -->
+                  <!-- Keep this above to populate this list onchange="selectPdbContainer()" -->
                   <select class="form-control select2" id="selectPdb" name="selectPdb" tabindex="-1">
                   </select> 
                 </div>
@@ -243,7 +258,7 @@
             </div>
             
             <!-- /.card-header -->
-            <div class="modal-body">
+            <div class="card-body">
               <div
                 id="container"
                 style="width: 100%; height: 600px; position: relative"
@@ -252,8 +267,19 @@
               ></div>
             </div>
             <!-- /.card-body -->
-
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col-12 -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
 <!-- /.content-wrapper -->
+
 <aside class="control-sidebar control-sidebar-dark">
   <!-- Control sidebar content goes here -->
   <div class="p-3 d-flex flex-column">
@@ -272,17 +298,17 @@
     <p class="mt-3">Configuration</p>
      <br class="mb-3" />
     <h6>Sphere Radius</h6>
-            <div class="card-body">
-                      <input
-                        type="range"
-                        class="custom-range"
-                        id="customRange1"
-                        min="1"
-                        step="0.01"
-                        max="5"
-                        value="1"
-                      />
-                    </div>
+    <div class="card-body">
+      <input
+        type="range"
+        class="custom-range"
+        id="customRange1"
+        min="1"
+        step="0.01"
+        max="5"
+        value="1"
+      />
+    </div>
                     
 
          <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -447,7 +473,7 @@
         </button>
       </div>
     </div>
-    <!-- /.modal-content esto es un test -->
+    <!-- /.modal-content this is a test -->
   </div>
   <!-- /.modal-dialog -->
 </div>
@@ -487,10 +513,6 @@
 </div>
 
 
-  <!-- /.modal-dialog -->
-</div>
-
-
 
 <div class="modal fade" id="timelineModal" tabindex="-1" role="dialog" aria-labelledby="timelineModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -502,7 +524,7 @@
         </button>
       </div>
       <div class="modal-body" id="timelineModalBody">
-        <!-- Aquí va el timeline -->
+        <!-- Timeline goes here -->
         <ul class="timeline timeline-vertical" id="timelineContent">
           <!-- El contenido se puede llenar dinámicamente con JS o dejar estático -->
         </ul>
@@ -511,7 +533,7 @@
   </div>
 </div>
   <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
-  <!-- Carga -->
+  <!-- Loader -->
 <div class="overlay" id="load" hidden >
   <div class="socket">
       <div class="gel center-gel">
@@ -721,14 +743,15 @@
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
-<script src="{% static 'assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
-<script src="{% static 'assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
-<script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
-<script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
-<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
-<script src="{% static 'assets/plugins/bs-stepper/js/bs-stepper.min.js' %}"></script>
-<script src="{% static 'assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script>
-<script src="{% static 'assets/plugins/bootstrap-slider/bootstrap-slider.min.js' %}"></script>
+<!-- Commented out: Not used in this file -->
+<!-- <script src="{% static 'assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script> -->
+<!-- <script src="{% static 'assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script> -->
+<!-- <script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script> -->
+<!-- <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script> -->
+<!-- <script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script> -->
+<!-- <script src="{% static 'assets/plugins/bs-stepper/js/bs-stepper.min.js' %}"></script> -->
+<!-- <script src="{% static 'assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script> -->
+<!-- <script src="{% static 'assets/plugins/bootstrap-slider/bootstrap-slider.min.js' %}"></script> -->
 <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
 <!-- JQVMap -->
 <script src="{% static 'assets/plugins/jqvmap/jquery.vmap.min.js' %}"></script>

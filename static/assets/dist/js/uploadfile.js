@@ -19,6 +19,12 @@ function loadGenes() {
     .get(geneUrl)
     .then((response) => {
       const geneSelect = document.getElementById("gene");
+      
+      // Destruir Select2 antes de actualizar el DOM
+      if ($(geneSelect).hasClass('select2-hidden-accessible')) {
+        $(geneSelect).select2('destroy');
+      }
+      
       geneSelect.innerHTML = '<option value="">Seleccione un gen</option>';
 
       response.data.results.forEach((gene) => {
@@ -27,6 +33,16 @@ function loadGenes() {
         option.textContent = gene.name;
         geneSelect.appendChild(option);
       });
+
+      // Reinicializar Select2 después de cargar los genes
+      $(geneSelect).select2({
+        theme: 'bootstrap4',
+        placeholder: 'Seleccione un gen',
+        allowClear: true,
+        width: '100%',
+        dropdownParent: $('#modal-crear-elemento'),
+        language: 'es'
+      });
     })
     .catch((error) => {
       console.error("Error cargando genes:", error);
@@ -34,6 +50,16 @@ function loadGenes() {
 }
 
 $(document).ready(function () {
+  // Inicializar Select2 antes de cargar genes
+  $('#gene').select2({
+    theme: 'bootstrap4',
+    placeholder: 'Seleccione un gen',
+    allowClear: true,
+    width: '100%',
+    dropdownParent: $('#modal-crear-elemento'),
+    language: 'es'
+  });
+  
   // Cargar la lista de genes
   loadGenes();
 
@@ -181,9 +207,8 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
   // A forEach loop is used to iterate through each element in the array.
   elements.forEach((elem) => elem.classList.remove("is-invalid"));
 
-  // Resetear el campo gene a la opción por defecto
-  document.getElementById("gene").innerHTML =
-    '<option value="">Seleccione un gen</option>';
+  // Resetear Select2 sin destruir la instancia
+  $('#gene').val(null).trigger('change');
   // Recargar la lista de genes
   loadGenes();
 });
@@ -210,12 +235,12 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
 
         // Asegurar que los genes estén cargados antes de establecer el valor
         if (document.getElementById("gene").options.length > 1) {
-          form.elements.gene.value = elemento.gene;
+          $('#gene').val(elemento.gene).trigger('change');
         } else {
           // Si los genes no están cargados, esperar y luego establecer el valor
           loadGenes();
           setTimeout(() => {
-            form.elements.gene.value = elemento.gene;
+            $('#gene').val(elemento.gene).trigger('change');
           }, 100);
         }
       })

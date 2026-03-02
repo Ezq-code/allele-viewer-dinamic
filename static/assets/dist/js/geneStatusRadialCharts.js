@@ -113,12 +113,15 @@
                 .filter(item => item.name);
             const wrapper = document.createElement('div');
             wrapper.className = 'gene-chart-item radial-chart-item';
+            wrapper.setAttribute('data-gene-name', gene.name);
 
             const chartHolder = document.createElement('div');
             chartHolder.className = 'radial-chart-canvas';
 
             const center = document.createElement('div');
             center.className = 'gene-donut-chart-center';
+            center.setAttribute('data-gene-name', gene.name);
+            center.style.cursor = 'pointer';
             const centerName = document.createElement('p');
             centerName.className = 'gene-donut-chart-center-name';
             centerName.textContent = gene.name;

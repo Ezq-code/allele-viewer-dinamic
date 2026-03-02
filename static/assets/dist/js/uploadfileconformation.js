@@ -13,28 +13,124 @@ const url = "/allele-formation/uploaded-snp-files/";
 const geneUrl = "/business-gestion/gene/";
 
 var load = document.getElementById("load");
+let select2Ready = false;
+
+function showLoadingOverlay() {
+  if (load) {
+    load.hidden = false;
+  }
+}
+
+function hideLoadingOverlay() {
+  if (load) {
+    load.hidden = true;
+  }
+}
+
+function updateSelect2ReadyState() {
+  const geneSelect = document.getElementById("gene");
+  const hasOptions = geneSelect && geneSelect.options.length > 1;
+  const initialized = hasSelect2() && $("#gene").hasClass("select2-hidden-accessible");
+
+  select2Ready = Boolean(hasOptions && initialized);
+  if (select2Ready) {
+    hideLoadingOverlay();
+  }
+}
+
+function hasSelect2() {
+  return typeof $.fn.select2 === "function";
+}
+
+function extractGeneList(payload) {
+  if (Array.isArray(payload)) {
+    return payload;
+  }
+  if (payload && Array.isArray(payload.results)) {
+    return payload.results;
+  }
+  return [];
+}
+
+function setGeneValue(value) {
+  const normalizedValue = value ? String(value) : "";
+  if (hasSelect2()) {
+    $("#gene").val(normalizedValue).trigger("change.select2");
+  } else {
+    document.getElementById("gene").value = normalizedValue;
+  }
+}
+
+function initializeGeneSelect2(maxAttempts = 10, delayMs = 150) {
+  let attempts = 0;
+
+  const tryInitialize = () => {
+    if (hasSelect2()) {
+      const $gene = $("#gene");
+      if ($gene.data("select2")) {
+        $gene.select2("destroy");
+      }
+      $gene.select2({
+        dropdownParent: $("#modal-crear-elemento"),
+        theme: "bootstrap4",
+        width: "100%",
+        dropdownAutoWidth: false,
+      });
+      updateSelect2ReadyState();
+      return;
+    }
+
+    attempts += 1;
+    if (attempts < maxAttempts) {
+      setTimeout(tryInitialize, delayMs);
+    } else {
+      console.warn("Select2 no está disponible para #gene; se usará select nativo.");
+      hideLoadingOverlay();
+    }
+  };
+
+  tryInitialize();
+}
 
 // Función para cargar la lista de genes
-function loadGenes() {
+function loadGenes(selectedGene = "") {
+  showLoadingOverlay();
+  select2Ready = false;
+
   axios
     .get(geneUrl)
     .then((response) => {
       const geneSelect = document.getElementById("gene");
+      const $geneSelect = $(geneSelect);
+      const genes = extractGeneList(response.data);
+
+      if ($geneSelect.hasClass("select2-hidden-accessible")) {
+        $geneSelect.select2("destroy");
+      }
+
       geneSelect.innerHTML = '<option value="">Seleccione un gen</option>';
 
-      response.data.results.forEach((gene) => {
+      genes.forEach((gene) => {
         const option = document.createElement("option");
         option.value = gene.id;
         option.textContent = gene.name;
         geneSelect.appendChild(option);
       });
+
+      initializeGeneSelect2();
+      setGeneValue(selectedGene);
+      updateSelect2ReadyState();
     })
     .catch((error) => {
       console.error("Error cargando genes:", error);
+      hideLoadingOverlay();
     });
 }
 
 $(document).ready(function () {
+  showLoadingOverlay();
+  initializeGeneSelect2();
+
   // Cargar la lista de genes
   loadGenes();
   $("table")
@@ -170,6 +266,7 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
   const elements = [...form.elements];
   // A forEach loop is used to iterate through each element in the array.
   elements.forEach((elem) => elem.classList.remove("is-invalid"));
+  setGeneValue("");
 });
 
 let edit_elemento = false;
@@ -191,20 +288,21 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
         // Llenar el formulario con los datos del usuario
         form.elements.name.value = elemento.custom_name;
         form.elements.description.value = elemento.description;
-        // Asegurar que los genes estén cargados antes de establecer el valor
-        if (document.getElementById("gene").options.length > 1) {
-          form.elements.gene.value = elemento.gene;
-        } else {
-          // Si los genes no están cargados, esperar y luego establecer el valor
-          loadGenes();
-          setTimeout(() => {
-            form.elements.gene.value = elemento.gene;
-          }, 100);
-        }
+        loadGenes(elemento.gene);
       })
       .catch(function (error) {});
   } else {
     modal.find(".modal-title").text("Subir Fichero");
+  }
+});
+
+$("#modal-crear-elemento").on("shown.bs.modal", function () {
+  showLoadingOverlay();
+  initializeGeneSelect2();
+  if (document.getElementById("gene").options.length <= 1) {
+    loadGenes();
+  } else {
+    updateSelect2ReadyState();
   }
 });
 
