@@ -3,6 +3,8 @@ from apps.business_app.models.disease_subgroup import DiseaseSubGroup
 from apps.business_app.models.disorder import Disorder
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.gene_group import GeneGroups
+from apps.business_app.models.gene_status import GeneStatus
+from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from django.core.management import call_command
 import logging
 
