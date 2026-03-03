@@ -323,6 +323,9 @@ SPREADSHEET_ID = env("SPREADSHEET_ID")
 CREDENTIAL_FILE_NAME = env("CREDENTIAL_FILE_NAME", default="credentials.json")
 
 CACHE_DEFAULT_TIMEOUT = env.int("CACHE_DEFAULT_TIMEOUT", default=300)
+DEFAULT_REDIS_HOST = "redis" if RUNNING_FROM == RUNNING_FROM_REMOTE else "127.0.0.1"
+REDIS_HOST = env.str("REDIS_HOST", default=DEFAULT_REDIS_HOST)
+REDIS_PORT = env.int("REDIS_PORT", default=6379)
 
 if DEBUG:
     cache_backend = {
@@ -332,14 +335,15 @@ if DEBUG:
 else:
     cache_backend = {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
         "TIMEOUT": CACHE_DEFAULT_TIMEOUT,
     }
 
 CACHES = {"default": cache_backend}
 
-REDIS_PORT = env.int("REDIS_PORT", default=6379)
-CELERY_BASE_REDIS_URL = env.str("CELERY_BASE_REDIS_URL", default="redis://localhost:")
+CELERY_BASE_REDIS_URL = env.str(
+    "CELERY_BASE_REDIS_URL", default=f"redis://{REDIS_HOST}:"
+)
 CELERY_BROKER_REDIS_URL = CELERY_BASE_REDIS_URL + str(REDIS_PORT)
 CELERY_BROKER_URL = CELERY_BASE_REDIS_URL + str(REDIS_PORT) + "/0"
 CELERY_RESULT_BACKEND = "django-db"
