@@ -66,28 +66,27 @@ if not DEBUG:
 ALLOWED_HOSTS = ["*"]
 
 # Security settings for HTTPS/proxy (Nginx)
-# Django needs to trust the domain when behind a reverse proxy with HTTPS
+csrf_origins_raw = env.str(
+    "CSRF_TRUSTED_ORIGINS",
+    default="http://localhost,http://127.0.0.1,https://alleleconformationsdynamic.pgxsoftware.com",
+)
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in csrf_origins_raw.replace(";", ",").split(",")
+    if origin.strip()
+]
 
-# Trust X-Forwarded-Proto header from Nginx for HTTPS detection
+production_origin = "https://alleleconformationsdynamic.pgxsoftware.com"
+if production_origin not in CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS.append(production_origin)
+
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    USE_X_FORWARDED_HOST = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SAMESITE = "Lax"
-
-# CSRF & Security settings for HTTPS/proxy
-CSRF_TRUSTED_ORIGINS = env.list(
-    "CSRF_TRUSTED_ORIGINS",
-    default=[
-        "http://localhost",
-        "http://127.0.0.1",
-        "https://alleleconformationsdynamic.pgxsoftware.com",
-    ],
-)
-
-# Tell Django it's behind a proxy (Nginx) handling SSL
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
 
