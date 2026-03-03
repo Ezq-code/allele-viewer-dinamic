@@ -46,10 +46,8 @@ class ExcelStructureValidator:
             logger.info(f"Validando hoja: '{sheet_name}'")
             if not Gene.objects.filter(name=sheet_name).exists():
                 logger.error(f"La hoja '{sheet_name}' no corresponde a un gen válido.")
-                raise ValueError(
-                    f"Estructura de archivo inválida. La hoja '{sheet_name}' "
-                    "no corresponde a un gen válido."
-                )
+                self.sheet_names.remove(sheet_name)
+                continue
             first_row = df.iloc[0]
 
             for column in self._output_mandatory_columns_for_validation:

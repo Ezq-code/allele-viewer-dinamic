@@ -1,0 +1,50 @@
+FROM python:3.11-slim
+
+# Establecer variables de entorno
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements
+COPY requirements.txt /app/
+
+# Instalar dependencias de Python
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copiar toda la aplicación
+COPY project_site/ /app/project_site/
+COPY apps/ /app/apps/
+COPY manage.py /app/
+COPY entrypoint.sh /app/
+COPY supervisord.conf /app/
+
+# Copiar archivos estáticos y templates (si existen)
+COPY static/ /app/static/
+COPY templates/ /app/templates/
+
+# Crear usuario no-root para ejecutar la aplicación
+RUN useradd -m -u 1000 appuser
+
+# Crear directorios necesarios y dar permisos
+RUN mkdir -p /app/static_output /app/media && \
+    sed -i 's/\r$//' /app/entrypoint.sh && \
+    chown -R appuser:appuser /app && \
+    chmod +x /app/entrypoint.sh && \
+    chmod -R 755 /app/media
+
+USER appuser
+
+# Exponer puerto
+EXPOSE 8000
+
+# Entrypoint
+ENTRYPOINT ["/app/entrypoint.sh"]
