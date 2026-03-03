@@ -65,6 +65,30 @@ if not DEBUG:
 
 ALLOWED_HOSTS = ["*"]
 
+# Security settings for HTTPS/proxy (Nginx)
+# Django needs to trust the domain when behind a reverse proxy with HTTPS
+
+# Trust X-Forwarded-Proto header from Nginx for HTTPS detection
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    CSRF_COOKIE_SAMESITE = "Lax"
+
+# CSRF & Security settings for HTTPS/proxy
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS",
+    default=[
+        "http://localhost",
+        "http://127.0.0.1",
+        "https://alleleconformationsdynamic.pgxsoftware.com",
+    ],
+)
+
+# Tell Django it's behind a proxy (Nginx) handling SSL
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Application definition
 
 INSTALLED_APPS = [

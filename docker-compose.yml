@@ -96,6 +96,7 @@ services:
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=6379
       - CELERY_BASE_REDIS_URL=${CELERY_BASE_REDIS_URL:-redis://redis:}
+      - CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS:-http://localhost,http://127.0.0.1}
       - RUNNING_FROM=remote
     depends_on:
       redis:
