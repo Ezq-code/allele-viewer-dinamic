@@ -39,13 +39,13 @@ python manage.py migrate --noinput
 echo "Recolectando archivos estáticos..."
 python manage.py collectstatic --noinput --clear
 
-# Precargando datos iniciales (fixtures)
-echo "Cargando datos iniciales..."
-python manage.py load_data
+# # Precargando datos iniciales (fixtures)
+# echo "Cargando datos iniciales..."
+# python manage.py load_data
 
-# Cargar genes
-echo "Cargando genes..."
-python manage.py load_gene_data
+# # Cargar genes
+# echo "Cargando genes..."
+# python manage.py load_gene_data
 
 # Crear superusuario si no existe (opcional)
 echo "Verificando superusuario..."
