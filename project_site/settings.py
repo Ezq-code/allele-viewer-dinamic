@@ -65,6 +65,29 @@ if not DEBUG:
 
 ALLOWED_HOSTS = ["*"]
 
+# Security settings for HTTPS/proxy (Nginx)
+csrf_origins_raw = env.str(
+    "CSRF_TRUSTED_ORIGINS",
+    default="http://localhost,http://127.0.0.1,https://alleleconformationsdynamic.pgxsoftware.com",
+)
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in csrf_origins_raw.replace(";", ",").split(",")
+    if origin.strip()
+]
+
+production_origin = "https://alleleconformationsdynamic.pgxsoftware.com"
+if production_origin not in CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS.append(production_origin)
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    USE_X_FORWARDED_HOST = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    CSRF_COOKIE_SAMESITE = "Lax"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -89,6 +112,8 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_spectacular_sidecar",  # required for Django collectstatic discovery
     "colorfield",
+    "django_celery_beat",
+    "django_celery_results",
 ]
 SPECTACULAR_SETTINGS = {
     "SWAGGER_UI_DIST": "SIDECAR",  # shorthand to use the sidecar instead
@@ -321,6 +346,9 @@ SPREADSHEET_ID = env("SPREADSHEET_ID")
 CREDENTIAL_FILE_NAME = env("CREDENTIAL_FILE_NAME", default="credentials.json")
 
 CACHE_DEFAULT_TIMEOUT = env.int("CACHE_DEFAULT_TIMEOUT", default=300)
+DEFAULT_REDIS_HOST = "redis" if RUNNING_FROM == RUNNING_FROM_REMOTE else "127.0.0.1"
+REDIS_HOST = env.str("REDIS_HOST", default=DEFAULT_REDIS_HOST)
+REDIS_PORT = env.int("REDIS_PORT", default=6379)
 
 if DEBUG:
     cache_backend = {
@@ -330,8 +358,24 @@ if DEBUG:
 else:
     cache_backend = {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
         "TIMEOUT": CACHE_DEFAULT_TIMEOUT,
     }
 
 CACHES = {"default": cache_backend}
+
+CELERY_BASE_REDIS_URL = env.str(
+    "CELERY_BASE_REDIS_URL", default=f"redis://{REDIS_HOST}:"
+)
+CELERY_BROKER_REDIS_URL = CELERY_BASE_REDIS_URL + str(REDIS_PORT)
+CELERY_BROKER_URL = CELERY_BASE_REDIS_URL + str(REDIS_PORT) + "/0"
+CELERY_RESULT_BACKEND = "django-db"
+
+
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60

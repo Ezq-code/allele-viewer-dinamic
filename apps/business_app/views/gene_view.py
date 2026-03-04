@@ -19,7 +19,6 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
 from apps.common.views import CommonOrderingFilter
-import re
 
 
 # Create your views here.

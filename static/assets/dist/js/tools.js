@@ -1,19 +1,31 @@
 function graficar_string(pdb_content) {
-  load.hidden = false;
-  // viewer.removeAllModels();
-  // viewer.render();
-  //  models[cont] = viewer.addModel(pdb_content, "pdb", { assignBonds: false });
-  //  cont++;
-  viewer.addModel(pdb_content, "pdb", { assignBonds: false });
-  viewer.setClickable({}, true, function (atom, viewer, event, container) {
-    showInfo(atom);
-  });
+  try {
+    load.hidden = false;
+    // viewer.removeAllModels();
+    // viewer.render();
+    //  models[cont] = viewer.addModel(pdb_content, "pdb", { assignBonds: false });
+    //  cont++;
+    viewer.addModel(pdb_content, "pdb", { assignBonds: false });
+    viewer.setClickable({}, true, function (atom, viewer, event, container) {
+      showInfo(atom);
+    });
 
-  // Crear los objetos de línea para los ejes de coordenadas
-  viewer.setCameraParameters({ fov: 2, z: 300 });
-  child();
-  viewer.spin(new $3Dmol.Vector3(1, 0, 0), 0.02); // Girar alrededor del eje X a una velocidad de 0.01 radianes por cuadro
-  viewer.spin(false);
+    // Crear los objetos de línea para los ejes de coordenadas
+    viewer.setCameraParameters({ fov: 2, z: 300 });
+    child();
+    viewer.spin(new $3Dmol.Vector3(1, 0, 0), 0.02); // Girar alrededor del eje X a una velocidad de 0.01 radianes por cuadro
+    viewer.spin(false);
+    load.hidden = true;
+  } catch (error) {
+    load.hidden = true;
+    console.error("Error en graficar_string:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error al cargar el archivo",
+      text: "No se pudo cargar el archivo PDB. Por favor, intenta más tarde.",
+      showConfirmButton: true,
+    });
+  }
 }
 
 // Función para iniciar la animación del atomo
