@@ -13613,14 +13613,14 @@ class Command(BaseCommand):
                 gene, created = Gene.objects.get_or_create(name=gene_name)
                 if created:
                     gene_status_middle_list.extend(
-                            [
-                                GeneStatusMiddle(
-                                    gene=gene,
-                                    gene_status=gene_status,
-                                )
-                                for gene_status in gene_status_list
-                            ]
-                        )
+                        [
+                            GeneStatusMiddle(
+                                gene=gene,
+                                gene_status=gene_status,
+                            )
+                            for gene_status in gene_status_list
+                        ]
+                    )
                 disorder.genes.add(gene)
                 gene_group.genes.add(gene)
             except Exception as ex:

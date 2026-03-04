@@ -233,7 +233,9 @@ def update_gene_list_for_groups_task():
             missing_gene_names = list(set(gene_list) - set(existing_gene_names))
 
             if missing_gene_names:
-                Gene.objects.bulk_create([Gene(name=name) for name in missing_gene_names])
+                Gene.objects.bulk_create(
+                    [Gene(name=name) for name in missing_gene_names]
+                )
 
                 missing_genes = Gene.objects.filter(name__in=missing_gene_names)
                 gene_status_list = GeneStatus.objects.all()

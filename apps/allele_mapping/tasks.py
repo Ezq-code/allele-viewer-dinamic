@@ -1,7 +1,12 @@
 from celery import shared_task
 import logging
 
+from apps.allele_mapping.models.allele_region import AlleleRegion
+from apps.allele_mapping.utils.sub_country_population import (
+    populate_sub_country_from_population,
+)
 from apps.allele_mapping.utils.xslx_reader import XslxReader
+from apps.business_app.models.sub_country import SubCountry
 
 
 logger = logging.getLogger(__name__)
@@ -44,3 +49,13 @@ def process_allele_mapping_file(file_path, uploaded_file_id):
 
         AlleleMappingFiles.objects.filter(id=uploaded_file_id).delete()
         raise
+
+
+@shared_task(name="populate_sub_country_task")
+def populate_sub_country_task():
+    updated_count = populate_sub_country_from_population(AlleleRegion, SubCountry)
+    logger.info("populate_sub_country_task completed. updated_count=%s", updated_count)
+    return {
+        "status": "success",
+        "updated_count": updated_count,
+    }

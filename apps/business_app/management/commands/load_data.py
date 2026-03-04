@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from django.core.management import call_command
 from termcolor import colored
 
+
 class Command(BaseCommand):
     help = "Loads initial fixtures"
 
