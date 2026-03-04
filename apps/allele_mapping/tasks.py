@@ -36,6 +36,7 @@ def process_allele_mapping_file(file_path, uploaded_file_id):
         logger.info(
             f"Successfully processed file {file_path} for upload {uploaded_file_id}"
         )
+        populate_sub_country_task.delay()
 
         return {
             "status": "success",

@@ -3,6 +3,7 @@ from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.serializers.allele_region_info import (
     AlleleRegionInfoDetailSerializer,
 )
+from ..serializers.allele_region_coord import AlleleRegionCoordSerializer
 
 
 class AlleleRegionSerializer(serializers.ModelSerializer):
@@ -13,16 +14,15 @@ class AlleleRegionSerializer(serializers.ModelSerializer):
 
 class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
     alleles = serializers.SerializerMethodField()
+    coordinates = AlleleRegionCoordSerializer(many=True, read_only=True)
 
     class Meta:
         model = AlleleRegion
         fields = [
             "id",
             "population",
-            "location",
-            "lat",
-            "lon",
             "alleles",
+            "coordinates",
         ]
 
     def get_alleles(self, obj):

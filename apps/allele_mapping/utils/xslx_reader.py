@@ -28,17 +28,18 @@ class XslxReader(ExcelStructureValidator):
             gene = Gene.objects.get(name=sheet_name)
             data_for_batch_create = []
             for _, row in df.iterrows():
-                percent_of_individuals = row[
-                    ExcelNomenclators.percent_of_individuals_column_name
-                ]
-                if pd.isna(percent_of_individuals) or not percent_of_individuals:
-                    continue
                 allele_frequency = row[ExcelNomenclators.allele_frequency_column_name]
                 if pd.isna(allele_frequency) or not allele_frequency:
                     continue
                 sample_size = row[ExcelNomenclators.sample_size_column_name]
                 if pd.isna(sample_size) or not sample_size:
                     continue
+
+                percent_of_individuals = row[
+                    ExcelNomenclators.percent_of_individuals_column_name
+                ]
+                if pd.isna(percent_of_individuals) or not percent_of_individuals:
+                    percent_of_individuals = None
 
                 allele, _ = AlleleToMap.objects.get_or_create(
                     name=row[ExcelNomenclators.allele_column_name],

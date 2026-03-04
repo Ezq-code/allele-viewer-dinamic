@@ -8,22 +8,6 @@ class AlleleRegion(models.Model):
         verbose_name=_("population"),
         max_length=100,
     )
-    location = models.CharField(
-        verbose_name=_("location"),
-        max_length=100,
-        null=True,
-        blank=True,
-    )
-    lat = models.FloatField(
-        verbose_name=_("latitude"),
-        null=True,
-        blank=True,
-    )
-    lon = models.FloatField(
-        verbose_name=_("longitude"),
-        null=True,
-        blank=True,
-    )
     sub_country = models.ForeignKey(
         to=SubCountry,
         on_delete=models.SET_NULL,

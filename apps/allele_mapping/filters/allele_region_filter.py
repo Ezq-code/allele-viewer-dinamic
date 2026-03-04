@@ -42,8 +42,8 @@ class AlleleRegionFilter(django_filters.FilterSet):
         model = AlleleRegion
         fields = {
             "id": ["exact", "in"],
-            "lat": ["gte", "lte"],
-            "lon": ["gte", "lte"],
+            "coordinates__lat": ["gte", "lte"],
+            "coordinates__lon": ["gte", "lte"],
             "alleles__percent_of_individuals": ["gte", "lte"],
         }
 

@@ -6,6 +6,7 @@ from apps.allele_mapping.models.allele_mapping_files import AlleleMappingFiles
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.allele_mapping.models.allele_region import AlleleRegion
+from apps.allele_mapping.models.allele_region_coord import AlleleRegionCoord
 
 
 logger = logging.getLogger(__name__)
@@ -80,13 +81,23 @@ class AlleleRegionAdmin(admin.ModelAdmin):
         "id",
         "population",
         "sub_country",
+    ]
+    fields = [
+        "population",
+        "sub_country",
+    ]
+
+
+@admin.register(AlleleRegionCoord)
+class AlleleRegionCoordAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
         "location",
         "lat",
         "lon",
     ]
     fields = [
-        "population",
-        "sub_country",
         "location",
         "lat",
         "lon",

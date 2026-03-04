@@ -5,17 +5,6 @@ from django.db import migrations, models
 from apps.allele_mapping.tasks import populate_sub_country_task
 
 
-def populate_sub_country(apps, schema_editor):
-    """Populate sub_country field based on population field."""
-    populate_sub_country_task.delay()
-
-
-def reverse_populate_sub_country(apps, schema_editor):
-    """Reverse operation: clear all sub_country values."""
-    AlleleRegion = apps.get_model("allele_mapping", "AlleleRegion")
-    AlleleRegion.objects.all().update(sub_country=None)
-
-
 class Migration(migrations.Migration):
     dependencies = [
         ("allele_mapping", "0003_add_composite_indexes"),
@@ -34,5 +23,4 @@ class Migration(migrations.Migration):
                 to="business_app.subcountry",
             ),
         ),
-        migrations.RunPython(populate_sub_country, reverse_populate_sub_country),
     ]
