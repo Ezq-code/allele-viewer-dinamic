@@ -79,6 +79,8 @@ urlpatterns = [
         login_required(pages.disorder, login_url="/login/"),
         name="disorder",
     ),
+    
+    path("out", pages.out, name="out"),
     path("ancestral", pages.ancestral, name="ancestral"),
     path("alleleviewer", pages.alleleviewer, name="alleleviewer"),
     path("login/", pages.first_login, name="first_login"),

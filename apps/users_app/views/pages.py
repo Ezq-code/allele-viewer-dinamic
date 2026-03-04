@@ -34,6 +34,9 @@ def alleleviewer(request):
 def ancestral(request):
     return render(request, "grafico/ancestral.html")
 
+def out(request):
+    return render(request, "out/out.html")
+
 
 # @cache_page(60 * 15)
 def uploadfile(request):
