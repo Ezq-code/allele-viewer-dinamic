@@ -31,11 +31,11 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
         "region__population": ["icontains"],
         "allele__name": ["icontains"],
         "allele__gene__name": ["iexact"],
-        "sub_country__name": ["icontains"],
+        "region__sub_country__name": ["icontains"],
     }
     filterset_fields = {
         "region": ["exact"],
-        "sub_country": ["exact"],
+        "region__sub_country": ["exact"],
         "allele": ["exact"],
         "allele__gene": ["exact"],
         "sample_size": ["gte", "lte"],
