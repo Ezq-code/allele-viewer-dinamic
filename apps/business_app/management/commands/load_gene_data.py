@@ -13610,8 +13610,8 @@ class Command(BaseCommand):
                     name=disorder_name, defaults={"disease_subgroup": disease_subgroup}
                 )
 
-                gene, created = Gene.objects.get_or_create(name=gene_name)
-                if created:
+                gene, _ = Gene.objects.get_or_create(name=gene_name)
+                if not GeneStatusMiddle.objects.filter(gene=gene).exists():
                     gene_status_middle_list.extend(
                         [
                             GeneStatusMiddle(

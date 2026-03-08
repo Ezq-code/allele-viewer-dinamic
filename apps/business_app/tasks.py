@@ -224,9 +224,7 @@ def update_gene_list_for_groups_task():
     for gene_group_id, gene_list in dict_for_update.items():
         try:
             gene_group = GeneGroups.objects.get(id=gene_group_id)
-
             gene_group.genes.clear()
-
             existing_gene_names = Gene.objects.filter(name__in=gene_list).values_list(
                 "name", flat=True
             )

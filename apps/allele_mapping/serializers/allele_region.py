@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from drf_spectacular.utils import extend_schema_field
 from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.serializers.allele_region_info import (
     AlleleRegionInfoDetailSerializer,
@@ -23,11 +22,10 @@ class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
             "id",
             "population",
             "alleles",
-            "coordinates",
+            "coordinates",  
         ]
 
-    @extend_schema_field(AlleleRegionInfoDetailSerializer(many=True))
-    def get_alleles(self, obj):
+    def get_alleles(self, obj): # TODO utilizar el filter class aquí
         """
         Obtener alelos, priorizando los filtrados si existen
         Optimizado para ordenar en base de datos en lugar de Python

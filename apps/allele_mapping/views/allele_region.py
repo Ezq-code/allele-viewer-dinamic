@@ -22,7 +22,7 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
     """
 
     pagination_class = AllResultsSetPagination
-    queryset = AlleleRegion.objects.prefetch_related("alleles", "alleles__allele__gene")
+    queryset = AlleleRegion.objects.prefetch_related("alleles", "alleles__allele__gene", "coordinates")
     serializer_class = AlleleRegionWithAllelesSerializer
     ordering_fields = "__all__"
     filter_backends = [
