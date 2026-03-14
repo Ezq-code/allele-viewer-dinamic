@@ -164,8 +164,8 @@ class AlleleRegionFilter(django_filters.FilterSet):
                 "alleles",
                 queryset=AlleleRegionInfo.objects.filter(
                     allele_id__in=allele_ids,
-                    allele_frequency__isnull=False,
                     allele_frequency__gt=0,
+                    sample_size__gt=0,
                 )
                 .select_related("allele", "allele__gene")
                 .order_by("-allele_frequency"),

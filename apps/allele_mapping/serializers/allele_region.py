@@ -22,10 +22,10 @@ class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
             "id",
             "population",
             "alleles",
-            "coordinates",  
+            "coordinates",
         ]
 
-    def get_alleles(self, obj): # TODO utilizar el filter class aquí
+    def get_alleles(self, obj):  # TODO utilizar el filter class aquí
         """
         Obtener alelos, priorizando los filtrados si existen
         Optimizado para ordenar en base de datos en lugar de Python

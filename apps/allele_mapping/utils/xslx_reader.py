@@ -65,12 +65,12 @@ class XslxReader(ExcelStructureValidator):
             gene = Gene.objects.get(name=sheet_name)
             data_for_batch_create = []
             data_for_region_coords_batch_create = []
-            coordinate_column_triplets = self._get_coordinate_column_triplets(df.columns)
+            coordinate_column_triplets = self._get_coordinate_column_triplets(
+                df.columns
+            )
 
             if not coordinate_column_triplets:
-                logger.warning(
-                    f"No coordinate triplets found for sheet {sheet_name}."
-                )
+                logger.warning(f"No coordinate triplets found for sheet {sheet_name}.")
 
             for _, row in df.iterrows():
                 allele_frequency = row[ExcelNomenclators.allele_frequency_column_name]
@@ -130,6 +130,8 @@ class XslxReader(ExcelStructureValidator):
 
             if data_for_region_coords_batch_create:
                 logger.info("Inserting AlleleRegionCoord objects in batch")
-                AlleleRegionCoord.objects.bulk_create(data_for_region_coords_batch_create)
+                AlleleRegionCoord.objects.bulk_create(
+                    data_for_region_coords_batch_create
+                )
 
             logger.info("Insertions completed")

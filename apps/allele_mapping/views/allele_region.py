@@ -7,6 +7,8 @@ from apps.common.pagination import AllResultsSetPagination
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
+from django.db.models import Prefetch, OuterRef
+
 from apps.allele_mapping.serializers.allele_region import (
     AlleleRegionWithAllelesSerializer,
 )
@@ -22,7 +24,22 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
     """
 
     pagination_class = AllResultsSetPagination
-    queryset = AlleleRegion.objects.prefetch_related("alleles", "alleles__allele__gene", "coordinates")
+    queryset = (
+        AlleleRegion.objects.prefetch_related(
+            Prefetch(
+                "alleles",
+                queryset=AlleleRegionInfo.objects.filter(
+                    allele_frequency__gt=0,
+                    sample_size__gt=0,
+                    region=OuterRef("pk")
+                )
+                .select_related("allele", "allele__gene")
+                .order_by("-allele_frequency"),
+            ),
+            "alleles__allele__gene",
+            "coordinates",
+        ),
+    )
     serializer_class = AlleleRegionWithAllelesSerializer
     ordering_fields = "__all__"
     filter_backends = [
