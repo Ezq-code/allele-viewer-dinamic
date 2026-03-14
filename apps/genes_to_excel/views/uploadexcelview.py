@@ -111,6 +111,7 @@ class UploadExcelView(APIView):
                 "Alleleasoc",
                 "Species",
                 "Variant",
+                "Order",
             ]
             for col in columnas_requeridas:
                 if col not in df.columns:
