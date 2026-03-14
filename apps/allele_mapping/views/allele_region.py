@@ -29,9 +29,7 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
             Prefetch(
                 "alleles",
                 queryset=AlleleRegionInfo.objects.filter(
-                    allele_frequency__gt=0,
-                    sample_size__gt=0,
-                    region=OuterRef("pk")
+                    allele_frequency__gt=0, sample_size__gt=0, region=OuterRef("pk")
                 )
                 .select_related("allele", "allele__gene")
                 .order_by("-allele_frequency"),

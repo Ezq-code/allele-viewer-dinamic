@@ -36,8 +36,8 @@ class AlleleRegionInfoWithRegionSerializer(serializers.ModelSerializer):
     gene_name = serializers.CharField(source="allele.gene.name", read_only=True)
     region_name = serializers.CharField(source="region.population", read_only=True)
     region_location = serializers.CharField(source="region.location", read_only=True)
-    region_lat = serializers.FloatField(source="region.lat", read_only=True)
-    region_lon = serializers.FloatField(source="region.lon", read_only=True)
+    region_lat = serializers.FloatField(read_only=True)
+    region_lon = serializers.FloatField(read_only=True)
 
     class Meta:
         model = AlleleRegionInfo

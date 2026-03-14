@@ -32,10 +32,14 @@ class CountryAdmin(admin.ModelAdmin):
         "name",
         "code",
         "enabled",
+        "latitude",
+        "longitude",
     ]
     fields = [
         "name",
         "code",
         "enabled",
+        "latitude",
+        "longitude",
     ]
     search_fields = ["name", "code"]

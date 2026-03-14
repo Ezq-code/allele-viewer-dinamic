@@ -5,7 +5,9 @@
     "fields": {
       "name": "Afghanistan",
       "code": "AF",
-      "enabled": true
+      "enabled": true,
+      "latitude": "34.52",
+      "longitude": "69.17"
     }
   },
   {
@@ -14,7 +16,9 @@
     "fields": {
       "name": "Åland Islands",
       "code": "AX",
-      "enabled": true
+      "enabled": true,
+      "latitude": "60.10",
+      "longitude": "19.95"
     }
   },
   {
@@ -23,7 +27,9 @@
     "fields": {
       "name": "Albania",
       "code": "AL",
-      "enabled": true
+      "enabled": true,
+      "latitude": "41.33",
+      "longitude": "19.82"
     }
   },
   {
@@ -32,7 +38,9 @@
     "fields": {
       "name": "Algeria",
       "code": "DZ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "36.75",
+      "longitude": "3.06"
     }
   },
   {
@@ -41,7 +49,9 @@
     "fields": {
       "name": "American Samoa",
       "code": "AS",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-14.28",
+      "longitude": "-170.70"
     }
   },
   {
@@ -50,7 +60,9 @@
     "fields": {
       "name": "Andorra",
       "code": "AD",
-      "enabled": true
+      "enabled": true,
+      "latitude": "42.51",
+      "longitude": "1.52"
     }
   },
   {
@@ -59,7 +71,9 @@
     "fields": {
       "name": "Angola",
       "code": "AO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-8.84",
+      "longitude": "13.29"
     }
   },
   {
@@ -68,7 +82,9 @@
     "fields": {
       "name": "Anguilla",
       "code": "AI",
-      "enabled": true
+      "enabled": true,
+      "latitude": "18.22",
+      "longitude": "-63.07"
     }
   },
   {
@@ -77,7 +93,9 @@
     "fields": {
       "name": "Antarctica",
       "code": "AQ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-90.00",
+      "longitude": "0.00"
     }
   },
   {
@@ -86,7 +104,9 @@
     "fields": {
       "name": "Antigua and Barbuda",
       "code": "AG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "17.12",
+      "longitude": "-61.85"
     }
   },
   {
@@ -95,7 +115,9 @@
     "fields": {
       "name": "Argentina",
       "code": "AR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-34.60",
+      "longitude": "-58.38"
     }
   },
   {
@@ -104,7 +126,9 @@
     "fields": {
       "name": "Armenia",
       "code": "AM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "40.18",
+      "longitude": "44.51"
     }
   },
   {
@@ -113,7 +137,9 @@
     "fields": {
       "name": "Aruba",
       "code": "AW",
-      "enabled": true
+      "enabled": true,
+      "latitude": "12.52",
+      "longitude": "-70.03"
     }
   },
   {
@@ -122,7 +148,9 @@
     "fields": {
       "name": "Australia",
       "code": "AU",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-35.28",
+      "longitude": "149.13"
     }
   },
   {
@@ -131,7 +159,9 @@
     "fields": {
       "name": "Austria",
       "code": "AT",
-      "enabled": true
+      "enabled": true,
+      "latitude": "48.21",
+      "longitude": "16.37"
     }
   },
   {
@@ -140,7 +170,9 @@
     "fields": {
       "name": "Azerbaijan",
       "code": "AZ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "40.41",
+      "longitude": "49.87"
     }
   },
   {
@@ -149,7 +181,9 @@
     "fields": {
       "name": "Bahamas",
       "code": "BS",
-      "enabled": true
+      "enabled": true,
+      "latitude": "25.03",
+      "longitude": "-77.40"
     }
   },
   {
@@ -158,7 +192,9 @@
     "fields": {
       "name": "Bahrain",
       "code": "BH",
-      "enabled": true
+      "enabled": true,
+      "latitude": "26.23",
+      "longitude": "50.58"
     }
   },
   {
@@ -167,7 +203,9 @@
     "fields": {
       "name": "Bangladesh",
       "code": "BD",
-      "enabled": true
+      "enabled": true,
+      "latitude": "23.81",
+      "longitude": "90.41"
     }
   },
   {
@@ -176,7 +214,9 @@
     "fields": {
       "name": "Barbados",
       "code": "BB",
-      "enabled": true
+      "enabled": true,
+      "latitude": "13.10",
+      "longitude": "-59.61"
     }
   },
   {
@@ -185,7 +225,9 @@
     "fields": {
       "name": "Belarus",
       "code": "BY",
-      "enabled": true
+      "enabled": true,
+      "latitude": "53.90",
+      "longitude": "27.57"
     }
   },
   {
@@ -194,7 +236,9 @@
     "fields": {
       "name": "Belgium",
       "code": "BE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "50.85",
+      "longitude": "4.35"
     }
   },
   {
@@ -203,7 +247,9 @@
     "fields": {
       "name": "Belize",
       "code": "BZ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "17.25",
+      "longitude": "-88.77"
     }
   },
   {
@@ -212,7 +258,9 @@
     "fields": {
       "name": "Benin",
       "code": "BJ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "6.50",
+      "longitude": "2.60"
     }
   },
   {
@@ -221,7 +269,9 @@
     "fields": {
       "name": "Bermuda",
       "code": "BM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "32.29",
+      "longitude": "-64.78"
     }
   },
   {
@@ -230,7 +280,9 @@
     "fields": {
       "name": "Bhutan",
       "code": "BT",
-      "enabled": true
+      "enabled": true,
+      "latitude": "27.47",
+      "longitude": "89.64"
     }
   },
   {
@@ -239,7 +291,9 @@
     "fields": {
       "name": "Bolivia, Plurinational State of",
       "code": "BO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-19.04",
+      "longitude": "-65.26"
     }
   },
   {
@@ -248,7 +302,9 @@
     "fields": {
       "name": "Bonaire, Sint Eustatius and Saba",
       "code": "BQ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "12.18",
+      "longitude": "-68.25"
     }
   },
   {
@@ -257,7 +313,9 @@
     "fields": {
       "name": "Bosnia and Herzegovina",
       "code": "BA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "43.86",
+      "longitude": "18.41"
     }
   },
   {
@@ -266,7 +324,9 @@
     "fields": {
       "name": "Botswana",
       "code": "BW",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-24.63",
+      "longitude": "25.93"
     }
   },
   {
@@ -275,7 +335,9 @@
     "fields": {
       "name": "Bouvet Island",
       "code": "BV",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-54.42",
+      "longitude": "3.36"
     }
   },
   {
@@ -284,7 +346,9 @@
     "fields": {
       "name": "Brazil",
       "code": "BR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-15.80",
+      "longitude": "-47.88"
     }
   },
   {
@@ -293,7 +357,9 @@
     "fields": {
       "name": "British Indian Ocean Territory",
       "code": "IO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-7.31",
+      "longitude": "72.41"
     }
   },
   {
@@ -302,7 +368,9 @@
     "fields": {
       "name": "Brunei Darussalam",
       "code": "BN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "4.89",
+      "longitude": "114.94"
     }
   },
   {
@@ -311,7 +379,9 @@
     "fields": {
       "name": "Bulgaria",
       "code": "BG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "42.70",
+      "longitude": "23.32"
     }
   },
   {
@@ -320,7 +390,9 @@
     "fields": {
       "name": "Burkina Faso",
       "code": "BF",
-      "enabled": true
+      "enabled": true,
+      "latitude": "12.37",
+      "longitude": "-1.52"
     }
   },
   {
@@ -329,7 +401,9 @@
     "fields": {
       "name": "Burundi",
       "code": "BI",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-3.43",
+      "longitude": "29.36"
     }
   },
   {
@@ -338,7 +412,9 @@
     "fields": {
       "name": "Cambodia",
       "code": "KH",
-      "enabled": true
+      "enabled": true,
+      "latitude": "11.56",
+      "longitude": "104.93"
     }
   },
   {
@@ -347,7 +423,9 @@
     "fields": {
       "name": "Cameroon",
       "code": "CM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "3.85",
+      "longitude": "11.52"
     }
   },
   {
@@ -356,7 +434,9 @@
     "fields": {
       "name": "Canada",
       "code": "CA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "45.42",
+      "longitude": "-75.70"
     }
   },
   {
@@ -365,7 +445,9 @@
     "fields": {
       "name": "Cape Verde",
       "code": "CV",
-      "enabled": true
+      "enabled": true,
+      "latitude": "14.92",
+      "longitude": "-23.51"
     }
   },
   {
@@ -374,7 +456,9 @@
     "fields": {
       "name": "Cayman Islands",
       "code": "KY",
-      "enabled": true
+      "enabled": true,
+      "latitude": "19.29",
+      "longitude": "-81.37"
     }
   },
   {
@@ -383,7 +467,9 @@
     "fields": {
       "name": "Central African Republic",
       "code": "CF",
-      "enabled": true
+      "enabled": true,
+      "latitude": "4.39",
+      "longitude": "18.56"
     }
   },
   {
@@ -392,7 +478,9 @@
     "fields": {
       "name": "Chad",
       "code": "TD",
-      "enabled": true
+      "enabled": true,
+      "latitude": "12.13",
+      "longitude": "15.05"
     }
   },
   {
@@ -401,7 +489,9 @@
     "fields": {
       "name": "Chile",
       "code": "CL",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-33.45",
+      "longitude": "-70.67"
     }
   },
   {
@@ -410,7 +500,9 @@
     "fields": {
       "name": "China",
       "code": "CN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "39.90",
+      "longitude": "116.41"
     }
   },
   {
@@ -419,7 +511,9 @@
     "fields": {
       "name": "Christmas Island",
       "code": "CX",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-10.42",
+      "longitude": "105.68"
     }
   },
   {
@@ -428,7 +522,9 @@
     "fields": {
       "name": "Cocos (Keeling) Islands",
       "code": "CC",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-12.17",
+      "longitude": "96.83"
     }
   },
   {
@@ -437,7 +533,9 @@
     "fields": {
       "name": "Colombia",
       "code": "CO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "4.71",
+      "longitude": "-74.07"
     }
   },
   {
@@ -446,7 +544,9 @@
     "fields": {
       "name": "Comoros",
       "code": "KM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-11.70",
+      "longitude": "43.26"
     }
   },
   {
@@ -455,7 +555,9 @@
     "fields": {
       "name": "Congo",
       "code": "CG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-4.27",
+      "longitude": "15.29"
     }
   },
   {
@@ -464,7 +566,9 @@
     "fields": {
       "name": "Congo, the Democratic Republic of the",
       "code": "CD",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-4.44",
+      "longitude": "15.27"
     }
   },
   {
@@ -473,7 +577,9 @@
     "fields": {
       "name": "Cook Islands",
       "code": "CK",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-21.21",
+      "longitude": "-159.78"
     }
   },
   {
@@ -482,7 +588,9 @@
     "fields": {
       "name": "Costa Rica",
       "code": "CR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "9.93",
+      "longitude": "-84.09"
     }
   },
   {
@@ -491,7 +599,9 @@
     "fields": {
       "name": "Côte d'Ivoire",
       "code": "CI",
-      "enabled": true
+      "enabled": true,
+      "latitude": "6.85",
+      "longitude": "-5.30"
     }
   },
   {
@@ -500,7 +610,9 @@
     "fields": {
       "name": "Croatia",
       "code": "HR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "45.82",
+      "longitude": "15.98"
     }
   },
   {
@@ -509,7 +621,9 @@
     "fields": {
       "name": "Cuba",
       "code": "CU",
-      "enabled": true
+      "enabled": true,
+      "latitude": "23.11",
+      "longitude": "-82.37"
     }
   },
   {
@@ -518,7 +632,9 @@
     "fields": {
       "name": "Curaçao",
       "code": "CW",
-      "enabled": true
+      "enabled": true,
+      "latitude": "12.12",
+      "longitude": "-68.93"
     }
   },
   {
@@ -527,7 +643,9 @@
     "fields": {
       "name": "Cyprus",
       "code": "CY",
-      "enabled": true
+      "enabled": true,
+      "latitude": "35.19",
+      "longitude": "33.38"
     }
   },
   {
@@ -536,7 +654,9 @@
     "fields": {
       "name": "Czech Republic",
       "code": "CZ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "50.08",
+      "longitude": "14.44"
     }
   },
   {
@@ -545,7 +665,9 @@
     "fields": {
       "name": "Denmark",
       "code": "DK",
-      "enabled": true
+      "enabled": true,
+      "latitude": "55.68",
+      "longitude": "12.57"
     }
   },
   {
@@ -554,7 +676,9 @@
     "fields": {
       "name": "Djibouti",
       "code": "DJ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "11.57",
+      "longitude": "43.15"
     }
   },
   {
@@ -563,7 +687,9 @@
     "fields": {
       "name": "Dominica",
       "code": "DM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "15.30",
+      "longitude": "-61.38"
     }
   },
   {
@@ -572,7 +698,9 @@
     "fields": {
       "name": "Dominican Republic",
       "code": "DO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "18.49",
+      "longitude": "-69.93"
     }
   },
   {
@@ -581,7 +709,9 @@
     "fields": {
       "name": "Ecuador",
       "code": "EC",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-0.18",
+      "longitude": "-78.47"
     }
   },
   {
@@ -590,7 +720,9 @@
     "fields": {
       "name": "Egypt",
       "code": "EG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "30.04",
+      "longitude": "31.24"
     }
   },
   {
@@ -599,7 +731,9 @@
     "fields": {
       "name": "El Salvador",
       "code": "SV",
-      "enabled": true
+      "enabled": true,
+      "latitude": "13.69",
+      "longitude": "-89.22"
     }
   },
   {
@@ -608,7 +742,9 @@
     "fields": {
       "name": "Equatorial Guinea",
       "code": "GQ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "3.75",
+      "longitude": "8.78"
     }
   },
   {
@@ -617,7 +753,9 @@
     "fields": {
       "name": "Eritrea",
       "code": "ER",
-      "enabled": true
+      "enabled": true,
+      "latitude": "15.32",
+      "longitude": "38.92"
     }
   },
   {
@@ -626,7 +764,9 @@
     "fields": {
       "name": "Estonia",
       "code": "EE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "59.44",
+      "longitude": "24.75"
     }
   },
   {
@@ -635,7 +775,9 @@
     "fields": {
       "name": "Ethiopia",
       "code": "ET",
-      "enabled": true
+      "enabled": true,
+      "latitude": "9.01",
+      "longitude": "38.76"
     }
   },
   {
@@ -644,7 +786,9 @@
     "fields": {
       "name": "Falkland Islands (Malvinas)",
       "code": "FK",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-51.70",
+      "longitude": "-57.85"
     }
   },
   {
@@ -653,7 +797,9 @@
     "fields": {
       "name": "Faroe Islands",
       "code": "FO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "62.01",
+      "longitude": "-6.77"
     }
   },
   {
@@ -662,7 +808,9 @@
     "fields": {
       "name": "Fiji",
       "code": "FJ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-18.12",
+      "longitude": "178.44"
     }
   },
   {
@@ -671,7 +819,9 @@
     "fields": {
       "name": "Finland",
       "code": "FI",
-      "enabled": true
+      "enabled": true,
+      "latitude": "60.17",
+      "longitude": "24.94"
     }
   },
   {
@@ -680,7 +830,9 @@
     "fields": {
       "name": "France",
       "code": "FR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "48.86",
+      "longitude": "2.35"
     }
   },
   {
@@ -689,7 +841,9 @@
     "fields": {
       "name": "French Guiana",
       "code": "GF",
-      "enabled": true
+      "enabled": true,
+      "latitude": "4.94",
+      "longitude": "-52.33"
     }
   },
   {
@@ -698,7 +852,9 @@
     "fields": {
       "name": "French Polynesia",
       "code": "PF",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-17.65",
+      "longitude": "-149.43"
     }
   },
   {
@@ -707,7 +863,9 @@
     "fields": {
       "name": "French Southern Territories",
       "code": "TF",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-49.35",
+      "longitude": "70.22"
     }
   },
   {
@@ -716,7 +874,9 @@
     "fields": {
       "name": "Gabon",
       "code": "GA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "0.42",
+      "longitude": "9.45"
     }
   },
   {
@@ -725,7 +885,9 @@
     "fields": {
       "name": "Gambia",
       "code": "GM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "13.44",
+      "longitude": "-16.57"
     }
   },
   {
@@ -734,7 +896,9 @@
     "fields": {
       "name": "Georgia",
       "code": "GE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "41.72",
+      "longitude": "44.78"
     }
   },
   {
@@ -743,7 +907,9 @@
     "fields": {
       "name": "Germany",
       "code": "DE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "52.52",
+      "longitude": "13.41"
     }
   },
   {
@@ -752,7 +918,9 @@
     "fields": {
       "name": "Ghana",
       "code": "GH",
-      "enabled": true
+      "enabled": true,
+      "latitude": "5.60",
+      "longitude": "-0.19"
     }
   },
   {
@@ -761,7 +929,9 @@
     "fields": {
       "name": "Gibraltar",
       "code": "GI",
-      "enabled": true
+      "enabled": true,
+      "latitude": "36.14",
+      "longitude": "-5.35"
     }
   },
   {
@@ -770,7 +940,9 @@
     "fields": {
       "name": "Greece",
       "code": "GR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "37.98",
+      "longitude": "23.73"
     }
   },
   {
@@ -779,7 +951,9 @@
     "fields": {
       "name": "Greenland",
       "code": "GL",
-      "enabled": true
+      "enabled": true,
+      "latitude": "64.18",
+      "longitude": "-51.69"
     }
   },
   {
@@ -788,7 +962,9 @@
     "fields": {
       "name": "Grenada",
       "code": "GD",
-      "enabled": true
+      "enabled": true,
+      "latitude": "12.06",
+      "longitude": "-61.75"
     }
   },
   {
@@ -797,7 +973,9 @@
     "fields": {
       "name": "Guadeloupe",
       "code": "GP",
-      "enabled": true
+      "enabled": true,
+      "latitude": "16.27",
+      "longitude": "-61.58"
     }
   },
   {
@@ -806,7 +984,9 @@
     "fields": {
       "name": "Guam",
       "code": "GU",
-      "enabled": true
+      "enabled": true,
+      "latitude": "13.44",
+      "longitude": "144.79"
     }
   },
   {
@@ -815,7 +995,9 @@
     "fields": {
       "name": "Guatemala",
       "code": "GT",
-      "enabled": true
+      "enabled": true,
+      "latitude": "14.63",
+      "longitude": "-90.51"
     }
   },
   {
@@ -824,7 +1006,9 @@
     "fields": {
       "name": "Guernsey",
       "code": "GG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "49.46",
+      "longitude": "-2.54"
     }
   },
   {
@@ -833,7 +1017,9 @@
     "fields": {
       "name": "Guinea",
       "code": "GN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "9.54",
+      "longitude": "-13.68"
     }
   },
   {
@@ -842,7 +1028,9 @@
     "fields": {
       "name": "Guinea-Bissau",
       "code": "GW",
-      "enabled": true
+      "enabled": true,
+      "latitude": "11.88",
+      "longitude": "-15.62"
     }
   },
   {
@@ -851,7 +1039,9 @@
     "fields": {
       "name": "Guyana",
       "code": "GY",
-      "enabled": true
+      "enabled": true,
+      "latitude": "6.80",
+      "longitude": "-58.16"
     }
   },
   {
@@ -860,7 +1050,9 @@
     "fields": {
       "name": "Haiti",
       "code": "HT",
-      "enabled": true
+      "enabled": true,
+      "latitude": "18.59",
+      "longitude": "-72.31"
     }
   },
   {
@@ -869,7 +1061,9 @@
     "fields": {
       "name": "Heard Island and McDonald Islands",
       "code": "HM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-53.08",
+      "longitude": "73.50"
     }
   },
   {
@@ -878,7 +1072,9 @@
     "fields": {
       "name": "Holy See (Vatican City State)",
       "code": "VA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "41.90",
+      "longitude": "12.45"
     }
   },
   {
@@ -887,7 +1083,9 @@
     "fields": {
       "name": "Honduras",
       "code": "HN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "14.07",
+      "longitude": "-87.20"
     }
   },
   {
@@ -896,7 +1094,9 @@
     "fields": {
       "name": "Hong Kong",
       "code": "HK",
-      "enabled": true
+      "enabled": true,
+      "latitude": "22.32",
+      "longitude": "114.17"
     }
   },
   {
@@ -905,7 +1105,9 @@
     "fields": {
       "name": "Hungary",
       "code": "HU",
-      "enabled": true
+      "enabled": true,
+      "latitude": "47.50",
+      "longitude": "19.04"
     }
   },
   {
@@ -914,7 +1116,9 @@
     "fields": {
       "name": "Iceland",
       "code": "IS",
-      "enabled": true
+      "enabled": true,
+      "latitude": "64.15",
+      "longitude": "-21.94"
     }
   },
   {
@@ -923,7 +1127,9 @@
     "fields": {
       "name": "India",
       "code": "IN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "28.61",
+      "longitude": "77.21"
     }
   },
   {
@@ -932,7 +1138,9 @@
     "fields": {
       "name": "Indonesia",
       "code": "ID",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-6.21",
+      "longitude": "106.85"
     }
   },
   {
@@ -941,7 +1149,9 @@
     "fields": {
       "name": "Iran, Islamic Republic of",
       "code": "IR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "35.69",
+      "longitude": "51.39"
     }
   },
   {
@@ -950,7 +1160,9 @@
     "fields": {
       "name": "Iraq",
       "code": "IQ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "33.31",
+      "longitude": "44.36"
     }
   },
   {
@@ -959,7 +1171,9 @@
     "fields": {
       "name": "Ireland",
       "code": "IE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "53.35",
+      "longitude": "-6.26"
     }
   },
   {
@@ -968,7 +1182,9 @@
     "fields": {
       "name": "Isle of Man",
       "code": "IM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "54.15",
+      "longitude": "-4.48"
     }
   },
   {
@@ -977,7 +1193,9 @@
     "fields": {
       "name": "Israel",
       "code": "IL",
-      "enabled": true
+      "enabled": true,
+      "latitude": "31.77",
+      "longitude": "35.21"
     }
   },
   {
@@ -986,7 +1204,9 @@
     "fields": {
       "name": "Italy",
       "code": "IT",
-      "enabled": true
+      "enabled": true,
+      "latitude": "41.90",
+      "longitude": "12.50"
     }
   },
   {
@@ -995,7 +1215,9 @@
     "fields": {
       "name": "Jamaica",
       "code": "JM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "17.98",
+      "longitude": "-76.80"
     }
   },
   {
@@ -1004,7 +1226,9 @@
     "fields": {
       "name": "Japan",
       "code": "JP",
-      "enabled": true
+      "enabled": true,
+      "latitude": "35.68",
+      "longitude": "139.69"
     }
   },
   {
@@ -1013,7 +1237,9 @@
     "fields": {
       "name": "Jersey",
       "code": "JE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "49.18",
+      "longitude": "-2.10"
     }
   },
   {
@@ -1022,7 +1248,9 @@
     "fields": {
       "name": "Jordan",
       "code": "JO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "31.95",
+      "longitude": "35.93"
     }
   },
   {
@@ -1031,7 +1259,9 @@
     "fields": {
       "name": "Kazakhstan",
       "code": "KZ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "51.16",
+      "longitude": "71.43"
     }
   },
   {
@@ -1040,7 +1270,9 @@
     "fields": {
       "name": "Kenya",
       "code": "KE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-1.29",
+      "longitude": "36.82"
     }
   },
   {
@@ -1049,7 +1281,9 @@
     "fields": {
       "name": "Kiribati",
       "code": "KI",
-      "enabled": true
+      "enabled": true,
+      "latitude": "1.33",
+      "longitude": "172.98"
     }
   },
   {
@@ -1058,7 +1292,9 @@
     "fields": {
       "name": "Korea, Democratic People's Republic of",
       "code": "KP",
-      "enabled": true
+      "enabled": true,
+      "latitude": "39.04",
+      "longitude": "125.76"
     }
   },
   {
@@ -1067,7 +1303,9 @@
     "fields": {
       "name": "Korea, Republic of",
       "code": "KR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "37.57",
+      "longitude": "126.98"
     }
   },
   {
@@ -1076,7 +1314,9 @@
     "fields": {
       "name": "Kuwait",
       "code": "KW",
-      "enabled": true
+      "enabled": true,
+      "latitude": "29.38",
+      "longitude": "47.98"
     }
   },
   {
@@ -1085,7 +1325,9 @@
     "fields": {
       "name": "Kyrgyzstan",
       "code": "KG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "42.87",
+      "longitude": "74.59"
     }
   },
   {
@@ -1094,7 +1336,9 @@
     "fields": {
       "name": "Lao People's Democratic Republic",
       "code": "LA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "17.98",
+      "longitude": "102.63"
     }
   },
   {
@@ -1103,7 +1347,9 @@
     "fields": {
       "name": "Latvia",
       "code": "LV",
-      "enabled": true
+      "enabled": true,
+      "latitude": "56.95",
+      "longitude": "24.11"
     }
   },
   {
@@ -1112,7 +1358,9 @@
     "fields": {
       "name": "Lebanon",
       "code": "LB",
-      "enabled": true
+      "enabled": true,
+      "latitude": "33.89",
+      "longitude": "35.50"
     }
   },
   {
@@ -1121,7 +1369,9 @@
     "fields": {
       "name": "Lesotho",
       "code": "LS",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-29.61",
+      "longitude": "28.23"
     }
   },
   {
@@ -1130,7 +1380,9 @@
     "fields": {
       "name": "Liberia",
       "code": "LR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "6.30",
+      "longitude": "-10.80"
     }
   },
   {
@@ -1139,7 +1391,9 @@
     "fields": {
       "name": "Libya",
       "code": "LY",
-      "enabled": true
+      "enabled": true,
+      "latitude": "32.89",
+      "longitude": "13.19"
     }
   },
   {
@@ -1148,7 +1402,9 @@
     "fields": {
       "name": "Liechtenstein",
       "code": "LI",
-      "enabled": true
+      "enabled": true,
+      "latitude": "47.14",
+      "longitude": "9.52"
     }
   },
   {
@@ -1157,7 +1413,9 @@
     "fields": {
       "name": "Lithuania",
       "code": "LT",
-      "enabled": true
+      "enabled": true,
+      "latitude": "54.69",
+      "longitude": "25.28"
     }
   },
   {
@@ -1166,7 +1424,9 @@
     "fields": {
       "name": "Luxembourg",
       "code": "LU",
-      "enabled": true
+      "enabled": true,
+      "latitude": "49.61",
+      "longitude": "6.13"
     }
   },
   {
@@ -1175,7 +1435,9 @@
     "fields": {
       "name": "Macao",
       "code": "MO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "22.20",
+      "longitude": "113.55"
     }
   },
   {
@@ -1184,7 +1446,9 @@
     "fields": {
       "name": "Macedonia, the Former Yugoslav Republic of",
       "code": "MK",
-      "enabled": true
+      "enabled": true,
+      "latitude": "42.00",
+      "longitude": "21.43"
     }
   },
   {
@@ -1193,7 +1457,9 @@
     "fields": {
       "name": "Madagascar",
       "code": "MG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-18.88",
+      "longitude": "47.51"
     }
   },
   {
@@ -1202,7 +1468,9 @@
     "fields": {
       "name": "Malawi",
       "code": "MW",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-13.96",
+      "longitude": "33.77"
     }
   },
   {
@@ -1211,7 +1479,9 @@
     "fields": {
       "name": "Malaysia",
       "code": "MY",
-      "enabled": true
+      "enabled": true,
+      "latitude": "3.14",
+      "longitude": "101.69"
     }
   },
   {
@@ -1220,7 +1490,9 @@
     "fields": {
       "name": "Maldives",
       "code": "MV",
-      "enabled": true
+      "enabled": true,
+      "latitude": "4.18",
+      "longitude": "73.51"
     }
   },
   {
@@ -1229,7 +1501,9 @@
     "fields": {
       "name": "Mali",
       "code": "ML",
-      "enabled": true
+      "enabled": true,
+      "latitude": "12.64",
+      "longitude": "-8.00"
     }
   },
   {
@@ -1238,7 +1512,9 @@
     "fields": {
       "name": "Malta",
       "code": "MT",
-      "enabled": true
+      "enabled": true,
+      "latitude": "35.90",
+      "longitude": "14.51"
     }
   },
   {
@@ -1247,7 +1523,9 @@
     "fields": {
       "name": "Marshall Islands",
       "code": "MH",
-      "enabled": true
+      "enabled": true,
+      "latitude": "7.09",
+      "longitude": "171.38"
     }
   },
   {
@@ -1256,7 +1534,9 @@
     "fields": {
       "name": "Martinique",
       "code": "MQ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "14.60",
+      "longitude": "-61.07"
     }
   },
   {
@@ -1265,7 +1545,9 @@
     "fields": {
       "name": "Mauritania",
       "code": "MR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "18.07",
+      "longitude": "-15.97"
     }
   },
   {
@@ -1274,7 +1556,9 @@
     "fields": {
       "name": "Mauritius",
       "code": "MU",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-20.16",
+      "longitude": "57.50"
     }
   },
   {
@@ -1283,7 +1567,9 @@
     "fields": {
       "name": "Mayotte",
       "code": "YT",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-12.78",
+      "longitude": "45.23"
     }
   },
   {
@@ -1292,7 +1578,9 @@
     "fields": {
       "name": "Mexico",
       "code": "MX",
-      "enabled": true
+      "enabled": true,
+      "latitude": "19.43",
+      "longitude": "-99.13"
     }
   },
   {
@@ -1301,7 +1589,9 @@
     "fields": {
       "name": "Micronesia, Federated States of",
       "code": "FM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "6.92",
+      "longitude": "158.25"
     }
   },
   {
@@ -1310,7 +1600,9 @@
     "fields": {
       "name": "Moldova, Republic of",
       "code": "MD",
-      "enabled": true
+      "enabled": true,
+      "latitude": "47.01",
+      "longitude": "28.86"
     }
   },
   {
@@ -1319,7 +1611,9 @@
     "fields": {
       "name": "Monaco",
       "code": "MC",
-      "enabled": true
+      "enabled": true,
+      "latitude": "43.74",
+      "longitude": "7.42"
     }
   },
   {
@@ -1328,7 +1622,9 @@
     "fields": {
       "name": "Mongolia",
       "code": "MN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "47.92",
+      "longitude": "106.92"
     }
   },
   {
@@ -1337,7 +1633,9 @@
     "fields": {
       "name": "Montenegro",
       "code": "ME",
-      "enabled": true
+      "enabled": true,
+      "latitude": "42.43",
+      "longitude": "19.26"
     }
   },
   {
@@ -1346,7 +1644,9 @@
     "fields": {
       "name": "Montserrat",
       "code": "MS",
-      "enabled": true
+      "enabled": true,
+      "latitude": "16.70",
+      "longitude": "-62.22"
     }
   },
   {
@@ -1355,7 +1655,9 @@
     "fields": {
       "name": "Morocco",
       "code": "MA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "34.02",
+      "longitude": "-6.84"
     }
   },
   {
@@ -1364,7 +1666,9 @@
     "fields": {
       "name": "Mozambique",
       "code": "MZ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-25.97",
+      "longitude": "32.57"
     }
   },
   {
@@ -1373,7 +1677,9 @@
     "fields": {
       "name": "Myanmar",
       "code": "MM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "19.76",
+      "longitude": "96.07"
     }
   },
   {
@@ -1382,7 +1688,9 @@
     "fields": {
       "name": "Namibia",
       "code": "NA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-22.57",
+      "longitude": "17.08"
     }
   },
   {
@@ -1391,7 +1699,9 @@
     "fields": {
       "name": "Nauru",
       "code": "NR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-0.55",
+      "longitude": "166.92"
     }
   },
   {
@@ -1400,7 +1710,9 @@
     "fields": {
       "name": "Nepal",
       "code": "NP",
-      "enabled": true
+      "enabled": true,
+      "latitude": "27.72",
+      "longitude": "85.32"
     }
   },
   {
@@ -1409,7 +1721,9 @@
     "fields": {
       "name": "Netherlands",
       "code": "NL",
-      "enabled": true
+      "enabled": true,
+      "latitude": "52.37",
+      "longitude": "4.90"
     }
   },
   {
@@ -1418,7 +1732,9 @@
     "fields": {
       "name": "New Caledonia",
       "code": "NC",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-22.27",
+      "longitude": "166.46"
     }
   },
   {
@@ -1427,7 +1743,9 @@
     "fields": {
       "name": "New Zealand",
       "code": "NZ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-41.28",
+      "longitude": "174.78"
     }
   },
   {
@@ -1436,7 +1754,9 @@
     "fields": {
       "name": "Nicaragua",
       "code": "NI",
-      "enabled": true
+      "enabled": true,
+      "latitude": "12.13",
+      "longitude": "-86.25"
     }
   },
   {
@@ -1445,7 +1765,9 @@
     "fields": {
       "name": "Niger",
       "code": "NE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "13.51",
+      "longitude": "2.11"
     }
   },
   {
@@ -1454,7 +1776,9 @@
     "fields": {
       "name": "Nigeria",
       "code": "NG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "9.08",
+      "longitude": "7.40"
     }
   },
   {
@@ -1463,7 +1787,9 @@
     "fields": {
       "name": "Niue",
       "code": "NU",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-19.05",
+      "longitude": "-169.87"
     }
   },
   {
@@ -1472,7 +1798,9 @@
     "fields": {
       "name": "Norfolk Island",
       "code": "NF",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-29.03",
+      "longitude": "167.95"
     }
   },
   {
@@ -1481,7 +1809,9 @@
     "fields": {
       "name": "Northern Mariana Islands",
       "code": "MP",
-      "enabled": true
+      "enabled": true,
+      "latitude": "15.20",
+      "longitude": "145.75"
     }
   },
   {
@@ -1490,7 +1820,9 @@
     "fields": {
       "name": "Norway",
       "code": "NO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "59.91",
+      "longitude": "10.75"
     }
   },
   {
@@ -1499,7 +1831,9 @@
     "fields": {
       "name": "Oman",
       "code": "OM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "23.59",
+      "longitude": "58.54"
     }
   },
   {
@@ -1508,7 +1842,9 @@
     "fields": {
       "name": "Pakistan",
       "code": "PK",
-      "enabled": true
+      "enabled": true,
+      "latitude": "33.68",
+      "longitude": "73.05"
     }
   },
   {
@@ -1517,7 +1853,9 @@
     "fields": {
       "name": "Palau",
       "code": "PW",
-      "enabled": true
+      "enabled": true,
+      "latitude": "7.51",
+      "longitude": "134.55"
     }
   },
   {
@@ -1526,7 +1864,9 @@
     "fields": {
       "name": "Palestine, State of",
       "code": "PS",
-      "enabled": true
+      "enabled": true,
+      "latitude": "31.90",
+      "longitude": "35.20"
     }
   },
   {
@@ -1535,7 +1875,9 @@
     "fields": {
       "name": "Panama",
       "code": "PA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "8.98",
+      "longitude": "-79.52"
     }
   },
   {
@@ -1544,7 +1886,9 @@
     "fields": {
       "name": "Papua New Guinea",
       "code": "PG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-9.44",
+      "longitude": "147.18"
     }
   },
   {
@@ -1553,7 +1897,9 @@
     "fields": {
       "name": "Paraguay",
       "code": "PY",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-25.26",
+      "longitude": "-57.58"
     }
   },
   {
@@ -1562,7 +1908,9 @@
     "fields": {
       "name": "Peru",
       "code": "PE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-12.05",
+      "longitude": "-77.04"
     }
   },
   {
@@ -1571,7 +1919,9 @@
     "fields": {
       "name": "Philippines",
       "code": "PH",
-      "enabled": true
+      "enabled": true,
+      "latitude": "14.60",
+      "longitude": "120.98"
     }
   },
   {
@@ -1580,7 +1930,9 @@
     "fields": {
       "name": "Pitcairn",
       "code": "PN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-25.07",
+      "longitude": "-130.10"
     }
   },
   {
@@ -1589,7 +1941,9 @@
     "fields": {
       "name": "Poland",
       "code": "PL",
-      "enabled": true
+      "enabled": true,
+      "latitude": "52.23",
+      "longitude": "21.01"
     }
   },
   {
@@ -1598,7 +1952,9 @@
     "fields": {
       "name": "Portugal",
       "code": "PT",
-      "enabled": true
+      "enabled": true,
+      "latitude": "38.72",
+      "longitude": "-9.14"
     }
   },
   {
@@ -1607,7 +1963,9 @@
     "fields": {
       "name": "Puerto Rico",
       "code": "PR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "18.22",
+      "longitude": "-66.59"
     }
   },
   {
@@ -1616,7 +1974,9 @@
     "fields": {
       "name": "Qatar",
       "code": "QA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "25.29",
+      "longitude": "51.53"
     }
   },
   {
@@ -1625,7 +1985,9 @@
     "fields": {
       "name": "Réunion",
       "code": "RE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-20.88",
+      "longitude": "55.45"
     }
   },
   {
@@ -1634,7 +1996,9 @@
     "fields": {
       "name": "Romania",
       "code": "RO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "44.43",
+      "longitude": "26.10"
     }
   },
   {
@@ -1643,7 +2007,9 @@
     "fields": {
       "name": "Russian Federation",
       "code": "RU",
-      "enabled": true
+      "enabled": true,
+      "latitude": "55.76",
+      "longitude": "37.62"
     }
   },
   {
@@ -1652,7 +2018,9 @@
     "fields": {
       "name": "Rwanda",
       "code": "RW",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-1.94",
+      "longitude": "30.06"
     }
   },
   {
@@ -1661,7 +2029,9 @@
     "fields": {
       "name": "Saint Barthélemy",
       "code": "BL",
-      "enabled": true
+      "enabled": true,
+      "latitude": "17.90",
+      "longitude": "-62.83"
     }
   },
   {
@@ -1670,7 +2040,9 @@
     "fields": {
       "name": "Saint Helena, Ascension and Tristan da Cunha",
       "code": "SH",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-15.93",
+      "longitude": "-5.72"
     }
   },
   {
@@ -1679,7 +2051,9 @@
     "fields": {
       "name": "Saint Kitts and Nevis",
       "code": "KN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "17.30",
+      "longitude": "-62.72"
     }
   },
   {
@@ -1688,7 +2062,9 @@
     "fields": {
       "name": "Saint Lucia",
       "code": "LC",
-      "enabled": true
+      "enabled": true,
+      "latitude": "14.01",
+      "longitude": "-60.98"
     }
   },
   {
@@ -1697,7 +2073,9 @@
     "fields": {
       "name": "Saint Martin (French part)",
       "code": "MF",
-      "enabled": true
+      "enabled": true,
+      "latitude": "18.07",
+      "longitude": "-63.05"
     }
   },
   {
@@ -1706,7 +2084,9 @@
     "fields": {
       "name": "Saint Pierre and Miquelon",
       "code": "PM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "46.78",
+      "longitude": "-56.18"
     }
   },
   {
@@ -1715,7 +2095,9 @@
     "fields": {
       "name": "Saint Vincent and the Grenadines",
       "code": "VC",
-      "enabled": true
+      "enabled": true,
+      "latitude": "13.16",
+      "longitude": "-61.22"
     }
   },
   {
@@ -1724,7 +2106,9 @@
     "fields": {
       "name": "Samoa",
       "code": "WS",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-13.85",
+      "longitude": "-171.75"
     }
   },
   {
@@ -1733,7 +2117,9 @@
     "fields": {
       "name": "San Marino",
       "code": "SM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "43.94",
+      "longitude": "12.46"
     }
   },
   {
@@ -1742,7 +2128,9 @@
     "fields": {
       "name": "Sao Tome and Principe",
       "code": "ST",
-      "enabled": true
+      "enabled": true,
+      "latitude": "0.34",
+      "longitude": "6.73"
     }
   },
   {
@@ -1751,7 +2139,9 @@
     "fields": {
       "name": "Saudi Arabia",
       "code": "SA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "24.71",
+      "longitude": "46.68"
     }
   },
   {
@@ -1760,7 +2150,9 @@
     "fields": {
       "name": "Senegal",
       "code": "SN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "14.72",
+      "longitude": "-17.47"
     }
   },
   {
@@ -1769,7 +2161,9 @@
     "fields": {
       "name": "Serbia",
       "code": "RS",
-      "enabled": true
+      "enabled": true,
+      "latitude": "44.79",
+      "longitude": "20.45"
     }
   },
   {
@@ -1778,7 +2172,9 @@
     "fields": {
       "name": "Seychelles",
       "code": "SC",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-4.62",
+      "longitude": "55.45"
     }
   },
   {
@@ -1787,7 +2183,9 @@
     "fields": {
       "name": "Sierra Leone",
       "code": "SL",
-      "enabled": true
+      "enabled": true,
+      "latitude": "8.49",
+      "longitude": "-13.23"
     }
   },
   {
@@ -1796,7 +2194,9 @@
     "fields": {
       "name": "Singapore",
       "code": "SG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "1.35",
+      "longitude": "103.82"
     }
   },
   {
@@ -1805,7 +2205,9 @@
     "fields": {
       "name": "Sint Maarten (Dutch part)",
       "code": "SX",
-      "enabled": true
+      "enabled": true,
+      "latitude": "18.02",
+      "longitude": "-63.06"
     }
   },
   {
@@ -1814,7 +2216,9 @@
     "fields": {
       "name": "Slovakia",
       "code": "SK",
-      "enabled": true
+      "enabled": true,
+      "latitude": "48.15",
+      "longitude": "17.11"
     }
   },
   {
@@ -1823,7 +2227,9 @@
     "fields": {
       "name": "Slovenia",
       "code": "SI",
-      "enabled": true
+      "enabled": true,
+      "latitude": "46.06",
+      "longitude": "14.51"
     }
   },
   {
@@ -1832,7 +2238,9 @@
     "fields": {
       "name": "Solomon Islands",
       "code": "SB",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-9.43",
+      "longitude": "159.96"
     }
   },
   {
@@ -1841,7 +2249,9 @@
     "fields": {
       "name": "Somalia",
       "code": "SO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "2.05",
+      "longitude": "45.32"
     }
   },
   {
@@ -1850,7 +2260,9 @@
     "fields": {
       "name": "South Africa",
       "code": "ZA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-25.75",
+      "longitude": "28.19"
     }
   },
   {
@@ -1859,7 +2271,9 @@
     "fields": {
       "name": "South Georgia and the South Sandwich Islands",
       "code": "GS",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-54.28",
+      "longitude": "-36.51"
     }
   },
   {
@@ -1868,7 +2282,9 @@
     "fields": {
       "name": "South Sudan",
       "code": "SS",
-      "enabled": true
+      "enabled": true,
+      "latitude": "4.85",
+      "longitude": "31.58"
     }
   },
   {
@@ -1877,7 +2293,9 @@
     "fields": {
       "name": "Spain",
       "code": "ES",
-      "enabled": true
+      "enabled": true,
+      "latitude": "40.42",
+      "longitude": "-3.70"
     }
   },
   {
@@ -1886,7 +2304,9 @@
     "fields": {
       "name": "Sri Lanka",
       "code": "LK",
-      "enabled": true
+      "enabled": true,
+      "latitude": "6.93",
+      "longitude": "79.86"
     }
   },
   {
@@ -1895,7 +2315,9 @@
     "fields": {
       "name": "Sudan",
       "code": "SD",
-      "enabled": true
+      "enabled": true,
+      "latitude": "15.50",
+      "longitude": "32.56"
     }
   },
   {
@@ -1904,7 +2326,9 @@
     "fields": {
       "name": "Suriname",
       "code": "SR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "5.85",
+      "longitude": "-55.20"
     }
   },
   {
@@ -1913,7 +2337,9 @@
     "fields": {
       "name": "Svalbard and Jan Mayen",
       "code": "SJ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "78.22",
+      "longitude": "15.65"
     }
   },
   {
@@ -1922,7 +2348,9 @@
     "fields": {
       "name": "Swaziland",
       "code": "SZ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-26.30",
+      "longitude": "31.14"
     }
   },
   {
@@ -1931,7 +2359,9 @@
     "fields": {
       "name": "Sweden",
       "code": "SE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "59.33",
+      "longitude": "18.07"
     }
   },
   {
@@ -1940,7 +2370,9 @@
     "fields": {
       "name": "Switzerland",
       "code": "CH",
-      "enabled": true
+      "enabled": true,
+      "latitude": "46.95",
+      "longitude": "7.45"
     }
   },
   {
@@ -1949,7 +2381,9 @@
     "fields": {
       "name": "Syrian Arab Republic",
       "code": "SY",
-      "enabled": true
+      "enabled": true,
+      "latitude": "33.51",
+      "longitude": "36.28"
     }
   },
   {
@@ -1958,7 +2392,9 @@
     "fields": {
       "name": "Taiwan, Province of China",
       "code": "TW",
-      "enabled": true
+      "enabled": true,
+      "latitude": "25.03",
+      "longitude": "121.56"
     }
   },
   {
@@ -1967,7 +2403,9 @@
     "fields": {
       "name": "Tajikistan",
       "code": "TJ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "38.56",
+      "longitude": "68.79"
     }
   },
   {
@@ -1976,7 +2414,9 @@
     "fields": {
       "name": "Tanzania, United Republic of",
       "code": "TZ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-6.16",
+      "longitude": "35.75"
     }
   },
   {
@@ -1985,7 +2425,9 @@
     "fields": {
       "name": "Thailand",
       "code": "TH",
-      "enabled": true
+      "enabled": true,
+      "latitude": "13.76",
+      "longitude": "100.50"
     }
   },
   {
@@ -1994,7 +2436,9 @@
     "fields": {
       "name": "Timor-Leste",
       "code": "TL",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-8.56",
+      "longitude": "125.57"
     }
   },
   {
@@ -2003,7 +2447,9 @@
     "fields": {
       "name": "Togo",
       "code": "TG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "6.13",
+      "longitude": "1.22"
     }
   },
   {
@@ -2012,7 +2458,9 @@
     "fields": {
       "name": "Tokelau",
       "code": "TK",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-9.20",
+      "longitude": "-171.85"
     }
   },
   {
@@ -2021,7 +2469,9 @@
     "fields": {
       "name": "Tonga",
       "code": "TO",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-21.13",
+      "longitude": "-175.20"
     }
   },
   {
@@ -2030,7 +2480,9 @@
     "fields": {
       "name": "Trinidad and Tobago",
       "code": "TT",
-      "enabled": true
+      "enabled": true,
+      "latitude": "10.65",
+      "longitude": "-61.52"
     }
   },
   {
@@ -2039,7 +2491,9 @@
     "fields": {
       "name": "Tunisia",
       "code": "TN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "36.81",
+      "longitude": "10.18"
     }
   },
   {
@@ -2048,7 +2502,9 @@
     "fields": {
       "name": "Turkey",
       "code": "TR",
-      "enabled": true
+      "enabled": true,
+      "latitude": "39.93",
+      "longitude": "32.86"
     }
   },
   {
@@ -2057,7 +2513,9 @@
     "fields": {
       "name": "Turkmenistan",
       "code": "TM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "37.96",
+      "longitude": "58.33"
     }
   },
   {
@@ -2066,7 +2524,9 @@
     "fields": {
       "name": "Turks and Caicos Islands",
       "code": "TC",
-      "enabled": true
+      "enabled": true,
+      "latitude": "21.46",
+      "longitude": "-71.14"
     }
   },
   {
@@ -2075,7 +2535,9 @@
     "fields": {
       "name": "Tuvalu",
       "code": "TV",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-8.52",
+      "longitude": "179.20"
     }
   },
   {
@@ -2084,7 +2546,9 @@
     "fields": {
       "name": "Uganda",
       "code": "UG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "0.35",
+      "longitude": "32.58"
     }
   },
   {
@@ -2093,7 +2557,9 @@
     "fields": {
       "name": "Ukraine",
       "code": "UA",
-      "enabled": true
+      "enabled": true,
+      "latitude": "50.45",
+      "longitude": "30.52"
     }
   },
   {
@@ -2102,7 +2568,9 @@
     "fields": {
       "name": "United Arab Emirates",
       "code": "AE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "24.45",
+      "longitude": "54.37"
     }
   },
   {
@@ -2111,7 +2579,9 @@
     "fields": {
       "name": "United Kingdom",
       "code": "GB",
-      "enabled": true
+      "enabled": true,
+      "latitude": "51.51",
+      "longitude": "-0.13"
     }
   },
   {
@@ -2120,7 +2590,9 @@
     "fields": {
       "name": "United States",
       "code": "US",
-      "enabled": true
+      "enabled": true,
+      "latitude": "38.91",
+      "longitude": "-77.04"
     }
   },
   {
@@ -2129,7 +2601,9 @@
     "fields": {
       "name": "United States Minor Outlying Islands",
       "code": "UM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "16.73",
+      "longitude": "-169.53"
     }
   },
   {
@@ -2138,7 +2612,9 @@
     "fields": {
       "name": "Uruguay",
       "code": "UY",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-34.90",
+      "longitude": "-56.16"
     }
   },
   {
@@ -2147,7 +2623,9 @@
     "fields": {
       "name": "Uzbekistan",
       "code": "UZ",
-      "enabled": true
+      "enabled": true,
+      "latitude": "41.30",
+      "longitude": "69.24"
     }
   },
   {
@@ -2156,7 +2634,9 @@
     "fields": {
       "name": "Vanuatu",
       "code": "VU",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-17.73",
+      "longitude": "168.32"
     }
   },
   {
@@ -2165,7 +2645,9 @@
     "fields": {
       "name": "Venezuela, Bolivarian Republic of",
       "code": "VE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "10.48",
+      "longitude": "-66.90"
     }
   },
   {
@@ -2174,7 +2656,9 @@
     "fields": {
       "name": "Viet Nam",
       "code": "VN",
-      "enabled": true
+      "enabled": true,
+      "latitude": "21.03",
+      "longitude": "105.83"
     }
   },
   {
@@ -2183,7 +2667,9 @@
     "fields": {
       "name": "Virgin Islands, British",
       "code": "VG",
-      "enabled": true
+      "enabled": true,
+      "latitude": "18.42",
+      "longitude": "-64.62"
     }
   },
   {
@@ -2192,7 +2678,9 @@
     "fields": {
       "name": "Virgin Islands, U.S.",
       "code": "VI",
-      "enabled": true
+      "enabled": true,
+      "latitude": "18.34",
+      "longitude": "-64.93"
     }
   },
   {
@@ -2201,7 +2689,9 @@
     "fields": {
       "name": "Wallis and Futuna",
       "code": "WF",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-13.28",
+      "longitude": "-176.18"
     }
   },
   {
@@ -2210,7 +2700,9 @@
     "fields": {
       "name": "Western Sahara",
       "code": "EH",
-      "enabled": true
+      "enabled": true,
+      "latitude": "27.15",
+      "longitude": "-13.20"
     }
   },
   {
@@ -2219,7 +2711,9 @@
     "fields": {
       "name": "Yemen",
       "code": "YE",
-      "enabled": true
+      "enabled": true,
+      "latitude": "15.37",
+      "longitude": "44.19"
     }
   },
   {
@@ -2228,7 +2722,9 @@
     "fields": {
       "name": "Zambia",
       "code": "ZM",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-15.42",
+      "longitude": "28.28"
     }
   },
   {
@@ -2237,7 +2733,9 @@
     "fields": {
       "name": "Zimbabwe",
       "code": "ZW",
-      "enabled": true
+      "enabled": true,
+      "latitude": "-17.83",
+      "longitude": "31.05"
     }
   }
 ]
