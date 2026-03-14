@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
+from apps.allele_mapping.serializers.allele_region_coord import AlleleRegionCoordSerializer
 
 
 class AlleleRegionInfoSerializer(serializers.ModelSerializer):
@@ -38,6 +39,7 @@ class AlleleRegionInfoWithRegionSerializer(serializers.ModelSerializer):
     region_location = serializers.CharField(source="region.location", read_only=True)
     region_lat = serializers.FloatField(read_only=True)
     region_lon = serializers.FloatField(read_only=True)
+    studies_coord=AlleleRegionCoordSerializer(source="region.coordinates", many=True)
 
     class Meta:
         model = AlleleRegionInfo
@@ -52,10 +54,15 @@ class AlleleRegionInfoWithRegionSerializer(serializers.ModelSerializer):
             "region_location",
             "region_lat",
             "region_lon",
+            "studies_coord",
+
         ]
         read_only_fields = [
             "id",
             "allele_frequency",
             "percent_of_individuals",
-            "sample_size",
+            "sample_size",            
+            "region_lat",
+            "region_lon",
+            "studies_coord",
         ]

@@ -32,6 +32,7 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
             "region__sub_country",
             "region__sub_country__country",
         )
+        .prefetch_related("region__coordinates")
     )
     serializer_class = AlleleRegionInfoWithRegionSerializer
 
