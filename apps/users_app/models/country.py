@@ -6,6 +6,9 @@ class Country(models.Model):
     name = models.CharField(verbose_name=_("Country name"), max_length=50)
     code = models.CharField(verbose_name=_("Country code"), max_length=2)
     enabled = models.BooleanField(verbose_name=_("Enabled"), default=True)
+    latitude = models.CharField(max_length=255, verbose_name=_("Latitude"), null=True, blank=True)
+    longitude = models.CharField(max_length=255, verbose_name=_("Longitude"), null=True, blank=True)
+
 
     class Meta:
         verbose_name = _("Country")
