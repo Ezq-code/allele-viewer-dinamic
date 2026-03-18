@@ -115,11 +115,10 @@ class AlleleRegionFilter(django_filters.FilterSet):
         return queryset.filter(id__in=alleles_id)
 
     def filter_by_country(self, queryset, name, value):
-        """Filtra regiones cuyo campo 'population' comienza con el país indicado."""
+        """Filtra regiones por país usando el atributo sub_country."""
         if not value:
             return queryset
-        # Búsqueda insensible a mayúsculas al inicio del string
-        return queryset.filter(population__istartswith=value)
+        return queryset.filter(sub_country__name__iexact=value)
 
     def filter_by_alleles_list(self, queryset, name, value):
         """

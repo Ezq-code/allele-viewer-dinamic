@@ -91,24 +91,26 @@
                     data-slider-value="[10001,4000000]"
                   />
                 </div>
-                <!--
-                <div class="d-inline-block">
-                  <select class="form-control form-control-sm" name="sampleSize"
-                          id="sampleSize" style="width:210px;">
-                      <option value="10001-4000000">Sample Size: More Than 10001</option>
-                      <option value="1001-10000">Sample Size: 1001-10000</option>
-                      <option value="201-1000">Sample Size: 201-1000</option>
-                      <option value="101-200">Sample Size: 101-200</option>
-                      <option value="51-100">Sample Size: 51-100</option>
-                      <option value="1-50">Sample Size: 1-50</option>
+
+                <div class="d-inline-block" style="margin-right: 8px; height: 45px;">
+                  <select class="form-control form-control-sm"
+                          id="primarysecondary" style="width:140px;" disabled>
+                          <option value="Primary">Primary</option>
+                          <option value="Secondary">Secondary</option>
                   </select>
                 </div>
-                -->
+
+                <div class="d-inline-block" style="margin-right: 8px; height: 45px;">
+                  <select class="form-control form-control-sm"
+                          id="country" style="width:140px;">
+                  </select>
+                </div>
+
                 <div class="d-inline-block" style="margin-right: 8px; height: 45px;">
                   <select class="form-control form-control-sm"
                           id="genes" style="width:140px;">
                   </select>
-              </div>
+                </div>
 
               <div class="d-inline-block" style="margin-right: 8px;">
                 <select class="form-control form-control-sm select2 select2-sm-custom" id="allele-list" name="allele-list" multiple="multiple" data-placeholder="Select allele..." style="width: 100%;" >
@@ -249,6 +251,11 @@ if (!sessionStorage.getItem('inicializado')) {
       sessionStorage.setItem('group_allele', JSON.stringify(["A*01:01"]));
       sessionStorage.setItem('minSampleSize', '10001');
       sessionStorage.setItem('maxSampleSize', '4000000');
+      sessionStorage.setItem('country', 'All Countries');
+      sessionStorage.setItem('lat', '0');
+      sessionStorage.setItem('long', '0');
+      sessionStorage.setItem('zoom', '1');     
+      sessionStorage.setItem('primarysecondary', 'Primary');       
       sessionStorage.setItem('inicializado', 'true');
     }
 
@@ -340,7 +347,6 @@ $(function () {
         </svg>`;
 }
 
-
     jQuery(function($) {
     
     function obtenerColorPorResto(numero) {
@@ -395,13 +401,6 @@ function coordKey(lat, lon) {
   return `${lat},${lon}`;
 }
 
-/**
- * Ajusta las coordenadas de `element` para que no repita (lat, lon) en MapPoint,
- * siguiendo el patrón de offsets descrito.
- *
- * MapPoint: array de objetos { id, population, location, latLng: [lat, lon], ... }
- * element: objeto a insertar, con latLng: [lat, lon]
- */
  function adjustLatLngForNewElement(MapPoint, element) {
   if (!element.latLng || element.latLng.length !== 2) {
     throw new Error("element.latLng debe ser un array [lat, lon]");
@@ -475,10 +474,43 @@ function coordKey(lat, lon) {
 });
 
     var loadedData = false;
-    var  gene_name =  sessionStorage.getItem('gene');
-    var  group_allele =   JSON.parse(sessionStorage.getItem('group_allele'));
-    var  min_Sample_Size =  sessionStorage.getItem('minSampleSize');
-    var  max_Sample_Size =  sessionStorage.getItem('maxSampleSize');
+    var gene_name = sessionStorage.getItem('gene');
+    var group_allele = JSON.parse(sessionStorage.getItem('group_allele'));
+    var min_Sample_Size = sessionStorage.getItem('minSampleSize');
+    var max_Sample_Size = sessionStorage.getItem('maxSampleSize');
+    var country_name = sessionStorage.getItem('country'); 
+
+    $.ajax({
+            type: 'GET',
+            url: '/business-gestion/sub-countries/',     
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    title: "No se pudieron cargar los datos.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            },
+            dataType: 'json',
+            success: function (response) {
+                var data = response.results;
+                selectCountry = document.getElementById('country');
+
+                var opt = document.createElement('option');
+                  opt.value = 'All Countries';
+                  opt.innerHTML = 'All Countries';
+                  selectCountry.appendChild(opt);
+
+                data.forEach(function (country) {
+                  var opt = document.createElement('option');
+                  opt.value = country.name;
+                  opt.innerHTML = country.name;
+                  selectCountry.appendChild(opt);
+                });
+                var aCountry = document.getElementById("country");
+                aCountry.value = sessionStorage.getItem('country');      
+            }
+        });
 
     $.ajax({
             type: 'GET',
@@ -534,11 +566,6 @@ function coordKey(lat, lon) {
                   opt.innerHTML = alele_group;
                   selectGroupAllele.appendChild(opt);
                 });
-                //var aAllele_Group = document.getElementById("allele-list");
-                //aAllele_Group.value = sessionStorage.getItem("group_allele");      
-
-                //var aAllele_Group = document.getElementById("allele-list");
-                //$(aAllele_Group).val() = JSON.parse(sessionStorage.getItem("group_allele"));
 
                 var aAllele_Group = document.getElementById("allele-list");
                 var storedValues = JSON.parse(sessionStorage.getItem("group_allele"));
@@ -547,13 +574,25 @@ function coordKey(lat, lon) {
             }
         });
     }   
-    var mapPoints = [];  
+    var mapPoints = []; 
+    var anUrl = ''; 
     let regionAlele = {};
     let alleleInfo = {};
+    var isCountry = false;
  
+    if (country_name == 'All Countries')
+    { 
+      anUrl = '/allele-mapping/alleles-region/?alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size;
+      isCountry = false;  
+    }
+    else
+    { 
+      anUrl = '/allele-mapping/alleles-region/?country=' + country_name + '&alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size; 
+      isCountry = true;
+    }
  
 axios
-    .get('/allele-mapping/alleles-region/?alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size)
+    .get(anUrl)
     .then(function (response) {
         // 🔍 Depuración: mira la URL y la respuesta en la consola
         console.log('URL consultada:', '/allele-mapping/alleles-region/?alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size);
@@ -571,16 +610,29 @@ axios
             });
             return;
         }
-
         var data = response.data.results;
         console.log('Número de resultados:', data.length);
-
         if (data.length > 0) {
             // --- HAY DATOS: procesar y dibujar marcadores ---
             data.forEach(function (region) {
+                if (isCountry)  
+                {
+                  sessionStorage.setItem('lat', region.coordinates[0].lat);
+                  sessionStorage.setItem('long', region.coordinates[0].lon);
+                  //sessionStorage.setItem('lat', region.lat);
+                  //sessionStorage.setItem('long', region.lon);
+                  sessionStorage.setItem('zoom', '4');  
+                }
+                else
+                {
+                  sessionStorage.setItem('lat', '0');
+                  sessionStorage.setItem('long', '0');
+                  sessionStorage.setItem('zoom', '1');  
+                }
                 regionAlele = {
                     name: region.population,
-                    latLng: [region.lat, region.lon],
+                    latLng: [region.coordinates[0].lat, region.coordinates[0].lon],
+                    //latLng: [region.lat, region.lon],
                     pie: []
                 };
 
@@ -725,6 +777,32 @@ axios
                 });
             }
 
+
+// Función helper: centra usando lat/lng directamente
+function setFocusLatLng(mapObj, lat, lng, scale) {
+  // el proyector interno del mapa mantiene una transformación
+  var proj = mapObj.projection;
+  var point = proj.latLngToPoint(lat, lng);
+
+  // Estos x,y están en píxeles del canvas, hay que normalizarlos
+  // usando el tamaño del canvas (width/height)
+  var svg = $(mapObj.container).find('svg')[0];
+  var w = svg.viewBox.baseVal.width;
+  var h = svg.viewBox.baseVal.height;
+
+  var x = point.x / w;
+  var y = point.y / h;
+
+  mapObj.setFocus({
+    x: x,
+    y: y,
+    scale: scale,
+    animate: true
+  });
+}
+
+
+
             // Inicializar el mapa con los marcadores
             $('#map').vectorMap({
                 map: 'world_mill_en',
@@ -738,7 +816,16 @@ axios
                 onViewportChange: () => reposition('#map')
             });
 
+
             setTimeout(() => addPieMarkers('#map'), 300);
+
+            if (isCountry)  
+            {
+             var aLat = parseFloat(sessionStorage.getItem('lat'));
+             var aLong = parseFloat(sessionStorage.getItem('long'));
+             const mapObj = $('#map').vectorMap('get', 'mapObject');
+             mapObj.setFocus({ x: ((aLong+180)/360)-0.02, y: (Math.abs(((aLat+90)/180)-1)+0.1), scale: 4, animate: true });
+            }
 
             loadedData = true;
             Swal.close();
@@ -776,13 +863,17 @@ axios
         });
     });
 
-//}, 14000);
-
 });
 
 document.getElementById('btreloadgene').addEventListener('click', function() {   
     var aGene = document.getElementById("genes");
     sessionStorage.setItem('gene', aGene.value);
+
+    var aCountry = document.getElementById("country");
+    sessionStorage.setItem('country', aCountry.value);
+
+    var aPrimarySecondary = document.getElementById("primarysecondary");
+    sessionStorage.setItem('primarysecondary', aPrimarySecondary.value);
 
     var aGroupAllele = document.getElementById("allele-list");
     var selectedValues = $(aGroupAllele).val();
@@ -790,13 +881,6 @@ document.getElementById('btreloadgene').addEventListener('click', function() {
     if (selectedValues) {
      sessionStorage.setItem('group_allele', JSON.stringify(selectedValues));
     }
-
-    /*
-    var aSampleSize = document.getElementById("sampleSize");
-    var aPosition = aSampleSize.value.indexOf("-");
-    var aBegin = aSampleSize.value.substring(0,aPosition);
-    var anEnd = aSampleSize.value.substring(aPosition+1);
-    */
 
     var aRange = document.getElementById('sampleSizeRange')
     .getAttribute('data-value');
@@ -843,11 +927,6 @@ document.getElementById('btreloadgene').addEventListener('click', function() {
                   opt.innerHTML = alele_group;
                   selectGroupAllele.appendChild(opt);
                 });
-                //var aAllele_Group = document.getElementById("allele-list");
-                //aAllele_Group.value = sessionStorage.getItem("group_allele"); 
-               
-                //var aAllele_Group = document.getElementById("allele-list");
-                //$(aAllele_Group).val() = JSON.parse(sessionStorage.getItem("group_allele"));
 
                 var aAllele_Group = document.getElementById("allele-list");
                 var storedValues = JSON.parse(sessionStorage.getItem("group_allele"));
