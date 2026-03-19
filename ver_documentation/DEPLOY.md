@@ -161,3 +161,7 @@ docker compose -f docker-compose.yml logs -f --tail=100
 - credenciales de DB seguras
 - revisión de puertos expuestos (PostgreSQL/Redis)
 - backups de BD periódicos
+
+
+## Ejemplo de correr comando concreto en container desplegado
+`docker exec -w /app allele_dinamic_web python manage.py load_country_data`
