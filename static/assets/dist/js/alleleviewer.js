@@ -483,6 +483,7 @@ function cargarGenes() {
       // selectGene.innerHTML = '<option value="">Selec gen</option>';
       if (response.data.results.length == 0) {
         console.log("✌️retornóooooooooooooooooooo --->");
+        load.hidden = true;
         return;
       }
       response.data.results.forEach(function (gene) {
@@ -503,6 +504,17 @@ function cargarGenes() {
           poblarArchivosPorGen(response.data.results[0].id);
         }
       }
+      load.hidden = true;
+    })
+    .catch(function (error) {
+      load.hidden = true;
+      console.error("Error cargando genes:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al cargar genes",
+        text: "No se pudieron cargar los genes. Por favor, intenta más tarde.",
+        showConfirmButton: true,
+      });
     });
 }
 
@@ -520,6 +532,7 @@ function poblarArchivosPorGen(geneId) {
   selectfile.innerHTML = "";
   if (!geneId) {
     // Si no hay gen seleccionado, limpiar y salir
+    load.hidden = true;
     return;
   }
   axios
@@ -542,7 +555,24 @@ function poblarArchivosPorGen(geneId) {
       } else {
         document.getElementById("selectPdb").innerHTML = "";
         load.hidden = true;
+        Swal.fire({
+          icon: "warning",
+          title: "Sin archivos",
+          text: "No hay archivos disponibles para el gen seleccionado.",
+          showConfirmButton: false,
+          timer: 2000,
+        });
       }
+    })
+    .catch(function (error) {
+      load.hidden = true;
+      console.error("Error cargando archivos:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al cargar archivos",
+        text: "No se pudieron cargar los archivos. Por favor, intenta más tarde.",
+        showConfirmButton: true,
+      });
     });
 }
 
@@ -552,6 +582,19 @@ function poblarListasPdb(versionAllele) {
   var $selectPdb = document.getElementById("selectPdb");
 
   $selectPdb.innerHTML = "";
+  
+  if (!versionAllele || versionAllele.length === 0) {
+    load.hidden = true;
+    Swal.fire({
+      icon: "warning",
+      title: "Sin archivos PDB",
+      text: "No hay archivos PDB disponibles.",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    return;
+  }
+  
   versionAllele.forEach(function (element) {
     var option = new Option(element.custom_name, element.id);
     $selectPdb.add(option);
@@ -567,26 +610,74 @@ function poblarListasPdb(versionAllele) {
 }
 
 function selectUrl() {
-  if (!multi_graph) {
-    viewer.clear();
+  try {
+    if (!multi_graph) {
+      viewer.clear();
+    }
+    labelOn = false;
+    zoom.value = 0;
+    var $selectfile = document.getElementById("selectfile");
+    var $selectPdb = document.getElementById("selectPdb");
+    var idFile = $selectfile.value;
+    
+    // Validar que hay valores seleccionados
+    if (!idFile || !$selectPdb.value) {
+      load.hidden = true;
+      Swal.fire({
+        icon: "warning",
+        title: "Selecciona un archivo",
+        text: "Por favor, selecciona un gen, archivo y PDB.",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    }
+    
+    document.getElementById("animation").disabled = false;
+    document.getElementById("filter_region").disabled = false;
+
+    const elemento = globalData[findPosition(globalData, $selectfile.value)];
+    
+    if (!elemento) {
+      load.hidden = true;
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se puede encontrar el archivo seleccionado.",
+        showConfirmButton: true,
+      });
+      return;
+    }
+    
+    let pos = findPosition(elemento.pdb_files, $selectPdb.value);
+    
+    if (pos === -1) {
+      load.hidden = true;
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se puede encontrar el archivo PDB seleccionado.",
+        showConfirmButton: true,
+      });
+      return;
+    }
+
+    let versionAllele = elemento.pdb_files[pos].pdb_content;
+    localStorage.setItem("uploadFileId", idFile);
+    localStorage.setItem("pdb", versionAllele);
+    graficar_string(versionAllele);
+    snpModalShowBotton.disabled = false;
+    ExpandModalShowBotton.disabled = false;
+  } catch (error) {
+    load.hidden = true;
+    console.error("Error en selectUrl:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error al cargar el archivo",
+      text: "Ocurrió un error inesperado. Por favor, intenta más tarde.",
+      showConfirmButton: true,
+    });
   }
-  labelOn = false;
-  zoom.value = 0;
-  var $selectfile = document.getElementById("selectfile");
-  var $selectPdb = document.getElementById("selectPdb");
-  var idFile = $selectfile.value;
-  document.getElementById("animation").disabled = false;
-  document.getElementById("filter_region").disabled = false;
-
-  const elemento = globalData[findPosition(globalData, $selectfile.value)];
-  let pos = findPosition(elemento.pdb_files, $selectPdb.value);
-
-  let versionAllele = elemento.pdb_files[pos].pdb_content;
-  localStorage.setItem("uploadFileId", idFile);
-  localStorage.setItem("pdb", versionAllele);
-  graficar_string(versionAllele);
-  snpModalShowBotton.disabled = false;
-  ExpandModalShowBotton.disabled = false;
 }
 
 function findPosition(data, id) {
@@ -617,7 +708,7 @@ async function showInfo(atom) {
 
       const map = `<div id="world-map3" style="width: 320px; height: 200px; margin: 0 auto; background-color: #fff;"></div>
         <!-- Map card -->
-            </div><div class="location-label" style="background-color: #a5bfdd; color: #666666; padding-left: 2px;">
+            <div class="location-label" style="background-color: #a5bfdd; color: #666666; padding-left: 2px;">
   <i class="fas fa-circle"></i>
   <span class="ml-2">Selected Region: ${elemento.region}</span>
 </div>`;
