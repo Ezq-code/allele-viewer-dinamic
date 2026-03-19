@@ -20,6 +20,7 @@ class GenDataSerializer(serializers.ModelSerializer):
             "alleleasoc",
             "variant",
             "species",
+            "order", # Updated fiel
             "fecha_creacion",
         ]
         read_only_fields = ["fecha_creacion", "fecha_actualizacion"]
