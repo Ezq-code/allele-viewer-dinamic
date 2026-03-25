@@ -21,6 +21,7 @@ class CaracteristicaGen(models.Model):
     alleleasoc = models.TextField(blank=True)
     species = models.CharField(max_length=100, blank=True)
     variant = models.CharField(max_length=100, blank=True)
+    order=models.CharField(max_length=100, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 
