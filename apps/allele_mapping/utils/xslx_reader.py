@@ -32,7 +32,7 @@ class XslxReader(ExcelStructureValidator):
         longitud_column = ExcelNomenclators.longitud_column_name
 
         normalized_columns = [
-            self._normalize_column_name(column_name) for column_name in columns
+            XslxReader._normalize_column_name(column_name) for column_name in columns
         ]
 
         triplets = []

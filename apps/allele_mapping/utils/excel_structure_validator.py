@@ -21,6 +21,8 @@ class ExcelStructureValidator:
             ExcelNomenclators.location_column_name,
             ExcelNomenclators.latitud_column_name,
             ExcelNomenclators.longitud_column_name,
+            ExcelNomenclators.subcountry_column_name,
+            ExcelNomenclators.primary_or_secondary_column_name,
         )
 
         # 1. Leer todas las hojas del archivo Excel
