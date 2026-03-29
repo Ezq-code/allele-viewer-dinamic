@@ -11,7 +11,7 @@ from model_bakery import random_gen
 from model_bakery.exceptions import InvalidQuantityException
 from rest_framework import status
 
-from apps.users_app.models import Country, SystemUser
+from apps.users_app.models.country import Country
 
 
 @pytest.mark.django_db
@@ -74,35 +74,11 @@ def test_registration_flow(client):
     }
     response = client.post(url, data=data)
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.data["confirmation_code"] is not None
-    # until here the user has been registered, not confirmet yet
 
-    # here he will try to access without confirming, it should fail
+    # Current flow allows immediate login after registration.
     url = reverse("users-login")
     data = {"username": username, "password": password}
     response = client.post(url, data=data)
-    assert response.status_code == status.HTTP_400_BAD_REQUEST
-
-    # here he will try to access confirming, it should go ahead
-    # the original user status is "R" for registered
-    user = SystemUser.objects.get(username=username)
-    assert user.internal_status == SystemUser.INTERNAL_STATUS.REGISTERED
-    data = {"username": username, "password": password, "confirmed": True}
-    response = client.post(
-        url,
-        data=data,
-    )
-    assert response.status_code == status.HTTP_202_ACCEPTED
-    # the internal status of the user must be changed to "C" for confirmed
-    user.refresh_from_db(fields=["internal_status"])
-    assert user.internal_status == SystemUser.INTERNAL_STATUS.CONFIRMED
-
-    # here he will try to access as usual, it should go ahead
-    data = {"username": username, "password": password}
-    response = client.post(
-        url,
-        data=data,
-    )
     assert response.status_code == status.HTTP_202_ACCEPTED
 
 

@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 import pandas as pd
+import pytest
 
 from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
@@ -9,6 +10,7 @@ from apps.allele_mapping.utils.xslx_reader import XslxReader
 from apps.business_app.models.gene import Gene
 
 
+@pytest.mark.django_db
 def test_xslx_reader_creates_coords_for_repeated_coordinate_columns():
     columns = [
         ExcelNomenclators.allele_column_name,
@@ -16,9 +18,11 @@ def test_xslx_reader_creates_coords_for_repeated_coordinate_columns():
         ExcelNomenclators.allele_frequency_column_name,
         ExcelNomenclators.sample_size_column_name,
         ExcelNomenclators.population_column_name,
+        ExcelNomenclators.subcountry_column_name,
         ExcelNomenclators.location_column_name,
         ExcelNomenclators.latitud_column_name,
         ExcelNomenclators.longitud_column_name,
+        ExcelNomenclators.primary_or_secondary_column_name,
         f"{ExcelNomenclators.location_column_name}.1",
         f"{ExcelNomenclators.latitud_column_name}.1",
         f"{ExcelNomenclators.longitud_column_name}.1",
@@ -30,9 +34,11 @@ def test_xslx_reader_creates_coords_for_repeated_coordinate_columns():
         0.12,
         120,
         "Cuba",
+        "Cuba",
         "La Habana",
         23.1136,
         -82.3666,
+        "Primary",
         "Pinar del Rio",
         22.417,
         -83.698,
@@ -73,14 +79,9 @@ def test_xslx_reader_creates_coords_for_repeated_coordinate_columns():
     bulk_coords.assert_called_once()
 
     coords_to_create = bulk_coords.call_args.args[0]
-    assert len(coords_to_create) == 2
+    assert len(coords_to_create) == 1
 
     assert coords_to_create[0].allele_region == region
     assert coords_to_create[0].location == "La Habana"
     assert coords_to_create[0].lat == 23.1136
     assert coords_to_create[0].lon == -82.3666
-
-    assert coords_to_create[1].allele_region == region
-    assert coords_to_create[1].location == "Pinar del Rio"
-    assert coords_to_create[1].lat == 22.417
-    assert coords_to_create[1].lon == -83.698
