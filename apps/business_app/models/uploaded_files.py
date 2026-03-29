@@ -95,7 +95,7 @@ class UploadedFiles(models.Model):
 
         elif is_new and original_file:
             try:
-                process_uploaded_file_task.delay(self.id)
+                process_uploaded_file_task.apply_async(args=[self.id], retry=False)
 
             except Exception as e:
                 print(e)

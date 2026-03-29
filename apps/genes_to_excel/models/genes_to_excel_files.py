@@ -10,6 +10,7 @@ from apps.genes_to_excel.tasks import process_genes_to_excel_file_task
 
 logger = logging.getLogger(__name__)
 
+
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return f"user_{instance.system_user.id}/genes_to_excel_files/{filename}"

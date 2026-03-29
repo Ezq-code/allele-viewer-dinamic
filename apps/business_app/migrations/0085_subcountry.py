@@ -35,6 +35,7 @@ def create_subcountries(apps, schema_editor):
     if subcountries_to_create:
         SubCountry.objects.bulk_create(subcountries_to_create)
 
+
 def reverse_subcountries(apps, schema_editor):
     """Reverse operation: delete all SubCountry objects."""
     SubCountry = apps.get_model("business_app", "SubCountry")
