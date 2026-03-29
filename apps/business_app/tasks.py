@@ -1,4 +1,5 @@
 import logging
+import os
 
 from celery import shared_task
 from django.core.management import call_command
@@ -9,8 +10,70 @@ from apps.business_app.models.gene import Gene
 from apps.business_app.models.gene_group import GeneGroups
 from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
+from apps.business_app.models.site_configurations import SiteConfiguration
+from apps.business_app.utils.xslx_to_pdb import XslxToPdb
+from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
 
 logger = logging.getLogger(__name__)
+
+
+@shared_task(name="process_uploaded_file_task")
+def process_uploaded_file_task(uploaded_file_id):
+    try:
+        from apps.business_app.models.uploaded_files import UploadedFiles
+
+        uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
+        original_file = uploaded_file.original_file
+        file_name, _ = os.path.splitext(original_file.name)
+
+        global_configuration = SiteConfiguration.get_solo()
+        processor_classes = [XslxToPdb, XslxToPdbGraph]
+
+        for processor_class in processor_classes:
+            if processor_class is XslxToPdbGraph:
+                processor_object = processor_class(
+                    original_file,
+                    global_configuration,
+                    uploaded_file_id=uploaded_file.id,
+                )
+            else:
+                processor_object = processor_class(original_file, global_configuration)
+            if global_configuration.upload_to_drive or isinstance(
+                processor_object, XslxToPdbGraph
+            ):
+                processor_object.proccess_initial_file_data(uploaded_file.id)
+            processor_object.proccess_pdb_file(uploaded_file.id, file_name)
+
+        return {"status": "success", "uploaded_file_id": uploaded_file_id}
+    except Exception as e:
+        logger.error("Error processing uploaded file %s: %s", uploaded_file_id, str(e))
+        from apps.business_app.models.uploaded_files import UploadedFiles
+
+        UploadedFiles.objects.filter(id=uploaded_file_id).delete()
+        raise
+
+
+@shared_task(name="build_uploaded_file_graph_cache_task")
+def build_uploaded_file_graph_cache_task(uploaded_file_id):
+    try:
+        from apps.business_app.models.uploaded_files import UploadedFiles
+
+        uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
+        global_configuration = SiteConfiguration.get_solo()
+        processor_object = XslxToPdbGraph(
+            uploaded_file.original_file,
+            global_configuration,
+            uploaded_file_id=uploaded_file.id,
+        )
+        processor_object.proccess_initial_file_data(uploaded_file.id)
+        return {"status": "success", "uploaded_file_id": uploaded_file_id}
+    except Exception as e:
+        logger.error(
+            "Error building graph cache for uploaded file %s: %s",
+            uploaded_file_id,
+            str(e),
+        )
+        raise
 
 
 @shared_task(name="create_subcountries_task")

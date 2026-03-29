@@ -7,10 +7,8 @@ from django.utils.translation import gettext_lazy as _
 from apps.business_app.models import AllowedExtensions
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.initial_file_data import InitialFileData
+from apps.business_app.tasks import process_uploaded_file_task
 from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDriveApi
-from apps.business_app.utils.xslx_to_pdb import XslxToPdb
-from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
-from apps.business_app.models.site_configurations import SiteConfiguration
 from django.core.cache import cache
 
 
@@ -87,7 +85,7 @@ class UploadedFiles(models.Model):
     def save(self, *args, **kwargs):
         original_file = self.original_file
         is_new = self.pk is None
-        file_name, extension = os.path.splitext(original_file.name)
+        _, extension = os.path.splitext(original_file.name)
         super().save(*args, **kwargs)  # Call the "real" save() method.
         if (
             extension == ".pdb"
@@ -97,28 +95,7 @@ class UploadedFiles(models.Model):
 
         elif is_new and original_file:
             try:
-                global_configuration = SiteConfiguration.get_solo()
-
-                processor_classes = [XslxToPdb, XslxToPdbGraph]
-                for processor_class in processor_classes:
-                    processor_object = processor_class(
-                        original_file, global_configuration
-                    )
-                    # Process the file and get the processed content
-                    if global_configuration.upload_to_drive or isinstance(
-                        processor_object, XslxToPdbGraph
-                    ):
-                        processor_object.proccess_initial_file_data(self.id)
-                    processor_object.proccess_pdb_file(self.id, file_name)
-                    # if isinstance(processor_object, XslxToPdb):
-                    #     # Upload the file to Google Drive
-                    #     processor = UploadToGoogleDriveApi()
-                    #     sheet_id = processor.upload_file_to_google_drive(
-                    #         original_file.path
-                    #     )
-                    #     print(sheet_id)
-                    #     self.google_sheet_id = sheet_id
-                    #     self.save(force_update=True, update_fields=["google_sheet_id"])
+                process_uploaded_file_task.delay(self.id)
 
             except Exception as e:
                 print(e)
