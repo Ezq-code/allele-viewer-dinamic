@@ -10,8 +10,8 @@ from apps.allele_mapping.utils.xslx_reader import XslxReader
 logger = logging.getLogger(__name__)
 
 
-@shared_task(name="process_allele_mapping_file")
-def process_allele_mapping_file(file_path, uploaded_file_id):
+@shared_task(name="process_allele_mapping_file_task")
+def process_allele_mapping_file_task(file_path, uploaded_file_id):
     """
     Tarea asíncrona para procesar archivos de mapeo de alelos.
 
