@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 class ExcelStructureValidator:
     def __init__(self, origin_file) -> None:
         self.origin_file = origin_file
-
         # Lista de columnas que deben existir en todas las hojas
         self._output_mandatory_columns_for_validation = (
             ExcelNomenclators.allele_column_name,

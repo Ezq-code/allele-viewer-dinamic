@@ -7,7 +7,7 @@ from apps.common.pagination import AllResultsSetPagination
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
-from django.db.models import Prefetch, OuterRef
+from django.db.models import OuterRef
 
 from apps.allele_mapping.serializers.allele_region import (
     AlleleRegionWithAllelesSerializer,

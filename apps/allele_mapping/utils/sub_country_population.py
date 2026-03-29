@@ -1,3 +1,6 @@
+from apps.business_app.models.sub_country import SubCountry
+from apps.allele_mapping.models.allele_region import AlleleRegion
+
 SPECIAL_SUB_COUNTRY_MAPPINGS = {
     "england": "United Kingdom",
     "wales": "United Kingdom",
@@ -10,9 +13,11 @@ SPECIAL_SUB_COUNTRY_MAPPINGS = {
     "iran": "Iran, Islamic Republic of",
     "taiwan": "Taiwan, Province of China",
     "south korea": "Korea, Republic of",
+    "north korea": "Korea, Democratic People's Republic of",
     "azores": "Portugal",
     "madeira": "Portugal",
     "gaza": "Palestine, State of",
+    "palestine": "Palestine, State of",
     "kosovo": "Albania",
     "sao tome": "Sao Tome and Principe",
     "macedonia": "Macedonia, the Former Yugoslav Republic of",
@@ -21,29 +26,27 @@ SPECIAL_SUB_COUNTRY_MAPPINGS = {
 }
 
 
-def populate_sub_country_from_population(
-    allele_region_model, sub_country_model, batch_size=1000
-):
-    all_subcountries = list(sub_country_model.objects.all().order_by("-name"))
+def populate_sub_country_from_population(batch_size=1000):
+    all_subcountries = list(SubCountry.objects.all().order_by("-name"))
     allele_regions_to_update = []
 
-    for allele_region in allele_region_model.objects.filter(
+    for allele_region in AlleleRegion.objects.filter(
         sub_country__isnull=True
     ).iterator():
-        population_value = (allele_region.population or "").strip()
-        if not population_value:
+        subcountry_value = allele_region.sub_country_incoming_name
+        if not subcountry_value:
             continue
 
-        population_lower = population_value.lower()
+        subcountry_lower = subcountry_value.lower().replace("-", " ").strip()
         sub_country = None
 
         for key, country_name in SPECIAL_SUB_COUNTRY_MAPPINGS.items():
-            if population_lower.startswith(key):
+            if subcountry_lower.startswith(key):
                 sub_country = next(
                     (
                         sub_country
                         for sub_country in all_subcountries
-                        if sub_country.name.startswith(country_name)
+                        if sub_country.name.lower().startswith(country_name.lower())
                     ),
                     None,
                 )
@@ -52,7 +55,7 @@ def populate_sub_country_from_population(
 
         if not sub_country:
             for sc in all_subcountries:
-                if population_lower.startswith(sc.name.lower()):
+                if subcountry_lower.startswith(sc.name.lower()):
                     sub_country = sc
                     break
 
@@ -61,7 +64,7 @@ def populate_sub_country_from_population(
             allele_regions_to_update.append(allele_region)
 
     if allele_regions_to_update:
-        allele_region_model.objects.bulk_update(
+        AlleleRegion.objects.bulk_update(
             allele_regions_to_update,
             ["sub_country"],
             batch_size=batch_size,

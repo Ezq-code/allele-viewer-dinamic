@@ -2,38 +2,14 @@
 
 import django.db.models.deletion
 from django.db import migrations, models
+from apps.business_app.tasks import create_subcountries_task
 
 
 def create_subcountries(apps, schema_editor):
     """Create SubCountry objects for each Country.
     For United States (code='US'), create 3 subregions with identificative suffixes.
     For other countries, create one SubCountry with the same name."""
-    Country = apps.get_model("users_app", "Country")
-    SubCountry = apps.get_model("business_app", "SubCountry")
-
-    subcountries_to_create = []
-
-    for country in Country.objects.all():
-        if country.code == "US":
-            subcountries_to_create.append(
-                SubCountry(name=f"{country.name} - East", country=country),
-            )
-            subcountries_to_create.append(
-                SubCountry(name=f"{country.name} - West", country=country),
-            )
-            subcountries_to_create.append(
-                SubCountry(
-                    name=f"{country.name} - Central and Mountains", country=country
-                ),
-            )
-        else:
-            # Create one SubCountry with the same name as the country
-            subcountries_to_create.append(
-                SubCountry(name=country.name, country=country)
-            )
-
-    # Create all SubCountry objects in a single batch operation
-    SubCountry.objects.bulk_create(subcountries_to_create)
+    create_subcountries_task().delay()
 
 
 def reverse_subcountries(apps, schema_editor):

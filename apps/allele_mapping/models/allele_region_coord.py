@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from apps.business_app.models.sub_country import SubCountry
 
 
 class AlleleRegionCoord(models.Model):
@@ -29,6 +28,12 @@ class AlleleRegionCoord(models.Model):
     class Meta:
         verbose_name = _("Allele Region Coordinate")
         verbose_name_plural = _("Allele Region Coordinates")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["lat", "lon"],
+                name="unique_lat_lon",
+            )
+        ]
 
     def __str__(self):
         return f"{self.allele_region}"

@@ -21,6 +21,7 @@ class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "population",
+            "sub_country_incoming_name",
             "alleles",
             "coordinates",
         ]

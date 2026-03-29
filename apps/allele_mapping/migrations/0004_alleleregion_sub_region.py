@@ -2,7 +2,6 @@
 
 import django.db.models.deletion
 from django.db import migrations, models
-from apps.allele_mapping.tasks import populate_sub_country_task
 
 
 class Migration(migrations.Migration):

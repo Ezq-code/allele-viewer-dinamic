@@ -3,12 +3,44 @@ import logging
 from celery import shared_task
 from django.core.management import call_command
 
+from apps.users_app.models.country import Country
+from apps.business_app.models.sub_country import SubCountry
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.gene_group import GeneGroups
 from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 
 logger = logging.getLogger(__name__)
+
+
+@shared_task(name="create_subcountries_task")
+def create_subcountries_task():
+    """Create SubCountry objects for each Country.
+    For United States (code='US'), create 3 subregions with identificative suffixes.
+    For other countries, create one SubCountry with the same name."""
+    subcountries_to_create = []
+
+    for country in Country.objects.all():
+        if country.code == "US":
+            subcountries_to_create.append(
+                SubCountry(name=f"{country.name} - East", country=country),
+            )
+            subcountries_to_create.append(
+                SubCountry(name=f"{country.name} - West", country=country),
+            )
+            subcountries_to_create.append(
+                SubCountry(
+                    name=f"{country.name} - Central and Mountains", country=country
+                ),
+            )
+        else:
+            # Create one SubCountry with the same name as the country
+            subcountries_to_create.append(
+                SubCountry(name=country.name, country=country)
+            )
+
+    # Create all SubCountry objects in a single batch operation
+    SubCountry.objects.bulk_create(subcountries_to_create)
 
 
 @shared_task(name="update_gene_list_for_groups_task")

@@ -8,6 +8,12 @@ class AlleleRegion(models.Model):
         verbose_name=_("population"),
         max_length=100,
     )
+    sub_country_incoming_name = models.CharField(
+        verbose_name=_("sub country incoming name"),
+        max_length=255,
+        null=True,
+        blank=True,
+    )
     sub_country = models.ForeignKey(
         to=SubCountry,
         on_delete=models.SET_NULL,

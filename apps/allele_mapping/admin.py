@@ -64,6 +64,7 @@ class AlleleRegionInfoAdmin(admin.ModelAdmin):
         "percent_of_individuals",
         "allele_frequency",
         "sample_size",
+        "kind_of_info",
     ]
     fields = [
         "allele",
@@ -71,6 +72,7 @@ class AlleleRegionInfoAdmin(admin.ModelAdmin):
         "percent_of_individuals",
         "allele_frequency",
         "sample_size",
+        "kind_of_info",
     ]
 
 
@@ -81,6 +83,7 @@ class AlleleRegionAdmin(admin.ModelAdmin):
         "id",
         "population",
         "sub_country",
+        "sub_country_incoming_name",
     ]
     fields = [
         "population",
