@@ -29,14 +29,15 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
             Prefetch(
                 "alleles",
                 queryset=AlleleRegionInfo.objects.filter(
-                    allele_frequency__gt=0, sample_size__gt=0, region=OuterRef("pk")
+                    allele_frequency__gt=0,
+                    sample_size__gt=0
                 )
                 .select_related("allele", "allele__gene")
                 .order_by("-allele_frequency"),
             ),
             "alleles__allele__gene",
             "coordinates",
-        ),
+        )
     )
     serializer_class = AlleleRegionWithAllelesSerializer
     ordering_fields = "__all__"
@@ -56,162 +57,3 @@ class AlleleRegionViewSet(viewsets.ReadOnlyModelViewSet):
         """
         return super().list(request, *args, **kwargs)
 
-    @action(detail=False, methods=["get"], url_path="countries")
-    @method_decorator(cache_page(timeout=None))
-    def list_countries(self, request):
-        """
-        Endpoint para obtener la lista de países únicos.
-        El país se extrae como la primera palabra del campo 'population'.
-        Ejemplo: "Spain", "Germany", "United States" (devuelve "United")
-        """
-        cache_key = "allele_region_countries_list"
-        countries = cache.get(cache_key)
-        if countries is None:
-            # Extraer primera palabra de cada population no nulo
-            populations = (
-                AlleleRegion.objects.exclude(population__isnull=True)
-                .exclude(population__exact="")
-                .values_list("population", flat=True)
-                .distinct()
-            )
-            countries = set()
-            for pop in populations:
-                if pop and isinstance(pop, str):
-                    # Tomar primera palabra
-                    first_word = pop.split()[0] if pop.split() else pop
-                    countries.add(first_word)
-            countries = sorted(list(countries))
-            cache.set(cache_key, countries, timeout=None)
-
-        return Response({"countries": countries})
-
-    # @method_decorator(cache_page(60 * 15))  # Cache por 15 minutos
-    # @action(detail=False, methods=['get'], url_path='with-allele-info')
-    # def with_allele_info(self, request):
-    #     """
-    #     Endpoint PAGINADO para todas las regiones con sus alelos
-    #     """
-    #     # se agrega filtro por sample_size aquí si fuera necesario
-    #     min_sample_size = request.query_params.get('min_sample_size')
-    #     max_sample_size = request.query_params.get('max_sample_size')
-
-    #     regions = AlleleRegion.objects.filter(
-    #         alleles__allele_frequency__isnull=False
-    #     ).exclude(
-    #         alleles__allele_frequency=0
-    #     ).distinct()
-
-    #     # filtro por sample_size si se proporciona
-    #     if min_sample_size or max_sample_size:
-    #         # filtro para allele_info
-    #         allele_filter = Q(allele_frequency__isnull=False) & ~Q(allele_frequency=0)
-
-    #         if min_sample_size:
-    #             allele_filter &= Q(sample_size__gte=int(min_sample_size))
-    #         if max_sample_size:
-    #             allele_filter &= Q(sample_size__lte=int(max_sample_size))
-
-    #         # Filtrar regiones que tienen alelos que cumplen el filtro
-    #         region_ids = AlleleRegionInfo.objects.filter(
-    #             allele_filter
-    #         ).values_list('region_id', flat=True).distinct()
-
-    #         regions = regions.filter(id__in=region_ids)
-
-    #     # Prefetch relacionado
-    #     regions = regions.prefetch_related(
-    #         Prefetch(
-    #             'alleles',
-    #             queryset=AlleleRegionInfo.objects.filter(
-    #                 allele_frequency__isnull=False
-    #             ).exclude(
-    #                 allele_frequency=0
-    #             ).select_related('allele', 'allele__gene'),
-    #             to_attr='filtered_alleles'
-    #         )
-    #     )
-
-    #     serializer = AlleleRegionWithAllelesSerializer(regions, many=True)
-    #     return Response(serializer.data)
-
-    @method_decorator(cache_page(timeout=None))
-    @action(detail=False, methods=["get"], url_path="by-gene")
-    def by_gene(self, request):
-        """
-        Endpoint optimizado con filtros:
-        - allelic_group (REQUERIDO): Grupo alélico (ej: "A*01", "B*15")
-        - min_sample_size (OPCIONAL): límite inferior del rango
-        - max_sample_size (OPCIONAL): límite superior del rango
-        """
-        # gene_id = request.query_params.get('gene_id')
-        # gene_name = request.query_params.get('gene_name')
-        allelic_group = request.query_params.get("allelic_group")
-        min_sample_size = request.query_params.get("min_sample_size")
-        max_sample_size = request.query_params.get("max_sample_size")
-
-        if not allelic_group:
-            return Response({"error": "You must provide allelic_group"}, status=400)
-
-        # Construir el filtro base para allele_info
-        allele_info_filter = Q(allele_frequency__isnull=False, allele_frequency__gt=0)
-
-        # Agregar filtro por grupo alélico si se proporciona
-        if allelic_group:
-            # Asegurarnos de que el grupo alélico tenga el formato correcto
-            # Puede venir como "A*01" o "A*01:*" - normalizamos
-            if ":" not in allelic_group:
-                # Si no tiene ":", buscamos alelos que comiencen con ese grupo
-                allele_info_filter &= Q(allele__name__startswith=allelic_group + ":")
-            else:
-                # Si ya tiene ":", buscamos exactamente ese grupo
-                allele_info_filter &= Q(allele__name__startswith=allelic_group)
-
-        # Agregar filtro por rango de sample_size si se proporciona
-        if min_sample_size:
-            try:
-                min_sample_size = int(min_sample_size)
-                allele_info_filter &= Q(sample_size__gte=min_sample_size)
-            except ValueError:
-                return Response(
-                    {"error": "min_sample_size must be an integer"}, status=400
-                )
-        if max_sample_size:
-            try:
-                max_sample_size = int(max_sample_size)
-                allele_info_filter &= Q(sample_size__lte=max_sample_size)
-            except ValueError:
-                return Response(
-                    {"error": "max_sample_size must be an integer"}, status=400
-                )
-
-        # Validar que min no sea mayor que max
-        if min_sample_size and max_sample_size and min_sample_size > max_sample_size:
-            return Response(
-                {"error": "min_sample_size cannot be greater than max_sample_size"},
-                status=400,
-            )
-
-        # Obtener solo los IDs de regiones que tienen al menos un alelo que cumple el filtro
-        region_ids = (
-            AlleleRegionInfo.objects.filter(allele_info_filter)
-            .values_list("region_id", flat=True)
-            .distinct()
-        )
-
-        # Si no hay regiones que cumplan, devolver vacío inmediatamente
-        if not region_ids:
-            return Response([])
-
-        # Obtener las regiones con prefetch, aplicando el mismo filtro a los alelos
-        regions = AlleleRegion.objects.filter(id__in=region_ids).prefetch_related(
-            Prefetch(
-                "alleles",
-                queryset=AlleleRegionInfo.objects.filter(allele_info_filter)
-                .select_related("allele", "allele__gene")
-                .order_by("-allele_frequency"),
-                to_attr="filtered_alleles",
-            )
-        )
-
-        serializer = AlleleRegionWithAllelesSerializer(regions, many=True)
-        return Response(serializer.data)

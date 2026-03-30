@@ -1,0 +1,71 @@
+/* Que el contenedor de Select2 use la misma altura que form-control-sm */
+.select2-container--bootstrap4 .select2-selection--multiple {
+  min-height: calc(1.8125rem + 2px);  /* altura aproximada de .form-control-sm en Bootstrap 4 */
+  padding-top: .15rem;
+  padding-bottom: .15rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Evitar que crezca demasiado cuando hay varios tags */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+/* Chips un poco más compactos */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+  min-height: 25px !important; /*calc(1.8125rem + 2px); */ /* altura aproximada de .form-control-sm en Bootstrap 4 */
+  height: 25px !important;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: .75rem;
+}
+
+/* Si quieres forzar exactamente la misma altura que el resto */
+.select2-sm-custom + .select2-container--bootstrap4 .select2-selection--multiple {
+  height: 30px !important; /*  calc(1.8125rem + 2px); */
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  
+}
+
+.select2-sm-custom + .select2-container--bootstrap4 {
+  width: 6.5rem;       /* ancho fijo ~9 caracteres */
+  min-width: 6.5rem;
+}
+
+
+/* Estilos para las columnas de alelos en el modal */
+.allele-col {
+  min-width: 150px;
+  margin-bottom: 10px;
+}
+
+.allele-col ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.allele-col li {
+  list-style: none;
+  padding: 2px 5px;
+  font-size: 0.85rem;
+}
+
+.allele-col li.highlighted {
+  font-weight: bold;
+  background-color: #e8f4f8;
+  border-radius: 3px;
+}
+
+/* Estilo para el gráfico de pastel en el modal */
+.pie-slice {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.pie-slice:hover {
+  opacity: 0.8;
+}

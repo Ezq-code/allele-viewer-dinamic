@@ -15,15 +15,18 @@ class AlleleRegionSerializer(serializers.ModelSerializer):
 class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
     alleles = serializers.SerializerMethodField()
     coordinates = AlleleRegionCoordSerializer(many=True, read_only=True)
+    sub_country_name = serializers.CharField(source='sub_country.name', read_only=True)
 
     class Meta:
         model = AlleleRegion
         fields = [
             "id",
             "population",
-            "sub_country_incoming_name",
-            "alleles",
+            "sub_country",
+            "sub_country_name",
             "coordinates",
+            "alleles",
+
         ]
 
     def get_alleles(self, obj):  # TODO utilizar el filter class aquí
