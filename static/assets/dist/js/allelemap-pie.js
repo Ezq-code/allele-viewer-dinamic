@@ -26,7 +26,7 @@ $(function () {
     function updateLabel(values) {
       var min = values[0];
       var max = values[1];
-      $label.text('(' + format(min) + ' � ' + format(max) + ')');
+      $label.text('(' + format(min) + ' - ' + format(max) + ')');
     }
 
     // Valores iniciales
@@ -181,7 +181,7 @@ function coordKey(lat, lon) {
     // Opcional: si quieres un fallback m�s all� de 3 grados:
     // por ejemplo seguir creciendo d = 4,5,6...
     // o lanzar un error porque dices que no habr� > 25 coincidencias.
-    console.warn("No se encontr� posici�n libre dentro de �3 grados para", baseLat, baseLon);
+    console.warn("No se encontró posición libre dentro de 3 grados para", baseLat, baseLon);
   }
 
   element.latLng = [newLat, newLon];
@@ -336,13 +336,13 @@ axios
             Swal.fire({
                 icon: 'error',
                 title: 'Error de datos',
-                text: 'El servidor respondi� con un formato inesperado.',
+                text: 'El servidor respondió con un formato inesperado.',
                 confirmButtonText: 'Aceptar'
             });
             return;
         }
         var data = response.data.results;
-        console.log('N�mero de resultados:', data.length);
+        console.log('Número de resultados:', data.length);
         if (data.length > 0) {
             // --- HAY DATOS: procesar y dibujar marcadores ---
             data.forEach(function (region) {
@@ -350,8 +350,8 @@ axios
              {    
                 if (isCountry)  
                 {
-                  sessionStorage.setItem('lat', region.coordinates[0].lat);
-                  sessionStorage.setItem('long', region.coordinates[0].lon);
+                  sessionStorage.setItem('lat', region.lat);
+                  sessionStorage.setItem('long', region.lon);
                   //sessionStorage.setItem('lat', region.lat);
                   //sessionStorage.setItem('long', region.lon);
                   sessionStorage.setItem('zoom', '4');  
@@ -589,12 +589,12 @@ function setFocusLatLng(mapObj, lat, lng, scale) {
         }
     })
     .catch(function (error) {
-        console.error('Error en la petici�n:', error);
+        console.error('Error en la petición:', error);
         Swal.close();
         Swal.fire({
             icon: 'error',
-            title: 'Error de conexi�n',
-            text: 'Ocurri� un problema al cargar los datos. Intenta de nuevo.',
+            title: 'Error de conexión',
+            text: 'Ocurrió un problema al cargar los datos. Intenta de nuevo.',
             confirmButtonText: 'Aceptar'
         });
     });
