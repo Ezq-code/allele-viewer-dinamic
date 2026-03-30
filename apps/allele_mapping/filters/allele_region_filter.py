@@ -8,37 +8,32 @@ from django.core.cache import cache
 
 class AlleleRegionFilter(django_filters.FilterSet):
     gene_name = django_filters.CharFilter(
-        method="filter_by_gene_name",
-        label="Gene Name"
+        method="filter_by_gene_name", label="Gene Name"
     )
     alleles_list = django_filters.CharFilter(
-        method="filter_by_alleles_list",
-        label="Alleles list (comma separated)"
+        method="filter_by_alleles_list", label="Alleles list (comma separated)"
     )
     country = django_filters.CharFilter(
-        method="filter_by_country",
-        label="Country (subcountry name)"
+        method="filter_by_country", label="Country (subcountry name)"
     )
     min_allele_frequency = django_filters.NumberFilter(
         method="filter_by_min_allele_frequency",
-        label="Min allele frequency (percentage)"
+        label="Min allele frequency (percentage)",
     )
     max_allele_frequency = django_filters.NumberFilter(
         method="filter_by_max_allele_frequency",
-        label="Max allele frequency (percentage)"
+        label="Max allele frequency (percentage)",
     )
     min_sample_size = django_filters.NumberFilter(
-        method="filter_by_min_sample_size",
-        label="Min sample size"
+        method="filter_by_min_sample_size", label="Min sample size"
     )
     max_sample_size = django_filters.NumberFilter(
-        method="filter_by_max_sample_size",
-        label="Max sample size"
+        method="filter_by_max_sample_size", label="Max sample size"
     )
     kind_of_info = django_filters.ChoiceFilter(
         choices=AlleleRegionInfo.KIND_OF_INFO.choices,
         method="filter_by_kind_of_info",
-        label="Kind of info (P=Primary, S=Secondary)"
+        label="Kind of info (P=Primary, S=Secondary)",
     )
 
     class Meta:
@@ -162,9 +157,7 @@ class AlleleRegionFilter(django_filters.FilterSet):
 
         # 3. Construir el queryset base de AlleleRegionInfo (solo registros válidos)
         base_qs = AlleleRegionInfo.objects.filter(
-            allele_frequency__isnull=False,
-            allele_frequency__gt=0,
-            sample_size__gt=0
+            allele_frequency__isnull=False, allele_frequency__gt=0, sample_size__gt=0
         )
 
         # 4. Aplicar todas las condiciones acumuladas
@@ -184,9 +177,10 @@ class AlleleRegionFilter(django_filters.FilterSet):
         queryset = queryset.filter(id__in=region_ids).prefetch_related(
             Prefetch(
                 "alleles",
-                queryset=base_qs.select_related("allele", "allele__gene")
-                         .order_by("-allele_frequency"),
-                to_attr="filtered_alleles"
+                queryset=base_qs.select_related("allele", "allele__gene").order_by(
+                    "-allele_frequency"
+                ),
+                to_attr="filtered_alleles",
             )
         )
         return queryset

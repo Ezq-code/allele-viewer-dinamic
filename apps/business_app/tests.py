@@ -141,7 +141,9 @@ def test_uploaded_files_serializer_list_action_returns_cached_allele_nodes():
         context={"view": SimpleNamespace(action="list")}
     )
     obj = SimpleNamespace(id=1)
-    cache_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(uploaded_file_id=obj.id)
+    cache_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
+        uploaded_file_id=obj.id
+    )
     cache.set(cache_key, [], timeout=None)
 
     with patch(
@@ -158,7 +160,9 @@ def test_uploaded_files_serializer_create_action_returns_cached_allele_nodes():
         context={"view": SimpleNamespace(action="create")}
     )
     obj = SimpleNamespace(id=2)
-    cache_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(uploaded_file_id=obj.id)
+    cache_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
+        uploaded_file_id=obj.id
+    )
     cache.set(cache_key, [], timeout=None)
 
     with patch(

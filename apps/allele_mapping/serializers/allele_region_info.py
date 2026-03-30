@@ -15,7 +15,9 @@ class AlleleRegionInfoDetailSerializer(serializers.ModelSerializer):
     allele_name = serializers.CharField(source="allele.name", read_only=True)
     gene_name = serializers.CharField(source="allele.gene.name", read_only=True)
     allele_frequency = serializers.SerializerMethodField()
-    kind_of_info_display = serializers.CharField(source="get_kind_of_info_display", read_only=True)
+    kind_of_info_display = serializers.CharField(
+        source="get_kind_of_info_display", read_only=True
+    )
 
     class Meta:
         model = AlleleRegionInfo
