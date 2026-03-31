@@ -81,6 +81,16 @@ class GeneViewSet(
         serializer_class=GeneGetAllInfoSerializer,
     )
     def get_all_info(self, request):
+        """
+        Retrieve all genes with complete information.
+        
+        Returns a comprehensive list of all genes using GeneGetAllInfoSerializer,
+        which includes detailed information about each gene.
+        
+        Returns:
+            Response: List of genes with full details including groups, disorders,
+                     and status information
+        """
         return self.list(request)
 
     @action(
@@ -91,6 +101,16 @@ class GeneViewSet(
         serializer_class=GeneSerializer,
     )
     def list_for_graph(self, request):
+        """
+        Retrieve genes that have associated uploaded files for graph visualization.
+        
+        This endpoint filters genes to only include those that have at least one
+        uploaded file associated with them. Useful for generating graphs where
+        only genes with data should be displayed.
+        
+        Returns:
+            Response: List of genes that have uploaded files
+        """
         return self.list(request)
 
     @action(
@@ -101,9 +121,16 @@ class GeneViewSet(
     )
     def with_alleles_to_map(self, request):
         """
-        Endpoint para obtener genes que tienen alelos en la tabla AlleleToMap
+        Retrieve genes that have alleles in the AlleleToMap table.
+        
+        Filters genes to only include those that have at least one related
+        AlleleToMap entry. Uses database EXISTS query for efficient filtering.
+        
+        Returns:
+            Response: List of genes (using GeneSimpleSerializer) that have
+                     alleles mapped
         """
-        # Filtrar genes que tienen al menos un AlleleToMap relacionado
+        # Filter genes that have at least one AlleleToMap related
         queryset = self.get_queryset().filter(
             Exists(AlleleToMap.objects.filter(gene_id=OuterRef("pk")))
         )
@@ -120,33 +147,45 @@ class GeneViewSet(
     @method_decorator(cache_page(timeout=None))
     def get_alleles_by_gene(self, request):
         """
-        DEVUELVE LA LISTA COMPLETA DE ALELOS DE UN GEN ESPECÍFICO.
-        Parámetros: gene_name (REQUERIDO)
-        Retorna:
-        {
-            "gene_name": "HLA-A",
-            "alleles": ["A*01:01", "A*01:02", "A*02:01", ...]
-        }
+        Retrieve the complete list of alleles for a specific gene.
+        
+        This endpoint returns all unique allele names associated with a given gene.
+        The results are cached indefinitely for performance.
+        
+        Args:
+            request: The HTTP request containing query parameters
+                - gene_name (required): The name of the gene to retrieve alleles for
+                
+        Returns:
+            Response: Object containing gene_name and sorted list of alleles
+            Example:
+            {
+                "gene_name": "HLA-A",
+                "alleles": ["A*01:01", "A*01:02", "A*02:01", ...]
+            }
+            
+        Raises:
+            HTTP_400_BAD_REQUEST: If gene_name parameter is not provided
         """
         gene_name = request.query_params.get("gene_name")
 
         if not gene_name:
             return Response({"error": "You must provide gene_name"}, status=400)
 
-        # Filtrar alelos del gen especificado (búsqueda exacta, no icontains)
+        # Filter alleles for the specified gene (exact match, not icontains)
         alleles_qs = (
             AlleleToMap.objects.filter(
-                gene__name=gene_name  # Cambiado a búsqueda exacta
+                gene__name=gene_name  # Changed to exact match
             )
             .values_list("name", flat=True)
             .distinct()
         )
 
-        # Si no hay alelos, devolver lista vacía
+        # If no alleles, return empty list
         if not alleles_qs:
             return Response({"gene_name": gene_name, "alleles": []})
 
-        # Convertir a lista y ordenar alfabéticamente
+        # Convert to list and sort alphabetically
         allele_list = sorted(list(alleles_qs))
 
         return Response({"gene_name": gene_name, "alleles": allele_list})

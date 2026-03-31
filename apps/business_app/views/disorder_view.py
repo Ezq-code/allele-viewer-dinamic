@@ -53,7 +53,6 @@ class DisorderViewSet(
     ]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    # Endpoint reducido
     @action(
         detail=False,
         methods=["GET"],
@@ -61,6 +60,16 @@ class DisorderViewSet(
         url_name="minimal-list",
     )
     def minimal_list(self, request):
+        """
+        Retrieve a minimal list of disorders.
+        
+        Returns a simplified representation of all disorders using
+        DisorderMinimalSerializer. This endpoint is optimized for quick
+        loading of basic disorder information.
+        
+        Returns:
+            Response: List of disorders with minimal fields
+        """
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
