@@ -45,7 +45,6 @@ class DiseaseGroupViewSet(
     ]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    # Endpoint reducido
     @action(
         detail=False,
         methods=["GET"],
@@ -53,6 +52,16 @@ class DiseaseGroupViewSet(
         url_name="minimal-list",
     )
     def minimal_list(self, request):
+        """
+        Retrieve a minimal list of disease groups.
+        
+        Returns a simplified representation of all disease groups using
+        DiseaseGroupMinimalSerializer. This endpoint is optimized for quick
+        loading of basic disease group information.
+        
+        Returns:
+            Response: List of disease groups with minimal fields
+        """
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
