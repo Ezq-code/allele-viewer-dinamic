@@ -309,7 +309,7 @@ function coordKey(lat, lon) {
     var isCountry = false;
     var kind_of_info_key = '';
 
-    if (kind_of_info = 'primary') {kind_of_info_key = 'P'} else if (kind_of_info = 'secondary') {kind_of_info_key = 'S'}  
+    if (kind_of_info == 'Primary') {kind_of_info_key = 'P'} else if (kind_of_info == 'Secondary') {kind_of_info_key = 'S'}  
 
     if (country_name == 'All Countries')
     { 
@@ -325,7 +325,7 @@ function coordKey(lat, lon) {
 axios
     .get(anUrl)
     .then(function (response) {
-        // ?? Depuraci�n: mira la URL y la respuesta en la consola
+        // ?? Depuración: mira la URL y la respuesta en la consola
         console.log('URL consultada:', '/allele-mapping/alleles-region/?alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size);
         console.log('Respuesta completa:', response.data);
 
@@ -346,9 +346,10 @@ axios
         if (data.length > 0) {
             // --- HAY DATOS: procesar y dibujar marcadores ---
             data.forEach(function (region) {
-            if (region.coordinates.length > 0)
-             {    
-                if (isCountry)  
+            //if ( region.coordinates.length > 0)
+            if ((kind_of_info_key == 'P') || ((kind_of_info_key == 'S') && (region.coordinates.length > 0)))
+            {    
+                if ((isCountry) && (kind_of_info_key == 'P'))  
                 {
                   sessionStorage.setItem('lat', region.lat);
                   sessionStorage.setItem('long', region.lon);
@@ -362,10 +363,20 @@ axios
                   sessionStorage.setItem('long', '0');
                   sessionStorage.setItem('zoom', '1');  
                 }
-                regionAlele = {
+
+               if (kind_of_info_key == 'S')
+               {
+               regionAlele = {
                     name: region.population,
                     latLng: [region.coordinates[0].lat, region.coordinates[0].lon],
                     //latLng: [region.lat, region.lon],
+                    pie: []
+                };
+               }
+               else if (kind_of_info_key == 'P')
+                regionAlele = {
+                    name: region.population,
+                    latLng: [region.lat, region.lon],
                     pie: []
                 };
 
@@ -380,7 +391,7 @@ axios
 
                 regionAlele = adjustLatLngForNewElement(mapPoints, regionAlele);
                 mapPoints.push(regionAlele);
-             }
+            }
             });
 
             // Definir funciones auxiliares (se mantienen igual)
@@ -555,7 +566,8 @@ function setFocusLatLng(mapObj, lat, lng, scale) {
 
             setTimeout(() => addPieMarkers('#map'), 300);
 
-            if (isCountry)  
+            //if (isCountry) 
+            if ((isCountry) && (kind_of_info_key == 'P'))  
             {
              var aLat = parseFloat(sessionStorage.getItem('lat'));
              var aLong = parseFloat(sessionStorage.getItem('long'));
@@ -631,7 +643,12 @@ document.getElementById('btreloadgene').addEventListener('click', function() {
     setTimeout(function () {
     location.reload()
     }, 500);
-});    
+});   
+
+document.getElementById('primarysecondary').addEventListener('change', function() {   
+    var aPrimarySecondary = document.getElementById("primarysecondary");
+    sessionStorage.setItem('primarysecondary', aPrimarySecondary.value); 
+});
 
   document.getElementById('genes').addEventListener('change', function() {   
   
