@@ -74,7 +74,7 @@ class XslxToPdbGraph(ExcelReader):
         self.G = nx.DiGraph()
 
     def proccess_initial_file_data(self, *args):
-        print("Proccessing initial file data for generate graph...")
+        logger.info("Proccessing initial file data for generate graph...")
         """
         Esta función recibe como parámetro el ide del fichero
         (uploaded_file_id) y almacena los datos del dataframe
@@ -136,7 +136,7 @@ class XslxToPdbGraph(ExcelReader):
     def proccess_pdb_file(
         self, uploaded_file_id, pdb_filename_base, existing_pdb_file=None
     ):
-        print("Proccessing PDB file into a Graph...")
+        logger.info("Proccessing PDB file into a Graph...")
         # Obtener el grafo desde el fichero excel almacenado en un Dataframe
         nodes_list = list(self.G.nodes)
         edges_list = list(self.G.edges)

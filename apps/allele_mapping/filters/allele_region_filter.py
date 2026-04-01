@@ -1,5 +1,5 @@
 import django_filters
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
@@ -7,207 +7,183 @@ from django.core.cache import cache
 
 
 class AlleleRegionFilter(django_filters.FilterSet):
-    """
-    Filtro personalizado para AlleleRegion
-    """
-
     gene_name = django_filters.CharFilter(
         method="filter_by_gene_name", label="Gene Name"
     )
     alleles_list = django_filters.CharFilter(
-        method="filter_by_alleles_list", label="Alleles List (comma separated)"
+        method="filter_by_alleles_list", label="Alleles list (comma separated)"
     )
     country = django_filters.CharFilter(
-        method="filter_by_country", label="Country (first word of population)"
+        method="filter_by_country", label="Country (subcountry name)"
     )
     min_allele_frequency = django_filters.NumberFilter(
-        method="filter_by_min_allele_frequency", label="Min Allele Frequency"
+        method="filter_by_min_allele_frequency",
+        label="Min allele frequency (percentage)",
     )
     max_allele_frequency = django_filters.NumberFilter(
-        method="filter_by_max_allele_frequency", label="Max Allele Frequency"
+        method="filter_by_max_allele_frequency",
+        label="Max allele frequency (percentage)",
     )
     min_sample_size = django_filters.NumberFilter(
-        method="filter_by_min_sample_size", label="Min Sample Size"
+        method="filter_by_min_sample_size", label="Min sample size"
     )
     max_sample_size = django_filters.NumberFilter(
-        method="filter_by_max_sample_size", label="Max Sample Size"
+        method="filter_by_max_sample_size", label="Max sample size"
     )
-
-    # Base queryset para AlleleRegionInfo (frecuencias válidas)
-    allele_region_info = AlleleRegionInfo.objects.filter(
-        allele_frequency__isnull=False, allele_frequency__gt=0
+    kind_of_info = django_filters.ChoiceFilter(
+        choices=AlleleRegionInfo.KIND_OF_INFO.choices,
+        method="filter_by_kind_of_info",
+        label="Kind of info (P=Primary, S=Secondary)",
     )
 
     class Meta:
         model = AlleleRegion
         fields = {
             "id": ["exact", "in"],
-            "lat": ["gte", "lte"],
-            "lon": ["gte", "lte"],
+            "coordinates__lat": ["gte", "lte"],
+            "coordinates__lon": ["gte", "lte"],
             "alleles__percent_of_individuals": ["gte", "lte"],
         }
 
-    def filter_by_min_sample_size(self, queryset, name, value):
-        """
-        Filtra las regiones con alelos que tienen al menos el tamaño de muestra dado
-        """
-        if value is None:
-            return queryset
-        cache_key = f"filter_by_min_sample_size_{value}"
-        alleles_id = cache.get(cache_key)
-        if alleles_id is None:
-            self.allele_region_info = self.allele_region_info.filter(
-                sample_size__gte=value
-            )
-            alleles_id = self.allele_region_info.values_list("region_id", flat=True)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Almacenamos las condiciones para filtrar AlleleRegionInfo
+        self.allele_filters = Q()
+        # Para la optimización, guardamos los IDs de alelos cuando sea posible
+        self.allele_ids_set = False
+        self.allele_ids = None
 
-            cache.set(cache_key, alleles_id, timeout=None)
-        return queryset.filter(id__in=alleles_id)
-
-    def filter_by_max_sample_size(self, queryset, name, value):
-        """
-        Filtra las regiones con alelos que tienen como máximo el tamaño de muestra dado
-        """
-        if value is None:
-            return queryset
-        cache_key = f"filter_by_max_sample_size_{value}"
-        alleles_id = cache.get(cache_key)
-        if alleles_id is None:
-            self.allele_region_info = self.allele_region_info.filter(
-                sample_size__lte=value
-            )
-
-            alleles_id = self.allele_region_info.values_list("region_id", flat=True)
-            cache.set(cache_key, alleles_id, timeout=None)
-        return queryset.filter(id__in=alleles_id)
-
-    def filter_by_min_allele_frequency(self, queryset, name, value):
-        """
-        Filtra las regiones con alelos que tienen al menos la frecuencia alélica dada
-        """
-        if value is None:
-            return queryset
-        cache_key = f"filter_by_min_allele_frequency_{value}"
-        alleles_id = cache.get(cache_key)
-        if alleles_id is None:
-            self.allele_region_info = self.allele_region_info.filter(
-                allele_frequency__gte=value
-            )
-
-            alleles_id = self.allele_region_info.values_list("region_id", flat=True)
-            cache.set(cache_key, alleles_id, timeout=None)
-        return queryset.filter(id__in=alleles_id)
-
-    def filter_by_max_allele_frequency(self, queryset, name, value):
-        """
-        Filtra las regiones con alelos que tienen como máximo la frecuencia alélica dada
-        """
-        if value is None:
-            return queryset
-        cache_key = f"filter_by_max_allele_frequency_{value}"
-        alleles_id = cache.get(cache_key)
-        if alleles_id is None:
-            self.allele_region_info = self.allele_region_info.filter(
-                allele_frequency__lte=value
-            )
-            alleles_id = self.allele_region_info.values_list("region_id", flat=True)
-            cache.set(cache_key, alleles_id, timeout=None)
-        return queryset.filter(id__in=alleles_id)
-
-    def filter_by_country(self, queryset, name, value):
-        """Filtra regiones cuyo campo 'population' comienza con el país indicado."""
-        if not value:
-            return queryset
-        # Búsqueda insensible a mayúsculas al inicio del string
-        return queryset.filter(population__istartswith=value)
-
-    def filter_by_alleles_list(self, queryset, name, value):
-        """
-        Filtra regiones que contienen al menos uno de los alelos especificados.
-        El parámetro 'value' es una cadena con nombres de alelos separados por comas.
-        Ejemplo: ?alleles_list=A*01:01,A*02:01,B*07:02
-        """
-        if not value:
-            return queryset
-
-        # Dividir y limpiar la lista de alelos
-        allele_names = [name.strip() for name in value.split(",") if name.strip()]
-        if not allele_names:
-            return queryset
-
-        cache_key = f"alleles_list_filter_{'_'.join(sorted(allele_names))}"
-        cached_data = cache.get(cache_key)
-
-        if cached_data:
-            allele_ids, region_ids = cached_data
-        else:
-            # Obtener IDs de los alelos exactos
-            allele_ids = list(
-                AlleleToMap.objects.filter(name__in=allele_names)
-                .values_list("id", flat=True)
-                .distinct()
-            )
-            if not allele_ids:
-                return queryset.none()
-
-            # Obtener regiones que tienen esos alelos (con frecuencias válidas)
-            region_ids = list(
-                self.allele_region_info.filter(allele_id__in=allele_ids)
-                .values_list("region_id", flat=True)
-                .distinct()
-            )
-            cache.set(cache_key, (allele_ids, region_ids), timeout=None)
-
-        # Prefetch para traer SOLO los alelos de la lista
-        filtered_queryset = queryset.filter(id__in=region_ids).prefetch_related(
-            Prefetch(
-                "alleles",
-                queryset=AlleleRegionInfo.objects.filter(
-                    allele_id__in=allele_ids,
-                    allele_frequency__isnull=False,
-                    allele_frequency__gt=0,
-                )
-                .select_related("allele", "allele__gene")
-                .order_by("-allele_frequency"),
-                to_attr="filtered_alleles",
-            )
-        )
-        return filtered_queryset
-
+    # --------------------------------------------------------------
+    # Métodos que acumulan condiciones (sin aplicar prefetch)
+    # --------------------------------------------------------------
     def filter_by_gene_name(self, queryset, name, value):
         if not value:
             return queryset
+        # Obtener IDs de alelos para el gen (con caché)
         cache_key = f"gene_filter_{value}"
-        cached_data = cache.get(cache_key)
-        if cached_data:
-            allele_ids, region_ids = cached_data
-        else:
+        allele_ids = cache.get(cache_key)
+        if allele_ids is None:
             allele_ids = list(
                 AlleleToMap.objects.filter(gene__name=value)
                 .values_list("id", flat=True)
                 .distinct()
             )
-            region_ids = list(
-                self.allele_region_info.filter(allele_id__in=allele_ids)
-                .values_list("region_id", flat=True)
+            cache.set(cache_key, allele_ids, timeout=3600)
+        if not allele_ids:
+            self.allele_filters &= Q(pk__isnull=True)  # fuerza vacío
+        else:
+            self.allele_filters &= Q(allele_id__in=allele_ids)
+            self._store_allele_ids(allele_ids)
+        return queryset
+
+    def filter_by_alleles_list(self, queryset, name, value):
+        if not value:
+            return queryset
+        allele_names = [n.strip() for n in value.split(",") if n.strip()]
+        if not allele_names:
+            return queryset
+        cache_key = f"alleles_list_{'_'.join(sorted(allele_names))}"
+        allele_ids = cache.get(cache_key)
+        if allele_ids is None:
+            allele_ids = list(
+                AlleleToMap.objects.filter(name__in=allele_names)
+                .values_list("id", flat=True)
                 .distinct()
             )
-            cache.set(cache_key, (allele_ids, region_ids), timeout=3600)
+            cache.set(cache_key, allele_ids, timeout=None)
+        if not allele_ids:
+            self.allele_filters &= Q(pk__isnull=True)
+        else:
+            self.allele_filters &= Q(allele_id__in=allele_ids)
+            self._store_allele_ids(allele_ids)
+        return queryset
 
-        filtered_queryset = queryset.filter(id__in=region_ids).prefetch_related(
+    def filter_by_kind_of_info(self, queryset, name, value):
+        if not value:
+            return queryset
+        self.allele_filters &= Q(kind_of_info=value)
+        return queryset
+
+    def filter_by_min_sample_size(self, queryset, name, value):
+        if value is None:
+            return queryset
+        self.allele_filters &= Q(sample_size__gte=value)
+        return queryset
+
+    def filter_by_max_sample_size(self, queryset, name, value):
+        if value is None:
+            return queryset
+        self.allele_filters &= Q(sample_size__lte=value)
+        return queryset
+
+    def filter_by_min_allele_frequency(self, queryset, name, value):
+        if value is None:
+            return queryset
+        self.allele_filters &= Q(allele_frequency__gte=value)
+        return queryset
+
+    def filter_by_max_allele_frequency(self, queryset, name, value):
+        if value is None:
+            return queryset
+        self.allele_filters &= Q(allele_frequency__lte=value)
+        return queryset
+
+    def filter_by_country(self, queryset, name, value):
+        if not value:
+            return queryset
+        return queryset.filter(sub_country__name__iexact=value)
+
+    # --------------------------------------------------------------
+    # Método auxiliar para almacenar allele_ids (intersección)
+    # --------------------------------------------------------------
+    def _store_allele_ids(self, ids):
+        if self.allele_ids_set:
+            # Si ya existen IDs, hacer interseccion
+            self.allele_ids = list(set(self.allele_ids) & set(ids))
+        else:
+            self.allele_ids = ids
+            self.allele_ids_set = True
+
+    # --------------------------------------------------------------
+    # Sobrescritura de filter_queryset: aquí se aplica el prefetch único
+    # --------------------------------------------------------------
+    def filter_queryset(self, queryset):
+        # 1. Aplicar filtros básicos (los que no afectan a AlleleRegionInfo)
+        queryset = super().filter_queryset(queryset)
+
+        # 2. Si no hay filtros sobre AlleleRegionInfo, se devuelve el queryset sin prefetch extra
+        if not self.allele_filters and not self.allele_ids_set:
+            return queryset
+
+        # 3. Construir el queryset base de AlleleRegionInfo (solo registros válidos)
+        base_qs = AlleleRegionInfo.objects.filter(
+            allele_frequency__isnull=False, allele_frequency__gt=0, sample_size__gt=0
+        )
+
+        # 4. Aplicar todas las condiciones acumuladas
+        if self.allele_filters:
+            base_qs = base_qs.filter(self.allele_filters)
+
+        # 5. Si tenemos allele_ids precalculados, añadimos ese filtro
+        if self.allele_ids_set and self.allele_ids:
+            base_qs = base_qs.filter(allele_id__in=self.allele_ids)
+
+        # 6. Obtener los IDs de región que tienen al menos un alelo que cumpla
+        region_ids = list(base_qs.values_list("region_id", flat=True).distinct())
+        if not region_ids:
+            return queryset.none()
+
+        # 7. Aplicar un único prefetch con el queryset filtrado
+        queryset = queryset.filter(id__in=region_ids).prefetch_related(
             Prefetch(
                 "alleles",
-                queryset=AlleleRegionInfo.objects.filter(
-                    allele_id__in=allele_ids,
-                    allele_frequency__isnull=False,
-                    allele_frequency__gt=0,
-                )
-                .select_related("allele", "allele__gene")
-                .order_by("-allele_frequency"),
+                queryset=base_qs.select_related("allele", "allele__gene").order_by(
+                    "-allele_frequency"
+                ),
                 to_attr="filtered_alleles",
             )
         )
-        return filtered_queryset
+        return queryset
 
     # def filter_queryset(self, queryset):
     #     """

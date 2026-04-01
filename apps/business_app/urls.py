@@ -13,6 +13,7 @@ from apps.business_app.views import (
     MarkerViewSet,
     EventGalleryViewSet,
     LayerViewSet,
+    SubCountryViewSet,
 )
 from apps.business_app.views.allele_full_family import AlleleFullFamilyViewSet
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
@@ -145,6 +146,12 @@ router.register(
     "regions",
     RegionViewSet,
     basename="regions",
+)
+
+router.register(
+    "sub-countries",
+    SubCountryViewSet,
+    basename="sub-countries",
 )
 
 router.register(

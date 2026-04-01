@@ -1,4 +1,5 @@
 import pandas as pd
+import logging
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import parsers, renderers
@@ -9,6 +10,8 @@ from ..serializers.uploadexcelserializer import UploadExcelSerializer
 from ..utils.xslx_reader import XslxReader
 
 from rest_framework.views import APIView
+
+logger = logging.getLogger(__name__)
 
 # Nuevo
 
@@ -81,7 +84,7 @@ class UploadExcelView(APIView):
         nombre_archivo = serializer.validated_data[
             "nombre_archivo"
         ]  # serializer.validated_data.get("nombre_archivo", archivo.name)
-        print(f"Este es el nombre del archivo: {nombre_archivo}")
+        logger.info(f"Este es el nombre del archivo: {nombre_archivo}")
 
         try:
             # Read the Excel file
@@ -95,7 +98,7 @@ class UploadExcelView(APIView):
             # Read each sheet and append to the list
             for sheet_name in excel_file.sheet_names:
                 df_sheet = pd.read_excel(excel_file, sheet_name=sheet_name)
-                print(f" Reading {sheet_name} gene")
+                logger.info(f" Reading {sheet_name} gene")
                 all_dfs.append(df_sheet)
 
             # Combine all DataFrames into one
@@ -121,10 +124,10 @@ class UploadExcelView(APIView):
                     )
 
             # Descomentar esto solo para pruebas o si se necesita mostrar los resultados en la lectura
-            print("Procesar con XslxReader")
+            logger.info("Procesar con XslxReader")
             resultados = XslxReader(archivo).proccess_file(df, nombre_archivo)
             # resultados = XslxReader.proccess_file(df, nombre_archivo)
-            print(resultados)
+            logger.info(resultados)
             return Response(
                 {
                     "mensaje": f"Archivo {nombre_archivo} procesado exitosamente",

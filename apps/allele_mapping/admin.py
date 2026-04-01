@@ -6,6 +6,7 @@ from apps.allele_mapping.models.allele_mapping_files import AlleleMappingFiles
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.allele_mapping.models.allele_region import AlleleRegion
+from apps.allele_mapping.models.allele_region_coord import AlleleRegionCoord
 
 
 logger = logging.getLogger(__name__)
@@ -63,6 +64,7 @@ class AlleleRegionInfoAdmin(admin.ModelAdmin):
         "percent_of_individuals",
         "allele_frequency",
         "sample_size",
+        "kind_of_info",
     ]
     fields = [
         "allele",
@@ -70,6 +72,7 @@ class AlleleRegionInfoAdmin(admin.ModelAdmin):
         "percent_of_individuals",
         "allele_frequency",
         "sample_size",
+        "kind_of_info",
     ]
 
 
@@ -79,12 +82,25 @@ class AlleleRegionAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "population",
+        "sub_country",
+        "sub_country_incoming_name",
+    ]
+    fields = [
+        "population",
+        "sub_country",
+    ]
+
+
+@admin.register(AlleleRegionCoord)
+class AlleleRegionCoordAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
         "location",
         "lat",
         "lon",
     ]
     fields = [
-        "population",
         "location",
         "lat",
         "lon",

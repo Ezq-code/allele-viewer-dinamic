@@ -11,6 +11,7 @@ __all__ = [
     "EventGalleryViewSet",
     "FeatureViewSet",
     "LayerViewSet",
+    "SubCountryViewSet",
 ]
 from .allowed_extensions import AllowedExtensionsViewSet
 from .site_configurations import SiteConfigurationViewSet
@@ -24,3 +25,4 @@ from .marker import MarkerViewSet
 from .event_gallery import EventGalleryViewSet
 from .layer import LayerViewSet
 from .feature import FeatureViewSet
+from .sub_country import SubCountryViewSet

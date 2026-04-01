@@ -64,8 +64,12 @@ python manage.py runserver_plus --cert-file localhost.crt --key-file localhost.k
 redis-cli ping  # Debe responder: PONG
 
 # Iniciar Celery (Windows)
-.\start_celery_worker.ps1   # Terminal 1
-.\start_celery_beat.ps1     # Terminal 2
+.\start_celery_worker_win.ps1   # Terminal 1
+.\start_celery_beat_win.ps1     # Terminal 2
+
+# Iniciar Celery (Unix)
+.\start_celery_worker_unix.ps1   # Terminal 1
+.\start_celery_beat_unix.ps1     # Terminal 2
 
 # O manualmente
 celery -A project_site worker --loglevel=info --pool=solo
@@ -75,8 +79,8 @@ celery -A project_site beat --loglevel=info
 **Con Docker (solo Redis):**
 ```powershell
 docker compose up -d redis
-.\start_celery_worker.ps1
-.\start_celery_beat.ps1
+.\start_celery_worker_...ps1
+.\start_celery_beat_...ps1
 ```
 
 📚 **Documentación completa:** Ver [`CELERY.md`](./CELERY.md) para guía detallada, ejemplos y troubleshooting.

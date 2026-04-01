@@ -1,12 +1,14 @@
 import os
-
+import logging
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 from apps.business_app.models import AllowedExtensions
 from apps.business_app.models.gene import Gene
-from apps.genes_to_excel.utils.xslx_reader import XslxReader
+from apps.genes_to_excel.tasks import process_genes_to_excel_file_task
+
+logger = logging.getLogger(__name__)
 
 
 def user_directory_path(instance, filename):
@@ -70,16 +72,14 @@ class GenesToExcelFiles(models.Model):
     def save(self, *args, **kwargs):
         file = self.file
         is_new = self.pk is None
-        file_name, extension = os.path.splitext(file.name)
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
         if is_new and file:
             try:
-                processor_object = XslxReader(file)
-                processor_object.proccess_file(self.id, self.gene)
+                process_genes_to_excel_file_task.delay(file.path, self.id)
 
             except Exception as e:
-                print(e)
+                logger.error(e)
                 self.delete()
                 raise e
 

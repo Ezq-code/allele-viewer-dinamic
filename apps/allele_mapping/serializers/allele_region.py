@@ -3,6 +3,7 @@ from apps.allele_mapping.models.allele_region import AlleleRegion
 from apps.allele_mapping.serializers.allele_region_info import (
     AlleleRegionInfoDetailSerializer,
 )
+from ..serializers.allele_region_coord import AlleleRegionCoordSerializer
 
 
 class AlleleRegionSerializer(serializers.ModelSerializer):
@@ -13,19 +14,25 @@ class AlleleRegionSerializer(serializers.ModelSerializer):
 
 class AlleleRegionWithAllelesSerializer(serializers.ModelSerializer):
     alleles = serializers.SerializerMethodField()
+    coordinates = AlleleRegionCoordSerializer(many=True, read_only=True)
+    sub_country_name = serializers.CharField(source="sub_country.name", read_only=True)
+    lat = serializers.FloatField(source="sub_country.country.latitude", read_only=True)
+    lon = serializers.FloatField(source="sub_country.country.longitude", read_only=True)
 
     class Meta:
         model = AlleleRegion
         fields = [
             "id",
             "population",
-            "location",
             "lat",
             "lon",
+            "sub_country",
+            "sub_country_name",
+            "coordinates",
             "alleles",
         ]
 
-    def get_alleles(self, obj):
+    def get_alleles(self, obj):  # TODO utilizar el filter class aquí
         """
         Obtener alelos, priorizando los filtrados si existen
         Optimizado para ordenar en base de datos en lugar de Python

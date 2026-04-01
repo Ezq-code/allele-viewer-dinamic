@@ -11,6 +11,22 @@ from apps.common.views import CommonOrderingFilter
 
 
 class AlleleSNPInfoViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    ViewSet for viewing allele SNP information.
+    
+    Provides read-only access to AlleleSNPInfo model instances with filtering,
+    search, and ordering capabilities. This endpoint is publicly accessible
+    (AllowAny permission) and only includes data from predefined uploaded files.
+    
+    Features:
+        - Read-only operations (list and retrieve)
+        - Filter by allele and uploaded_file__gene
+        - Search functionality
+        - Ordering on all fields
+        - Prefetch related ancestor and location formation data
+        - Only includes predefined uploaded files
+    """
+    
     queryset = AlleleSNPInfo.objects.prefetch_related(
         "ancester_formation", "location_formation"
     ).filter(uploaded_file__predefined=True)

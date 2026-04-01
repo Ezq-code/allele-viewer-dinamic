@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
 from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
 from apps.allele_formation.serializers.snp_allele_ancester_formation_serializer import (
     SNPAlleleAncesterFormationSerializer,
@@ -26,11 +27,13 @@ class AlleleSNPInfoSerializer(serializers.ModelSerializer):
             "location_formation",
         ]
 
+    @extend_schema_field(SNPAlleleLocationFormationSerializer(many=True))
     def get_location_formation(self, obj):
         return SNPAlleleLocationFormationSerializer(
             obj.location_formation.all(), many=True
         ).data
 
+    @extend_schema_field(SNPAlleleAncesterFormationSerializer(many=True))
     def get_ancester_formation(self, obj):
         return SNPAlleleAncesterFormationSerializer(
             obj.ancester_formation.all(), many=True

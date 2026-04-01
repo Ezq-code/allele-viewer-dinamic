@@ -9,6 +9,7 @@ from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
 from apps.allele_mapping.serializers.allele_region_info import (
     AlleleRegionInfoWithRegionSerializer,
 )
+from django.db.models import F
 
 
 class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
@@ -16,9 +17,23 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
     ViewSet for AlleleInfo
     """
 
-    queryset = AlleleRegionInfo.objects.filter(
-        percent_of_individuals__isnull=False, percent_of_individuals__gt=0
-    ).select_related("allele", "allele__gene", "region")
+    queryset = (
+        AlleleRegionInfo.objects.filter(
+            percent_of_individuals__isnull=False, percent_of_individuals__gt=0
+        )
+        .annotate(
+            region_lat=F("region__sub_country__country__latitude"),
+            region_lon=F("region__sub_country__country__longitude"),
+        )
+        .select_related(
+            "allele",
+            "allele__gene",
+            "region",
+            "region__sub_country",
+            "region__sub_country__country",
+        )
+        .prefetch_related("region__coordinates")
+    )
     serializer_class = AlleleRegionInfoWithRegionSerializer
 
     ordering_fields = "__all__"
@@ -31,9 +46,12 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
         "region__population": ["icontains"],
         "allele__name": ["icontains"],
         "allele__gene__name": ["iexact"],
+        "region__sub_country__name": ["icontains"],
+        "region__sub_country__country__name": ["icontains"],
     }
     filterset_fields = {
         "region": ["exact"],
+        "region__sub_country": ["exact"],
         "allele": ["exact"],
         "allele__gene": ["exact"],
         "sample_size": ["gte", "lte"],

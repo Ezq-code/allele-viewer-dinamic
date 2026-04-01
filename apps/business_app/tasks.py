@@ -1,14 +1,109 @@
 import logging
+import os
 
 from celery import shared_task
 from django.core.management import call_command
 
+from apps.users_app.models.country import Country
+from apps.business_app.models.sub_country import SubCountry
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.gene_group import GeneGroups
 from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
+from apps.business_app.models.site_configurations import SiteConfiguration
+from apps.business_app.utils.xslx_to_pdb import XslxToPdb
+from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
 
 logger = logging.getLogger(__name__)
+
+
+@shared_task(name="process_uploaded_file_task")
+def process_uploaded_file_task(uploaded_file_id):
+    try:
+        from apps.business_app.models.uploaded_files import UploadedFiles
+
+        uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
+        original_file = uploaded_file.original_file
+        file_name, _ = os.path.splitext(original_file.name)
+
+        global_configuration = SiteConfiguration.get_solo()
+        processor_classes = [XslxToPdb, XslxToPdbGraph]
+
+        for processor_class in processor_classes:
+            if processor_class is XslxToPdbGraph:
+                processor_object = processor_class(
+                    original_file,
+                    global_configuration,
+                    uploaded_file_id=uploaded_file.id,
+                )
+            else:
+                processor_object = processor_class(original_file, global_configuration)
+            if global_configuration.upload_to_drive or isinstance(
+                processor_object, XslxToPdbGraph
+            ):
+                processor_object.proccess_initial_file_data(uploaded_file.id)
+            processor_object.proccess_pdb_file(uploaded_file.id, file_name)
+
+        return {"status": "success", "uploaded_file_id": uploaded_file_id}
+    except Exception as e:
+        logger.error("Error processing uploaded file %s: %s", uploaded_file_id, str(e))
+        from apps.business_app.models.uploaded_files import UploadedFiles
+
+        UploadedFiles.objects.filter(id=uploaded_file_id).delete()
+        raise
+
+
+@shared_task(name="build_uploaded_file_graph_cache_task")
+def build_uploaded_file_graph_cache_task(uploaded_file_id):
+    try:
+        from apps.business_app.models.uploaded_files import UploadedFiles
+
+        uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
+        global_configuration = SiteConfiguration.get_solo()
+        processor_object = XslxToPdbGraph(
+            uploaded_file.original_file,
+            global_configuration,
+            uploaded_file_id=uploaded_file.id,
+        )
+        processor_object.proccess_initial_file_data(uploaded_file.id)
+        return {"status": "success", "uploaded_file_id": uploaded_file_id}
+    except Exception as e:
+        logger.error(
+            "Error building graph cache for uploaded file %s: %s",
+            uploaded_file_id,
+            str(e),
+        )
+        raise
+
+
+@shared_task(name="create_subcountries_task")
+def create_subcountries_task():
+    """Create SubCountry objects for each Country.
+    For United States (code='US'), create 3 subregions with identificative suffixes.
+    For other countries, create one SubCountry with the same name."""
+    subcountries_to_create = []
+
+    for country in Country.objects.all():
+        if country.code == "US":
+            subcountries_to_create.append(
+                SubCountry(name=f"{country.name} - East", country=country),
+            )
+            subcountries_to_create.append(
+                SubCountry(name=f"{country.name} - West", country=country),
+            )
+            subcountries_to_create.append(
+                SubCountry(
+                    name=f"{country.name} - Central and Mountains", country=country
+                ),
+            )
+        else:
+            # Create one SubCountry with the same name as the country
+            subcountries_to_create.append(
+                SubCountry(name=country.name, country=country)
+            )
+
+    # Create all SubCountry objects in a single batch operation
+    SubCountry.objects.bulk_create(subcountries_to_create)
 
 
 @shared_task(name="update_gene_list_for_groups_task")
@@ -224,16 +319,16 @@ def update_gene_list_for_groups_task():
     for gene_group_id, gene_list in dict_for_update.items():
         try:
             gene_group = GeneGroups.objects.get(id=gene_group_id)
-
             gene_group.genes.clear()
-
             existing_gene_names = Gene.objects.filter(name__in=gene_list).values_list(
                 "name", flat=True
             )
             missing_gene_names = list(set(gene_list) - set(existing_gene_names))
 
             if missing_gene_names:
-                Gene.objects.bulk_create([Gene(name=name) for name in missing_gene_names])
+                Gene.objects.bulk_create(
+                    [Gene(name=name) for name in missing_gene_names]
+                )
 
                 missing_genes = Gene.objects.filter(name__in=missing_gene_names)
                 gene_status_list = GeneStatus.objects.all()

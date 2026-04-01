@@ -11,4 +11,6 @@ class CountrySerializer(serializers.ModelSerializer):
             "name",
             "code",
             "enabled",
+            "latitude",
+            "longitude",
         ]
