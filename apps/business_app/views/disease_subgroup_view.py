@@ -54,11 +54,11 @@ class DiseaseSubGroupViewSet(
     def minimal_list(self, request):
         """
         Retrieve a minimal list of disease subgroups.
-        
+
         Returns a simplified representation of all disease subgroups using
         DiseaseSubGroupMinimalSerializer. This endpoint is optimized for quick
         loading of basic disease subgroup information.
-        
+
         Returns:
             Response: List of disease subgroups with minimal fields
         """

@@ -47,11 +47,11 @@ class GeneGroupsViewSet(
     def minimal_list(self, request):
         """
         Retrieve a minimal list of gene groups.
-        
+
         Returns a simplified representation of all gene groups using
         GeneGroupMinimalSerializer. This endpoint is optimized for quick
         loading of basic gene group information.
-        
+
         Returns:
             Response: List of gene groups with minimal fields
         """

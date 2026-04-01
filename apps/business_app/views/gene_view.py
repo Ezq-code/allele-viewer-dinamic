@@ -83,10 +83,10 @@ class GeneViewSet(
     def get_all_info(self, request):
         """
         Retrieve all genes with complete information.
-        
+
         Returns a comprehensive list of all genes using GeneGetAllInfoSerializer,
         which includes detailed information about each gene.
-        
+
         Returns:
             Response: List of genes with full details including groups, disorders,
                      and status information
@@ -103,11 +103,11 @@ class GeneViewSet(
     def list_for_graph(self, request):
         """
         Retrieve genes that have associated uploaded files for graph visualization.
-        
+
         This endpoint filters genes to only include those that have at least one
         uploaded file associated with them. Useful for generating graphs where
         only genes with data should be displayed.
-        
+
         Returns:
             Response: List of genes that have uploaded files
         """
@@ -122,10 +122,10 @@ class GeneViewSet(
     def with_alleles_to_map(self, request):
         """
         Retrieve genes that have alleles in the AlleleToMap table.
-        
+
         Filters genes to only include those that have at least one related
         AlleleToMap entry. Uses database EXISTS query for efficient filtering.
-        
+
         Returns:
             Response: List of genes (using GeneSimpleSerializer) that have
                      alleles mapped
@@ -148,14 +148,14 @@ class GeneViewSet(
     def get_alleles_by_gene(self, request):
         """
         Retrieve the complete list of alleles for a specific gene.
-        
+
         This endpoint returns all unique allele names associated with a given gene.
         The results are cached indefinitely for performance.
-        
+
         Args:
             request: The HTTP request containing query parameters
                 - gene_name (required): The name of the gene to retrieve alleles for
-                
+
         Returns:
             Response: Object containing gene_name and sorted list of alleles
             Example:
@@ -163,7 +163,7 @@ class GeneViewSet(
                 "gene_name": "HLA-A",
                 "alleles": ["A*01:01", "A*01:02", "A*02:01", ...]
             }
-            
+
         Raises:
             HTTP_400_BAD_REQUEST: If gene_name parameter is not provided
         """

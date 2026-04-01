@@ -10,10 +10,10 @@ from apps.allele_formation.serializers.snp_allele_ancester_formation_serializer 
 class SNPAlleleAncesterFormationViewSet(viewsets.ModelViewSet):  # ! NOT USED FOR NOW
     """
     ViewSet for managing SNP allele ancestor formation data.
-    
+
     Provides CRUD operations for SNPAlleleAncesterFormation model instances.
     Note: This ViewSet is not currently in use.
     """
-    
+
     queryset = SNPAlleleAncesterFormation.objects.all()
     serializer_class = SNPAlleleAncesterFormationSerializer

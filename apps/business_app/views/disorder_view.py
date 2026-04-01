@@ -62,11 +62,11 @@ class DisorderViewSet(
     def minimal_list(self, request):
         """
         Retrieve a minimal list of disorders.
-        
+
         Returns a simplified representation of all disorders using
         DisorderMinimalSerializer. This endpoint is optimized for quick
         loading of basic disorder information.
-        
+
         Returns:
             Response: List of disorders with minimal fields
         """
