@@ -1,11 +1,13 @@
 import os
-
+import logging
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
 from apps.business_app.models import AllowedExtensions
-from apps.allele_mapping.tasks import process_allele_mapping_file
+from apps.allele_mapping.tasks import process_allele_mapping_file_task
+
+logger = logging.getLogger(__name__)
 
 
 def user_directory_path(instance, filename):
@@ -63,10 +65,11 @@ class AlleleMappingFiles(models.Model):
         if is_new and file:
             try:
                 # Ejecutar procesamiento asíncrono con Celery
-                process_allele_mapping_file.delay(file.path, self.id)
+
+                process_allele_mapping_file_task.delay(file.path, self.id)
 
             except Exception as e:
-                print(e)
+                logger.error(e)
                 self.delete()
                 raise e
 

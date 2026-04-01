@@ -30,6 +30,23 @@ class EventGalleryViewSet(viewsets.ModelViewSet, GenericAPIView):
 
     @action(detail=False, methods=["post"], url_path="bulk-upload/(?P<event_id>[^/.]+)")
     def bulk_upload(self, request, event_id=None):
+        """
+        Bulk upload multiple images for a specific event.
+
+        Accepts multiple image files and associates them with the specified event.
+        Images should be provided as a list in the 'images' field of the form data.
+
+        Args:
+            request: The HTTP request containing the image files
+            event_id: The ID of the event to associate the images with
+
+        Returns:
+            Response: Success message with count of uploaded images or error details
+
+        Raises:
+            HTTP_404_NOT_FOUND: If the specified event does not exist
+            HTTP_400_BAD_REQUEST: If no images are provided
+        """
         try:
             event = Event.objects.get(id=event_id)
         except Event.DoesNotExist:
@@ -37,7 +54,7 @@ class EventGalleryViewSet(viewsets.ModelViewSet, GenericAPIView):
                 {"error": "Event not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
-        # Se asume que las imágenes vienen como una lista en el campo 'images'
+        # Images are expected as a list in the 'images' field
         images = request.FILES.getlist("images")
         if not images:
             return Response(
@@ -50,7 +67,7 @@ class EventGalleryViewSet(viewsets.ModelViewSet, GenericAPIView):
                 {
                     "event": event.id,
                     "image": image,
-                    "name": image.name,  # Opcional
+                    "name": image.name,  # Optional
                 }
             )
 

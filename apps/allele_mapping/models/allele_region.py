@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from apps.business_app.models.sub_country import SubCountry
 
 
 class AlleleRegion(models.Model):
@@ -7,19 +8,16 @@ class AlleleRegion(models.Model):
         verbose_name=_("population"),
         max_length=100,
     )
-    location = models.CharField(
-        verbose_name=_("location"),
-        max_length=100,
+    sub_country_incoming_name = models.CharField(
+        verbose_name=_("sub country incoming name"),
+        max_length=255,
         null=True,
         blank=True,
     )
-    lat = models.FloatField(
-        verbose_name=_("latitude"),
-        null=True,
-        blank=True,
-    )
-    lon = models.FloatField(
-        verbose_name=_("longitude"),
+    sub_country = models.ForeignKey(
+        to=SubCountry,
+        on_delete=models.SET_NULL,
+        related_name="allele_countries",
         null=True,
         blank=True,
     )

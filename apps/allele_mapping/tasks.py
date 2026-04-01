@@ -1,14 +1,17 @@
 from celery import shared_task
 import logging
 
+from apps.allele_mapping.utils.sub_country_population import (
+    populate_sub_country_from_population,
+)
 from apps.allele_mapping.utils.xslx_reader import XslxReader
 
 
 logger = logging.getLogger(__name__)
 
 
-@shared_task(name="process_allele_mapping_file")
-def process_allele_mapping_file(file_path, uploaded_file_id):
+@shared_task(name="process_allele_mapping_file_task")
+def process_allele_mapping_file_task(file_path, uploaded_file_id):
     """
     Tarea asíncrona para procesar archivos de mapeo de alelos.
 
@@ -19,11 +22,10 @@ def process_allele_mapping_file(file_path, uploaded_file_id):
     Returns:
         dict: Resultado del procesamiento
     """
+    logger.info(
+        f"Starting async processing of file {file_path} for upload {uploaded_file_id}"
+    )
     try:
-        logger.info(
-            f"Starting async processing of file {file_path} for upload {uploaded_file_id}"
-        )
-
         # Crear instancia de XslxReader y procesar el archivo
         processor_object = XslxReader(file_path)
         processor_object.proccess_file(uploaded_file_id)
@@ -31,6 +33,7 @@ def process_allele_mapping_file(file_path, uploaded_file_id):
         logger.info(
             f"Successfully processed file {file_path} for upload {uploaded_file_id}"
         )
+        populate_sub_country_task.delay()
 
         return {
             "status": "success",
@@ -44,3 +47,13 @@ def process_allele_mapping_file(file_path, uploaded_file_id):
 
         AlleleMappingFiles.objects.filter(id=uploaded_file_id).delete()
         raise
+
+
+@shared_task(name="populate_sub_country_task")
+def populate_sub_country_task():
+    updated_count = populate_sub_country_from_population()
+    logger.info("populate_sub_country_task completed. updated_count=%s", updated_count)
+    return {
+        "status": "success",
+        "updated_count": updated_count,
+    }

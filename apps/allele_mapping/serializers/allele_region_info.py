@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
+from apps.allele_mapping.serializers.allele_region_coord import (
+    AlleleRegionCoordSerializer,
+)
 
 
 class AlleleRegionInfoSerializer(serializers.ModelSerializer):
@@ -12,6 +15,9 @@ class AlleleRegionInfoDetailSerializer(serializers.ModelSerializer):
     allele_name = serializers.CharField(source="allele.name", read_only=True)
     gene_name = serializers.CharField(source="allele.gene.name", read_only=True)
     allele_frequency = serializers.SerializerMethodField()
+    kind_of_info_display = serializers.CharField(
+        source="get_kind_of_info_display", read_only=True
+    )
 
     class Meta:
         model = AlleleRegionInfo
@@ -22,6 +28,8 @@ class AlleleRegionInfoDetailSerializer(serializers.ModelSerializer):
             "allele_frequency",
             "percent_of_individuals",
             "sample_size",
+            "kind_of_info",
+            "kind_of_info_display",
         ]
 
     def get_allele_frequency(self, obj):
@@ -36,8 +44,9 @@ class AlleleRegionInfoWithRegionSerializer(serializers.ModelSerializer):
     gene_name = serializers.CharField(source="allele.gene.name", read_only=True)
     region_name = serializers.CharField(source="region.population", read_only=True)
     region_location = serializers.CharField(source="region.location", read_only=True)
-    region_lat = serializers.FloatField(source="region.lat", read_only=True)
-    region_lon = serializers.FloatField(source="region.lon", read_only=True)
+    region_lat = serializers.FloatField(read_only=True)
+    region_lon = serializers.FloatField(read_only=True)
+    studies_coord = AlleleRegionCoordSerializer(source="region.coordinates", many=True)
 
     class Meta:
         model = AlleleRegionInfo
@@ -49,13 +58,18 @@ class AlleleRegionInfoWithRegionSerializer(serializers.ModelSerializer):
             "percent_of_individuals",
             "sample_size",
             "region_name",
+            "kind_of_info",
             "region_location",
             "region_lat",
             "region_lon",
+            "studies_coord",
         ]
         read_only_fields = [
             "id",
             "allele_frequency",
             "percent_of_individuals",
             "sample_size",
+            "region_lat",
+            "region_lon",
+            "studies_coord",
         ]

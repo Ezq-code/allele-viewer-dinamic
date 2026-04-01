@@ -10,6 +10,20 @@ from apps.common.views import CommonOrderingFilter
 
 
 class UploadedSNPFilesViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing uploaded SNP files.
+
+    Provides CRUD operations for UploadedSNPFiles model instances with filtering,
+    search, and ordering capabilities. Access is restricted to authenticated users
+    or read-only for anonymous users.
+
+    Features:
+        - Filter by system_user and gene
+        - Search functionality
+        - Ordering on all fields
+        - Select related gene for optimized queries
+    """
+
     queryset = UploadedSNPFiles.objects.select_related("gene").all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 

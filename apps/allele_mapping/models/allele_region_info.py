@@ -3,6 +3,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 class AlleleRegionInfo(models.Model):
+    class KIND_OF_INFO(models.TextChoices):
+        PRIMARY = "P", _("primary")
+        SECONDARY = "S", _("secondary")
+
     allele = models.ForeignKey(
         "allele_mapping.AlleleToMap",
         on_delete=models.CASCADE,
@@ -28,6 +32,11 @@ class AlleleRegionInfo(models.Model):
         null=True,
         blank=True,
         db_index=True,
+    )
+    kind_of_info = models.CharField(
+        max_length=1,
+        choices=KIND_OF_INFO,
+        default=KIND_OF_INFO.PRIMARY,
     )
 
     class Meta:
