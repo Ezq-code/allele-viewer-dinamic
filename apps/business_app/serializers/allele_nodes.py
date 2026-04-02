@@ -104,7 +104,11 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
         )
         graph = cache.get(graph_key)
         if not graph:
+<<<<<<< HEAD
             build_uploaded_file_graph_cache_task.delay(obj.uploaded_file_id)
+=======
+            build_uploaded_file_graph_cache_task(obj.uploaded_file_id)
+>>>>>>> dev
             return None
 
         return set(function_to_call(graph, [], obj.number))
