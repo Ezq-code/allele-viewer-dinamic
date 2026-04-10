@@ -64,9 +64,15 @@ class XslxReader(ExcelStructureValidator):
                         "variant": str(row["Variant"]).strip()
                         if pd.notna(row["Variant"])
                         else "",
-                        "order": str(row["Order"]).strip()
-                        if pd.notna(row["Order"])
-                        else "",
+                        "order_one": str(row['Order1']).strip()
+                        if pd.notna(row['Order1']) 
+                        else '',
+                        "order_two": str(row['Order2']).strip() 
+                        if pd.notna(row['Order2']) 
+                        else '',
+                        "order_three": str(row['Order3']).strip() 
+                        if pd.notna(row['Order3']) 
+                        else ''
                     }
 
                     cord_valor = (

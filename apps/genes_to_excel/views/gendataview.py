@@ -62,7 +62,9 @@ class GetGenCharacteristicsView(APIView):
                     "protein",
                     "alleleasoc",
                     "species",
-                    "order",
+                    'order_one', # updated field
+                    'order_two', # updated field
+                    'order_three', # updated field
                     "fecha_creacion",
                 )
             )
@@ -135,7 +137,9 @@ class GetGenCharacteristicsStreamingView(APIView):
                         "protein",
                         "alleleasoc",
                         "species",
-                        "order",
+                        'order_one', # updated field
+                        'order_two', # updated field
+                        'order_three', # updated field
                         "fecha_creacion",
                     )
                     .iterator(chunk_size=batch_size)
@@ -208,7 +212,9 @@ class CoordinateValuesView(APIView):
                         "Alleleasoc": item.alleleasoc,
                         "Species": item.species,
                         "Variant": item.variant,
-                        "Order": item.order,
+                        "Order1": item.order_one, # updated field
+                        "Order2": item.order_two, # updated field
+                        "Order3": item.order_three, # updated field
                     }
                 )
 
