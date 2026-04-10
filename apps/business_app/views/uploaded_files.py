@@ -1,11 +1,15 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.generics import GenericAPIView
+from rest_framework.decorators import action
 
 
 from apps.common.views import CommonOrderingFilter
 from apps.business_app.models.uploaded_files import UploadedFiles
-from apps.business_app.serializers.uploaded_files import UploadedFilesSerializer
+from apps.business_app.serializers.uploaded_files import (
+    UploadedFilesSerializer,
+    SimpleListUploadedFilesSerializer,
+)
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -39,3 +43,13 @@ class UploadedFilesViewSet(viewsets.ModelViewSet, GenericAPIView):
     @method_decorator(cache_page(timeout=None, key_prefix="retreive_uploaded_file"))
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
+
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="simple-list",
+        url_name="simple-list",
+        serializer_class=SimpleListUploadedFilesSerializer,
+    )
+    def simple_list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)

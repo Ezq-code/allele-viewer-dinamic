@@ -7,7 +7,7 @@ const csrfToken = document.cookie
   .find((c) => c.trim().startsWith("csrftoken="))
   ?.split("=")[1];
 // url del endpoint principal
-const url = "/business-gestion/uploaded-files/";
+const url = "/business-gestion/uploaded-files/simple-list/";
 // url para obtener genes
 const geneUrl = "/business-gestion/gene/";
 
@@ -326,7 +326,7 @@ form.addEventListener("submit", function (event) {
         document.getElementById("customFile").files[0]
       );
     }
-    const url = "/business-gestion/uploaded-files/";
+    const url = "/business-gestion/uploaded-files/simple-list/";
 
     if (edit_elemento) {
       $("#modal-crear-elemento").modal("hide");

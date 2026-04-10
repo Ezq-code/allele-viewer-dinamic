@@ -12,10 +12,8 @@ from typing import List, Dict, Any
 logger = logging.getLogger(__name__)
 
 
-class UploadedFilesSerializer(serializers.ModelSerializer):
-    pdb_files = PdbFilesSerializer(many=True, read_only=True)
+class SimpleListUploadedFilesSerializer(serializers.ModelSerializer):
     gene_name = serializers.CharField(source="gene.name", read_only=True, default=None)
-    allele_nodes = serializers.SerializerMethodField()
 
     class Meta:
         model = UploadedFiles
@@ -28,8 +26,6 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
             "gene",
             "gene_name",
             "predefined",
-            "pdb_files",
-            "allele_nodes",
         ]
         read_only_fields = [
             "id",
@@ -41,6 +37,24 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
         except Exception as e:
             logger.error(f"{str(e)}")
             raise serializers.ValidationError(e) from e
+
+
+class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
+    pdb_files = PdbFilesSerializer(many=True, read_only=True)
+    allele_nodes = serializers.SerializerMethodField()
+
+    class Meta(SimpleListUploadedFilesSerializer.Meta):
+        fields = SimpleListUploadedFilesSerializer.Meta.fields + [
+            "pdb_files",
+            "allele_nodes",
+        ]
+        read_only_fields = SimpleListUploadedFilesSerializer.Meta.read_only_fields + [
+            "gene",
+            "gene_name",
+            "predefined",
+            "pdb_files",
+            "allele_nodes",
+        ]
 
     def get_allele_nodes(self, obj) -> List[Dict[str, Any]]:
         allele_nodes_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
