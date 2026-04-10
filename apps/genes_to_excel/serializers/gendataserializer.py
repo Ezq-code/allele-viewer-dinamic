@@ -20,13 +20,8 @@ class GenDataSerializer(serializers.ModelSerializer):
             "alleleasoc",
             "variant",
             "species",
-<<<<<<< Updated upstream
-            "order",  # Updated fiel
-=======
-            'order_one',
-            'order_two', 
-            'order_three'
->>>>>>> Stashed changes
-            "fecha_creacion",
+            "order_one",
+            "order_two",
+            "order_three" "fecha_creacion",
         ]
         read_only_fields = ["fecha_creacion", "fecha_actualizacion"]
