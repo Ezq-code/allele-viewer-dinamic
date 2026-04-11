@@ -19,7 +19,7 @@ class UploadToGoogleDriveApi(GoogleApiCoordinator):
         self.drive_service = build("drive", "v3", credentials=self.creds)
 
     def upload_file_to_google_drive(self, file_path):
-        print("Uploading local file to Google Drive...")
+        logger.info("Uploading local file to Google Drive...")
         # Nombre de la hoja de cálculo en Google Drive
         sheet_name = (
             baker.random_gen.gen_string(max_length=10) + ".gsheet"
@@ -45,13 +45,13 @@ class UploadToGoogleDriveApi(GoogleApiCoordinator):
             fileId=file.get("id"), body=permission
         ).execute()
 
-        print(f"File '{sheet_name}' uploaded successfully!")
+        logger.info(f"File '{sheet_name}' uploaded successfully!")
         # Obtener el ID de la hoja de cálculo
         sheet_id = file.get("id")
         return sheet_id
 
     def copy_google_drive_file(self, remote_file_id):
-        print("Copying file from Google Drive to Google Drive...")
+        logger.info("Copying file from Google Drive to Google Drive...")
         # Nombre de la hoja de cálculo en Google Drive
         sheet_name = (
             baker.random_gen.gen_string(max_length=10) + ".gsheet"
@@ -76,10 +76,9 @@ class UploadToGoogleDriveApi(GoogleApiCoordinator):
 
     def delete_file_from_google_drive(self, file_id):
         """Delete a file or folder in Google Drive by ID."""
-        print("Deleting file from Google Drive...")
+        logger.info("Deleting file from Google Drive...")
         try:
             self.drive_service.files().delete(fileId=file_id).execute()
-            print(f"Successfully deleted file/folder with ID: {file_id}")
+            logger.info(f"Successfully deleted file/folder with ID: {file_id}")
         except Exception as e:
-            print(f"Error deleting file/folder with ID: {file_id}")
-            print(f"Error details: {str(e)}")
+            logger.error(f"Error deleting file/folder with ID: {file_id}, details: {e}", exc_info=True)

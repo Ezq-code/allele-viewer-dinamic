@@ -1,4 +1,5 @@
 import os
+import logging
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -10,6 +11,7 @@ from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.tasks import process_uploaded_file_task
 from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDriveApi
 from django.core.cache import cache
+logger = logging.getLogger(__name__)
 
 
 def user_directory_path(instance, filename):
@@ -98,7 +100,7 @@ class UploadedFiles(models.Model):
                 process_uploaded_file_task.apply_async(args=[self.id], retry=False)
 
             except Exception as e:
-                print(e)
+                logger.error(e)
                 self.delete()
                 raise e
         if self.predefined:
