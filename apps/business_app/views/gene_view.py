@@ -40,7 +40,6 @@ class GeneViewSet(
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        print(self.action)
         if self.action == "list_for_graph":
             queryset = queryset.filter(
                 Exists(UploadedFiles.objects.filter(gene_id=OuterRef("pk")))
@@ -92,6 +91,14 @@ class GeneViewSet(
                      and status information
         """
         return self.list(request)
+
+
+    @method_decorator(cache_page(timeout=None))
+    def list(self, request, *args, **kwargs):
+        """
+        Lista todos los AlleleRegion con filtros aplicados
+        """
+        return super().list(request, *args, **kwargs)
 
     @action(
         detail=False,

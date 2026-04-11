@@ -82,7 +82,8 @@ class UploadedSNPFiles(models.Model):
                 processor_object.proccess_sheets(self.id)
 
             except Exception as e:
-                logger.error(e)
+                logger.error(f"An error occurred: {e}", exc_info=True)
+
                 self.delete()
                 raise e
         if self.predefined:

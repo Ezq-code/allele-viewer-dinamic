@@ -46,7 +46,7 @@ def process_uploaded_file_task(uploaded_file_id):
 
         return {"status": "success", "uploaded_file_id": uploaded_file_id}
     except Exception as e:
-        logger.error("Error processing uploaded file %s: %s", uploaded_file_id, str(e))
+        logger.error("Error processing uploaded file %s: %s", uploaded_file_id, str(e), exc_info=True)
         from apps.business_app.models.uploaded_files import UploadedFiles
 
         UploadedFiles.objects.filter(id=uploaded_file_id).delete()

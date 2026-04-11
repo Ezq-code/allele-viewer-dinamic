@@ -100,7 +100,7 @@ class UploadedFiles(models.Model):
                 process_uploaded_file_task.apply_async(args=[self.id], retry=False)
 
             except Exception as e:
-                logger.error(e)
+                logger.error(f"An error occurred: {e}", exc_info=True)
                 self.delete()
                 raise e
         if self.predefined:
