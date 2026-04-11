@@ -326,13 +326,13 @@ form.addEventListener("submit", function (event) {
         document.getElementById("customFile").files[0]
       );
     }
-    const url = "/business-gestion/uploaded-files/simple-list/";
+    const write_url = "/business-gestion/uploaded-files/";
 
     if (edit_elemento) {
       $("#modal-crear-elemento").modal("hide");
       load.hidden = false;
       axios
-        .patch(`${url}${selected_id}/`, data)
+        .patch(`${write_url}${selected_id}/`, data)
         .then((response) => {
           if (response.status === 200) {
             load.hidden = true;
@@ -367,7 +367,7 @@ form.addEventListener("submit", function (event) {
       $("#modal-crear-elemento").modal("hide");
       load.hidden = false;
       axios
-        .post(url, data)
+        .post(write_url, data)
         .then((response) => {
           if (response.status === 201) {
             load.hidden = true;
