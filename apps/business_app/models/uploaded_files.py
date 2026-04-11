@@ -11,6 +11,7 @@ from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.tasks import process_uploaded_file_task
 from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDriveApi
 from django.core.cache import cache
+
 logger = logging.getLogger(__name__)
 
 
@@ -76,6 +77,7 @@ class UploadedFiles(models.Model):
         verbose_name=_("created at"),
         auto_now_add=True,  # Set the field to now every time the object is first created
     )
+    processed = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _("Uploaded File")

@@ -295,6 +295,7 @@ class UploadedFilesAdmin(admin.ModelAdmin):
         "original_file",
         "gene",
         "predefined",
+        "processed",
         "system_user",
         "google_sheet_id",
     ]

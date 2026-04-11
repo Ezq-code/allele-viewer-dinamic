@@ -2,7 +2,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, status, mixins
 from drf_spectacular.utils import extend_schema
 import logging
-logger = logging.getLogger(__name__)
 
 
 from apps.business_app.models.initial_xyz_expansion_data import InitialXyzExpansionData
@@ -18,6 +17,8 @@ from apps.business_app.utils.google_sheet_coordinate_processor import (
 from rest_framework.response import Response
 from google.auth.exceptions import RefreshError
 
+
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 

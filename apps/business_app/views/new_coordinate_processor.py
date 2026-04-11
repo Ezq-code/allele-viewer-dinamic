@@ -18,6 +18,9 @@ from apps.business_app.serializers.new_xyz_coordinate_processor import (
 from apps.business_app.utils.google_sheet_coordinate_processor import (
     GoogleSheetCoordinateProcessor,
 )
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # Create your views here.

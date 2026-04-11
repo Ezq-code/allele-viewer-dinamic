@@ -92,7 +92,6 @@ class GeneViewSet(
         """
         return self.list(request)
 
-
     @method_decorator(cache_page(timeout=None))
     def list(self, request, *args, **kwargs):
         """
