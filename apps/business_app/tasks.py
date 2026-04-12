@@ -1,6 +1,5 @@
 import logging
 import os
-import json
 from celery import shared_task
 from django.core.management import call_command
 from django.core.cache import cache
@@ -94,10 +93,10 @@ def fill_predecessors_and_sucessors_for_all_nodes(uploaded_file_id: int):
             node_number=node.number,
             function_to_call=extract_children_tree,
         )
-        node.sucessors=list(children_tree)
-        node.predecessors=list(parent_tree)
+        node.sucessors = list(children_tree)
+        node.predecessors = list(parent_tree)
         list_to_update.append(node)
-    AlleleNode.objects.bulk_update(list_to_update, fields=["sucessors","predecessors"])
+    AlleleNode.objects.bulk_update(list_to_update, fields=["sucessors", "predecessors"])
 
 
 @shared_task(name="build_uploaded_file_graph_cache_task")
