@@ -103,7 +103,7 @@ class GeneViewSet(
         methods=["GET"],
         url_path="list-for-graph",
         url_name="list-for-graph",
-        serializer_class=GeneSerializer,
+        serializer_class=GeneSimpleSerializer,
     )
     def list_for_graph(self, request):
         """
