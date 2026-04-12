@@ -7,7 +7,9 @@ const csrfToken = document.cookie
   .find((c) => c.trim().startsWith("csrftoken="))
   ?.split("=")[1];
 // url del endpoint principal
-const url = "/business-gestion/uploaded-files/simple-list/";
+const write_url = "/business-gestion/uploaded-files/";
+const read_url = write_url + "simple-list/";
+
 // url para obtener genes
 const geneUrl = "/business-gestion/gene/";
 
@@ -101,7 +103,7 @@ $(document).ready(function () {
         }
 
         axios
-          .get(url, {
+          .get(read_url, {
             params: {
               page_size: data.length,
               page: data.start / data.length + 1,
@@ -180,7 +182,7 @@ function function_delete(selected_id) {
   const table = $("#tabla-de-Datos").DataTable();
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
   axios
-    .delete(`${url}${selected_id}/`)
+    .delete(`${write_url}${selected_id}/`)
     .then((response) => {
       Toast.fire({
         icon: "success",
@@ -225,7 +227,7 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
     modal.find(".modal-title").text("Editar " + dataName);
     // Realizar la petición con Axios
     axios
-      .get(`${url}${selected_id}/`)
+      .get(`${read_url}${selected_id}/`)
       .then(function (response) {
         // Recibir la respuesta
         const elemento = response.data;
@@ -316,7 +318,7 @@ form.addEventListener("submit", function (event) {
     data.append("system_user", localStorage.getItem("id"));
     data.append("custom_name", document.getElementById("name").value);
     data.append("description", document.getElementById("description").value);
-    data.append("gene", document.getElementById("gene").value);
+    data.append("gene", $('#gene').val());
         // ...dentro del submit del formulario...
     data.append("predefined", document.getElementById("predefined").checked);
     // ...resto del código...
@@ -326,7 +328,6 @@ form.addEventListener("submit", function (event) {
         document.getElementById("customFile").files[0]
       );
     }
-    const write_url = "/business-gestion/uploaded-files/";
 
     if (edit_elemento) {
       $("#modal-crear-elemento").modal("hide");
@@ -417,7 +418,7 @@ function ia_algorithms_recalculate(id, name) {
   }).then((result) => {
     if (result.isConfirmed) {
       axios
-        .get(`${url}${id}/recalculate/`)
+        .get(`${read_url}${id}/recalculate/`)
         .then((response) => {
           if (response.status === 200) {
             Swal.fire({

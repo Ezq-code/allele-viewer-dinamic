@@ -28,8 +28,8 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
         source="children.count",
     )
     children = ChildSerializer(many=True)
-    predecessors = serializers.SerializerMethodField()
-    sucessors = serializers.SerializerMethodField()
+    # predecessors = serializers.SerializerMethodField()
+    # sucessors = serializers.SerializerMethodField()
 
     class Meta:
         model = AlleleNode

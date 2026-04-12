@@ -49,7 +49,6 @@ class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
             "allele_nodes",
         ]
         read_only_fields = SimpleListUploadedFilesSerializer.Meta.read_only_fields + [
-            "gene",
             "gene_name",
             "predefined",
             "pdb_files",

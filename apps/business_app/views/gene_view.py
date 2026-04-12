@@ -41,9 +41,8 @@ class GeneViewSet(
     def get_queryset(self):
         queryset = super().get_queryset()
         if self.action == "list_for_graph":
-            queryset = queryset.filter(
-                Exists(UploadedFiles.objects.filter(gene_id=OuterRef("pk")))
-            )
+            uploaded_files_qs = UploadedFiles.objects.values_list("id", flat=True).distinct()
+            queryset = Gene.objects.filter(uploaded_files__id__in=uploaded_files_qs).distinct().only("id", "name")
         return queryset
 
     serializer_class = GeneSerializer
