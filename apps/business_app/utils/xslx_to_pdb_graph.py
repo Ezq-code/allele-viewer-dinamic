@@ -82,6 +82,9 @@ class XslxToPdbGraph(ExcelReader):
         como base de datos de nodos y ejes. 
         """
         # Construyendo el grafo con una instancia de NetworkX
+        if f"graph_for_{self.uploaded_file_id}" in cache:
+            return
+
         edges_list = []
         self.ilu_list = []
         try:

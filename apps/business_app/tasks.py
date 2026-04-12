@@ -19,10 +19,10 @@ logger = logging.getLogger(__name__)
 
 @shared_task(name="process_uploaded_file_task")
 def process_uploaded_file_task(uploaded_file_id):
-    try:
-        from apps.business_app.models.uploaded_files import UploadedFiles
+    from apps.business_app.models.uploaded_files import UploadedFiles
 
-        uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
+    uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
+    try:
         original_file = uploaded_file.original_file
         file_name, _ = os.path.splitext(original_file.name)
 
@@ -43,18 +43,18 @@ def process_uploaded_file_task(uploaded_file_id):
             ):
                 processor_object.proccess_initial_file_data(uploaded_file.id)
             processor_object.proccess_pdb_file(uploaded_file.id, file_name)
+            uploaded_file.processed = True
+            uploaded_file.save(update_fields=["processed"])
 
         return {"status": "success", "uploaded_file_id": uploaded_file_id}
     except Exception as e:
         logger.error(
             "Error processing uploaded file %s: %s",
             uploaded_file_id,
-            str(e),
+            e,
             exc_info=True,
         )
-        from apps.business_app.models.uploaded_files import UploadedFiles
-
-        UploadedFiles.objects.filter(id=uploaded_file_id).delete()
+        uploaded_file.delete()
         raise
 
 

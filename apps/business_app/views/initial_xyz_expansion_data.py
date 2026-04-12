@@ -17,7 +17,6 @@ from apps.business_app.utils.google_sheet_coordinate_processor import (
 from rest_framework.response import Response
 from google.auth.exceptions import RefreshError
 
-
 logger = logging.getLogger(__name__)
 
 # Create your views here.
