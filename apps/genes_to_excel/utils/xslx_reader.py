@@ -5,7 +5,7 @@ import pandas as pd
 from apps.genes_to_excel.utils.excel_structure_validator import ExcelStructureValidator
 from django.db import transaction
 from apps.business_app.models.gene import Gene
-from ..models.gen_data import CaracteristicaGen
+from ..models.caracteristica_gen import CaracteristicaGen
 
 
 logger = logging.getLogger(__name__)

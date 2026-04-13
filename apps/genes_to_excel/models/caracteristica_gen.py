@@ -18,7 +18,7 @@ class CaracteristicaGen(models.Model):
     valor = models.CharField(max_length=10, blank=True)
     color = models.CharField(max_length=50, blank=True)
     protein = models.CharField(max_length=100, blank=True)
-    alleleasoc = models.TextField(blank=True)
+    alleleasoc = models.CharField(max_length=250, blank=True)
     species = models.CharField(max_length=100, blank=True)
     variant = models.CharField(max_length=100, blank=True)
     order_one = models.CharField(max_length=100, blank=True)

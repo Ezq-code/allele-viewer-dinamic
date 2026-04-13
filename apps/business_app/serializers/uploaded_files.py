@@ -12,7 +12,7 @@ from typing import List, Dict, Any
 logger = logging.getLogger(__name__)
 
 
-class UploadedFilesSerializer(serializers.ModelSerializer):
+class UploadedFilesSerializer(serializers.ModelSerializer):  # este
     pdb_files = PdbFilesSerializer(many=True, read_only=True)
     gene_name = serializers.CharField(source="gene.name", read_only=True, default=None)
     allele_nodes = serializers.SerializerMethodField()
