@@ -34,9 +34,6 @@ def alleleviewer(request):
 def ancestral(request):
     return render(request, "grafico/ancestral.html")
 
-def som(request):
-    return render(request, "seqOrdeMut/som.html")
-
 
 # @cache_page(60 * 15)
 def uploadfile(request):
