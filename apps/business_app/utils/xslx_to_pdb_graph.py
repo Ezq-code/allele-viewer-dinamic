@@ -5,6 +5,7 @@ from networkx import Graph
 import pandas as pd
 
 from apps.business_app.models.pdb_files import PdbFiles
+from apps.business_app.models.allele_node import AlleleNode
 from apps.business_app.models.site_configurations import SiteConfiguration
 from apps.business_app.utils.excel_reader import ExcelNomenclators, ExcelReader
 from django.core.cache import cache
@@ -82,6 +83,14 @@ class XslxToPdbGraph(ExcelReader):
         como base de datos de nodos y ejes. 
         """
         # Construyendo el grafo con una instancia de NetworkX
+        if (
+            AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
+                uploaded_file_id=self.uploaded_file_id
+            )
+            in cache
+        ):
+            return
+
         edges_list = []
         self.ilu_list = []
         try:
@@ -124,7 +133,9 @@ class XslxToPdbGraph(ExcelReader):
             # Recorrer el diccionario de nodos
             self.G.add_edges_from(edges_list)  # Add a edges list
             cache.set(
-                f"graph_for_{self.uploaded_file_id}",
+                AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
+                    uploaded_file_id=self.uploaded_file_id
+                ),
                 self.G,
                 timeout=None,
             )

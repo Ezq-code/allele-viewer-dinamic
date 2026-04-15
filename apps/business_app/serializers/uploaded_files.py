@@ -5,17 +5,13 @@ import logging
 
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from apps.business_app.serializers.pdb_files import PdbFilesSerializer
-from django.core.cache import cache
-from typing import List, Dict, Any
 
 
 logger = logging.getLogger(__name__)
 
 
-class UploadedFilesSerializer(serializers.ModelSerializer):
-    pdb_files = PdbFilesSerializer(many=True, read_only=True)
+class SimpleListUploadedFilesSerializer(serializers.ModelSerializer):
     gene_name = serializers.CharField(source="gene.name", read_only=True, default=None)
-    allele_nodes = serializers.SerializerMethodField()
 
     class Meta:
         model = UploadedFiles
@@ -28,8 +24,6 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
             "gene",
             "gene_name",
             "predefined",
-            "pdb_files",
-            "allele_nodes",
         ]
         read_only_fields = [
             "id",
@@ -42,11 +36,28 @@ class UploadedFilesSerializer(serializers.ModelSerializer):
             logger.error(f"{str(e)}")
             raise serializers.ValidationError(e) from e
 
-    def get_allele_nodes(self, obj) -> List[Dict[str, Any]]:
-        allele_nodes_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
-            uploaded_file_id=obj.id
-        )
-        if not cache.has_key(allele_nodes_key):
-            info = AlleleNodeSerializer(obj.allele_nodes, many=True).data
-            cache.set(allele_nodes_key, info)
-        return cache.get(allele_nodes_key)
+
+class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
+    pdb_files = PdbFilesSerializer(many=True, read_only=True)
+    allele_nodes = AlleleNodeSerializer(many=True, read_only=True)
+
+    class Meta(SimpleListUploadedFilesSerializer.Meta):
+        fields = SimpleListUploadedFilesSerializer.Meta.fields + [
+            "pdb_files",
+            "allele_nodes",
+        ]
+        read_only_fields = SimpleListUploadedFilesSerializer.Meta.read_only_fields + [
+            "gene_name",
+            "predefined",
+            "pdb_files",
+            "allele_nodes",
+        ]
+
+    # def get_allele_nodes(self, obj) -> List[Dict[str, Any]]:
+    #     allele_nodes_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
+    #         uploaded_file_id=obj.id
+    #     )
+    #     if not cache.has_key(allele_nodes_key):
+    #         info = AlleleNodeSerializer(obj.allele_nodes, many=True).data
+    #         cache.set(allele_nodes_key, info)
+    #     return cache.get(allele_nodes_key)

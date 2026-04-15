@@ -40,10 +40,14 @@ class GeneViewSet(
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        print(self.action)
         if self.action == "list_for_graph":
-            queryset = queryset.filter(
-                Exists(UploadedFiles.objects.filter(gene_id=OuterRef("pk")))
+            uploaded_files_qs = UploadedFiles.objects.filter(
+                gene__isnull=False
+            ).values_list("id", flat=True)
+            queryset = (
+                Gene.objects.filter(uploaded_files__id__in=uploaded_files_qs)
+                .distinct()
+                .only("id", "name")
             )
         return queryset
 
@@ -93,12 +97,19 @@ class GeneViewSet(
         """
         return self.list(request)
 
+    @method_decorator(cache_page(timeout=None))
+    def list(self, request, *args, **kwargs):
+        """
+        Lista todos los AlleleRegion con filtros aplicados
+        """
+        return super().list(request, *args, **kwargs)
+
     @action(
         detail=False,
         methods=["GET"],
         url_path="list-for-graph",
         url_name="list-for-graph",
-        serializer_class=GeneSerializer,
+        serializer_class=GeneSimpleSerializer,
     )
     def list_for_graph(self, request):
         """
