@@ -216,6 +216,8 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
 });
 
 let edit_elemento = false;
+let form = document.getElementById("form-create-elemento");
+
 $("#modal-crear-elemento").on("show.bs.modal", function (event) {
   var button = $(event.relatedTarget); // Button that triggered the modal
   var modal = $(this);
@@ -227,7 +229,7 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
     modal.find(".modal-title").text("Editar " + dataName);
     // Realizar la petición con Axios
     axios
-      .get(`${read_url}${selected_id}/`)
+      .get(`${write_url}${selected_id}/`)
       .then(function (response) {
         // Recibir la respuesta
         const elemento = response.data;
@@ -238,11 +240,13 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
         // Asegurar que los genes estén cargados antes de establecer el valor
         if (document.getElementById("gene").options.length > 1) {
           $('#gene').val(elemento.gene).trigger('change');
+          document.getElementById("predefined").checked = elemento.predefined;
         } else {
           // Si los genes no están cargados, esperar y luego establecer el valor
           loadGenes();
           setTimeout(() => {
             $('#gene').val(elemento.gene).trigger('change');
+            document.getElementById("predefined").checked = elemento.predefined;
           }, 100);
         }
       })
@@ -307,7 +311,6 @@ $(function () {
 });
 
 // crear elemento
-let form = document.getElementById("form-create-elemento");
 form.addEventListener("submit", function (event) {
   event.preventDefault();
   var table = $("#tabla-de-Datos").DataTable();
