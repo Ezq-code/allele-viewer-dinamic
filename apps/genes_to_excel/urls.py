@@ -12,6 +12,11 @@ from apps.genes_to_excel.views import (
 )
 from apps.genes_to_excel.views.caracteristica_gen import CaracteristicaGenViewSet
 from apps.genes_to_excel.views.coordenadas_gen import CoordenadasGenViewSet
+from apps.genes_to_excel.views import (
+    genview,
+    uploadexcelview,
+    admin_views,
+)
 
 router = ExtendedSimpleRouter()
 

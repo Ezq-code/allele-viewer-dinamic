@@ -38,6 +38,7 @@ def som(request):
     return render(request, "seqOrdeMut/som.html")
 
 
+
 # @cache_page(60 * 15)
 def uploadfile(request):
     return render(request, "grafico/uploadfile.html")
