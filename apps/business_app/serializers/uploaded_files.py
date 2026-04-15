@@ -5,8 +5,6 @@ import logging
 
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from apps.business_app.serializers.pdb_files import PdbFilesSerializer
-from django.core.cache import cache
-from typing import List, Dict, Any
 
 
 logger = logging.getLogger(__name__)

@@ -36,6 +36,14 @@ class AlleleSNPInfoAdmin(admin.ModelAdmin):
         "loss_location_snp",
         "increment_location_snp",
     ]
+    search_fields = [
+        "allele",
+        "uploaded_file__gene__name",
+    ]
+    list_filter = [
+        "allele",
+        "uploaded_file__gene__name",
+    ]
 
 
 @admin.register(UploadedSNPFiles)
@@ -58,6 +66,9 @@ class UploadedSNPFilesAdmin(admin.ModelAdmin):
         "gene",
         "system_user",
     ]
+    list_filter = [
+        "gene__name",
+    ]
 
 
 @admin.register(SNPAlleleAncesterFormation)
@@ -75,6 +86,12 @@ class SNPAlleleAncesterFormationAdmin(admin.ModelAdmin):
         "order",
         "formation",
         "color",
+    ]
+    list_filter = [
+        "allele",
+    ]
+    search_fields = [
+        "allele",
     ]
 
 
