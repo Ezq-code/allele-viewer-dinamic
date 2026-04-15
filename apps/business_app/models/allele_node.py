@@ -23,6 +23,8 @@ class AlleleNode(models.Model):
         verbose_name=_("RS"),
     )
     children = models.ManyToManyField("self", symmetrical=False, blank=True)
+    predecessors = models.JSONField(default=list)
+    sucessors = models.JSONField(default=list)
     uploaded_file = models.ForeignKey(
         to="UploadedFiles",
         on_delete=models.CASCADE,

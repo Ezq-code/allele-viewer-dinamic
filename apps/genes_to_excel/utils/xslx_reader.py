@@ -16,12 +16,12 @@ class XslxReader(ExcelStructureValidator):
         super().__init__(origin_file)
 
     # def proccess_file(self, uploaded_file_id, gene):
-    #    print("Proccessing file data...")
+    #    logger.info("Proccessing file data...")
 
     # @staticmethod
     @staticmethod
     def proccess_file(df, nombre_archivo):
-        print("Proccessing file data...")
+        logger.info("Proccessing file data...")
         resultados = {
             "genes_procesados": 0,
             "caracteristicas_guardadas": 0,
@@ -39,7 +39,7 @@ class XslxReader(ExcelStructureValidator):
                     gen, gen_created = Gene.objects.get_or_create(name=gene_nombre)
 
                     if gen_created:
-                        print(f"Nuevo gen: {gene_nombre}")
+                        logger.info(f"Nuevo gen: {gene_nombre}")
                         resultados["genes_procesados"] += 1
 
                     # Preparar datos para CaracteristicaGen
@@ -89,9 +89,9 @@ class XslxReader(ExcelStructureValidator):
                         for key, value in defaults.items():
                             setattr(caracteristica, key, value)
                         caracteristica.save()
-                        print(f"Actualizado.....{index}")
+                        logger.info(f"Actualizado.....{index}")
                     else:
-                        print(f"Guardado.....{index}")
+                        logger.info(f"Guardado.....{index}")
 
                     resultados["caracteristicas_guardadas"] += 1
 

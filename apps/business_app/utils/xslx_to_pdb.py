@@ -61,7 +61,7 @@ class XslxToPdb(ExcelReader):
                 ) from None
 
     def proccess_initial_file_data(self, uploaded_file_id):
-        print("Proccessing initial file data...")
+        logger.info("Proccessing initial file data...")
         data = []
         for index, row in self.input_df.iterrows():
             data.append(
@@ -94,7 +94,7 @@ class XslxToPdb(ExcelReader):
         )
 
     def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base):
-        print("Proccessing PDB file...")
+        logger.info("Proccessing PDB file...")
         allele_allele_number_pool = []
         try:
             pdb_files = [io.StringIO() for _ in range(self.coordinates_sets)]

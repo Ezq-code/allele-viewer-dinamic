@@ -1,28 +1,33 @@
 import logging
 import os
-
 from celery import shared_task
 from django.core.management import call_command
+from django.core.cache import cache
 
 from apps.users_app.models.country import Country
 from apps.business_app.models.sub_country import SubCountry
 from apps.business_app.models.gene import Gene
+from apps.business_app.models.allele_node import AlleleNode
 from apps.business_app.models.gene_group import GeneGroups
 from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.site_configurations import SiteConfiguration
 from apps.business_app.utils.xslx_to_pdb import XslxToPdb
 from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
+from apps.business_app.utils.xslx_to_pdb_graph import (
+    extract_children_tree,
+    extract_parents_tree,
+)
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task(name="process_uploaded_file_task")
 def process_uploaded_file_task(uploaded_file_id):
-    try:
-        from apps.business_app.models.uploaded_files import UploadedFiles
+    from apps.business_app.models.uploaded_files import UploadedFiles
 
-        uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
+    uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
+    try:
         original_file = uploaded_file.original_file
         file_name, _ = os.path.splitext(original_file.name)
 
@@ -43,14 +48,55 @@ def process_uploaded_file_task(uploaded_file_id):
             ):
                 processor_object.proccess_initial_file_data(uploaded_file.id)
             processor_object.proccess_pdb_file(uploaded_file.id, file_name)
+            fill_predecessors_and_sucessors_for_all_nodes(
+                uploaded_file_id=uploaded_file_id
+            )
+            uploaded_file.processed = True
+            uploaded_file.save(update_fields=["processed"])
 
         return {"status": "success", "uploaded_file_id": uploaded_file_id}
     except Exception as e:
-        logger.error("Error processing uploaded file %s: %s", uploaded_file_id, str(e))
-        from apps.business_app.models.uploaded_files import UploadedFiles
-
-        UploadedFiles.objects.filter(id=uploaded_file_id).delete()
+        logger.error(
+            "Error processing uploaded file %s: %s",
+            uploaded_file_id,
+            e,
+            exc_info=True,
+        )
+        uploaded_file.delete()
         raise
+
+
+def _get_graph_info(uploaded_file_id, node_number, function_to_call):
+    graph_key = AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
+        uploaded_file_id=uploaded_file_id
+    )
+    graph = cache.get(graph_key)
+    if not graph:
+        build_uploaded_file_graph_cache_task(uploaded_file_id)
+        graph = cache.get(graph_key)
+    return set(function_to_call(graph, [], node_number))
+
+
+def fill_predecessors_and_sucessors_for_all_nodes(uploaded_file_id: int):
+    from apps.business_app.models.allele_node import AlleleNode
+
+    nodes = AlleleNode.objects.filter(uploaded_file_id=uploaded_file_id).all()
+    list_to_update = []
+    for node in nodes:
+        parent_tree = _get_graph_info(
+            uploaded_file_id=uploaded_file_id,
+            node_number=node.number,
+            function_to_call=extract_parents_tree,
+        )
+        children_tree = _get_graph_info(
+            uploaded_file_id=uploaded_file_id,
+            node_number=node.number,
+            function_to_call=extract_children_tree,
+        )
+        node.sucessors = list(children_tree)
+        node.predecessors = list(parent_tree)
+        list_to_update.append(node)
+    AlleleNode.objects.bulk_update(list_to_update, fields=["sucessors", "predecessors"])
 
 
 @shared_task(name="build_uploaded_file_graph_cache_task")

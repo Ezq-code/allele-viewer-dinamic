@@ -69,14 +69,15 @@ class AlleleMappingFiles(models.Model):
                 process_allele_mapping_file_task.delay(file.path, self.id)
 
             except Exception as e:
-                logger.error(e)
+                logger.error(f"An error occurred: {e}", exc_info=True)
+
                 self.delete()
                 raise e
 
     def delete(self, *args, **kwargs):
         # Delete the physical file before deleting the record
         self.delete_physical_file(self.file)
-        print("Borrando allelemapping con id ", self.id)
+        logger.info("Borrando allelemapping con id ", self.id)
         super().delete(*args, **kwargs)
 
     def delete_physical_file(self, file_field):
