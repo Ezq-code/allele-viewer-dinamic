@@ -5,7 +5,7 @@ import pandas as pd
 from apps.genes_to_excel.utils.excel_structure_validator import ExcelStructureValidator
 from django.db import transaction
 from apps.business_app.models.gene import Gene
-from ..models.gen_data import CaracteristicaGen
+from ..models.caracteristica_gen import CaracteristicaGen
 
 
 logger = logging.getLogger(__name__)
@@ -64,8 +64,14 @@ class XslxReader(ExcelStructureValidator):
                         "variant": str(row["Variant"]).strip()
                         if pd.notna(row["Variant"])
                         else "",
-                        "order": str(row["Order"]).strip()
-                        if pd.notna(row["Order"])
+                        "order_one": str(row["Order1"]).strip()
+                        if pd.notna(row["Order1"])
+                        else "",
+                        "order_two": str(row["Order2"]).strip()
+                        if pd.notna(row["Order2"])
+                        else "",
+                        "order_three": str(row["Order3"]).strip()
+                        if pd.notna(row["Order3"])
                         else "",
                     }
 

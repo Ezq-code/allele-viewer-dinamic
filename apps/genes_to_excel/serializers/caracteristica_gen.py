@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from ..models.gen_data import CaracteristicaGen
+from ..models.caracteristica_gen import CaracteristicaGen
 
 
-class GenDataSerializer(serializers.ModelSerializer):
+class CaracteristicaGenSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source="gen.name", read_only=True)
 
     class Meta:
@@ -20,7 +20,9 @@ class GenDataSerializer(serializers.ModelSerializer):
             "alleleasoc",
             "variant",
             "species",
-            "order",  # Updated fiel
+            "order_one",
+            "order_two",
+            "order_three",
             "fecha_creacion",
         ]
         read_only_fields = ["fecha_creacion", "fecha_actualizacion"]

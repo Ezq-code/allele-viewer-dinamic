@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOM - Matriz de Mutaciones</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Selector de genes */
+        .gene-selector {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .gene-selector label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .gene-selector select {
+            width: 250px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .gene-selector button {
+            padding: 8px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .gene-selector button:hover {
+            background: #0056b3;
+        }
+
+        .info-gen {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Card de la tabla */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .badge {
+            background: #17a2b8;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        /* Estilo Excel para la tabla */
+        .excel-table-container {
+            overflow-x: auto;
+            max-height: 65vh;
+            position: relative;
+        }
+
+        .excel-table {
+            border-collapse: collapse;
+            font-family: 'Segoe UI', Calibri, sans-serif;
+            font-size: 11px;
+            min-width: 100%;
+        }
+
+        .excel-table th,
+        .excel-table td {
+            border: 1px solid #d4d4d4;
+            padding: 6px 10px;
+            white-space: nowrap;
+        }
+
+        .excel-table th {
+            background-color: #f3f3f3;
+            font-weight: bold;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .excel-table th:first-child,
+        .excel-table td:first-child {
+            position: sticky;
+            left: 0;
+            background-color: #f8f8f8;
+            font-weight: bold;
+            z-index: 5;
+            min-width: 130px;
+        }
+
+        .excel-table th:first-child {
+            z-index: 15;
+        }
+
+        .excel-table td {
+            text-align: center;
+        }
+
+        .excel-table td:first-child {
+            text-align: left;
+        }
+
+        .excel-table tr:hover td {
+            background-color: #e6f7ff !important;
+        }
+
+        /* Loading overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Mensajes */
+        .message-container {
+            padding: 50px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay hidden" id="load">
+        <div class="text-center">
+            <i class="fas fa-3x fa-sync fa-spin"></i>
+            <p class="mt-2">Cargando datos...</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-dna"></i> Sequential Order of Mutations (SOM)</h1>
+            <p>Matriz de variantes alélicas - Estilo Excel</p>
+        </div>
+
+        <div class="gene-selector">
+            <label><i class="fas fa-filter"></i> Seleccionar Gen:</label>
+            <select id="selectGene">
+                <option value="">Cargando genes...</option>
+            </select>
+            <button id="btnCargar"><i class="fas fa-search"></i> Cargar</button>
+            <div id="infoGenActual" class="info-gen">
+                <i class="fas fa-info-circle"></i> Seleccione un gen para comenzar
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-table"></i> Matriz de mutaciones</h3>
+                <span id="info-stats" class="badge">Esperando selección</span>
+            </div>
+            <div class="excel-table-container" id="excel-container">
+                <div class="message-container">
+                    <i class="fas fa-table fa-3x mb-3" style="color: #999;"></i>
+                    <p style="color: #666;">Seleccione un gen para ver la matriz de mutaciones</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // DATOS MOCK PARA PRUEBA
+        // ============================================
+        const mockData = [
+            { cord: "1,1", order_one: "1", order_two: "0", order_three: "1", protein: "V3I", valor: "V", color: "255,255,255", alleleasoc: "A*11:04,A*03:02,A*01:01,A*36:01", gen_nombre: "HLA-A" },
+            { cord: "1,2", order_one: "1", order_two: "0", order_three: "2", protein: "A5P", valor: "A", color: "255,255,255", alleleasoc: "A*11:04,A*03:02,A*01:01", gen_nombre: "HLA-A" },
+            { cord: "1,3", order_one: "1", order_two: "0", order_three: "3", protein: "L10V", valor: "L", color: "100,200,255", alleleasoc: "A*11:04,A*01:01", gen_nombre: "HLA-A" },
+            { cord: "1,4", order_one: "1", order_two: "0", order_three: "4", protein: "S14L", valor: "S", color: "255,200,100", alleleasoc: "A*03:02,A*01:01,A*36:01", gen_nombre: "HLA-A" },
+            { cord: "2,1", order_one: "2", order_two: "0", order_three: "1", protein: "W23R", valor: "W", color: "150,100,50", alleleasoc: "A*11:04,A*03:02", gen_nombre: "HLA-A" },
+            { cord: "2,2", order_one: "2", order_two: "0", order_three: "2", protein: "F33Y", valor: "F", color: "50,150,200", alleleasoc: "A*03:02,A*01:01", gen_nombre: "HLA-A" },
+            { cord: "2,3", order_one: "2", order_two: "0", order_three: "3", protein: "R41S", valor: "R", color: "200,50,150", alleleasoc: "A*11:04,A*36:01", gen_nombre: "HLA-A" },
+            { cord: "2,4", order_one: "2", order_two: "0", order_three: "4", protein: "T55S", valor: "T", color: "255,255,255", alleleasoc: "A*11:04,A*03:02,A*01:01", gen_nombre: "HLA-A" },
+            { cord: "3,1", order_one: "3", order_two: "0", order_three: "1", protein: "R59Q", valor: "R", color: "255,255,255", alleleasoc: "A*11:04,A*01:01", gen_nombre: "HLA-A" },
+            { cord: "3,2", order_one: "3", order_two: "0", order_three: "2", protein: "Q67R", valor: "Q", color: "100,255,100", alleleasoc: "A*03:02,A*36:01", gen_nombre: "HLA-A" },
+            { cord: "3,3", order_one: "3", order_two: "0", order_three: "3", protein: "R68K", valor: "R", color: "255,100,100", alleleasoc: "A*11:04", gen_nombre: "HLA-A" }
+        ];
+
+        const mockGenes = ["HLA-A", "HLA-B", "HLA-C"];
+
+        // Variables globales
+        const load = document.getElementById("load");
+        let currentGen = null;
+
+        // ============================================
+        // FUNCIONES PRINCIPALES
+        // ============================================
+
+        function mostrarMensaje(mensaje, tipo = "info") {
+            const container = document.getElementById("excel-container");
+            if (!container) return;
+            
+            let bgColor = "#f8f9fa";
+            let icon = "fa-info-circle";
+            let color = "#004085";
+            
+            if (tipo === "warning") {
+                bgColor = "#fff3cd";
+                icon = "fa-exclamation-triangle";
+                color = "#856404";
+            } else if (tipo === "error") {
+                bgColor = "#f8d7da";
+                icon = "fa-exclamation-circle";
+                color = "#721c24";
+            }
+            
+            container.innerHTML = `
+                <div style="padding: 50px; text-align: center; background: ${bgColor};">
+                    <i class="fas ${icon} fa-3x mb-3" style="color: ${color};"></i>
+                    <p style="color: ${color};">${mensaje}</p>
+                </div>
+            `;
+            
+            const statsSpan = document.getElementById("info-stats");
+            if (statsSpan) statsSpan.innerHTML = "Sin datos";
+        }
+
+        function procesarDatos(registros) {
+            const coordenadasMap = new Map();
+            const alelosSet = new Set();
+            const valoresMap = new Map();
+            
+            registros.forEach(reg => {
+                const cord = reg.cord;
+                const order1 = parseFloat(reg.order_one) || 0;
+                const order2 = parseFloat(reg.order_two) || 0;
+                const order3 = parseFloat(reg.order_three) || 0;
+                const protein = reg.protein || "";
+                const valor = reg.valor || "";
+                const color = reg.color || "255,255,255";
+                
+                if (!coordenadasMap.has(cord)) {
+                    coordenadasMap.set(cord, {
+                        cord: cord,
+                        order1: order1,
+                        order2: order2,
+                        order3: order3,
+                        protein: protein
+                    });
+                }
+                
+                const alelosStr = reg.alleleasoc || "";
+                if (alelosStr) {
+                    const alelosList = alelosStr.split(',').map(a => a.trim()).filter(a => a);
+                    alelosList.forEach(alelo => {
+                        if (alelo) {
+                            alelosSet.add(alelo);
+                            const key = `${alelo}|${cord}`;
+                            if (!valoresMap.has(key)) {
+                                valoresMap.set(key, { valor: valor, color: color });
+                            }
+                        }
+                    });
+                }
+            });
+            
+            const coordenadas = Array.from(coordenadasMap.values())
+                .sort((a, b) => {
+                    if (a.order1 !== b.order1) return a.order1 - b.order1;
+                    if (a.order2 !== b.order2) return a.order2 - b.order2;
+                    return a.order3 - b.order3;
+                });
+            
+            const alelos = Array.from(alelosSet).sort();
+            
+            const matriz = alelos.map(alelo => {
+                const fila = coordenadas.map(coord => {
+                    const key = `${alelo}|${coord.cord}`;
+                    return valoresMap.get(key) || { valor: "", color: "255,255,255" };
+                });
+                return { alelo: alelo, valores: fila };
+            });
+            
+            return { alelos: alelos, coordenadas: coordenadas, matriz: matriz };
+        }
+
+        function renderizarTablaExcel(data) {
+            const container = document.getElementById("excel-container");
+            if (!container) return;
+            
+            const { alelos, coordenadas, matriz } = data;
+            
+            if (alelos.length === 0 || coordenadas.length === 0) {
+                mostrarMensaje("No se encontraron alelos o coordenadas para mostrar", "warning");
+                return;
+            }
+            
+            const table = document.createElement("table");
+            table.className = "excel-table";
+            
+            // Cabecera
+            const thead = document.createElement("thead");
+            const headerRow = document.createElement("tr");
+            
+            const thFirst = document.createElement("th");
+            thFirst.textContent = "Alelo / Posición";
+            thFirst.style.minWidth = "140px";
+            headerRow.appendChild(thFirst);
+            
+            coordenadas.forEach(coord => {
+                const th = document.createElement("th");
+                let headerText = coord.cord;
+                if (coord.protein && coord.protein !== "") {
+                    headerText += `\n${coord.protein}`;
+                }
+                th.textContent = headerText;
+                th.style.whiteSpace = "pre-wrap";
+                th.style.minWidth = "70px";
+                th.title = `Order: ${coord.order1},${coord.order2},${coord.order3}`;
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Cuerpo
+            const tbody = document.createElement("tbody");
+            
+            matriz.forEach(fila => {
+                const tr = document.createElement("tr");
+                
+                const tdAlelo = document.createElement("td");
+                tdAlelo.textContent = fila.alelo;
+                tdAlelo.style.fontWeight = "bold";
+                tdAlelo.style.backgroundColor = "#f8f8f8";
+                tr.appendChild(tdAlelo);
+                
+                fila.valores.forEach(celda => {
+                    const td = document.createElement("td");
+                    td.textContent = celda.valor || "";
+                    
+                    if (celda.color && celda.color !== "255,255,255" && celda.valor) {
+                        const rgb = celda.color.split(',').map(Number);
+                        if (rgb.length === 3 && !(rgb[0] === 255 && rgb[1] === 255 && rgb[2] === 255)) {
+                            td.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+                            const luminancia = (rgb[0] * 0.299 + rgb[1] * 0.587 + rgb[2] * 0.114);
+                            td.style.color = luminancia > 128 ? "#000" : "#fff";
+                        }
+                    }
+                    
+                    if (celda.valor) {
+                        td.title = `Valor: ${celda.valor}`;
+                    }
+                    
+                    tr.appendChild(td);
+                });
+                
+                tbody.appendChild(tr);
+            });
+            
+            table.appendChild(tbody);
+            container.innerHTML = "";
+            container.appendChild(table);
+        }
+
+        async function cargarListaGenes() {
+            try {
+                const selectGene = document.getElementById("selectGene");
+                selectGene.innerHTML = '<option value="">Seleccione un gen</option>';
+                
+                mockGenes.forEach(gene => {
+                    const option = document.createElement("option");
+                    option.value = gene;
+                    option.textContent = gene;
+                    selectGene.appendChild(option);
+                });
+                
+                const lastGen = localStorage.getItem("lastSelectedGen");
+                if (lastGen && mockGenes.includes(lastGen)) {
+                    selectGene.value = lastGen;
+                    cargarDatosPorGen(lastGen);
+                }
+            } catch (error) {
+                console.error("Error cargando genes:", error);
+            }
+        }
+
+        async function cargarDatosPorGen(genName) {
+            if (!genName) {
+                mostrarMensaje("Por favor, seleccione un gen", "warning");
+                return;
+            }
+            
+            load.classList.remove("hidden");
+            currentGen = genName;
+            localStorage.setItem("lastSelectedGen", genName);
+            
+            const infoGen = document.getElementById("infoGenActual");
+            if (infoGen) {
+                infoGen.innerHTML = `<i class="fas fa-dna"></i> Gen actual: <strong>${genName}</strong>`;
+                infoGen.style.background = "#d4edda";
+            }
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                const registros = mockData.filter(reg => reg.gen_nombre === genName);
+                
+                if (!registros || registros.length === 0) {
+                    mostrarMensaje(`No hay datos para el gen ${genName}`, "warning");
+                    load.classList.add("hidden");
+                    return;
+                }
+                
+                const resultado = procesarDatos(registros);
+                renderizarTablaExcel(resultado);
+                
+                const statsSpan = document.getElementById("info-stats");
+                if (statsSpan) {
+                    statsSpan.innerHTML = `${resultado.alelos.length} alelos × ${resultado.coordenadas.length} posiciones`;
+                }
+                
+                load.classList.add("hidden");
+            } catch (error) {
+                load.classList.add("hidden");
+                mostrarMensaje(`Error: ${error.message}`, "error");
+            }
+        }
+
+        // Inicializar
+        document.addEventListener("DOMContentLoaded", function() {
+            cargarListaGenes();
+            
+            document.getElementById("btnCargar").addEventListener("click", function() {
+                const selectGene = document.getElementById("selectGene");
+                const genSeleccionado = selectGene.value;
+                if (genSeleccionado) {
+                    cargarDatosPorGen(genSeleccionado);
+                } else {
+                    alert("Por favor, seleccione un gen");
+                }
+            });
+            
+            document.getElementById("selectGene").addEventListener("change", function() {
+                if (this.value) {
+                    cargarDatosPorGen(this.value);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

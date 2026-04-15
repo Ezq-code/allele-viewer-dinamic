@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from apps.business_app.models.gene import Gene
-from ..models.gen_data import CaracteristicaGen
+from ..models.caracteristica_gen import CaracteristicaGen
 import logging
 from rest_framework import permissions
 
