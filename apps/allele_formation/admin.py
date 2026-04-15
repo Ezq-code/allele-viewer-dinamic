@@ -38,7 +38,6 @@ class AlleleSNPInfoAdmin(admin.ModelAdmin):
     ]
     search_fields = [
         "allele",
-        "uploaded_file__gene__name",
     ]
     list_filter = [
         "allele",
@@ -91,7 +90,7 @@ class SNPAlleleAncesterFormationAdmin(admin.ModelAdmin):
         "allele",
     ]
     search_fields = [
-        "allele",
+        "allele__allele",
     ]
 
 
