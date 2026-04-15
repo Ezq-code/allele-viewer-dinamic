@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
-from apps.allele_formation.utils.excel_snp_reader import ExcelSNPReader
+from apps.allele_formation.tasks import process_uploaded_snp_file_task
 from apps.business_app.models import AllowedExtensions
 from apps.business_app.models.gene import Gene
 
@@ -74,16 +74,15 @@ class UploadedSNPFiles(models.Model):
         if committed is False and not is_new:
             self.delete()
 
-        super().save(*args, **kwargs)  # Call the "real" save() method.
+        super().save(*args, **kwargs)
 
         if not committed:
             try:
-                processor_object = ExcelSNPReader(snp_file)
-                processor_object.proccess_sheets(self.id)
-
+                process_uploaded_snp_file_task.delay(self.id)
             except Exception as e:
-                logger.error(f"An error occurred: {e}", exc_info=True)
-
+                logger.error(
+                    f"Failed to queue task for file processing: {e}", exc_info=True
+                )
                 self.delete()
                 raise e
         if self.predefined:
