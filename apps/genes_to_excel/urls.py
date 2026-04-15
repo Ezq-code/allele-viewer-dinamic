@@ -6,7 +6,6 @@ from django.urls import path
 from rest_framework_extensions.routers import ExtendedSimpleRouter
 
 from apps.genes_to_excel.views import (
-    caracteristica_gen,
     genview,
     uploadexcelview,
     admin_views,

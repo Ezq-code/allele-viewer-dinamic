@@ -5,38 +5,180 @@
 <link rel="stylesheet" href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
-
+<style>
+    /* Estilo Excel */
+    .excel-table-container {
+        overflow-x: auto;
+        position: relative;
+        max-height: 70vh;
+        border: 1px solid #d0d0d0;
+        background: white;
+    }
+    
+    .excel-table {
+        border-collapse: collapse;
+        font-family: 'Segoe UI', Calibri, 'Helvetica Neue', sans-serif;
+        font-size: 11px;
+        min-width: 100%;
+    }
+    
+    .excel-table th,
+    .excel-table td {
+        border: 1px solid #d4d4d4;
+        padding: 6px 10px;
+        white-space: nowrap;
+    }
+    
+    .excel-table th {
+        background-color: #f3f3f3;
+        font-weight: bold;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .excel-table th:first-child,
+    .excel-table td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: #f8f8f8;
+        font-weight: bold;
+        z-index: 5;
+        min-width: 130px;
+    }
+    
+    .excel-table th:first-child {
+        z-index: 15;
+    }
+    
+    .excel-table td {
+        text-align: center;
+    }
+    
+    .excel-table td:first-child {
+        text-align: left;
+    }
+    
+    .excel-table tr:hover td {
+        background-color: #e6f7ff !important;
+    }
+    
+    .gene-selector {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #dee2e6;
+    }
+    
+    .info-gen {
+        margin-top: 15px;
+        padding: 10px;
+        background: #e3f2fd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="content-wrapper">
-  <section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Sequential Order of Mutations (SOM)</h1>
+    <div class="overlay" id="load" hidden>
+        <div class="text-center">
+            <i class="fas fa-3x fa-sync fa-spin"></i>
+            <p class="mt-2">Cargando datos...</p>
         </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">SOM</li>
-          </ol>
-        </div>
-      </div>
     </div>
-  </section>
-  <section class="content">
-    <div class="row">
-      <div class="col-12">
-      hola mundo
-      </div>
-    </div>
-  </section>
-  <section class="content">
 
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Sequential Order of Mutations (SOM)</h1>
+                    <h6 class="text-muted">Matriz de variantes alélicas</h6>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">SOM</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Selector de genes -->
+            <div class="gene-selector">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label><i class="fas fa-dna"></i> Seleccionar Gen:</label>
+                            <select id="selectGene" class="form-control">
+                                <option value="">Cargando genes...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button id="btnCargar" class="btn btn-primary form-control">
+                                <i class="fas fa-search"></i> Cargar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <div id="infoGenActual" class="info-gen">
+                                <i class="fas fa-info-circle"></i> Seleccione un gen para comenzar
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de datos -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-table"></i> Matriz de mutaciones
+                    </h3>
+                    <div class="card-tools">
+                        <span id="info-stats" class="badge badge-info">Cargando...</span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div id="excel-container" class="excel-table-container">
+                        <div class="text-center p-5">
+                            <i class="fas fa-table fa-3x mb-3 text-muted"></i>
+                            <p class="text-muted">Seleccione un gen para ver la matriz de mutaciones</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
-
 {% endblock %}
+
 {% block script %}
 <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
@@ -54,8 +196,8 @@
 <script src="{% static 'assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
 <script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
 <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
+
 <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static 'assets/dist/js/som.js' %}"></script>
-
-
 {% endblock %}
