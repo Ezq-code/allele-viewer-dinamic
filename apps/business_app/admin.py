@@ -207,7 +207,7 @@ class GeneAdmin(admin.ModelAdmin):
         "description",
         "status",
     ]
-    search_fields = ("name", "disorders__name")
+    search_fields = ("name",)
     list_filter = [
         "groups",
         "disorders",
