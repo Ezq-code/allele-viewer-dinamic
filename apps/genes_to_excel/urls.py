@@ -19,9 +19,7 @@ router = ExtendedSimpleRouter()
 router.register(
     "caracteristica-gen", CaracteristicaGenViewSet, basename="caracteristica-gen"
 )
-router.register(
-    "coordenadas-gen", CoordenadasGenViewSet, basename="coordenadas-gen"
-)
+router.register("coordenadas-gen", CoordenadasGenViewSet, basename="coordenadas-gen")
 urlpatterns = [
     path(
         "v1/admin/clear-all-data/",
@@ -33,7 +31,7 @@ urlpatterns = [
         "v1/upload_excel_file",
         uploadexcelview.UploadExcelView.as_view(),
         name="upload-excel-file",
-    )
+    ),
 ]
 
 urlpatterns += router.urls
