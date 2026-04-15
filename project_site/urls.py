@@ -80,6 +80,7 @@ urlpatterns = [
         name="disorder",
     ),
     path("ancestral", pages.ancestral, name="ancestral"),
+    path("som", pages.som, name="som"),
     path("alleleviewer", pages.alleleviewer, name="alleleviewer"),
     path("login/", pages.first_login, name="first_login"),
     path("", pages.introduction, name="introducction"),

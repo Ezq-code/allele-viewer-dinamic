@@ -5,7 +5,7 @@ import pandas as pd
 from apps.genes_to_excel.utils.excel_structure_validator import ExcelStructureValidator
 from django.db import transaction
 from apps.business_app.models.gene import Gene
-from ..models.gen_data import CaracteristicaGen
+from ..models.caracteristica_gen import CaracteristicaGen
 
 
 logger = logging.getLogger(__name__)
@@ -16,12 +16,12 @@ class XslxReader(ExcelStructureValidator):
         super().__init__(origin_file)
 
     # def proccess_file(self, uploaded_file_id, gene):
-    #    print("Proccessing file data...")
+    #    logger.info("Proccessing file data...")
 
     # @staticmethod
     @staticmethod
     def proccess_file(df, nombre_archivo):
-        print("Proccessing file data...")
+        logger.info("Proccessing file data...")
         resultados = {
             "genes_procesados": 0,
             "caracteristicas_guardadas": 0,
@@ -39,7 +39,7 @@ class XslxReader(ExcelStructureValidator):
                     gen, gen_created = Gene.objects.get_or_create(name=gene_nombre)
 
                     if gen_created:
-                        print(f"Nuevo gen: {gene_nombre}")
+                        logger.info(f"Nuevo gen: {gene_nombre}")
                         resultados["genes_procesados"] += 1
 
                     # Preparar datos para CaracteristicaGen
@@ -64,8 +64,14 @@ class XslxReader(ExcelStructureValidator):
                         "variant": str(row["Variant"]).strip()
                         if pd.notna(row["Variant"])
                         else "",
-                        "order": str(row["Order"]).strip()
-                        if pd.notna(row["Order"])
+                        "order_one": str(row["Order1"]).strip()
+                        if pd.notna(row["Order1"])
+                        else "",
+                        "order_two": str(row["Order2"]).strip()
+                        if pd.notna(row["Order2"])
+                        else "",
+                        "order_three": str(row["Order3"]).strip()
+                        if pd.notna(row["Order3"])
                         else "",
                     }
 
@@ -83,9 +89,9 @@ class XslxReader(ExcelStructureValidator):
                         for key, value in defaults.items():
                             setattr(caracteristica, key, value)
                         caracteristica.save()
-                        print(f"Actualizado.....{index}")
+                        logger.info(f"Actualizado.....{index}")
                     else:
-                        print(f"Guardado.....{index}")
+                        logger.info(f"Guardado.....{index}")
 
                     resultados["caracteristicas_guardadas"] += 1
 

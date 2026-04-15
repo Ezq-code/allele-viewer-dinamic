@@ -295,6 +295,7 @@ class UploadedFilesAdmin(admin.ModelAdmin):
         "original_file",
         "gene",
         "predefined",
+        "processed",
         "system_user",
         "google_sheet_id",
     ]
@@ -306,6 +307,16 @@ class UploadedFilesAdmin(admin.ModelAdmin):
         "predefined",
         "system_user",
         "google_sheet_id",
+    ]
+    list_filter = [
+        "gene__name",
+        "custom_name",
+        "predefined",
+        "processed",
+    ]
+    search_fields = [
+        "gene__name",
+        "custom_name",
     ]
 
     def save_model(self, request, obj, form, change):
@@ -332,6 +343,9 @@ class PdbFilesAdmin(admin.ModelAdmin):
         "custom_name",
         "description",
         "kind",
+    ]
+    list_filter = [
+        "original_file__gene__name",
     ]
 
 
@@ -364,6 +378,14 @@ class RegionAdmin(admin.ModelAdmin):
         "name",
         "symbol",
     ]
+    list_filter = [
+        "color",
+        "name",
+    ]
+    search_fields = (
+        "name",
+        "symbol",
+    )
 
 
 @admin.register(RegionCountry)
@@ -378,6 +400,14 @@ class RegionCountryAdmin(admin.ModelAdmin):
         "region",
         "country",
     ]
+    list_filter = [
+        "region",
+        "country",
+    ]
+    search_fields = (
+        "region",
+        "country",
+    )
 
 
 @admin.register(InitialFileData)

@@ -1,6 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, status, mixins
 from drf_spectacular.utils import extend_schema
+import logging
 
 
 from apps.business_app.models.initial_xyz_expansion_data import InitialXyzExpansionData
@@ -16,6 +17,7 @@ from apps.business_app.utils.google_sheet_coordinate_processor import (
 from rest_framework.response import Response
 from google.auth.exceptions import RefreshError
 
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
@@ -62,13 +64,13 @@ class InitialXyzExpansionDataViewSet(
                 )
                 return Response(output_serializer.data)
         except RefreshError as e:
-            print(e)
+            logger.error(e, exc_info=True)
             return Response(
                 data={"detail": f"Error accessing the Google Sheet API: {e}"},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
         except Exception as e:
-            print(e)
+            logger.error(e, exc_info=True)
             return Response(
                 data={
                     "detail": f"An error occurred during the processing of the data: {e}."

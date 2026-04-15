@@ -24,12 +24,12 @@ class ChildSerializer(serializers.ModelSerializer):
 
 
 class AlleleNodeSerializer(serializers.ModelSerializer):
-    children_qty = serializers.IntegerField(
-        source="children.count",
-    )
-    children = ChildSerializer(many=True)
-    predecessors = serializers.SerializerMethodField()
-    sucessors = serializers.SerializerMethodField()
+    # children_qty = serializers.IntegerField(
+    #     source="children.count",
+    # )
+    # children = ChildSerializer(many=True)
+    # predecessors = serializers.SerializerMethodField()
+    # sucessors = serializers.SerializerMethodField()
 
     class Meta:
         model = AlleleNode
@@ -40,9 +40,9 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "element",
             "custom_element_name",
             "rs",
-            "uploaded_file",
-            "children_qty",
-            "children",
+            # "uploaded_file",
+            # "children_qty",
+            # "children",
             "region",
             "timeline_appearence",
             "sphere_radius",
@@ -51,20 +51,20 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "increment",
             "age_1",
             "age_2",
-            "frec_afr_amr",
-            "frec_amr",
-            "frec_csa",
-            "frec_eas",
-            "frec_eur",
-            "frec_lat",
-            "frec_nea",
-            "frec_oce",
-            "frec_ssa",
-            "frec_afr_eas",
-            "frec_afr_swe",
-            "frec_afr_nor",
-            "frec_ca",
-            "frec_sa",
+            # "frec_afr_amr",
+            # "frec_amr",
+            # "frec_csa",
+            # "frec_eas",
+            # "frec_eur",
+            # "frec_lat",
+            # "frec_nea",
+            # "frec_oce",
+            # "frec_ssa",
+            # "frec_afr_eas",
+            # "frec_afr_swe",
+            # "frec_afr_nor",
+            # "frec_ca",
+            # "frec_sa",
             "predecessors",
             "sucessors",
         ]
