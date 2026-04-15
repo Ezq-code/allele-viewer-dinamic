@@ -41,7 +41,7 @@ class SimpleListUploadedFilesSerializer(serializers.ModelSerializer):
 
 class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
     pdb_files = PdbFilesSerializer(many=True, read_only=True)
-    allele_nodes = serializers.SerializerMethodField()
+    allele_nodes = AlleleNodeSerializer(many=True, read_only=True)
 
     class Meta(SimpleListUploadedFilesSerializer.Meta):
         fields = SimpleListUploadedFilesSerializer.Meta.fields + [
@@ -55,11 +55,11 @@ class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
             "allele_nodes",
         ]
 
-    def get_allele_nodes(self, obj) -> List[Dict[str, Any]]:
-        allele_nodes_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
-            uploaded_file_id=obj.id
-        )
-        if not cache.has_key(allele_nodes_key):
-            info = AlleleNodeSerializer(obj.allele_nodes, many=True).data
-            cache.set(allele_nodes_key, info)
-        return cache.get(allele_nodes_key)
+    # def get_allele_nodes(self, obj) -> List[Dict[str, Any]]:
+    #     allele_nodes_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
+    #         uploaded_file_id=obj.id
+    #     )
+    #     if not cache.has_key(allele_nodes_key):
+    #         info = AlleleNodeSerializer(obj.allele_nodes, many=True).data
+    #         cache.set(allele_nodes_key, info)
+    #     return cache.get(allele_nodes_key)
