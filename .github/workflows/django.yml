@@ -1,9 +1,12 @@
 name: Deploy Application
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
-      - main  # Cambia esto según tu rama principal
+      - main
 
 jobs:
   deploy:
