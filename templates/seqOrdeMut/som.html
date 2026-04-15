@@ -94,6 +94,24 @@
         color: white;
         font-size: 1.5rem;
     }
+    /* Estilo para celdas clickeables */
+    .excel-table td[style*="cursor: pointer"] {
+        transition: all 0.2s ease;
+    }
+
+    .excel-table td[style*="cursor: pointer"]:active {
+        transform: scale(0.98);
+    }
+
+    /* Estilo para el modal de SweetAlert */
+    .swal2-popup {
+        font-size: 14px !important;
+    }
+
+    .swal2-html-container {
+        max-height: 500px;
+        overflow-y: auto;
+    }
 </style>
 {% endblock %}
 

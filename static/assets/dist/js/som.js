@@ -335,6 +335,158 @@ function procesarDatos(registros) {
     };
 }
 
+
+// ============================================
+// FUNCIÓN PARA OBTENER Y MOSTRAR DETALLES DE LA CELDA
+// ============================================
+async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual) {
+    try {
+        // Mostrar loading en el modal
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Cargando información...',
+                html: '<i class="fas fa-spinner fa-pulse"></i> Obteniendo datos de la coordenada...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }
+        
+        // Construir la URL con los parámetros correctos
+        // Usar el gen actual (currentGen) y las coordenadas de la celda
+        const url = `/genes_to_excel/coordenadas-gen/?cord=${filaNum}%2C${colNum}&gen__name=${currentGen}`;
+        
+        console.log(`🔍 Consultando detalles en: ${url}`);
+        
+        const response = await axios.get(url);
+        const data = response.data;
+        
+        if (!data.results || data.results.length === 0) {
+            throw new Error('No se encontraron detalles para esta celda');
+        }
+        
+        const detalle = data.results[0];
+        
+        // Procesar la lista de alelos asociados
+        const alelosAsociados = detalle.Alleleasoc ? detalle.Alleleasoc.split(',') : [];
+        
+        // Crear el contenido HTML del modal
+        const contenidoHTML = `
+            <div style="text-align: left; font-family: monospace;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold; width: 40%;">Gen:</td>
+                        <td style="padding: 8px;">${detalle.Gene || 'N/A'}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold;">Coordenada:</td>
+                        <td style="padding: 8px;">${detalle.Coordinate || 'N/A'}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold;">Valor:</td>
+                        <td style="padding: 8px;">
+                            <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; background-color: rgb(${detalle.Color || '200,200,200'}); font-weight: bold;">
+                                ${detalle.Valor || 'N/A'}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold;">Color:</td>
+                        <td style="padding: 8px;">
+                            <div style="display: inline-block; width: 40px; height: 20px; background-color: rgb(${detalle.Color || '255,255,255'}); border: 1px solid #ccc;"></div>
+                            (${detalle.Color || 'N/A'})
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold;">Proteína:</td>
+                        <td style="padding: 8px;">${detalle.Protein || 'N/A'}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold;">Alelos Asociados:</td>
+                        <td style="padding: 8px;">
+                            ${alelosAsociados.length > 0 ? 
+                                `<div style="max-height: 200px; overflow-y: auto;">
+                                    ${alelosAsociados.map(al => `<span style="display: inline-block; background: #f0f0f0; padding: 4px 8px; margin: 2px; border-radius: 4px; font-size: 12px;">${al.trim()}</span>`).join('')}
+                                </div>` : 
+                                'Ninguno'
+                            }
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold;">Especie:</td>
+                        <td style="padding: 8px;">${detalle.Species || 'N/A'}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold;">Variante:</td>
+                        <td style="padding: 8px;">${detalle.Variant || 'N/A'}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold;">Order1:</td>
+                        <td style="padding: 8px;">${detalle.Order1 || 'N/A'}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold;">Order2:</td>
+                        <td style="padding: 8px;">${detalle.Order2 || 'N/A'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; font-weight: bold;">Order3:</td>
+                        <td style="padding: 8px;">${detalle.Order3 || 'N/A'}</td>
+                    </tr>
+                </table>
+            </div>
+        `;
+        
+        // Mostrar el modal con la información
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: `Información de la celda`,
+                html: contenidoHTML,
+                icon: 'info',
+                width: '600px',
+                confirmButtonText: 'Cerrar',
+                confirmButtonColor: '#3085d6',
+                showCloseButton: true
+            });
+        } else {
+            // Fallback si SweetAlert no está disponible
+            alert(`
+                Gen: ${detalle.Gene}
+                Coordenada: ${detalle.Coordinate}
+                Valor: ${detalle.Valor}
+                Color: ${detalle.Color}
+                Proteína: ${detalle.Protein}
+                Alelos Asociados: ${detalle.Alleleasoc}
+                Especie: ${detalle.Species}
+                Variante: ${detalle.Variant}
+            `);
+        }
+        
+    } catch (error) {
+        console.error("Error obteniendo detalles de la celda:", error);
+        
+        let mensajeError = `No se pudo obtener la información de la celda: ${error.message}`;
+        
+        if (error.response) {
+            mensajeError += `\nStatus: ${error.response.status}`;
+            if (error.response.status === 404) {
+                mensajeError = `No se encontró información para esta coordenada (${filaNum}, ${colNum})`;
+            }
+        }
+        
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al cargar detalles',
+                text: mensajeError,
+                confirmButtonText: 'Aceptar'
+            });
+        } else {
+            alert(mensajeError);
+        }
+    }
+}
+
 // ============================================
 // 3. RENDERIZAR TABLA ESTILO EXCEL
 // ============================================
@@ -366,18 +518,18 @@ function renderizarTablaExcel(data) {
         
         // Esquina superior izquierda
         const thCorner = document.createElement("th");
-        thCorner.textContent = "Fila\\Col";
-        thCorner.style.minWidth = "80px";
+        thCorner.textContent = "Alelos \\ Proteínas";
+        thCorner.style.minWidth = "100px";
         thCorner.style.position = "sticky";
         thCorner.style.left = "0";
         thCorner.style.backgroundColor = "#f3f3f3";
         thCorner.style.zIndex = "20";
         headerRow.appendChild(thCorner);
         
-        // Columnas (mostrar el número de columna real)
-        columnas.forEach(col => {
+        // Columnas (mostrar nombres de proteínas)
+        columnas.forEach(proteina => {
             const th = document.createElement("th");
-            th.textContent = col;
+            th.textContent = proteina;
             th.style.minWidth = "80px";
             th.style.backgroundColor = "#f3f3f3";
             th.style.position = "sticky";
@@ -396,17 +548,17 @@ function renderizarTablaExcel(data) {
         matriz.forEach((fila, idxFila) => {
             const tr = document.createElement("tr");
             
-            // Celda de fila (primera columna) - mostrar el número de fila real
-            const tdFila = document.createElement("td");
-            tdFila.textContent = filas[idxFila];
-            tdFila.style.fontWeight = "bold";
-            tdFila.style.backgroundColor = "#f8f8f8";
-            tdFila.style.position = "sticky";
-            tdFila.style.left = "0";
-            tdFila.style.minWidth = "80px";
-            tdFila.style.textAlign = "center";
-            tdFila.style.zIndex = "5";
-            tr.appendChild(tdFila);
+            // Primera columna - Nombre del alelo (SIN acción)
+            const tdAlelo = document.createElement("td");
+            tdAlelo.textContent = filas[idxFila];
+            tdAlelo.style.fontWeight = "bold";
+            tdAlelo.style.backgroundColor = "#f8f8f8";
+            tdAlelo.style.position = "sticky";
+            tdAlelo.style.left = "0";
+            tdAlelo.style.minWidth = "100px";
+            tdAlelo.style.textAlign = "center";
+            tdAlelo.style.zIndex = "5";
+            tr.appendChild(tdAlelo);
             
             // Celdas de datos
             fila.forEach((celda, idxCol) => {
@@ -428,10 +580,49 @@ function renderizarTablaExcel(data) {
                     }
                 }
                 
-                // Tooltip con información
-                if (celda.valor) {
-                    td.title = `Valor: ${celda.valor} | Posición: (${celda.fila}, ${celda.columna})`;
-                    td.style.cursor = "help";
+                // ========== AGREGAR ACCIÓN SOLO A CELDAS CON VALOR ==========
+                if (celda.valor && celda.valor !== "") {
+                    // Cambiar cursor a pointer
+                    td.style.cursor = "pointer";
+                    
+                    // Tooltip informativo
+                    td.title = `Haz clic para ver detalles de "${celda.valor}" en ${filas[idxFila]}`;
+                    
+                    // Evento de clic para mostrar detalles
+                    td.addEventListener("click", (event) => {
+                        event.stopPropagation();
+                        mostrarDetalleCelda(
+                            filas[idxFila],      // Nombre del alelo
+                            columnas[idxCol],    // Nombre de la proteína
+                            celda.fila,          // Coordenada fila
+                            celda.columna,       // Coordenada columna
+                            celda.valor          // Valor de la celda
+                        );
+                    });
+                    
+                    // Efecto hover
+                    td.addEventListener("mouseenter", () => {
+                        td.style.backgroundColor = "#e3f2fd";
+                        td.style.transform = "scale(1.02)";
+                        td.style.transition = "all 0.2s ease";
+                        td.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+                    });
+                    
+                    td.addEventListener("mouseleave", () => {
+                        // Restaurar color original
+                        if (celda.color && celda.color !== "255,255,255") {
+                            const rgb = celda.color.split(',').map(Number);
+                            if (rgb.length === 3 && !(rgb[0] === 255 && rgb[1] === 255 && rgb[2] === 255)) {
+                                td.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+                            } else {
+                                td.style.backgroundColor = "";
+                            }
+                        } else {
+                            td.style.backgroundColor = "";
+                        }
+                        td.style.transform = "scale(1)";
+                        td.style.boxShadow = "none";
+                    });
                 }
                 
                 tr.appendChild(td);
@@ -595,10 +786,10 @@ async function cargarDatosPorGen(genName) {
         renderizarTablaExcel(resultado);
         
         if (infoGen) {
-            infoGen.innerHTML = `<i class="fas fa-check-circle"></i> Gen actual: <strong>${genName}</strong> - ${resultado.alelos.length} alelos, ${resultado.coordenadas.length} posiciones`;
+            infoGen.innerHTML = `<i class="fas fa-check-circle"></i> Gen actual: <strong>${genName}</strong>`;
             infoGen.style.background = "#d4edda";
         }
-        
+              
         if (load) load.hidden = true;
         
     } catch (error) {
