@@ -12,11 +12,6 @@ from apps.genes_to_excel.views import (
 )
 from apps.genes_to_excel.views.caracteristica_gen import CaracteristicaGenViewSet
 from apps.genes_to_excel.views.coordenadas_gen import CoordenadasGenViewSet
-from apps.genes_to_excel.views import (
-    genview,
-    uploadexcelview,
-    admin_views,
-)
 
 router = ExtendedSimpleRouter()
 
@@ -24,9 +19,7 @@ router = ExtendedSimpleRouter()
 router.register(
     "caracteristica-gen", CaracteristicaGenViewSet, basename="caracteristica-gen"
 )
-router.register(
-    "coordenadas-gen", CoordenadasGenViewSet, basename="coordenadas-gen"
-)
+router.register("coordenadas-gen", CoordenadasGenViewSet, basename="coordenadas-gen")
 urlpatterns = [
     path(
         "v1/admin/clear-all-data/",
@@ -38,7 +31,7 @@ urlpatterns = [
         "v1/upload_excel_file",
         uploadexcelview.UploadExcelView.as_view(),
         name="upload-excel-file",
-    )
+    ),
 ]
 
 urlpatterns += router.urls

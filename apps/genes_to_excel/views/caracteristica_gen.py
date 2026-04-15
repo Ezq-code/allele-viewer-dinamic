@@ -2,10 +2,6 @@ from rest_framework.generics import GenericAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from collections import defaultdict
-
 
 from ..serializers.caracteristica_gen import CaracteristicaGenSerializer
 from ..models.caracteristica_gen import CaracteristicaGen
@@ -16,8 +12,9 @@ class CaracteristicaGenViewSet(viewsets.ReadOnlyModelViewSet, GenericAPIView):
     serializer_class = CaracteristicaGenSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['gen__name']
-    search_fields = ['gen__name', 'gene']
+    filterset_fields = ["gen__name"]
+    search_fields = ["gen__name", "gene"]
+
 
 """
     @action(detail=False, methods=['get'], url_path='matriz')
@@ -101,4 +98,3 @@ class CaracteristicaGenViewSet(viewsets.ReadOnlyModelViewSet, GenericAPIView):
             'total_alelos': len(alelos)
         })
 """
-
