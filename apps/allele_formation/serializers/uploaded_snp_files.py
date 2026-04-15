@@ -1,9 +1,10 @@
+
 from rest_framework import serializers
 from apps.allele_formation.models.uploaded_snp_files import UploadedSNPFiles
 
 
 class UploadedSNPFileSerializer(serializers.ModelSerializer):
-    gene_name = serializers.CharField(source="gene.name", read_only=True, default=None)
+    gene_name = serializers.CharField(read_only=True)
 
     class Meta:
         model = UploadedSNPFiles

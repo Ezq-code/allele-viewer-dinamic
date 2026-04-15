@@ -2,12 +2,12 @@ from rest_framework import viewsets
 from apps.allele_formation.models.snp_allele_ancester_formation import (
     SNPAlleleAncesterFormation,
 )
-from apps.allele_formation.serializers.snp_allele_ancester_formation_serializer import (
+from apps.allele_formation.serializers.snp_allele_ancester_formation import (
     SNPAlleleAncesterFormationSerializer,
 )
 
 
-class SNPAlleleAncesterFormationViewSet(viewsets.ModelViewSet):  # ! NOT USED FOR NOW
+class SNPAlleleAncesterFormationViewSet(viewsets.ModelViewSet):
     """
     ViewSet for managing SNP allele ancestor formation data.
 

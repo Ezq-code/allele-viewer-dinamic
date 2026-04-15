@@ -9,7 +9,7 @@ from apps.allele_formation.views.allele_snp_info_viewset import AlleleSNPInfoVie
 # from apps.allele_formation.views.snp_allele_ancester_formation_viewset import (
 #     SNPAlleleAncesterFormationViewSet,
 # )
-from apps.allele_formation.views.uploaded_snp_files_viewset import (
+from apps.allele_formation.views.uploaded_snp_files import (
     UploadedSNPFilesViewSet,
 )
 

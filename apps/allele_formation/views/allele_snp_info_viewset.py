@@ -4,7 +4,7 @@ from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-from apps.allele_formation.serializers.allele_snp_info_serializer import (
+from apps.allele_formation.serializers.allele_snp_info import (
     AlleleSNPInfoSerializer,
 )
 from apps.common.views import CommonOrderingFilter

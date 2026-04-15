@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field
 from apps.allele_formation.models.allele_snp_info import AlleleSNPInfo
-from apps.allele_formation.serializers.snp_allele_ancester_formation_serializer import (
+from apps.allele_formation.serializers.snp_allele_ancester_formation import (
     SNPAlleleAncesterFormationSerializer,
 )
-from apps.allele_formation.serializers.snp_allele_location_formation_serializer import (
+from apps.allele_formation.serializers.snp_allele_location_formation import (
     SNPAlleleLocationFormationSerializer,
 )
 
