@@ -142,7 +142,7 @@ async function cargarListaGenes() {
             selectGene.value = lastGen;
             console.log(`🔄 Cargando último gen: ${lastGen}`);
             // Cargar datos automáticamente si hay un gen guardado
-            cargarDatosPorGen(lastGen);
+            //cargarDatosPorGen(lastGen);
         }
         
         // Ocultar loading
@@ -488,6 +488,19 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
 }
 
 // ============================================
+// Convertir número a letras estilo Excel (1=A, 2=B, 27=AA)
+// ============================================
+function numeroALetra(numero) {
+    let resultado = '';
+    while (numero > 0) {
+        numero--;
+        resultado = String.fromCharCode(65 + (numero % 26)) + resultado;
+        numero = Math.floor(numero / 26);
+    }
+    return resultado;
+}
+
+// ============================================
 // 3. RENDERIZAR TABLA ESTILO EXCEL
 // ============================================
 function renderizarTablaExcel(data) {
@@ -527,9 +540,21 @@ function renderizarTablaExcel(data) {
         headerRow.appendChild(thCorner);
         
         // Columnas (mostrar nombres de proteínas)
+        //columnas.forEach(proteina => {
+        //    const th = document.createElement("th");
+        //    th.textContent = proteina;
+        //    th.style.minWidth = "80px";
+        //    th.style.backgroundColor = "#f3f3f3";
+        //    th.style.position = "sticky";
+        //    th.style.top = "0";
+        //    th.style.zIndex = "10";
+        //    headerRow.appendChild(th);
+        //});
+
+        // Columnas - AHORA CON LETRAS EN LUGAR DE NÚMEROS
         columnas.forEach(proteina => {
             const th = document.createElement("th");
-            th.textContent = proteina;
+            th.textContent = numeroALetra(proteina); // ← Cambiado de 'proteina' a letras
             th.style.minWidth = "80px";
             th.style.backgroundColor = "#f3f3f3";
             th.style.position = "sticky";
@@ -849,12 +874,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     // Evento de cambio en select (carga automática)
-    const selectGene = document.getElementById("selectGene");
-    if (selectGene) {
-        selectGene.addEventListener("change", function() {
-            if (this.value) {
-                cargarDatosPorGen(this.value);
-            }
-        });
-    }
+    //const selectGene = document.getElementById("selectGene");
+    //if (selectGene) {
+    //    selectGene.addEventListener("change", function() {
+    //        if (this.value) {
+    //            cargarDatosPorGen(this.value);
+    //        }
+    //    });
+    //}
 });
