@@ -337,152 +337,311 @@ function procesarDatos(registros) {
 
 
 // ============================================
-// FUNCIÓN PARA OBTENER Y MOSTRAR DETALLES DE LA CELDA
+// FUNCIÓN PARA SANITIZAR HTML (Prevenir XSS)
+// ============================================
+function sanitizarHTML(str) {
+    if (!str) return 'N/A';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+// ============================================
+// FUNCIÓN PARA VALIDAR COLOR RGB
+// ============================================
+function validarColorRGB(color) {
+    if (!color) return '200,200,200';
+    const partes = color.split(',').map(Number);
+    if (partes.length === 3 && partes.every(n => n >= 0 && n <= 255)) {
+        return color;
+    }
+    return '200,200,200';
+}
+
+// ============================================
+// FUNCIÓN PARA OBTENER Y MOSTRAR DETALLES DE LA CELDA (MEJORADA)
 // ============================================
 async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual) {
-    try {
-        // Mostrar loading en el modal
+    // ========== VALIDACIONES DE SEGURIDAD ==========
+    
+    // 1. Verificar que no sea la primera columna (índice de fila)
+    if (!filaNum || !colNum) {
+        console.warn("Intento de click en celda sin coordenadas válidas");
+        return;
+    }
+    
+    // 2. Verificar que el valor no esté vacío
+    if (!valorActual || valorActual.trim() === "") {
+        console.warn("Intento de click en celda vacía");
+        return;
+    }
+    
+    // 3. Verificar que las coordenadas sean números válidos
+    if (isNaN(filaNum) || isNaN(colNum) || filaNum < 0 || colNum < 0) {
+        console.error("Coordenadas inválidas:", { filaNum, colNum });
+        return;
+    }
+
+    // 4. 🚫 EXCLUIR PRIMERA COLUMNA (columna 0 - números/índices)
+    if (colNum === 0) {
+        console.log("🚫 Primera columna (índice) - Sin acción", { filaNum, colNum });
+        return;
+    }
+    
+    // 5. 🚫 EXCLUIR PRIMERA FILA (fila 0 o 1 - headers adicionales)
+    //    Ajusta según tu estructura: puede ser fila 0 o fila 1
+    const PRIMERA_FILA_HEADER = 0;  // o 1, según tu matriz
+    if (filaNum === PRIMERA_FILA_HEADER) {
+        console.log("🚫 Primera fila (header) - Sin acción", { filaNum, colNum });
+        return;
+    }
+    
+    // 6. 🚫 EXCLUIR SEGUNDA COLUMNA (columna 1 - metadata)
+    const SEGUNDA_COLUMNA_METADATA = 1;
+    if (colNum === SEGUNDA_COLUMNA_METADATA) {
+        console.log("🚫 Segunda columna (metadata) - Sin acción", { filaNum, colNum });
+        return;
+    }
+    
+    // 7. 🚫 EXCLUIR SEGUNDA FILA (fila 1 - metadata adicional)
+    const SEGUNDA_FILA_METADATA = 1;
+    if (filaNum === SEGUNDA_FILA_METADATA) {
+        console.log("🚫 Segunda fila (metadata) - Sin acción", { filaNum, colNum });
+        return;
+    }
+
+    // 8. Validar parámetros obligatorios
+    if (!currentGen) {
         if (typeof Swal !== 'undefined') {
             Swal.fire({
+                icon: 'warning',
+                title: 'Error',
+                text: 'No hay un gen seleccionado',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+        return;
+    }
+    
+    // Validar que las coordenadas sean números válidos
+    const filaValida = Number.isInteger(filaNum) && filaNum >= 0;
+    const colValida = Number.isInteger(colNum) && colNum >= 0;
+    
+    if (!filaValida || !colValida) {
+        console.error('Coordenadas inválidas:', filaNum, colNum);
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `Coordenadas inválidas: (${filaNum}, ${colNum})`,
+                confirmButtonText: 'Aceptar'
+            });
+        }
+        return;
+    }
+    
+    let swalInstance = null;
+    
+    try {
+        // Mostrar modal de carga con timeout
+        if (typeof Swal !== 'undefined') {
+            swalInstance = Swal.fire({
                 title: 'Cargando información...',
                 html: '<i class="fas fa-spinner fa-pulse"></i> Obteniendo datos de la coordenada...',
-                allowOutsideClick: false,
+                allowOutsideClick: true, // Permitir cerrar mientras carga
+                showConfirmButton: false,
+                timer: 10000, // Timeout de 10 segundos
+                timerProgressBar: true,
                 didOpen: () => {
                     Swal.showLoading();
                 }
             });
         }
         
-        // Construir la URL con los parámetros correctos
-        // Usar el gen actual (currentGen) y las coordenadas de la celda
-        const url = `/genes_to_excel/coordenadas-gen/?cord=${filaNum}%2C${colNum}&gen__name=${currentGen}`;
+        // Construir URL con parámetros codificados correctamente
+        const params = new URLSearchParams({
+            cord: `${filaNum},${colNum}`,
+            gen__name: currentGen
+        });
+        const url = `/genes_to_excel/coordenadas-gen/?${params.toString()}`;
         
         console.log(`🔍 Consultando detalles en: ${url}`);
         
-        const response = await axios.get(url);
+        // Agregar timeout a la petición axios
+        const response = await axios.get(url, {
+            timeout: 15000 // 15 segundos timeout
+        });
+        
         const data = response.data;
         
+        // Validar respuesta
         if (!data.results || data.results.length === 0) {
             throw new Error('No se encontraron detalles para esta celda');
         }
         
         const detalle = data.results[0];
         
-        // Procesar la lista de alelos asociados
-        const alelosAsociados = detalle.Alleleasoc ? detalle.Alleleasoc.split(',') : [];
+        // Sanitizar todos los campos
+        const gen = sanitizarHTML(detalle.Gene);
+        const coordinate = sanitizarHTML(detalle.Coordinate);
+        const valor = sanitizarHTML(detalle.Valor);
+        const colorValido = validarColorRGB(detalle.Color);
+        const protein = sanitizarHTML(detalle.Protein);
+        const species = sanitizarHTML(detalle.Species);
+        const variant = sanitizarHTML(detalle.Variant);
+        const order1 = sanitizarHTML(detalle.Order1);
+        const order2 = sanitizarHTML(detalle.Order2);
+        const order3 = sanitizarHTML(detalle.Order3);
         
-        // Crear el contenido HTML del modal
+        // Procesar alelos asociados de forma segura
+        let alelosAsociados = [];
+        if (detalle.Alleleasoc) {
+            alelosAsociados = detalle.Alleleasoc.split(',')
+                .map(al => sanitizarHTML(al.trim()))
+                .filter(al => al && al !== '');
+        }
+        
+        // Calcular color de texto para contraste
+        const rgbParts = colorValido.split(',').map(Number);
+        const luminancia = (rgbParts[0] * 0.299 + rgbParts[1] * 0.587 + rgbParts[2] * 0.114);
+        const textoColor = luminancia > 128 ? '#000000' : '#ffffff';
+        
+        // Crear contenido HTML de forma segura (usando textContent internamente)
         const contenidoHTML = `
-            <div style="text-align: left; font-family: monospace;">
+            <div style="text-align: left; font-family: monospace; max-height: 70vh; overflow-y: auto;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; width: 40%;">Gen:</td>
-                        <td style="padding: 8px;">${detalle.Gene || 'N/A'}</td>
+                        <td style="padding: 8px; font-weight: bold; width: 40%; background: #f5f5f5;">Gen:</td>
+                        <td style="padding: 8px;">${gen}</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold;">Coordenada:</td>
-                        <td style="padding: 8px;">${detalle.Coordinate || 'N/A'}</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Coordenada:</td>
+                        <td style="padding: 8px;">${coordinate}</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold;">Valor:</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Valor:</td>
                         <td style="padding: 8px;">
-                            <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; background-color: rgb(${detalle.Color || '200,200,200'}); font-weight: bold;">
-                                ${detalle.Valor || 'N/A'}
+                            <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; background-color: rgb(${colorValido}); color: ${textoColor}; font-weight: bold;">
+                                ${valor || 'N/A'}
                             </span>
                         </td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold;">Color:</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Color:</td>
                         <td style="padding: 8px;">
-                            <div style="display: inline-block; width: 40px; height: 20px; background-color: rgb(${detalle.Color || '255,255,255'}); border: 1px solid #ccc;"></div>
-                            (${detalle.Color || 'N/A'})
+                            <div style="display: inline-block; width: 40px; height: 20px; background-color: rgb(${colorValido}); border: 1px solid #ccc; vertical-align: middle;"></div>
+                            <span style="margin-left: 8px;">(${colorValido})</span>
                         </td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold;">Proteína:</td>
-                        <td style="padding: 8px;">${detalle.Protein || 'N/A'}</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Proteína:</td>
+                        <td style="padding: 8px;">${protein}</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold;">Alelos Asociados:</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Alelos Asociados:</td>
                         <td style="padding: 8px;">
                             ${alelosAsociados.length > 0 ? 
-                                `<div style="max-height: 200px; overflow-y: auto;">
-                                    ${alelosAsociados.map(al => `<span style="display: inline-block; background: #f0f0f0; padding: 4px 8px; margin: 2px; border-radius: 4px; font-size: 12px;">${al.trim()}</span>`).join('')}
+                                `<div style="max-height: 150px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 4px;">
+                                    ${alelosAsociados.map(al => `<span style="background: #e0e0e0; padding: 4px 8px; border-radius: 4px; font-size: 12px; display: inline-block;">${al}</span>`).join('')}
                                 </div>` : 
-                                'Ninguno'
+                                '<span style="color: #999;">Ninguno</span>'
                             }
                         </td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold;">Especie:</td>
-                        <td style="padding: 8px;">${detalle.Species || 'N/A'}</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Especie:</td>
+                        <td style="padding: 8px;">${species}</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold;">Variante:</td>
-                        <td style="padding: 8px;">${detalle.Variant || 'N/A'}</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Variante:</td>
+                        <td style="padding: 8px;">${variant}</td>
                     </tr>
+                    ${order1 !== 'N/A' ? `
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold;">Order1:</td>
-                        <td style="padding: 8px;">${detalle.Order1 || 'N/A'}</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Order1:</td>
+                        <td style="padding: 8px;">${order1}</td>
                     </tr>
+                    ` : ''}
+                    ${order2 !== 'N/A' ? `
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold;">Order2:</td>
-                        <td style="padding: 8px;">${detalle.Order2 || 'N/A'}</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Order2:</td>
+                        <td style="padding: 8px;">${order2}</td>
                     </tr>
-                    <tr>
-                        <td style="padding: 8px; font-weight: bold;">Order3:</td>
-                        <td style="padding: 8px;">${detalle.Order3 || 'N/A'}</td>
+                    ` : ''}
+                    ${order3 !== 'N/A' ? `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Order3:</td>
+                        <td style="padding: 8px;">${order3}</td>
                     </tr>
+                    ` : ''}
                 </table>
             </div>
         `;
         
-        // Mostrar el modal con la información
+        // Cerrar modal de carga si existe
+        if (swalInstance) {
+            swalInstance.close();
+        }
+        
+        // Mostrar modal con información
         if (typeof Swal !== 'undefined') {
-            Swal.fire({
-                title: `Información de la celda`,
+            await Swal.fire({
+                title: `📊 Información - ${gen}`,
                 html: contenidoHTML,
                 icon: 'info',
-                width: '600px',
+                width: '650px',
                 confirmButtonText: 'Cerrar',
                 confirmButtonColor: '#3085d6',
-                showCloseButton: true
+                showCloseButton: true,
+                customClass: {
+                    popup: 'detalle-celda-modal'
+                }
             });
         } else {
-            // Fallback si SweetAlert no está disponible
-            alert(`
-                Gen: ${detalle.Gene}
-                Coordenada: ${detalle.Coordinate}
-                Valor: ${detalle.Valor}
-                Color: ${detalle.Color}
-                Proteína: ${detalle.Protein}
-                Alelos Asociados: ${detalle.Alleleasoc}
-                Especie: ${detalle.Species}
-                Variante: ${detalle.Variant}
-            `);
+            // Fallback seguro sin alert()
+            console.log('Detalle celda:', {
+                gen, coordinate, valor, protein, species, variant
+            });
+            mostrarMensaje(`Información: ${gen} - ${valor}`, 'info');
         }
         
     } catch (error) {
         console.error("Error obteniendo detalles de la celda:", error);
         
-        let mensajeError = `No se pudo obtener la información de la celda: ${error.message}`;
+        // Cerrar modal de carga si existe
+        if (swalInstance) {
+            swalInstance.close();
+        }
         
-        if (error.response) {
-            mensajeError += `\nStatus: ${error.response.status}`;
+        let mensajeError = '';
+        let tituloError = 'Error al cargar detalles';
+        
+        if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+            mensajeError = 'La petición ha excedido el tiempo de espera. Por favor, intente nuevamente.';
+        } else if (error.response) {
             if (error.response.status === 404) {
-                mensajeError = `No se encontró información para esta coordenada (${filaNum}, ${colNum})`;
+                mensajeError = `No se encontró información para la coordenada (${filaNum}, ${colNum}) en el gen ${currentGen}`;
+                tituloError = 'Información no disponible';
+            } else if (error.response.status === 500) {
+                mensajeError = 'Error interno del servidor. Por favor, intente más tarde.';
+            } else {
+                mensajeError = `Error ${error.response.status}: ${error.response.statusText || error.message}`;
             }
+        } else if (error.request) {
+            mensajeError = 'No se recibió respuesta del servidor. Verifique su conexión.';
+        } else {
+            mensajeError = error.message || 'Error desconocido al cargar los detalles';
         }
         
         if (typeof Swal !== 'undefined') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error al cargar detalles',
+            await Swal.fire({
+                icon: error.response?.status === 404 ? 'info' : 'error',
+                title: tituloError,
                 text: mensajeError,
                 confirmButtonText: 'Aceptar'
             });
         } else {
-            alert(mensajeError);
+            mostrarMensaje(mensajeError, 'error');
         }
     }
 }
