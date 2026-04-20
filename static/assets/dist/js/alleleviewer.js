@@ -716,6 +716,9 @@ async function showInfo(atom) {
       children = elemento.children;
       predecessors = elemento.predecessors;
       sucessors = elemento.sucessors;
+      console.log("Children:", children);
+      console.log("Predecessors:", predecessors);
+      console.log("Sucessors:", sucessors);
       const buttons = `<div class="btn-group btn-shadow">
         <button type="button" class="btn  btn-danger" data-toggle="tooltip" title="Show RS" onclick="mostrarRS('${
           elemento.rs
@@ -876,33 +879,27 @@ function loadFamilyFull(id) {
 function family(id) {
   const highlightColor = "#ffaa02";
 
-  viewer.setStyle(
-    {},
-    {
-      sphere: { color: "#eae8e8" },
-      stick: { color: "#eae8e8", showNonBonded: false },
+  datos.forEach((element) => {
+    const isTarget = children.some((item) => item.number === element.number) || element.number === id;
+    
+    if (isTarget) {
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: { color: highlightColor, radius: element.sphere_radius, hidden: false },
+          stick: { color: highlightColor, radius: element.stick_radius, showNonBonded: false, hidden: false },
+        }
+      );
+    } else {
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: { color: "#eae8e8", radius: element.sphere_radius, hidden: false },
+          stick: { color: "#eae8e8", radius: element.stick_radius, showNonBonded: false, hidden: false },
+        }
+      );
     }
-  );
-
-  viewer.setStyle(
-    { serial: id },
-    {
-      sphere: { color: highlightColor },
-      stick: { color: highlightColor, showNonBonded: false },
-    }
-  );
-
-  for (let index = 0; index < children.length; index++) {
-    const element = children[index].number;
-
-    viewer.setStyle(
-      { serial: element },
-      {
-        sphere: { color: highlightColor },
-        stick: { color: highlightColor, showNonBonded: false },
-      }
-    );
-  }
+  });
 
   viewer.render();
 }
@@ -1038,6 +1035,11 @@ function obtenerAtomoDesdeViewer(viewer, serial) {
 }
 
 function genealogicalTree(id) {
+  console.log("sucessors:", sucessors);
+  console.log("predecessors:", predecessors);
+  console.log("id:", id);
+  console.log("datos:", datos.map(e => e.number));
+  
   // Eliminar TODAS las etiquetas del viewer
   viewer.removeAllLabels();
   if (labelOn) {
@@ -1049,23 +1051,24 @@ function genealogicalTree(id) {
 
   load.hidden = false;
   datos.forEach((element) => {
-    const isVisible =
-      sucessors.some((item) => item === element.number) ||
-      predecessors.some((item) => item === element.number) ||
-      element.number === id;
+    const elementNumber = Number(element.number);
+    const isPredecessor = predecessors.some((item) => Number(item) === elementNumber);
+    const isSuccessor = sucessors.some((item) => Number(item) === elementNumber);
+    const isSelected = elementNumber === Number(id);
 
     // Aplicar estilos específicos para el nodo principal
-    if (element.number === id) {
+    if (isSelected) {
       viewer.setStyle(
         { serial: element.number },
         {
           sphere: {
             color: "#ff0000", // Color rojo para destacar
-            radius: 1.5, // Tamaño mayor de la esfera
+            radius: element.sphere_radius, // Mantener radio original
             hidden: false,
           },
           stick: {
             color: "#ff0000", // Color rojo para las conexiones
+            radius: element.stick_radius, // Mantener radio original
             hidden: false,
           },
         }
@@ -1084,17 +1087,19 @@ function genealogicalTree(id) {
         borderThickness: 1,
         borderColor: "#ff0000",
       });
-    } else if (predecessors.some((item) => item === element.number)) {
+    } else if (isPredecessor) {
       // Pintar predecesores de verde
       viewer.setStyle(
         { serial: element.number },
         {
           sphere: {
             color: "#00ff00", // Color verde
+            radius: element.sphere_radius, // Mantener radio original
             hidden: false,
           },
           stick: {
             color: "#00ff00", // Color verde para las conexiones
+            radius: element.stick_radius, // Mantener radio original
             hidden: false,
           },
         }
@@ -1120,17 +1125,19 @@ function genealogicalTree(id) {
         });
         predecesorLabel = true;
       }
-    } else if (sucessors.some((item) => item === element.number)) {
+    } else if (isSuccessor) {
       // Pintar sucesores de amarillo
       viewer.setStyle(
         { serial: element.number },
         {
           sphere: {
             color: "#ffff00", // Color amarillo
+            radius: element.sphere_radius, // Mantener radio original
             hidden: false,
           },
           stick: {
             color: "#ffff00", // Color amarillo para las conexiones
+            radius: element.stick_radius, // Mantener radio original
             hidden: false,
           },
         }
