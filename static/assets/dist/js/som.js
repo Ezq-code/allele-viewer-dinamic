@@ -35,7 +35,9 @@ async function obtenerTodosLosRegistros(genName) {
         pageCount++;
         console.log(`Cargando página ${pageCount}...`);
         
-        const response = await axios.get(nextUrl);
+        const response = await axios.get(nextUrl, {
+                                            timeout: 120000 // 2 minutos
+                                        });
         const data = response.data;
         
         allResults = [...allResults, ...data.results];
@@ -60,10 +62,13 @@ async function cargarListaGenes() {
         // Mostrar loading
         if (load) load.hidden = false;
         
-        console.log("🔍 Haciendo petición a: /genes_to_excel/v1/listgenes");
+        //console.log("🔍 Haciendo petición a: /genes_to_excel/v1/listgenes");
+        console.log("🔍 Haciendo petición a: /business-gestion/gene/");
         
         // Usar el nuevo endpoint específico para lista de genes
-        const response = await axios.get("/genes_to_excel/v1/listgenes");
+        const response = await axios.get("/business-gestion/gene/", {
+                                            timeout: 120000 // 2 minutos
+                                        });
         
         console.log("✅ Respuesta recibida:", response);
         console.log("📦 Datos de respuesta:", response.data);
@@ -469,7 +474,7 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         
         // Agregar timeout a la petición axios
         const response = await axios.get(url, {
-            timeout: 15000 // 15 segundos timeout
+            timeout: 120000  // 15 segundos timeout
         });
         
         const data = response.data;
