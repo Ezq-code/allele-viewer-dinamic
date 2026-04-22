@@ -27,7 +27,7 @@ class CaracteristicaGenViewSet(viewsets.ReadOnlyModelViewSet, GenericAPIView):
         serializer_class=GeneSimpleSerializer,
     )
     def get_related_genes(self, request):
-        genes_id = self.get_queryset().values_list("gen_id", flat=True)
+        genes_id = self.get_queryset().values_list("gen_id", flat=True).distinct()
 
         serializer = self.get_serializer(
             Gene.objects.filter(id__in=genes_id).only("id", "name").order_by("name"),
