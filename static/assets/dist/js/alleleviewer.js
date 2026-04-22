@@ -504,7 +504,6 @@ function cargarGenes() {
           poblarArchivosPorGen(response.data.results[0].id);
         }
       }
-      load.hidden = true;
     })
     .catch(function (error) {
       load.hidden = true;
