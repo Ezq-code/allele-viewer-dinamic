@@ -30,7 +30,8 @@ class CaracteristicaGenViewSet(viewsets.ReadOnlyModelViewSet, GenericAPIView):
         genes_id = self.get_queryset().values_list("gen_id", flat=True)
 
         serializer = self.get_serializer(
-            Gene.objects.filter(id__in=genes_id).only("id", "name"), many=True
+            Gene.objects.filter(id__in=genes_id).only("id", "name").order_by("name"),
+            many=True,
         )
 
         return Response({"results": serializer.data})
