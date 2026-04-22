@@ -63,10 +63,10 @@ async function cargarListaGenes() {
         if (load) load.hidden = false;
         
         //console.log("🔍 Haciendo petición a: /genes_to_excel/v1/listgenes");
-        console.log("🔍 Haciendo petición a: /business-gestion/gene/");
+        console.log("🔍 Haciendo petición a: /genes_to_excel/caracteristica-gen/get-related-genes/");
         
         // Usar el nuevo endpoint específico para lista de genes
-        const response = await axios.get("/business-gestion/gene/", {
+        const response = await axios.get("/genes_to_excel/caracteristica-gen/get-related-genes/", {
                                             timeout: 120000 // 2 minutos
                                         });
         
