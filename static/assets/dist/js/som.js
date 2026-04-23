@@ -20,7 +20,7 @@ if (csrfToken) {
 // ============================================
 async function obtenerTodosLosRegistros(genName) {
     let allResults = [];
-    let nextUrl = `/genes_to_excel/caracteristica-gen/?gen__name=${genName}&page_size=1000`;
+    let nextUrl = `/genes_to_excel/caracteristica-gen/get-all/?gen_id=${genName}`;
     let pageCount = 0;
     
     console.log(`Obteniendo todos los registros para ${genName}...`);
@@ -82,23 +82,23 @@ async function cargarListaGenes() {
         
         if (Array.isArray(genesData)) {
             console.log("✅ genesData es un array, longitud:", genesData.length);
-            // Extraer el campo 'name' de cada objeto
+            // Extraer id y name de cada objeto
             genesList = genesData.map(gene => {
                 console.log("Procesando gene:", gene);
-                return gene.name;
-            }).filter(name => {
-                console.log("Filtrando name:", name);
-                return name;
+                return { id: gene.id, name: gene.name };
+            }).filter(gene => {
+                console.log("Filtrando gene:", gene);
+                return gene.id && gene.name;
             });
         } else if (genesData.results && Array.isArray(genesData.results)) {
             console.log("✅ genesData tiene resultados paginados, longitud:", genesData.results.length);
             // Por si acaso el endpoint devuelve paginado en el futuro
             genesList = genesData.results.map(gene => {
                 console.log("Procesando gene:", gene);
-                return gene.name;
-            }).filter(name => {
-                console.log("Filtrando name:", name);
-                return name;
+                return { id: gene.id, name: gene.name };
+            }).filter(gene => {
+                console.log("Filtrando gene:", gene);
+                return gene.id && gene.name;
             });
         } else {
             console.error("❌ Formato inesperado:", genesData);
@@ -129,23 +129,23 @@ async function cargarListaGenes() {
         
         genesList.forEach(gene => {
             const option = document.createElement("option");
-            option.value = gene;
-            option.textContent = gene;
+            option.value = gene.id;  // Usar ID como value
+            option.textContent = gene.name;  // Mostrar nombre
             selectGene.appendChild(option);
-            console.log(`✅ Opción agregada: ${gene}`);
+            console.log(`✅ Opción agregada: ${gene.name} (ID: ${gene.id})`);
         });
         
         console.log(`✅ Select llenado con ${genesList.length} genes`);
         
         // Recuperar último gen seleccionado del localStorage
-        const lastGen = localStorage.getItem("lastSelectedGen");
-        console.log(`📌 Último gen seleccionado: ${lastGen}`);
+        const lastGenId = localStorage.getItem("lastSelectedGenId");
+        console.log(`📌 Último gen seleccionado: ${lastGenId}`);
         
-        if (lastGen && genesList.includes(lastGen)) {
-            selectGene.value = lastGen;
-            console.log(`🔄 Cargando último gen: ${lastGen}`);
+        if (lastGenId && genesList.some(g => g.id === lastGenId)) {
+            selectGene.value = lastGenId;
+            console.log(`🔄 Cargando último gen: ${lastGenId}`);
             // Cargar datos automáticamente si hay un gen guardado
-            //cargarDatosPorGen(lastGen);
+            //cargarDatosPorGen(lastGenId);
         }
         
         // Ocultar loading
@@ -464,7 +464,7 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         // Construir URL con parámetros codificados correctamente
         const params = new URLSearchParams({
             cord: `${filaNum},${colNum}`,
-            gen__name: currentGen
+            gen_id: currentGen,
         });
         const url = `/genes_to_excel/coordenadas-gen/?${params.toString()}`;
         
@@ -936,44 +936,44 @@ function mostrarMensaje(mensaje, tipo = "info") {
 // ============================================
 // 5. CARGAR DATOS POR GEN
 // ============================================
-async function cargarDatosPorGen(genName) {
-    if (!genName) {
+async function cargarDatosPorGen(genId, genNombre) {
+    if (!genId) {
         mostrarMensaje("Por favor, seleccione un gen", "warning");
         return;
     }
     
     if (load) load.hidden = false;
-    currentGen = genName;
-    localStorage.setItem("lastSelectedGen", genName);
+    currentGen = genId;
+    localStorage.setItem("lastSelectedGenId", genId);
     
     const infoGen = document.getElementById("infoGenActual");
     if (infoGen) {
-        infoGen.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Gen actual: <strong>${genName}</strong> - Cargando datos...`;
+        infoGen.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Gen actual: <strong>${genNombre}</strong> - Cargando datos...`;
         infoGen.style.background = "#e3f2fd";
     }
     
     try {
         // Obtener TODOS los registros del endpoint
-        const registros = await obtenerTodosLosRegistros(genName);
+        const registros = await obtenerTodosLosRegistros(genId);
         
         if (!registros || registros.length === 0) {
-            mostrarMensaje(`No hay datos para el gen ${genName}`, "warning");
+            mostrarMensaje(`No hay datos para el gen ${genNombre}`, "warning");
             if (load) load.hidden = true;
             if (infoGen) {
-                infoGen.innerHTML = `<i class="fas fa-info-circle"></i> Gen actual: <strong>${genName}</strong> - Sin datos`;
+                infoGen.innerHTML = `<i class="fas fa-info-circle"></i> Gen actual: <strong>${genNombre}</strong> - Sin datos`;
                 infoGen.style.background = "#fff3cd";
             }
             return;
         }
         
-        console.log(`Procesando ${registros.length} registros para ${genName}...`);
+        console.log(`Procesando ${registros.length} registros para ${genNombre} (ID: ${genId})...`);
         
         // Procesar y renderizar
         const resultado = procesarDatos(registros);
         renderizarTablaExcel(resultado);
         
         if (infoGen) {
-            infoGen.innerHTML = `<i class="fas fa-check-circle"></i> Gen actual: <strong>${genName}</strong>`;
+            infoGen.innerHTML = `<i class="fas fa-check-circle"></i> Gen actual: <strong>${genNombre}</strong>`;
             infoGen.style.background = "#d4edda";
         }
               
@@ -983,7 +983,7 @@ async function cargarDatosPorGen(genName) {
         if (load) load.hidden = true;
         console.error("Error cargando datos:", error);
         
-        let mensajeError = `Error al cargar datos del gen ${genName}: ${error.message}`;
+        let mensajeError = `Error al cargar datos del gen ${genNombre}: ${error.message}`;
         
         if (typeof Swal !== 'undefined') {
             Swal.fire({
@@ -997,7 +997,7 @@ async function cargarDatosPorGen(genName) {
         mostrarMensaje(mensajeError, "error");
         
         if (infoGen) {
-            infoGen.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error: ${genName}`;
+            infoGen.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error: ${genNombre}`;
             infoGen.style.background = "#f8d7da";
         }
     }
@@ -1017,9 +1017,10 @@ document.addEventListener("DOMContentLoaded", function() {
     if (btnCargar) {
         btnCargar.addEventListener("click", function() {
             const selectGene = document.getElementById("selectGene");
-            const genSeleccionado = selectGene.value;
-            if (genSeleccionado) {
-                cargarDatosPorGen(genSeleccionado);
+            const genId = selectGene.value;
+            const genNombre = selectGene.options[selectGene.selectedIndex].text;
+            if (genId) {
+                cargarDatosPorGen(genId, genNombre);
             } else {
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({

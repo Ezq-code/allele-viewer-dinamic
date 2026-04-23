@@ -3,6 +3,7 @@ import logging
 from django.contrib import admin
 
 from apps.genes_to_excel.models.genes_to_excel_files import GenesToExcelFiles
+from apps.genes_to_excel.models.caracteristica_gen import CaracteristicaGen
 
 
 logger = logging.getLogger(__name__)
@@ -36,3 +37,34 @@ class GenesToExcelFilesAdmin(admin.ModelAdmin):
             logger.error(f"{str(e)}")
             # Display the exception in the admin interface
             self.message_user(request, f"{str(e)}", level="error")
+
+@admin.register(CaracteristicaGen)
+class CaracteristicaGenAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "gene",
+        "cord",
+        "valor",
+        "color",
+        "protein",
+        "alleleasoc",
+        "species",
+        "variant",
+        "order_one",
+        "order_two",
+        "order_three",
+    ]
+    fields = [
+        "gene",
+        "cord",
+        "valor",
+        "color",
+        "protein",
+        "alleleasoc",
+        "species",
+        "variant",
+        "order_one",
+        "order_two",
+        "order_three",
+    ]
