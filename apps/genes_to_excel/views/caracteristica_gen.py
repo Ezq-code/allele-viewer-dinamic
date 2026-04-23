@@ -16,7 +16,7 @@ class CaracteristicaGenViewSet(viewsets.ReadOnlyModelViewSet, GenericAPIView):
     serializer_class = CaracteristicaGenSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ["gen__name"]
+    filterset_fields = ["gen_id", "cord", "protein"]
     search_fields = ["gen__name", "gene"]
 
     @action(
