@@ -20,7 +20,7 @@ if (csrfToken) {
 // ============================================
 async function obtenerTodosLosRegistros(genName) {
     let allResults = [];
-    let nextUrl = `/genes_to_excel/caracteristica-gen/?gen_id=${genName}&page_size=1000`;
+    let nextUrl = `/genes_to_excel/caracteristica-gen/get-all/?gen_id=${genName}`;
     let pageCount = 0;
     
     console.log(`Obteniendo todos los registros para ${genName}...`);

@@ -9,9 +9,10 @@ from apps.business_app.models.gene import Gene
 
 from ..serializers.caracteristica_gen import CaracteristicaGenSerializer
 from ..models.caracteristica_gen import CaracteristicaGen
+from apps.common.views import GetAllMixin
 
 
-class CaracteristicaGenViewSet(viewsets.ReadOnlyModelViewSet, GenericAPIView):
+class CaracteristicaGenViewSet(GetAllMixin, viewsets.ReadOnlyModelViewSet, GenericAPIView):
     queryset = CaracteristicaGen.objects.all()
     serializer_class = CaracteristicaGenSerializer
     permission_classes = [permissions.AllowAny]
