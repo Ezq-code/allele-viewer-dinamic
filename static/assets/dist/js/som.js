@@ -32,7 +32,7 @@ async function obtenerTodosLosRegistros(genName) {
     // Mostrar progreso inicial
     const statsSpan = document.getElementById("info-stats");
     if (statsSpan) {
-        statsSpan.innerHTML = `Cargando datos de ${genName}...`;
+        statsSpan.innerHTML = `Loading data for ${genName}...`;
     }
     const response = await axios.get(info_url, {
                                             timeout: REQUEST_TIMEOUT_MS
@@ -125,19 +125,19 @@ async function cargarListaGenes() {
         
         const selectGene = document.getElementById("selectGene");
         if (!selectGene) {
-            console.error("❌ No se encontró el elemento selectGene");
+            console.error("❌ selectGene element not found");
             return;
         }
         
         if (genesList.length === 0) {
-            console.warn("⚠️ No se encontraron genes en la respuesta");
-            selectGene.innerHTML = '<option value="">No hay genes disponibles</option>';
+            console.warn("⚠️ No genes found in response");
+            selectGene.innerHTML = '<option value="">No genes available</option>';
             if (load) load.hidden = true;
             return;
         }
         
         // Llenar el select con los genes
-        selectGene.innerHTML = '<option value="">Seleccione un gen</option>';
+        selectGene.innerHTML = '<option value="">Select a gene</option>';
         
         const optionFragment = document.createDocumentFragment();
         genesList.forEach(gene => {
@@ -166,8 +166,8 @@ async function cargarListaGenes() {
         if (DEBUG) console.log(`✅ Genes cargados exitosamente: ${genesList.length} genes encontrados`);
         
     } catch (error) {
-        console.error("❌ Error cargando lista de genes:", error);
-        console.error("Detalles del error:", {
+        console.error("❌ Error loading gene list:", error);
+        console.error("Error details:", {
             message: error.message,
             response: error.response,
             config: error.config
@@ -175,11 +175,11 @@ async function cargarListaGenes() {
         
         const selectGene = document.getElementById("selectGene");
         if (selectGene) {
-            selectGene.innerHTML = '<option value="">Error al cargar genes</option>';
+            selectGene.innerHTML = '<option value="">Error loading genes</option>';
         }
         
         // Mostrar mensaje de error detallado
-        let errorMsg = `No se pudo cargar la lista de genes: ${error.message}`;
+        let errorMsg = `Could not load gene list: ${error.message}`;
         
         if (error.response) {
             errorMsg += `\nStatus: ${error.response.status}`;
@@ -189,9 +189,9 @@ async function cargarListaGenes() {
         if (typeof Swal !== 'undefined') {
             Swal.fire({
                 icon: "error",
-                title: "Error al cargar genes",
+                title: "Error loading genes",
                 text: errorMsg,
-                confirmButtonText: "Aceptar"
+                confirmButtonText: "Accept"
             });
         } else {
             console.error("Error:", errorMsg);
@@ -432,8 +432,8 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
             Swal.fire({
                 icon: 'warning',
                 title: 'Error',
-                text: 'No hay un gen seleccionado',
-                confirmButtonText: 'Aceptar'
+                text: 'No gene selected',
+                confirmButtonText: 'Accept'
             });
         }
         return;
@@ -449,8 +449,8 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: `Coordenadas inválidas: (${filaNum}, ${colNum})`,
-                confirmButtonText: 'Aceptar'
+                text: `Invalid coordinates: (${filaNum}, ${colNum})`,
+                confirmButtonText: 'Accept'
             });
         }
         return;
@@ -462,8 +462,8 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         // Mostrar modal de carga con timeout
         if (typeof Swal !== 'undefined') {
             swalInstance = Swal.fire({
-                title: 'Cargando información...',
-                html: '<i class="fas fa-spinner fa-pulse"></i> Obteniendo datos de la coordenada...',
+                title: 'Loading information...',
+                html: '<i class="fas fa-spinner fa-pulse"></i> Fetching coordinate data...',
                 allowOutsideClick: true, // Permitir cerrar mientras carga
                 showConfirmButton: false,
                 timer: 10000, // Timeout de 10 segundos
@@ -492,7 +492,7 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         
         // Validar respuesta
         if (!data.results || data.results.length === 0) {
-            throw new Error('No se encontraron detalles para esta celda');
+            throw new Error('No details found for this cell');
         }
         
         const detalle = data.results[0];
@@ -527,15 +527,15 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
             <div style="text-align: left; font-family: monospace; max-height: 70vh; overflow-y: auto;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; width: 40%; background: #f5f5f5;">Gen:</td>
+                        <td style="padding: 8px; font-weight: bold; width: 40%; background: #f5f5f5;">Gene:</td>
                         <td style="padding: 8px;">${gen}</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Coordenada:</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Coordinate:</td>
                         <td style="padding: 8px;">${coordinate}</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Valor:</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Value:</td>
                         <td style="padding: 8px;">
                             <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; background-color: rgb(${colorValido}); color: ${textoColor}; font-weight: bold;">
                                 ${valor || 'N/A'}
@@ -550,26 +550,26 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
                         </td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Proteína:</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Protein:</td>
                         <td style="padding: 8px;">${protein}</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Alelos Asociados:</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Associated Alleles:</td>
                         <td style="padding: 8px;">
                             ${alelosAsociados.length > 0 ? 
                                 `<div style="max-height: 150px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 4px;">
                                     ${alelosAsociados.map(al => `<span style="background: #e0e0e0; padding: 4px 8px; border-radius: 4px; font-size: 12px; display: inline-block;">${al}</span>`).join('')}
                                 </div>` : 
-                                '<span style="color: #999;">Ninguno</span>'
+                                '<span style="color: #999;">None</span>'
                             }
                         </td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Especie:</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Species:</td>
                         <td style="padding: 8px;">${species}</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Variante:</td>
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Variant:</td>
                         <td style="padding: 8px;">${variant}</td>
                     </tr>
                     ${order1 !== 'N/A' ? `
@@ -602,11 +602,11 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         // Mostrar modal con información
         if (typeof Swal !== 'undefined') {
             await Swal.fire({
-                title: `📊 Información - ${gen}`,
+                title: `📊 Information - ${gen}`,
                 html: contenidoHTML,
                 icon: 'info',
                 width: '650px',
-                confirmButtonText: 'Cerrar',
+                confirmButtonText: 'Close',
                 confirmButtonColor: '#3085d6',
                 showCloseButton: true,
                 customClass: {
@@ -618,7 +618,7 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
             console.log('Detalle celda:', {
                 gen, coordinate, valor, protein, species, variant
             });
-            mostrarMensaje(`Información: ${gen} - ${valor}`, 'info');
+            mostrarMensaje(`Information: ${gen} - ${valor}`, 'info');
         }
         
     } catch (error) {
@@ -630,23 +630,23 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         }
         
         let mensajeError = '';
-        let tituloError = 'Error al cargar detalles';
+        let tituloError = 'Error loading details';
         
         if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-            mensajeError = 'La petición ha excedido el tiempo de espera. Por favor, intente nuevamente.';
+            mensajeError = 'The request timed out. Please try again.';
         } else if (error.response) {
             if (error.response.status === 404) {
-                mensajeError = `No se encontró información para la coordenada (${filaNum}, ${colNum}) en el gen ${currentGen}`;
-                tituloError = 'Información no disponible';
+                mensajeError = `No information found for coordinate (${filaNum}, ${colNum}) in gene ${currentGen}`;
+                tituloError = 'Information not available';
             } else if (error.response.status === 500) {
-                mensajeError = 'Error interno del servidor. Por favor, intente más tarde.';
+                mensajeError = 'Internal server error. Please try again later.';
             } else {
                 mensajeError = `Error ${error.response.status}: ${error.response.statusText || error.message}`;
             }
         } else if (error.request) {
-            mensajeError = 'No se recibió respuesta del servidor. Verifique su conexión.';
+            mensajeError = 'No response from server. Please check your connection.';
         } else {
-            mensajeError = error.message || 'Error desconocido al cargar los detalles';
+            mensajeError = error.message || 'Unknown error loading details';
         }
         
         if (typeof Swal !== 'undefined') {
@@ -654,7 +654,7 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
                 icon: error.response?.status === 404 ? 'info' : 'error',
                 title: tituloError,
                 text: mensajeError,
-                confirmButtonText: 'Aceptar'
+                confirmButtonText: 'Accept'
             });
         } else {
             mostrarMensaje(mensajeError, 'error');
@@ -685,7 +685,7 @@ function renderizarTablaExcel(data) {
     const { matriz, filas, columnas, minFila, minCol } = data;
     
     if (!matriz || matriz.length === 0 || columnas.length === 0) {
-        mostrarMensaje("No se encontraron datos para mostrar", "warning");
+        mostrarMensaje("No data found to display", "warning");
         return;
     }
     
@@ -695,7 +695,7 @@ function renderizarTablaExcel(data) {
     }
     
     // Mostrar indicador de carga
-    container.innerHTML = '<div style="padding: 20px; text-align: center;"><i class="fas fa-spinner fa-pulse"></i> Renderizando tabla...</div>';
+    container.innerHTML = '<div style="padding: 20px; text-align: center;"><i class="fas fa-spinner fa-pulse"></i> Rendering table...</div>';
     
     // Usar setTimeout para arrancar fuera del ciclo de eventos actual
     setTimeout(() => {
@@ -708,7 +708,7 @@ function renderizarTablaExcel(data) {
         
         // Esquina superior izquierda
         const thCorner = document.createElement("th");
-        thCorner.textContent = "Alelos \\ Proteínas";
+        thCorner.textContent = "Alleles \\ Proteins";
         thCorner.style.minWidth = "100px";
         thCorner.style.position = "sticky";
         thCorner.style.left = "0";
@@ -834,7 +834,7 @@ function renderizarTablaExcel(data) {
                         td.dataset.colNum = String(celda.columna);
                         td.dataset.valor = celda.valor;
                         td.dataset.baseBg = colorStyle.bg;
-                        td.title = `Click into a cell to see details "${celda.valor}" en ${filas[idxFila]}`;
+                        td.title = `Click a cell to view details "${celda.valor}" in ${filas[idxFila]}`;
                     }
 
                     tr.appendChild(td);
@@ -853,7 +853,7 @@ function renderizarTablaExcel(data) {
             // Actualizar estadísticas al finalizar el render
             const statsSpan = document.getElementById("info-stats");
             if (statsSpan) {
-                statsSpan.innerHTML = `${filas.length} filas × ${columnas.length} columnas | ${data.celdasConDatos} celdas con datos`;
+                statsSpan.innerHTML = `${filas.length} rows × ${columnas.length} columns | ${data.celdasConDatos} cells with data`;
                 statsSpan.className = "badge";
             }
 
@@ -863,7 +863,7 @@ function renderizarTablaExcel(data) {
             const indicator = document.getElementById("virtualScrollIndicator");
             if (indicator) {
                 indicator.classList.remove("hidden");
-                indicator.innerHTML = `<i class="fas fa-table"></i> Matriz desde (${data.minFila},${data.minCol}) hasta (${data.maxFila},${data.maxCol}) | Total celdas: ${data.totalCeldas.toLocaleString()} | Celdas con datos: ${data.celdasConDatos}`;
+                indicator.innerHTML = `<i class="fas fa-table"></i> Matrix from (${data.minFila},${data.minCol}) to (${data.maxFila},${data.maxCol}) | Total cells: ${data.totalCeldas.toLocaleString()} | Cells with data: ${data.celdasConDatos}`;
             }
         };
 
@@ -956,7 +956,7 @@ function mostrarMensaje(mensaje, tipo = "info") {
     
     const statsSpan = document.getElementById("info-stats");
     if (statsSpan) {
-        statsSpan.innerHTML = "Sin datos";
+        statsSpan.innerHTML = "No data";
     }
 }
 
@@ -975,7 +975,7 @@ async function cargarDatosPorGen(genId, genNombre) {
     
     const infoGen = document.getElementById("infoGenActual");
     if (infoGen) {
-        infoGen.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Current Gene: <strong>${genNombre}</strong> - Cargando datos...`;
+        infoGen.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Current Gene: <strong>${genNombre}</strong> - Loading data...`;
         infoGen.style.background = "#e3f2fd";
     }
     
@@ -984,7 +984,7 @@ async function cargarDatosPorGen(genId, genNombre) {
         const registros = await obtenerTodosLosRegistros(genId);
         
         if (!registros || registros.length === 0) {
-            mostrarMensaje(`No hay datos para el gen ${genNombre}`, "warning");
+            mostrarMensaje(`No data available for gene ${genNombre}`, "warning");
             if (load) load.hidden = true;
             if (infoGen) {
                 infoGen.innerHTML = `<i class="fas fa-info-circle"></i> Current Gene: <strong>${genNombre}</strong> - No data`;
@@ -993,7 +993,7 @@ async function cargarDatosPorGen(genId, genNombre) {
             return;
         }
         
-        console.log(`Procesando ${registros.length} registros para ${genNombre} (ID: ${genId})...`);
+        console.log(`Processing ${registros.length} records for ${genNombre} (ID: ${genId})...`);
         
         // Procesar y renderizar
         const resultado = procesarDatos(registros);
@@ -1008,16 +1008,16 @@ async function cargarDatosPorGen(genId, genNombre) {
         
     } catch (error) {
         if (load) load.hidden = true;
-        console.error("Error cargando datos:", error);
+        console.error("Error loading data:", error);
         
-        let mensajeError = `Error al cargar datos del gen ${genNombre}: ${error.message}`;
+        let mensajeError = `Error loading data for gene ${genNombre}: ${error.message}`;
         
         if (typeof Swal !== 'undefined') {
             Swal.fire({
                 icon: "error",
-                title: "Error al cargar datos",
+                title: "Error loading data",
                 text: mensajeError,
-                confirmButtonText: "Aceptar"
+                confirmButtonText: "Accept"
             });
         }
         
