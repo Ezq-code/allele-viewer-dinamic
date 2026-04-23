@@ -1,6 +1,10 @@
 from rest_framework.generics import GenericAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from apps.business_app.serializers.gene_serializer import GeneSimpleSerializer
+from apps.business_app.models.gene import Gene
 
 
 from ..serializers.caracteristica_gen import CaracteristicaGenSerializer
@@ -14,6 +18,23 @@ class CaracteristicaGenViewSet(viewsets.ReadOnlyModelViewSet, GenericAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["gen__name"]
     search_fields = ["gen__name", "gene"]
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="get-related-genes",
+        url_name="get-related-genes",
+        serializer_class=GeneSimpleSerializer,
+    )
+    def get_related_genes(self, request):
+        genes_id = self.get_queryset().values_list("gen_id", flat=True).distinct()
+
+        serializer = self.get_serializer(
+            Gene.objects.filter(id__in=genes_id).only("id", "name").order_by("name"),
+            many=True,
+        )
+
+        return Response({"results": serializer.data})
 
 
 """
