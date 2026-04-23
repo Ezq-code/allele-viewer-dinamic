@@ -51,17 +51,17 @@ class ExcelSNPReader:
             ExcelSNPNomenclators.sheet_bd_column_order,
         )
 
-        # self.sheet_bd_location_df = pd.read_excel(
-        #     self.origin_file,
-        #     sheet_name=ExcelSNPNomenclators.sheet_bd_location,
-        #     engine="openpyxl",
-        # )
+        self.sheet_bd_location_df = pd.read_excel(
+            self.origin_file,
+            sheet_name=ExcelSNPNomenclators.sheet_bd_location,
+            engine="openpyxl",
+        )
 
-        # self._validate_sheet_structure(
-        #     self.sheet_bd_location_df,
-        #     self._output_mandatory_columns_for_sheet_bd_location_validation,
-        #     ExcelSNPNomenclators.sheet_bd_location,
-        # )
+        self._validate_sheet_structure(
+            self.sheet_bd_location_df,
+            self._output_mandatory_columns_for_sheet_bd_location_validation,
+            ExcelSNPNomenclators.sheet_bd_location,
+        )
 
         self.sheet_bd_ancesters_df = pd.read_excel(
             self.origin_file,
