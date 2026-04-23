@@ -7,6 +7,7 @@ let currentGen = null;
 const REQUEST_TIMEOUT_MS = 120000;
 const DEFAULT_COLOR = "255,255,255";
 const DEBUG = false;
+const RENDER_ROWS_PER_FRAME = 30;
 
 // Cache de estilos por color para evitar parseos repetidos en tablas grandes
 const colorStyleCache = new Map();
@@ -696,7 +697,7 @@ function renderizarTablaExcel(data) {
     // Mostrar indicador de carga
     container.innerHTML = '<div style="padding: 20px; text-align: center;"><i class="fas fa-spinner fa-pulse"></i> Renderizando tabla...</div>';
     
-    // Usar setTimeout para no bloquear el UI
+    // Usar setTimeout para arrancar fuera del ciclo de eventos actual
     setTimeout(() => {
         const table = document.createElement("table");
         table.className = "excel-table";
@@ -746,64 +747,6 @@ function renderizarTablaExcel(data) {
         
         // ========== CUERPO ==========
         const tbody = document.createElement("tbody");
-        const bodyFragment = document.createDocumentFragment();
-        
-        // Filas
-        for (let idxFila = 0; idxFila < matriz.length; idxFila++) {
-            const fila = matriz[idxFila];
-            const tr = document.createElement("tr");
-            
-            // Primera columna - Nombre del alelo (SIN acción)
-            const tdAlelo = document.createElement("td");
-            tdAlelo.textContent = filas[idxFila];
-            tdAlelo.style.fontWeight = "bold";
-            tdAlelo.style.backgroundColor = "#f8f8f8";
-            tdAlelo.style.position = "sticky";
-            tdAlelo.style.left = "0";
-            tdAlelo.style.minWidth = "100px";
-            tdAlelo.style.textAlign = "center";
-            tdAlelo.style.zIndex = "5";
-            tr.appendChild(tdAlelo);
-            
-            // Celdas de datos
-            for (let idxCol = 0; idxCol < fila.length; idxCol++) {
-                const celda = fila[idxCol];
-                const td = document.createElement("td");
-                td.textContent = celda.valor || "";
-                td.style.textAlign = "center";
-                td.style.padding = "8px 12px";
-                td.style.border = "1px solid #ddd";
-                
-                const colorStyle = getColorStyle(celda.color, Boolean(celda.valor));
-                if (colorStyle.bg) {
-                    td.style.backgroundColor = colorStyle.bg;
-                    td.style.color = colorStyle.textColor;
-                    td.style.fontWeight = "bold";
-                }
-                
-                // ========== AGREGAR ACCIÓN SOLO A CELDAS CON VALOR ==========
-                if (celda.valor && celda.valor !== "") {
-                    // Cambiar cursor a pointer
-                    td.style.cursor = "pointer";
-                    td.classList.add("clickable-cell");
-                    td.dataset.alelo = filas[idxFila];
-                    td.dataset.columna = String(columnas[idxCol]);
-                    td.dataset.fila = String(celda.fila);
-                    td.dataset.colNum = String(celda.columna);
-                    td.dataset.valor = celda.valor;
-                    td.dataset.baseBg = colorStyle.bg;
-                    
-                    // Tooltip informativo
-                    td.title = `Click into a cell to see details "${celda.valor}" en ${filas[idxFila]}`;
-                }
-                
-                tr.appendChild(td);
-            }
-            
-            bodyFragment.appendChild(tr);
-        }
-
-        tbody.appendChild(bodyFragment);
         
         table.appendChild(tbody);
         container.innerHTML = "";
@@ -840,22 +783,91 @@ function renderizarTablaExcel(data) {
             td.style.transform = "scale(1)";
             td.style.boxShadow = "none";
         });
-        
-        // Actualizar estadísticas
-        const statsSpan = document.getElementById("info-stats");
-        if (statsSpan) {
-            statsSpan.innerHTML = `${filas.length} filas × ${columnas.length} columnas | ${data.celdasConDatos} celdas con datos`;
-            statsSpan.className = "badge";
-        }
-        
-        if (DEBUG) console.log("✅ Tabla renderizada correctamente");
-        
-        // Agregar información adicional en el indicador virtual
-        const indicator = document.getElementById("virtualScrollIndicator");
-        if (indicator) {
-            indicator.classList.remove("hidden");
-            indicator.innerHTML = `<i class="fas fa-table"></i> Matriz desde (${data.minFila},${data.minCol}) hasta (${data.maxFila},${data.maxCol}) | Total celdas: ${data.totalCeldas.toLocaleString()} | Celdas con datos: ${data.celdasConDatos}`;
-        }
+
+        // Render incremental por lotes para mantener UI responsiva
+        let idxFila = 0;
+        const totalFilas = matriz.length;
+
+        const renderChunk = () => {
+            const bodyFragment = document.createDocumentFragment();
+            const end = Math.min(idxFila + RENDER_ROWS_PER_FRAME, totalFilas);
+
+            for (; idxFila < end; idxFila++) {
+                const fila = matriz[idxFila];
+                const tr = document.createElement("tr");
+
+                // Primera columna - Nombre del alelo (SIN acción)
+                const tdAlelo = document.createElement("td");
+                tdAlelo.textContent = filas[idxFila];
+                tdAlelo.style.fontWeight = "bold";
+                tdAlelo.style.backgroundColor = "#f8f8f8";
+                tdAlelo.style.position = "sticky";
+                tdAlelo.style.left = "0";
+                tdAlelo.style.minWidth = "100px";
+                tdAlelo.style.textAlign = "center";
+                tdAlelo.style.zIndex = "5";
+                tr.appendChild(tdAlelo);
+
+                // Celdas de datos
+                for (let idxCol = 0; idxCol < fila.length; idxCol++) {
+                    const celda = fila[idxCol];
+                    const td = document.createElement("td");
+                    td.textContent = celda.valor || "";
+                    td.style.textAlign = "center";
+                    td.style.padding = "8px 12px";
+                    td.style.border = "1px solid #ddd";
+
+                    const colorStyle = getColorStyle(celda.color, Boolean(celda.valor));
+                    if (colorStyle.bg) {
+                        td.style.backgroundColor = colorStyle.bg;
+                        td.style.color = colorStyle.textColor;
+                        td.style.fontWeight = "bold";
+                    }
+
+                    // ========== AGREGAR ACCIÓN SOLO A CELDAS CON VALOR ==========
+                    if (celda.valor && celda.valor !== "") {
+                        td.style.cursor = "pointer";
+                        td.classList.add("clickable-cell");
+                        td.dataset.alelo = filas[idxFila];
+                        td.dataset.columna = String(columnas[idxCol]);
+                        td.dataset.fila = String(celda.fila);
+                        td.dataset.colNum = String(celda.columna);
+                        td.dataset.valor = celda.valor;
+                        td.dataset.baseBg = colorStyle.bg;
+                        td.title = `Click into a cell to see details "${celda.valor}" en ${filas[idxFila]}`;
+                    }
+
+                    tr.appendChild(td);
+                }
+
+                bodyFragment.appendChild(tr);
+            }
+
+            tbody.appendChild(bodyFragment);
+
+            if (idxFila < totalFilas) {
+                requestAnimationFrame(renderChunk);
+                return;
+            }
+
+            // Actualizar estadísticas al finalizar el render
+            const statsSpan = document.getElementById("info-stats");
+            if (statsSpan) {
+                statsSpan.innerHTML = `${filas.length} filas × ${columnas.length} columnas | ${data.celdasConDatos} celdas con datos`;
+                statsSpan.className = "badge";
+            }
+
+            if (DEBUG) console.log("✅ Tabla renderizada correctamente");
+
+            // Agregar información adicional en el indicador virtual
+            const indicator = document.getElementById("virtualScrollIndicator");
+            if (indicator) {
+                indicator.classList.remove("hidden");
+                indicator.innerHTML = `<i class="fas fa-table"></i> Matriz desde (${data.minFila},${data.minCol}) hasta (${data.maxFila},${data.maxCol}) | Total celdas: ${data.totalCeldas.toLocaleString()} | Celdas con datos: ${data.celdasConDatos}`;
+            }
+        };
+
+        requestAnimationFrame(renderChunk);
         
     }, 100);
 }
