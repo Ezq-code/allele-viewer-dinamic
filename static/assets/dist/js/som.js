@@ -4,6 +4,13 @@
 // ============================================
 const load = document.getElementById("load");
 let currentGen = null;
+const REQUEST_TIMEOUT_MS = 120000;
+const DEFAULT_COLOR = "255,255,255";
+const DEBUG = false;
+const RENDER_ROWS_PER_FRAME = 30;
+
+// Cache de estilos por color para evitar parseos repetidos en tablas grandes
+const colorStyleCache = new Map();
 
 // CSRF Token para Django
 const csrfToken = document.cookie
@@ -19,39 +26,54 @@ if (csrfToken) {
 // FUNCIÓN PARA OBTENER TODAS LAS PÁGINAS
 // ============================================
 async function obtenerTodosLosRegistros(genName) {
-    let allResults = [];
-    let nextUrl = `/genes_to_excel/caracteristica-gen/get-all/?gen_id=${genName}`;
-    let pageCount = 0;
-    
-    console.log(`Obteniendo todos los registros para ${genName}...`);
+    let info_url = `/genes_to_excel/caracteristica-gen/get-all/?gen_id=${genName}`;
+    if (DEBUG) console.log(`Obteniendo todos los registros para ${genName}...`);
     
     // Mostrar progreso inicial
     const statsSpan = document.getElementById("info-stats");
     if (statsSpan) {
         statsSpan.innerHTML = `Cargando datos de ${genName}...`;
     }
-    
-    while (nextUrl) {
-        pageCount++;
-        console.log(`Cargando página ${pageCount}...`);
-        
-        const response = await axios.get(nextUrl, {
-                                            timeout: 120000 // 2 minutos
+    const response = await axios.get(info_url, {
+                                            timeout: REQUEST_TIMEOUT_MS
                                         });
-        const data = response.data;
-        
-        allResults = [...allResults, ...data.results];
-        nextUrl = data.next;
-        
-        // Actualizar progreso
-        if (statsSpan && data.count) {
-            const porcentaje = Math.round((allResults.length / data.count) * 100);
-            statsSpan.innerHTML = `Cargando: ${allResults.length} de ${data.count} registros (${porcentaje}%)...`;
-        }
+    const data = response.data;
+    const result = data.results || [];
+    if (DEBUG) console.log(`Total registros obtenidos: ${result.length}`);
+    return result;
+}
+
+function getColorStyle(color, hasValue) {
+    if (!hasValue || !color || color === DEFAULT_COLOR) {
+        return { bg: "", textColor: "", bold: false };
     }
-    
-    console.log(`Total registros obtenidos: ${allResults.length}`);
-    return allResults;
+
+    if (colorStyleCache.has(color)) {
+        return colorStyleCache.get(color);
+    }
+
+    const rgb = color.split(",").map(Number);
+    if (rgb.length !== 3 || rgb.some((n) => Number.isNaN(n) || n < 0 || n > 255)) {
+        const fallback = { bg: "", textColor: "", bold: false };
+        colorStyleCache.set(color, fallback);
+        return fallback;
+    }
+
+    const isWhite = rgb[0] === 255 && rgb[1] === 255 && rgb[2] === 255;
+    if (isWhite) {
+        const whiteStyle = { bg: "", textColor: "", bold: false };
+        colorStyleCache.set(color, whiteStyle);
+        return whiteStyle;
+    }
+
+    const luminancia = (rgb[0] * 0.299 + rgb[1] * 0.587 + rgb[2] * 0.114);
+    const style = {
+        bg: `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`,
+        textColor: luminancia > 128 ? "#000" : "#fff",
+        bold: true
+    };
+    colorStyleCache.set(color, style);
+    return style;
 }
 
 // ============================================
@@ -62,18 +84,19 @@ async function cargarListaGenes() {
         // Mostrar loading
         if (load) load.hidden = false;
         
-        //console.log("🔍 Haciendo petición a: /genes_to_excel/v1/listgenes");
-        console.log("🔍 Haciendo petición a: /genes_to_excel/caracteristica-gen/get-related-genes/");
+        if (DEBUG) console.log("🔍 Haciendo petición a: /genes_to_excel/caracteristica-gen/get-related-genes/");
         
         // Usar el nuevo endpoint específico para lista de genes
         const response = await axios.get("/genes_to_excel/caracteristica-gen/get-related-genes/", {
-                                            timeout: 120000 // 2 minutos
+                                            timeout: REQUEST_TIMEOUT_MS
                                         });
         
-        console.log("✅ Respuesta recibida:", response);
-        console.log("📦 Datos de respuesta:", response.data);
-        console.log("📊 Tipo de datos:", typeof response.data);
-        console.log("📊 ¿Es array?", Array.isArray(response.data));
+        if (DEBUG) {
+            console.log("✅ Respuesta recibida:", response);
+            console.log("📦 Datos de respuesta:", response.data);
+            console.log("📊 Tipo de datos:", typeof response.data);
+            console.log("📊 ¿Es array?", Array.isArray(response.data));
+        }
         
         const genesData = response.data;
         
@@ -81,35 +104,24 @@ async function cargarListaGenes() {
         let genesList = [];
         
         if (Array.isArray(genesData)) {
-            console.log("✅ genesData es un array, longitud:", genesData.length);
+            if (DEBUG) console.log("✅ genesData es un array, longitud:", genesData.length);
             // Extraer id y name de cada objeto
-            genesList = genesData.map(gene => {
-                console.log("Procesando gene:", gene);
-                return { id: gene.id, name: gene.name };
-            }).filter(gene => {
-                console.log("Filtrando gene:", gene);
-                return gene.id && gene.name;
-            });
+            genesList = genesData
+                .map((gene) => ({ id: gene.id, name: gene.name }))
+                .filter((gene) => gene.id && gene.name);
         } else if (genesData.results && Array.isArray(genesData.results)) {
-            console.log("✅ genesData tiene resultados paginados, longitud:", genesData.results.length);
+            if (DEBUG) console.log("✅ genesData tiene resultados paginados, longitud:", genesData.results.length);
             // Por si acaso el endpoint devuelve paginado en el futuro
-            genesList = genesData.results.map(gene => {
-                console.log("Procesando gene:", gene);
-                return { id: gene.id, name: gene.name };
-            }).filter(gene => {
-                console.log("Filtrando gene:", gene);
-                return gene.id && gene.name;
-            });
+            genesList = genesData.results
+                .map((gene) => ({ id: gene.id, name: gene.name }))
+                .filter((gene) => gene.id && gene.name);
         } else {
             console.error("❌ Formato inesperado:", genesData);
             throw new Error("Formato de datos de genes inválido");
         }
         
-        console.log("📋 Lista de genes extraída:", genesList);
-        
-        // Ordenar alfabéticamente        
-        console.log("📋 Lista de genes ordenada:", genesList);
-        console.log(`📊 Total de genes encontrados: ${genesList.length}`);
+        if (DEBUG) console.log("📋 Lista de genes extraída:", genesList);
+        if (DEBUG) console.log(`📊 Total de genes encontrados: ${genesList.length}`);
         
         const selectGene = document.getElementById("selectGene");
         if (!selectGene) {
@@ -127,23 +139,23 @@ async function cargarListaGenes() {
         // Llenar el select con los genes
         selectGene.innerHTML = '<option value="">Seleccione un gen</option>';
         
+        const optionFragment = document.createDocumentFragment();
         genesList.forEach(gene => {
             const option = document.createElement("option");
             option.value = gene.id;  // Usar ID como value
             option.textContent = gene.name;  // Mostrar nombre
-            selectGene.appendChild(option);
-            console.log(`✅ Opción agregada: ${gene.name} (ID: ${gene.id})`);
+            optionFragment.appendChild(option);
+            if (DEBUG) console.log(`✅ Opción agregada: ${gene.name} (ID: ${gene.id})`);
         });
-        
-        console.log(`✅ Select llenado con ${genesList.length} genes`);
+        selectGene.appendChild(optionFragment);
         
         // Recuperar último gen seleccionado del localStorage
         const lastGenId = localStorage.getItem("lastSelectedGenId");
-        console.log(`📌 Último gen seleccionado: ${lastGenId}`);
+        if (DEBUG) console.log(`📌 Último gen seleccionado: ${lastGenId}`);
         
         if (lastGenId && genesList.some(g => g.id === lastGenId)) {
             selectGene.value = lastGenId;
-            console.log(`🔄 Cargando último gen: ${lastGenId}`);
+            if (DEBUG) console.log(`🔄 Cargando último gen: ${lastGenId}`);
             // Cargar datos automáticamente si hay un gen guardado
             //cargarDatosPorGen(lastGenId);
         }
@@ -151,7 +163,7 @@ async function cargarListaGenes() {
         // Ocultar loading
         if (load) load.hidden = true;
         
-        console.log(`✅ Genes cargados exitosamente: ${genesList.length} genes encontrados`);
+        if (DEBUG) console.log(`✅ Genes cargados exitosamente: ${genesList.length} genes encontrados`);
         
     } catch (error) {
         console.error("❌ Error cargando lista de genes:", error);
@@ -198,7 +210,7 @@ async function cargarListaGenes() {
 // 2. PROCESAR DATOS - CREAR MATRIZ COMPLETA DESDE COORDENADAS
 // ============================================
 function procesarDatos(registros) {
-    console.log("Procesando registros:", registros.length);
+    if (DEBUG) console.log("Procesando registros:", registros.length);
     
     if (!registros || registros.length === 0) {
         return {
@@ -222,10 +234,11 @@ function procesarDatos(registros) {
     const celdasMap = new Map(); // Key: "fila,columna" -> {valor, color}
     
     // Primera pasada: encontrar rangos y almacenar valores
-    registros.forEach(reg => {
+    for (let i = 0; i < registros.length; i++) {
+        const reg = registros[i];
         const cord = reg.cord;
         const valor = reg.valor || "";
-        const color = reg.color || "255,255,255";
+        const color = reg.color || DEFAULT_COLOR;
         
         if (cord && cord.includes(',')) {
             const [fila, columna] = cord.split(',').map(Number);
@@ -242,14 +255,12 @@ function procesarDatos(registros) {
                 if (valor && valor.trim() !== "") {
                     celdasMap.set(key, {
                         valor: valor,
-                        color: color,
-                        fila: fila,
-                        columna: columna
+                        color: color
                     });
                 }
             }
         }
-    });
+    }
     
     // Si no se encontraron coordenadas válidas
     if (minFila === Infinity) {
@@ -276,9 +287,11 @@ function procesarDatos(registros) {
         columnas.push(j);
     }
     
-    console.log(`Rango de filas: ${minFila} a ${maxFila} (total: ${filas.length})`);
-    console.log(`Rango de columnas: ${minCol} a ${maxCol} (total: ${columnas.length})`);
-    console.log(`Celdas con datos: ${celdasMap.size}`);
+    if (DEBUG) {
+        console.log(`Rango de filas: ${minFila} a ${maxFila} (total: ${filas.length})`);
+        console.log(`Rango de columnas: ${minCol} a ${maxCol} (total: ${columnas.length})`);
+        console.log(`Celdas con datos: ${celdasMap.size}`);
+    }
     
     // Crear la matriz completa (todas las celdas, incluso vacías)
     const matriz = [];
@@ -312,15 +325,15 @@ function procesarDatos(registros) {
     }
     
     // Contar estadísticas
-    const celdasConValor = matriz.reduce((total, fila) => {
-        return total + fila.filter(celda => celda.valor && celda.valor !== "").length;
-    }, 0);
+    const celdasConValor = celdasMap.size;
     
-    console.log(`Matriz creada: ${filas.length} filas x ${columnas.length} columnas`);
-    console.log(`Celdas con valor: ${celdasConValor} de ${filas.length * columnas.length} total`);
+    if (DEBUG) {
+        console.log(`Matriz creada: ${filas.length} filas x ${columnas.length} columnas`);
+        console.log(`Celdas con valor: ${celdasConValor} de ${filas.length * columnas.length} total`);
+    }
     
     // Mostrar ejemplo de las primeras celdas no vacías
-    if (celdasMap.size > 0) {
+    if (DEBUG && celdasMap.size > 0) {
         const primerasCeldas = Array.from(celdasMap.entries()).slice(0, 5);
         console.log("Ejemplo de celdas con datos:", primerasCeldas);
     }
@@ -344,9 +357,9 @@ function procesarDatos(registros) {
 // ============================================
 function sanitizarHTML(str) {
     if (!str) return 'N/A';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+    sanitizarHTML._el ||= document.createElement('div');
+    sanitizarHTML._el.textContent = str;
+    return sanitizarHTML._el.innerHTML;
 }
 
 // ============================================
@@ -472,7 +485,7 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         
         // Agregar timeout a la petición axios
         const response = await axios.get(url, {
-            timeout: 120000  // 15 segundos timeout
+            timeout: REQUEST_TIMEOUT_MS
         });
         
         const data = response.data;
@@ -676,13 +689,15 @@ function renderizarTablaExcel(data) {
         return;
     }
     
-    console.log(`Renderizando tabla: ${filas.length} filas x ${columnas.length} columnas`);
-    console.log(`Coordenada inicial: (${minFila}, ${minCol})`);
+    if (DEBUG) {
+        console.log(`Renderizando tabla: ${filas.length} filas x ${columnas.length} columnas`);
+        console.log(`Coordenada inicial: (${minFila}, ${minCol})`);
+    }
     
     // Mostrar indicador de carga
     container.innerHTML = '<div style="padding: 20px; text-align: center;"><i class="fas fa-spinner fa-pulse"></i> Renderizando tabla...</div>';
     
-    // Usar setTimeout para no bloquear el UI
+    // Usar setTimeout para arrancar fuera del ciclo de eventos actual
     setTimeout(() => {
         const table = document.createElement("table");
         table.className = "excel-table";
@@ -714,6 +729,7 @@ function renderizarTablaExcel(data) {
         //});
 
         // Columnas - AHORA CON LETRAS EN LUGAR DE NÚMEROS
+        const headerFragment = document.createDocumentFragment();
         columnas.forEach(proteina => {
             const th = document.createElement("th");
             th.textContent = numeroALetra(proteina); // ← Cambiado de 'proteina' a letras
@@ -722,8 +738,9 @@ function renderizarTablaExcel(data) {
             th.style.position = "sticky";
             th.style.top = "0";
             th.style.zIndex = "10";
-            headerRow.appendChild(th);
+            headerFragment.appendChild(th);
         });
+        headerRow.appendChild(headerFragment);
         
         thead.appendChild(headerRow);
         table.appendChild(thead);
@@ -731,116 +748,126 @@ function renderizarTablaExcel(data) {
         // ========== CUERPO ==========
         const tbody = document.createElement("tbody");
         
-        // Filas
-        matriz.forEach((fila, idxFila) => {
-            const tr = document.createElement("tr");
-            
-            // Primera columna - Nombre del alelo (SIN acción)
-            const tdAlelo = document.createElement("td");
-            tdAlelo.textContent = filas[idxFila];
-            tdAlelo.style.fontWeight = "bold";
-            tdAlelo.style.backgroundColor = "#f8f8f8";
-            tdAlelo.style.position = "sticky";
-            tdAlelo.style.left = "0";
-            tdAlelo.style.minWidth = "100px";
-            tdAlelo.style.textAlign = "center";
-            tdAlelo.style.zIndex = "5";
-            tr.appendChild(tdAlelo);
-            
-            // Celdas de datos
-            fila.forEach((celda, idxCol) => {
-                const td = document.createElement("td");
-                td.textContent = celda.valor || "";
-                td.style.textAlign = "center";
-                td.style.padding = "8px 12px";
-                td.style.border = "1px solid #ddd";
-                
-                // Aplicar color de fondo si no es blanco y tiene valor
-                if (celda.color && celda.color !== "255,255,255" && celda.valor) {
-                    const rgb = celda.color.split(',').map(Number);
-                    if (rgb.length === 3 && !(rgb[0] === 255 && rgb[1] === 255 && rgb[2] === 255)) {
-                        td.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-                        // Calcular color de texto contrastante
-                        const luminancia = (rgb[0] * 0.299 + rgb[1] * 0.587 + rgb[2] * 0.114);
-                        td.style.color = luminancia > 128 ? "#000" : "#fff";
-                        td.style.fontWeight = "bold";
-                    }
-                }
-                
-                // ========== AGREGAR ACCIÓN SOLO A CELDAS CON VALOR ==========
-                if (celda.valor && celda.valor !== "") {
-                    // Cambiar cursor a pointer
-                    td.style.cursor = "pointer";
-                    
-                    // Tooltip informativo
-                    td.title = `Haz clic para ver detalles de "${celda.valor}" en ${filas[idxFila]}`;
-                    
-                    // Evento de clic para mostrar detalles
-                    td.addEventListener("click", (event) => {
-                        event.stopPropagation();
-                        mostrarDetalleCelda(
-                            filas[idxFila],      // Nombre del alelo
-                            columnas[idxCol],    // Nombre de la proteína
-                            celda.fila,          // Coordenada fila
-                            celda.columna,       // Coordenada columna
-                            celda.valor          // Valor de la celda
-                        );
-                    });
-                    
-                    // Efecto hover
-                    td.addEventListener("mouseenter", () => {
-                        td.style.backgroundColor = "#e3f2fd";
-                        td.style.transform = "scale(1.02)";
-                        td.style.transition = "all 0.2s ease";
-                        td.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
-                    });
-                    
-                    td.addEventListener("mouseleave", () => {
-                        // Restaurar color original
-                        if (celda.color && celda.color !== "255,255,255") {
-                            const rgb = celda.color.split(',').map(Number);
-                            if (rgb.length === 3 && !(rgb[0] === 255 && rgb[1] === 255 && rgb[2] === 255)) {
-                                td.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-                            } else {
-                                td.style.backgroundColor = "";
-                            }
-                        } else {
-                            td.style.backgroundColor = "";
-                        }
-                        td.style.transform = "scale(1)";
-                        td.style.boxShadow = "none";
-                    });
-                }
-                
-                tr.appendChild(td);
-            });
-            
-            tbody.appendChild(tr);
-        });
-        
         table.appendChild(tbody);
         container.innerHTML = "";
         container.appendChild(table);
-        
-        // Actualizar estadísticas
-        const statsSpan = document.getElementById("info-stats");
-        if (statsSpan) {
-            const celdasConValor = matriz.reduce((total, fila) => {
-                return total + fila.filter(celda => celda.valor && celda.valor !== "").length;
-            }, 0);
-            
-            statsSpan.innerHTML = `${filas.length} filas × ${columnas.length} columnas | ${celdasConValor} celdas con datos`;
-            statsSpan.className = "badge";
-        }
-        
-        console.log("✅ Tabla renderizada correctamente");
-        
-        // Agregar información adicional en el indicador virtual
-        const indicator = document.getElementById("virtualScrollIndicator");
-        if (indicator) {
-            indicator.classList.remove("hidden");
-            indicator.innerHTML = `<i class="fas fa-table"></i> Matriz desde (${data.minFila},${data.minCol}) hasta (${data.maxFila},${data.maxCol}) | Total celdas: ${data.totalCeldas.toLocaleString()} | Celdas con datos: ${data.celdasConDatos}`;
-        }
+
+        // Delegación de eventos para minimizar listeners por celda
+        tbody.addEventListener("click", (event) => {
+            const td = event.target.closest("td.clickable-cell");
+            if (!td) return;
+            event.stopPropagation();
+
+            mostrarDetalleCelda(
+                td.dataset.alelo,
+                Number(td.dataset.columna),
+                Number(td.dataset.fila),
+                Number(td.dataset.colNum),
+                td.dataset.valor
+            );
+        });
+
+        tbody.addEventListener("mouseover", (event) => {
+            const td = event.target.closest("td.clickable-cell");
+            if (!td || td.contains(event.relatedTarget)) return;
+            td.style.backgroundColor = "#e3f2fd";
+            td.style.transform = "scale(1.02)";
+            td.style.transition = "all 0.2s ease";
+            td.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+        });
+
+        tbody.addEventListener("mouseout", (event) => {
+            const td = event.target.closest("td.clickable-cell");
+            if (!td || td.contains(event.relatedTarget)) return;
+            td.style.backgroundColor = td.dataset.baseBg || "";
+            td.style.transform = "scale(1)";
+            td.style.boxShadow = "none";
+        });
+
+        // Render incremental por lotes para mantener UI responsiva
+        let idxFila = 0;
+        const totalFilas = matriz.length;
+
+        const renderChunk = () => {
+            const bodyFragment = document.createDocumentFragment();
+            const end = Math.min(idxFila + RENDER_ROWS_PER_FRAME, totalFilas);
+
+            for (; idxFila < end; idxFila++) {
+                const fila = matriz[idxFila];
+                const tr = document.createElement("tr");
+
+                // Primera columna - Nombre del alelo (SIN acción)
+                const tdAlelo = document.createElement("td");
+                tdAlelo.textContent = filas[idxFila];
+                tdAlelo.style.fontWeight = "bold";
+                tdAlelo.style.backgroundColor = "#f8f8f8";
+                tdAlelo.style.position = "sticky";
+                tdAlelo.style.left = "0";
+                tdAlelo.style.minWidth = "100px";
+                tdAlelo.style.textAlign = "center";
+                tdAlelo.style.zIndex = "5";
+                tr.appendChild(tdAlelo);
+
+                // Celdas de datos
+                for (let idxCol = 0; idxCol < fila.length; idxCol++) {
+                    const celda = fila[idxCol];
+                    const td = document.createElement("td");
+                    td.textContent = celda.valor || "";
+                    td.style.textAlign = "center";
+                    td.style.padding = "8px 12px";
+                    td.style.border = "1px solid #ddd";
+
+                    const colorStyle = getColorStyle(celda.color, Boolean(celda.valor));
+                    if (colorStyle.bg) {
+                        td.style.backgroundColor = colorStyle.bg;
+                        td.style.color = colorStyle.textColor;
+                        td.style.fontWeight = "bold";
+                    }
+
+                    // ========== AGREGAR ACCIÓN SOLO A CELDAS CON VALOR ==========
+                    if (celda.valor && celda.valor !== "") {
+                        td.style.cursor = "pointer";
+                        td.classList.add("clickable-cell");
+                        td.dataset.alelo = filas[idxFila];
+                        td.dataset.columna = String(columnas[idxCol]);
+                        td.dataset.fila = String(celda.fila);
+                        td.dataset.colNum = String(celda.columna);
+                        td.dataset.valor = celda.valor;
+                        td.dataset.baseBg = colorStyle.bg;
+                        td.title = `Click into a cell to see details "${celda.valor}" en ${filas[idxFila]}`;
+                    }
+
+                    tr.appendChild(td);
+                }
+
+                bodyFragment.appendChild(tr);
+            }
+
+            tbody.appendChild(bodyFragment);
+
+            if (idxFila < totalFilas) {
+                requestAnimationFrame(renderChunk);
+                return;
+            }
+
+            // Actualizar estadísticas al finalizar el render
+            const statsSpan = document.getElementById("info-stats");
+            if (statsSpan) {
+                statsSpan.innerHTML = `${filas.length} filas × ${columnas.length} columnas | ${data.celdasConDatos} celdas con datos`;
+                statsSpan.className = "badge";
+            }
+
+            if (DEBUG) console.log("✅ Tabla renderizada correctamente");
+
+            // Agregar información adicional en el indicador virtual
+            const indicator = document.getElementById("virtualScrollIndicator");
+            if (indicator) {
+                indicator.classList.remove("hidden");
+                indicator.innerHTML = `<i class="fas fa-table"></i> Matriz desde (${data.minFila},${data.minCol}) hasta (${data.maxFila},${data.maxCol}) | Total celdas: ${data.totalCeldas.toLocaleString()} | Celdas con datos: ${data.celdasConDatos}`;
+            }
+        };
+
+        requestAnimationFrame(renderChunk);
         
     }, 100);
 }
@@ -938,7 +965,7 @@ function mostrarMensaje(mensaje, tipo = "info") {
 // ============================================
 async function cargarDatosPorGen(genId, genNombre) {
     if (!genId) {
-        mostrarMensaje("Por favor, seleccione un gen", "warning");
+        mostrarMensaje("Please select a gene", "warning");
         return;
     }
     
@@ -948,7 +975,7 @@ async function cargarDatosPorGen(genId, genNombre) {
     
     const infoGen = document.getElementById("infoGenActual");
     if (infoGen) {
-        infoGen.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Gen actual: <strong>${genNombre}</strong> - Cargando datos...`;
+        infoGen.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Current Gene: <strong>${genNombre}</strong> - Cargando datos...`;
         infoGen.style.background = "#e3f2fd";
     }
     
@@ -960,7 +987,7 @@ async function cargarDatosPorGen(genId, genNombre) {
             mostrarMensaje(`No hay datos para el gen ${genNombre}`, "warning");
             if (load) load.hidden = true;
             if (infoGen) {
-                infoGen.innerHTML = `<i class="fas fa-info-circle"></i> Gen actual: <strong>${genNombre}</strong> - Sin datos`;
+                infoGen.innerHTML = `<i class="fas fa-info-circle"></i> Current Gene: <strong>${genNombre}</strong> - No data`;
                 infoGen.style.background = "#fff3cd";
             }
             return;
@@ -973,7 +1000,7 @@ async function cargarDatosPorGen(genId, genNombre) {
         renderizarTablaExcel(resultado);
         
         if (infoGen) {
-            infoGen.innerHTML = `<i class="fas fa-check-circle"></i> Gen actual: <strong>${genNombre}</strong>`;
+            infoGen.innerHTML = `<i class="fas fa-check-circle"></i> Current Gene: <strong>${genNombre}</strong>`;
             infoGen.style.background = "#d4edda";
         }
               
@@ -1007,7 +1034,7 @@ async function cargarDatosPorGen(genId, genNombre) {
 // 6. INICIALIZAR
 // ============================================
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("Inicializando tabla SOM...");
+    console.log("Initializing SOM table...");
     
     // Cargar lista de genes desde el nuevo endpoint
     cargarListaGenes();
@@ -1025,12 +1052,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({
                         icon: "warning",
-                        title: "Seleccione un gen",
-                        text: "Por favor, seleccione un gen de la lista para cargar los datos.",
-                        confirmButtonText: "Aceptar"
+                        title: "Select a gene",
+                        text: "Please select a gene from the list to load the data.",
+                        confirmButtonText: "OK"
                     });
                 } else {
-                    alert("Por favor, seleccione un gen");
+                    alert("Please select a gene from the list to load the data.");
                 }
             }
         });
