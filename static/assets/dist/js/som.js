@@ -107,11 +107,8 @@ async function cargarListaGenes() {
         
         console.log("📋 Lista de genes extraída:", genesList);
         
-        // Ordenar alfabéticamente
-        genesList.sort();
-        
+        // Ordenar alfabéticamente        
         console.log("📋 Lista de genes ordenada:", genesList);
-        console.log("📋 YA TE ESTOY DANDO LA LISTA DE GENES ORDENADAS, PUEDES BORRAR EL .sort");
         console.log(`📊 Total de genes encontrados: ${genesList.length}`);
         
         const selectGene = document.getElementById("selectGene");
