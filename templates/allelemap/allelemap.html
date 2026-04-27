@@ -74,6 +74,13 @@
               <h3 class="card-title">Allele Map</h3>
               <div class="card-tools">
 
+              <div class="d-inline-block align-middle" style="font-size:.75rem; margin-right: 100px;">
+                <strong class="text-muted"> primary source:
+                  <a href="https://www.allelefrequencies.net/hla6006a.asp">
+                    allelefrequencies.net</a>
+              </strong>
+              </div>
+
                 <div class="d-inline-block align-middle" style="width:210px; margin-right: 15px;">
                   <label for="sampleSizeRange" class="mb-0" style="font-size:.75rem;">
                     Sample size
@@ -97,6 +104,7 @@
                           id="primarysecondary" style="width:140px;">
                           <option value="Primary">Primary</option>
                           <option value="Secondary">Secondary</option>
+                          <option value="Both">Both</option>
                   </select>
                 </div>
 
@@ -112,6 +120,12 @@
                   </select>
                 </div>
 
+
+                <div class="d-inline-block" style="margin-right: 2px;">
+                <label style="font-size:.75rem;">
+                  <input type="checkbox" id="AllAlleles" name="AllAlleles">
+                  All Alleles</label>
+                </div> 
               <div class="d-inline-block" style="margin-right: 8px;">
                 <select class="form-control form-control-sm select2 select2-sm-custom" id="allele-list" name="allele-list" multiple="multiple" data-placeholder="Select allele..." style="width: 100%;" >
                   <option value="51-100">Sample Size: 51-100</option>
@@ -182,6 +196,7 @@
       sessionStorage.setItem('long', '0');
       sessionStorage.setItem('zoom', '1');     
       sessionStorage.setItem('primarysecondary', 'Primary');       
+      sessionStorage.setItem('AllAlleles', 'F');
       sessionStorage.setItem('inicializado', 'true');
     }
 
