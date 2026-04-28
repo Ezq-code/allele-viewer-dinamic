@@ -114,7 +114,7 @@ $(function () {
 
 function buildOffsets() {
   const offsets = [];
-  const ds = [1, 2, 3]; // puedes ampliar si alg�n d�a necesitas m�s
+  const ds = [2, 3, 4]; // puedes ampliar si alg�n d�a necesitas m�s
 
   for (const d of ds) {
     offsets.push(
@@ -207,6 +207,10 @@ function coordKey(lat, lon) {
     var max_Sample_Size = sessionStorage.getItem('maxSampleSize');
     var country_name = sessionStorage.getItem('country'); 
     var kind_of_info =  sessionStorage.getItem('primarysecondary'); 
+    var AllAlleles =  sessionStorage.getItem('AllAlleles');  
+
+   var selectAllAlleles =  document.getElementById('AllAlleles');
+   selectAllAlleles.value = AllAlleles;
 
     axios
     .get('/business-gestion/sub-countries/')
@@ -285,22 +289,36 @@ function coordKey(lat, lon) {
                     var isCountry = false;
                     var kind_of_info_key = '';
                 
-                    if (kind_of_info == 'Primary') {kind_of_info_key = 'P'} else if (kind_of_info == 'Secondary') {kind_of_info_key = 'S'}  
+                    if (kind_of_info == 'Primary') {kind_of_info_key = 'P'} else if (kind_of_info == 'Secondary') {kind_of_info_key = 'S'} else if (kind_of_info == 'Both') {kind_of_info_key = 'both'}   
                 
                     if (country_name == 'All Countries')
                     { 
-                      anUrl = '/allele-mapping/alleles-region/?kind_of_info=' + kind_of_info_key + '&alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size;
+                      //anUrl = '/allele-mapping/alleles-region/?kind_of_info=' + kind_of_info_key + '&alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size;
                       isCountry = false;  
+
+                      if (AllAlleles == 'F')
+                      { 
+                        anUrl = '/allele-mapping/alleles-region/?kind_of_info=' + kind_of_info_key + '&alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size;
+                      }
+                      else
+                      {
+                        anUrl = '/allele-mapping/alleles-region/?kind_of_info=' + kind_of_info_key + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size;
+                      }
                     }
                     else
                     { 
-                      anUrl = '/allele-mapping/alleles-region/?country=' + country_name +'&kind_of_info=' + kind_of_info_key + '&alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size; 
+                      //anUrl = '/allele-mapping/alleles-region/?country=' + country_name +'&kind_of_info=' + kind_of_info_key + '&alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size; 
                       isCountry = true;
+
+                      if (AllAlleles == 'F')
+                      {
+                        anUrl = '/allele-mapping/alleles-region/?country=' + country_name +'&kind_of_info=' + kind_of_info_key + '&alleles_list=' + group_allele + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size;     
+                      }
+                      else
+                      {
+                        anUrl = '/allele-mapping/alleles-region/?country=' + country_name +'&kind_of_info=' + kind_of_info_key + '&min_sample_size=' + min_Sample_Size + '&max_sample_size=' + max_Sample_Size;                                               
+                      }
                     }
-
-                    
-
-
 
                     
                     axios
@@ -328,7 +346,8 @@ function coordKey(lat, lon) {
                             // --- HAY DATOS: procesar y dibujar marcadores ---
                             data.forEach(function (region) {
                             //if ( region.coordinates.length > 0)
-                            if ((kind_of_info_key == 'P') || ((kind_of_info_key == 'S') && (region.coordinates.length > 0)))
+                            if ((kind_of_info_key == 'P') || ((kind_of_info_key == 'S') && (region.coordinates.length > 0))
+                            || ((kind_of_info_key == 'both') && (region.coordinates.length > 0)))
                             {    
                                 if ((isCountry) && (kind_of_info_key == 'P'))  
                                 {
@@ -345,7 +364,7 @@ function coordKey(lat, lon) {
                                   sessionStorage.setItem('zoom', '1');  
                                 }
                 
-                               if (kind_of_info_key == 'S')
+                               if ((kind_of_info_key == 'S') || (kind_of_info_key == 'both'))  
                                {
                                regionAlele = {
                                     name: region.population,
@@ -365,7 +384,8 @@ function coordKey(lat, lon) {
                                     alleleInfo = {
                                         color: obtenerColorPorResto(allele.id),
                                         label: allele.allele_name,
-                                        value: allele.allele_frequency
+                                        value: allele.allele_frequency,
+                                        samplesize: allele.sample_size
                                     };
                                     regionAlele.pie.push(alleleInfo);
                                 });
@@ -396,7 +416,7 @@ function coordKey(lat, lon) {
                                         columnsHTML += `
                                             <li data-label="${p.label}">
                                                 <span style="display:inline-block;width:12px;height:12px;background:${p.color};margin-right:8px;border-radius:2px;"></span>
-                                                <strong>${p.label}:</strong> ${p.value.toFixed(2)}%
+                                                <strong>${p.label}:</strong> ${p.value.toFixed(2)}%,SampleSize: ${p.samplesize}
                                             </li>`;
                                     });
                                     columnsHTML += `</ul></div>`;
@@ -660,6 +680,9 @@ document.getElementById('btreloadgene').addEventListener('click', function() {
     var aGroupAllele = document.getElementById("allele-list");
     var selectedValues = $(aGroupAllele).val();
 
+    //var aAllAlleles = document.getElementById("AllAlleles");
+    //sessionStorage.setItem('AllAlleles', aAllAlleles.value);   
+
     if (selectedValues) {
      sessionStorage.setItem('group_allele', JSON.stringify(selectedValues));
     }
@@ -684,8 +707,23 @@ document.getElementById('primarysecondary').addEventListener('change', function(
     sessionStorage.setItem('primarysecondary', aPrimarySecondary.value); 
 });
 
-  document.getElementById('genes').addEventListener('change', function() {   
-  
+document.getElementById('AllAlleles').addEventListener('change', function() {
+    const checkbox = document.getElementById('AllAlleles');
+    const selectElement = document.getElementById('allele-list');
+    if (checkbox.checked) {
+        console.log('Checkbox marcado, valor:', checkbox.value);
+        sessionStorage.setItem('AllAlleles', 'T'); 
+        selectElement.disabled = true;
+    } else {
+        console.log('Checkbox desmarcado, valor:', 'No');
+        sessionStorage.setItem('AllAlleles', 'F'); 
+        selectElement.disabled = false;
+    }
+});
+
+
+
+document.getElementById('genes').addEventListener('change', function() {   
   var aGene = document.getElementById("genes");
   sessionStorage.setItem('gene', aGene.value);
   var  gene_name =  sessionStorage.getItem('gene');

@@ -30,10 +30,10 @@ class AlleleRegionFilter(django_filters.FilterSet):
     max_sample_size = django_filters.NumberFilter(
         method="filter_by_max_sample_size", label="Max sample size"
     )
-    kind_of_info = django_filters.ChoiceFilter(
-        choices=AlleleRegionInfo.KIND_OF_INFO.choices,
+
+    kind_of_info = django_filters.CharFilter(
         method="filter_by_kind_of_info",
-        label="Kind of info (P=Primary, S=Secondary)",
+        label="Kind of info: P (Primary), S (Secondary), both (or P,S)"
     )
 
     class Meta:
@@ -101,7 +101,13 @@ class AlleleRegionFilter(django_filters.FilterSet):
     def filter_by_kind_of_info(self, queryset, name, value):
         if not value:
             return queryset
-        self.allele_filters &= Q(kind_of_info=value)
+        parts = [v.strip().upper() for v in value.split(',') if v.strip()]
+        if not parts:
+            return queryset
+        # Si se pasa "both" o incluye tanto P como S, no se filtra**
+        if 'BOTH' in parts or ('P' in parts and 'S' in parts):
+            return queryset
+        self.allele_filters &= Q(kind_of_info__in=parts)
         return queryset
 
     def filter_by_min_sample_size(self, queryset, name, value):
