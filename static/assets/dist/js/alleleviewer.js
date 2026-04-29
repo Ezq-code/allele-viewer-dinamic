@@ -1375,6 +1375,7 @@ function sendExpantionValues() {
 
 function animation() {
   viewer.removeAllLabels();
+  currentAnimationLabel = null;
   $(".controlpanel").toast("hide");
   load.hidden = false;
   console.log("datos", datos);
@@ -1395,11 +1396,16 @@ function animation() {
   viewer.render();
   load.hidden = true;
   $(".controlpanel").toast("hide");
-  pausa = false; // Variable de control para pausar
+  clearTimeout(timeoutId);
+  pausa = true; // Inicia en pausa hasta que el usuario pulse Play
   indiceActual = 0;
+  currentSpeedIndex = 0;
   // let ordenada=ordenarPorTimeline(datos);
   animationWindows();
-  mostrarElementos(datos, 0.1);
+  const speedButton = document.getElementById("speedButton");
+  if (speedButton) {
+    speedButton.innerHTML = `${speeds[currentSpeedIndex].label}`;
+  }
 }
 // function ordenarPorTimeline(lista) {
 //   // Ordenar la lista por la propiedad timeline_appearence
@@ -1412,16 +1418,22 @@ function animation() {
 let pausa = false; // Variable de control para pausar
 let indiceActual = 0; // Índice del elemento actual
 let timeoutId; // Para almacenar el timeout
+let currentAnimationLabel = null; // Label activo durante la animación
 
 function mostrarElementos(lista, tiempo) {
   if (indiceActual >= lista.length) {
+    if (currentAnimationLabel) {
+      viewer.removeLabel(currentAnimationLabel);
+      currentAnimationLabel = null;
+      viewer.render();
+    }
     $(".controlpanel").toast("hide");
     return;
   } // Si ya se mostraron todos los elementos
 
   const element = lista[indiceActual];
   const stickRadius = element.stick_radius;
-  const sphereRadius = element.sphere_radius * zoomLevel;
+  const sphereRadius = element.sphere_radius;
 
   viewer.setStyle(
     { serial: element.number },
@@ -1435,6 +1447,31 @@ function mostrarElementos(lista, tiempo) {
       },
     }
   );
+
+  if (currentAnimationLabel) {
+    viewer.removeLabel(currentAnimationLabel);
+    currentAnimationLabel = null;
+  }
+
+  const atom = obtenerAtomoDesdeViewer(viewer, element.number);
+  if (atom) {
+    const nodeLabel =
+      element.custom_element_name ||
+      element.allele ||
+      `Node ${element.number}`;
+    currentAnimationLabel = viewer.addLabel(nodeLabel, {
+      position: {
+        x: atom.x,
+        y: atom.y,
+        z: atom.z,
+      },
+      fontSize: 12,
+      fontColor: "#ffffff",
+      backgroundColor: "rgba(21, 1, 1, 0.8)",
+      borderThickness: 1,
+      borderColor: "#6c757d",
+    });
+  }
 
   viewer.render();
   document.getElementById("yearshow").textContent = element.timeline_appearence;
@@ -1452,6 +1489,10 @@ function mostrarElementos(lista, tiempo) {
 function retroceder(lista) {
   if (indiceActual > 0) {
     indiceActual--;
+    if (currentAnimationLabel) {
+      viewer.removeLabel(currentAnimationLabel);
+      currentAnimationLabel = null;
+    }
     // Mostrar el elemento anterior inmediatamente
     const element = datos[indiceActual];
     viewer.setStyle(
@@ -1482,11 +1523,11 @@ function avanzar(lista) {
 // Variable global para la velocidad
 let currentSpeedIndex = 0;
 const speeds = [
+  { label: "x0.5", value: 1.0 },
   { label: "x1", value: 0.5 },
   { label: "x2", value: 0.25 },
   { label: "x3", value: 0.1 },
   { label: "x4", value: 0.05 },
-  { label: "x5", value: 0.025 },
 ];
 
 function animationWindows() {
@@ -1512,7 +1553,7 @@ function animationWindows() {
                       title="Play"
                       onclick="playStopAnimation(this)"
                     >
-                      <i class="nav-icon fas fa-pause"></i>
+                      <i class="nav-icon fas fa-play"></i>
                     </button>
                      <button
                       type="button"
@@ -1547,17 +1588,17 @@ function changeSpeed() {
   // Actualizar el texto del botón
   const speedButton = document.getElementById("speedButton");
   speedButton.innerHTML = `${newSpeed.label}`;
-  // Si hay una animación en curso, actualizarla con la nueva velocidad
-  // if (/* tu condición para verificar si la animación está en curso */) {
-  mostrarElementos(datos, newSpeed.value);
-
-  //}
+  // Si está reproduciendo, aplicar la nueva velocidad al siguiente paso.
+  if (!pausa) {
+    clearTimeout(timeoutId);
+    mostrarElementos(datos, newSpeed.value);
+  }
 }
 
 function playStopAnimation(button) {
   pausa = !pausa; // Cambiar el estado de pausa
   if (!pausa) {
-    mostrarElementos(datos, speeds[currentSpeedIndex]); // Reiniciar la visualización si se reanuda
+    mostrarElementos(datos, speeds[currentSpeedIndex].value); // Reiniciar la visualización si se reanuda
   } else {
     clearTimeout(timeoutId); // Limpiar el timeout si se pausa
   }
