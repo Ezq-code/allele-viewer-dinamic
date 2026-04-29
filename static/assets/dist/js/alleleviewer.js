@@ -1421,7 +1421,7 @@ function mostrarElementos(lista, tiempo) {
 
   const element = lista[indiceActual];
   const stickRadius = element.stick_radius;
-  const sphereRadius = element.sphere_radius * zoomLevel;
+  const sphereRadius = element.sphere_radius;
 
   viewer.setStyle(
     { serial: element.number },
