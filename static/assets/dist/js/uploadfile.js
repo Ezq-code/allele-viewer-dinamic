@@ -211,8 +211,7 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
 
   // Resetear Select2 sin destruir la instancia
   $('#gene').val(null).trigger('change');
-  // Recargar la lista de genes
-  loadGenes();
+  document.getElementById("predefined").checked = false;
 });
 
 let edit_elemento = false;
@@ -236,19 +235,8 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
         // Llenar el formulario con los datos del usuario
         form.elements.name.value = elemento.custom_name;
         form.elements.description.value = elemento.description;
-
-        // Asegurar que los genes estén cargados antes de establecer el valor
-        if (document.getElementById("gene").options.length > 1) {
-          $('#gene').val(elemento.gene).trigger('change');
-          document.getElementById("predefined").checked = elemento.predefined;
-        } else {
-          // Si los genes no están cargados, esperar y luego establecer el valor
-          loadGenes();
-          setTimeout(() => {
-            $('#gene').val(elemento.gene).trigger('change');
-            document.getElementById("predefined").checked = elemento.predefined;
-          }, 100);
-        }
+        $('#gene').val(elemento.gene).trigger('change');
+        document.getElementById("predefined").checked = elemento.predefined;
       })
       .catch(function (error) {});
   } else {
