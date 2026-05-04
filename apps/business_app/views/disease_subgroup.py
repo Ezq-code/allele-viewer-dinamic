@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import filters, permissions, viewsets
 from apps.business_app.models.disease_subgroup import DiseaseSubGroup
 from rest_framework.viewsets import GenericViewSet
-from apps.business_app.serializers.disease_subgroup_serializer import (
+from apps.business_app.serializers.disease_subgroup import (
     DiseaseSubGroupSerializer,
 )
 from apps.business_app.serializers.minimal_serializers import (

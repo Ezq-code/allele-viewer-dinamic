@@ -3,7 +3,7 @@ from rest_framework import filters, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from apps.business_app.models.gene_group import GeneGroups
-from apps.business_app.serializers.gene_group_serializer import GeneGroupsSerializer
+from apps.business_app.serializers.gene_group import GeneGroupsSerializer
 from apps.common.pagination import AllResultsSetPagination
 from apps.business_app.serializers.minimal_serializers import GeneGroupMinimalSerializer
 from rest_framework.decorators import action

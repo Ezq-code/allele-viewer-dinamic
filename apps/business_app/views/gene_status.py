@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.viewsets import GenericViewSet
 from apps.business_app.models.gene_status import GeneStatus
-from apps.business_app.serializers.gene_status_serializer import GeneStatusSerializer
+from apps.business_app.serializers.gene_status import GeneStatusSerializer
 from apps.common.pagination import AllResultsSetPagination
 
 

@@ -4,7 +4,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from apps.business_app.models.disorder import Disorder
-from apps.business_app.serializers.disorder_serializer import (
+from apps.business_app.serializers.disorder import (
     DisorderSerializer,
     DisorderTableSerializer,
 )
