@@ -10,7 +10,7 @@ const csrfToken = document.cookie
 const url = "/allele-formation/uploaded-snp-files/";
 
 // url para obtener genes
-const geneUrl = "/business-gestion/gene/list-for-graph/";
+const geneUrl = "/business-gestion/gene/list-for-dropdown/";
 
 var load = document.getElementById("load");
 let select2Ready = false;

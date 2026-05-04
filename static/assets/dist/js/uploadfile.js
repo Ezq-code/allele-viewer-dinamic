@@ -11,7 +11,7 @@ const write_url = "/business-gestion/uploaded-files/";
 const read_url = write_url + "simple-list/";
 
 // url para obtener genes
-const geneUrl = "/business-gestion/gene/list-for-graph/";
+const geneUrl = "/business-gestion/gene/list-for-dropdown/";
 
 var load = document.getElementById("load");
 

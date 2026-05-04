@@ -122,6 +122,20 @@ class GeneViewSet(
         Returns:
             Response: List of genes that have uploaded files
         """
+        return self.list(request) 
+        
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="list-for-dropdown",
+        url_name="list-for-dropdown",
+        serializer_class=GeneSimpleSerializer,
+        queryset=Gene.objects.all().only("id", "name"),
+    )
+    def list_for_dropdown(self, request):
+        """
+        Retrieve a simplified list of all genes for dropdown selection.
+        """
         return self.list(request)
 
     @action(
