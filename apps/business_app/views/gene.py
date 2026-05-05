@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from apps.business_app.models.gene import Gene
 from rest_framework.viewsets import GenericViewSet
 from apps.business_app.models.uploaded_files import UploadedFiles
-from apps.business_app.serializers.gene_serializer import (
+from apps.business_app.serializers.gene import (
     GeneGetAllInfoSerializer,
     GeneSerializer,
     GeneSimpleSerializer,
@@ -121,6 +121,20 @@ class GeneViewSet(
 
         Returns:
             Response: List of genes that have uploaded files
+        """
+        return self.list(request) 
+        
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="list-for-dropdown",
+        url_name="list-for-dropdown",
+        serializer_class=GeneSimpleSerializer,
+        queryset=Gene.objects.all().only("id", "name"),
+    )
+    def list_for_dropdown(self, request):
+        """
+        Retrieve a simplified list of all genes for dropdown selection.
         """
         return self.list(request)
 

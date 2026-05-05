@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from apps.business_app.serializers.gene_serializer import GeneSimpleSerializer
+from apps.business_app.serializers.gene import GeneSimpleSerializer
 from apps.business_app.models.gene import Gene
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page

@@ -10,7 +10,7 @@ const csrfToken = document.cookie
 const url = "/allele-formation/uploaded-snp-files/";
 
 // url para obtener genes
-const geneUrl = "/business-gestion/gene/";
+const geneUrl = "/business-gestion/gene/list-for-dropdown/";
 
 var load = document.getElementById("load");
 let select2Ready = false;
@@ -288,7 +288,7 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
         // Llenar el formulario con los datos del usuario
         form.elements.name.value = elemento.custom_name;
         form.elements.description.value = elemento.description;
-        loadGenes(elemento.gene);
+        setGeneValue(elemento.gene);
       })
       .catch(function (error) {});
   } else {
@@ -299,11 +299,7 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
 $("#modal-crear-elemento").on("shown.bs.modal", function () {
   showLoadingOverlay();
   initializeGeneSelect2();
-  if (document.getElementById("gene").options.length <= 1) {
-    loadGenes();
-  } else {
-    updateSelect2ReadyState();
-  }
+  updateSelect2ReadyState();
 });
 
 $(function () {
