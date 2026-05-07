@@ -18,6 +18,8 @@ from apps.business_app.utils.xslx_to_pdb_graph import (
     extract_children_tree,
     extract_parents_tree,
 )
+from apps.common.utils.pusher_client import PusherClient
+from apps.common.tasks import send_pusher_trigger_task
 
 logger = logging.getLogger(__name__)
 
@@ -67,12 +69,13 @@ def process_uploaded_file_task(uploaded_file_id):
             e,
             exc_info=True,
         )
-        uploaded_file.delete()
+
         send_pusher_trigger_task.delay(
             channel=PusherClient.CELERY_TASK_CHANNEL,
             event=PusherClient.FAILED_UPLOAD_3D_EXCEL,
-            data={"error_detail": e},
+            data={"error_detail": e.__str__()},
         )
+        # uploaded_file.delete()
         raise
 
 

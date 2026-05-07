@@ -15,6 +15,18 @@ const geneUrl = "/business-gestion/gene/list-for-dropdown/";
 
 var load = document.getElementById("load");
 
+function showFileProcessingMessage() {
+  Swal.fire({
+    title: "Processing",
+    text: "The file is beeing processed...",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+}
+
 // Función para cargar la lista de genes
 function loadGenes() {
   axios
@@ -182,21 +194,27 @@ $(document).ready(function () {
     celery_task_channel.bind("successful-upload-3d-excel", function (data) {
       // If it's the combined structure with task_info/alert_info
       console.log("Successful upload 3D Excel:", data);
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "3D Excel file uploaded successfully.",
-        });
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Successfull uploaded file",
+      });
+
+      if ($.fn.DataTable.isDataTable("#tabla-de-Datos")) {
+        $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
+      }
 
     });
     celery_task_channel.bind("failed-upload-3d-excel", function (data) {
       // If it's the combined structure with task_info/alert_info
       console.log("Failed upload 3D Excel:", data);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to upload 3D Excel file: "+data,
-        });
+      const errorDetail = data && data.error_detail ? data.error_detail : "Unknown error";
+      Swal.close();
+      Swal.fire({
+        icon: "error",
+        title: "Upload failed",
+        text: "The file could not be processed. " + errorDetail,
+      });
     });
   } else {
     console.warn(
@@ -394,18 +412,14 @@ form.addEventListener("submit", function (event) {
     } else {
       $("#modal-crear-elemento").modal("hide");
       load.hidden = false;
+      showFileProcessingMessage();
       axios
         .post(write_url, data)
         .then((response) => {
           if (response.status === 201) {
             load.hidden = true;
-            table.ajax.reload();
-            Swal.fire({
-              icon: "success",
-              title: "Elemento creado con éxito",
-              showConfirmButton: false,
-              timer: 1500,
-            });
+            // The success message and table refresh are handled by Pusher
+            // event "successful-upload-3d-excel".
           }
         })
         .catch((error) => {

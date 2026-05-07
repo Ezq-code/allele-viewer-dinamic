@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from apps.business_app.models import Event, Feature, Marker, EventGallery, EventType
 from django.views.decorators.cache import cache_page
+from django.conf import settings
 
 
 # Create your views here.

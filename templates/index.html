@@ -254,10 +254,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <li class="nav-item">
                     <a href="{% url 'disease-subgroup' %}" class="nav-link">
                       <i class="far fa-circle nav-icon text-success"></i>
-                      <p>
-                        {% blocktranslate %}DeseaseSubgroup{% endblocktranslate
-                        %}
-                      </p>
+                      <p>{% translate "DeseaseSubgroup" %}</p>
                     </a>
                   </li>
                   <li class="nav-item">
@@ -274,10 +271,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       class="nav-link"
                     >
                       <i class="far fa-circle nav-icon text-success"></i>
-                      <p>
-                        {% blocktranslate %}Load SNP Formation File{%
-                        endblocktranslate %}
-                      </p>
+                      <p>{% translate "Load SNP Formation File" %}</p>
                     </a>
                   </li>
                 </ul>
@@ -703,7 +697,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
     <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
-
+    <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+    <script>
+      // Accede a las variables directamente desde el template
+      const pusherKey = "{{ pusher_key }}";
+      const pusherCluster = "{{ pusher_cluster }}";
+    </script>
     <script>
       var Toast = Swal.mixin({
           toast: true,
@@ -722,12 +721,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
 
       }); {% endcomment %}
-    </script>
-    <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
-    <script>
-      // Accede a las variables directamente desde el template
-      const pusherKey = "{{ pusher_key }}";
-      const pusherCluster = "{{ pusher_cluster }}";
     </script>
 
     {% block script %} {% endblock %}
