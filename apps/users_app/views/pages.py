@@ -41,12 +41,26 @@ def som(request):
 
 # @cache_page(60 * 15)
 def uploadfile(request):
-    return render(request, "grafico/uploadfile.html")
+    return render(
+        request,
+        "grafico/uploadfile.html",
+        {
+            "pusher_key": settings.PUSHER_KEY,
+            "pusher_cluster": settings.PUSHER_CLUSTER,
+        },
+    )
 
 
 @cache_page(60 * 15)
 def uploadfileconformation(request):
-    return render(request, "grafico/uploadfileconformation.html")
+    return render(
+        request,
+        "grafico/uploadfileconformation.html",
+        {
+            "pusher_key": settings.PUSHER_KEY,
+            "pusher_cluster": settings.PUSHER_CLUSTER,
+        },
+    )
 
 
 @cache_page(60 * 15)

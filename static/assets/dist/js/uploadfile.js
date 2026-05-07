@@ -167,6 +167,42 @@ $(document).ready(function () {
         },
       ],
     });
+    
+  // Configuración de Pusher
+  if (
+    typeof pusherKey !== "undefined" &&
+    typeof pusherCluster !== "undefined"
+  ) {
+    var pusher = new Pusher(pusherKey, {
+      cluster: pusherCluster,
+    });
+
+    var celery_task_channel = pusher.subscribe("celery-task-channel");
+    // The realtime update may contain task or alert data (or both).
+    celery_task_channel.bind("successful-upload-3d-excel", function (data) {
+      // If it's the combined structure with task_info/alert_info
+      console.log("Successful upload 3D Excel:", data);
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "3D Excel file uploaded successfully.",
+        });
+
+    });
+    celery_task_channel.bind("failed-upload-3d-excel", function (data) {
+      // If it's the combined structure with task_info/alert_info
+      console.log("Failed upload 3D Excel:", data);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to upload 3D Excel file: "+data,
+        });
+    });
+  } else {
+    console.warn(
+      "Pusher keys no definidas. Las alertas en tiempo real no funcionarán."
+    );
+  }
 });
 
 $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
