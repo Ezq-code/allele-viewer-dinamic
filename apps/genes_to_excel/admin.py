@@ -38,6 +38,7 @@ class GenesToExcelFilesAdmin(admin.ModelAdmin):
             # Display the exception in the admin interface
             self.message_user(request, f"{str(e)}", level="error")
 
+
 @admin.register(CaracteristicaGen)
 class CaracteristicaGenAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"

@@ -122,8 +122,8 @@ class GeneViewSet(
         Returns:
             Response: List of genes that have uploaded files
         """
-        return self.list(request) 
-        
+        return self.list(request)
+
     @action(
         detail=False,
         methods=["GET"],

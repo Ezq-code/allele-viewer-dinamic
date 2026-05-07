@@ -33,7 +33,7 @@ class AlleleRegionFilter(django_filters.FilterSet):
 
     kind_of_info = django_filters.CharFilter(
         method="filter_by_kind_of_info",
-        label="Kind of info: P (Primary), S (Secondary), both (or P,S)"
+        label="Kind of info: P (Primary), S (Secondary), both (or P,S)",
     )
 
     class Meta:
@@ -101,11 +101,11 @@ class AlleleRegionFilter(django_filters.FilterSet):
     def filter_by_kind_of_info(self, queryset, name, value):
         if not value:
             return queryset
-        parts = [v.strip().upper() for v in value.split(',') if v.strip()]
+        parts = [v.strip().upper() for v in value.split(",") if v.strip()]
         if not parts:
             return queryset
         # Si se pasa "both" o incluye tanto P como S, no se filtra**
-        if 'BOTH' in parts or ('P' in parts and 'S' in parts):
+        if "BOTH" in parts or ("P" in parts and "S" in parts):
             return queryset
         self.allele_filters &= Q(kind_of_info__in=parts)
         return queryset
