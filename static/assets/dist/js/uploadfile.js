@@ -18,9 +18,11 @@ var load = document.getElementById("load");
 function showFileProcessingMessage() {
   Swal.fire({
     title: "Processing",
-    text: "The file is beeing processed...",
+    text: "The file is being processed. You will be notified when the upload is finished.",
     allowOutsideClick: false,
     allowEscapeKey: false,
+    timer: 4500,
+    timerProgressBar: true,
     didOpen: () => {
       Swal.showLoading();
     },
