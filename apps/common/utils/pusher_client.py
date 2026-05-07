@@ -9,18 +9,11 @@ class PusherClient:
     """Wrapper around pusher.Pusher that logs triggers for debugging."""
 
     # CHANNELS
-    MANAGEMENT_DASHBOARD_CHANNEL = "management-dashboard-channel"
-    DASHBOARD_CHANNEL = "dashboard-channel"
-    TASK_CHANNEL = "task-channel"
-    ALERT_CHANNEL = "alert-channel"
+    CELERY_TASK_CHANNEL = "celery-task-channel"
 
     # EVENTS
-    UPDATE_TASK_EVENT = "update-task-event"
-    UPDATE_TASK_EVENT_FOR_SUPERVISOR = "update-task-event-for-supervisor"
-    UPDATE_ALERT_EVENT = "update-alert-event"
-
-    NEW_ALERT_EVENT = "new-alert-event"
-    DELETED_ALERT_EVENT = "deleted-alert-event"
+    SUCCESSFUL_UPLOAD_3D_EXCEL = "successful-upload-3d-excel"
+    FAILED_UPLOAD_3D_EXCEL = "failed-upload-3d-excel"
 
     _instance = None
 
