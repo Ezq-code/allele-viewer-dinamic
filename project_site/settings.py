@@ -379,3 +379,11 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+
+PUSHER_APP_ID = env.str("PUSHER_APP_ID", default="")  # Example ID TODO: change it
+PUSHER_KEY = env.str("PUSHER_KEY", default="")  # Example key TODO: change it
+PUSHER_SECRET = env.str("PUSHER_SECRET", default="")  # Example secret TODO: change it
+PUSHER_CLUSTER = env.str(
+    "PUSHER_CLUSTER", default=""
+)  # Example cluster TODO: change it
