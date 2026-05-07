@@ -53,6 +53,11 @@ def process_uploaded_file_task(uploaded_file_id):
             )
             uploaded_file.processed = True
             uploaded_file.save(update_fields=["processed"])
+        send_pusher_trigger_task.delay(
+                channel=PusherClient.CELERY_TASK_CHANNEL,
+                event=PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL,
+                data={"uploaded_file_id": uploaded_file_id},
+            )
 
         return {"status": "success", "uploaded_file_id": uploaded_file_id}
     except Exception as e:
@@ -63,6 +68,11 @@ def process_uploaded_file_task(uploaded_file_id):
             exc_info=True,
         )
         uploaded_file.delete()
+        send_pusher_trigger_task.delay(
+                channel=PusherClient.CELERY_TASK_CHANNEL,
+                event=PusherClient.FAILED_UPLOAD_3D_EXCEL,
+                data={},
+            )
         raise
 
 
