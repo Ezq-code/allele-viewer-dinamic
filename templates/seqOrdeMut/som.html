@@ -65,10 +65,20 @@
 
   .excel-table td:first-child {
     text-align: left;
+  }  
+  
+  /* Mantener el color de fondo original en celdas con color personalizado */
+  .excel-table td[style*="background-color"]:hover {
+    opacity: 0.95;
   }
 
-  .excel-table tr:hover td {
-    background-color: #e6f7ff !important;
+  /* Efecto especial para celdas clickeables */
+  .excel-table td.clickable-cell:hover {
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    position: relative;
+    z-index: 20;
+    background-color: #e3f2fd ;
   }
 
   .gene-selector {
@@ -80,11 +90,11 @@
   }
 
   .info-gen {
-    margin-top: 15px;
     padding: 10px;
     background: #e3f2fd;
-    border-radius: 4px;
+    border-radius: 3px;
     font-size: 14px;
+    height: 38px;
   }
 
   .overlay {
@@ -101,6 +111,7 @@
     color: white;
     font-size: 1.5rem;
   }
+  
   /* Estilo para celdas clickeables */
   .excel-table td[style*="cursor: pointer"] {
     transition: all 0.2s ease;
@@ -119,6 +130,17 @@
     max-height: 500px;
     overflow-y: auto;
   }
+
+  @media (max-width: 768px) {
+    .excel-table-container {
+      max-height: 50vh;
+    }
+    .excel-table td, .excel-table th {
+      padding: 4px 6px;
+      font-size: 9px;
+    }
+  }
+
 </style>
 {% endblock %} {% block content %}
 <div class="content-wrapper">
