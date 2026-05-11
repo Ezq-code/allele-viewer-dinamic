@@ -29,7 +29,14 @@ def first_login(request):
 
 # @cache_page(60 * 15)
 def alleleviewer(request):
-    return render(request, "grafico/alleleviewer.html")
+    return render(
+        request,
+        "grafico/alleleviewer.html",
+        {
+            "pusher_key": settings.PUSHER_KEY,
+            "pusher_cluster": settings.PUSHER_CLUSTER,
+        },
+    )
 
 
 def ancestral(request):

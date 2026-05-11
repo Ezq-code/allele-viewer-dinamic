@@ -275,7 +275,7 @@ $(document).ready(function () {
     });
   } else {
     console.warn(
-      "Pusher keys no definidas. Las alertas en tiempo real no funcionaran."
+      "Pusher keys no definidas. Las alertas en tiempo real no funcionarán."
     );
   }
 });

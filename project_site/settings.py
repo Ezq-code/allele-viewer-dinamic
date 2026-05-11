@@ -181,6 +181,9 @@ if RUNNING_FROM == RUNNING_FROM_LOCAL:
     conexion = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "OPTIONS": {
+            "timeout": 30,
+        },
     }
 else:
     conexion = {
@@ -195,7 +198,8 @@ else:
 DATABASES = {
     "default": {
         **conexion,
-        "CONN_MAX_AGE": 600,  # Reutilizar conexiones por 10 minutos para mejor rendimiento
+        # SQLite local + Celery puede producir locks con conexiones persistentes.
+        "CONN_MAX_AGE": 0 if RUNNING_FROM == RUNNING_FROM_LOCAL else 600,
     },
 }
 
