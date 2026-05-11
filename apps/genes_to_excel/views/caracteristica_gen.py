@@ -14,7 +14,9 @@ from ..models.caracteristica_gen import CaracteristicaGen
 from apps.common.views import GetAllMixin
 
 
-class CaracteristicaGenViewSet(GetAllMixin, viewsets.ReadOnlyModelViewSet, GenericAPIView):
+class CaracteristicaGenViewSet(
+    GetAllMixin, viewsets.ReadOnlyModelViewSet, GenericAPIView
+):
     queryset = CaracteristicaGen.objects.all()
     serializer_class = CaracteristicaGenSerializer
     permission_classes = [permissions.AllowAny]
@@ -38,13 +40,14 @@ class CaracteristicaGenViewSet(GetAllMixin, viewsets.ReadOnlyModelViewSet, Gener
         )
 
         return Response({"results": serializer.data})
-    
+
     @method_decorator(cache_page(timeout=None))  # Cache por 15 minutos
     def list(self, request, *args, **kwargs):
         """
         Lista todos los AlleleRegionInfo con filtros aplicados
         """
         return super().list(request, *args, **kwargs)
+
 
 """
     @action(detail=False, methods=['get'], url_path='matriz')

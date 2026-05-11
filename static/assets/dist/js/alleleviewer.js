@@ -471,6 +471,20 @@ $(function () {
   cargarGenes();
   // poblarListasAllele();
   viewer.removeAllLabels();
+
+  // Suscripción a Pusher para recargar genes automáticamente al subir un nuevo archivo
+  if (typeof pusherKey !== "undefined" && typeof pusherCluster !== "undefined") {
+    var pusher = new Pusher(pusherKey, {
+      cluster: pusherCluster,
+    });
+    var celery_task_channel = pusher.subscribe("celery-task-channel");
+    celery_task_channel.bind("successful-upload-3d-excel", function (data) {
+      console.log("Nuevo archivo subido, recargando genes...", data);
+      const selectGene = document.getElementById("selectGene");
+      selectGene.innerHTML = "";
+      cargarGenes();
+    });
+  }
 });
 
 // Función para cargar genes en el select
@@ -482,7 +496,6 @@ function cargarGenes() {
       const selectGene = document.getElementById("selectGene");
       // selectGene.innerHTML = '<option value="">Selec gen</option>';
       if (response.data.results.length == 0) {
-        console.log("✌️retornóooooooooooooooooooo --->");
         load.hidden = true;
         return;
       }

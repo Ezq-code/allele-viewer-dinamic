@@ -15,6 +15,20 @@ const geneUrl = "/business-gestion/gene/list-for-dropdown/";
 
 var load = document.getElementById("load");
 
+function showFileProcessingMessage() {
+  Swal.fire({
+    title: "Processing",
+    text: "The file is being processed. You will be notified when the upload is finished.",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    timer: 4500,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+}
+
 // Función para cargar la lista de genes
 function loadGenes() {
   axios
@@ -167,6 +181,48 @@ $(document).ready(function () {
         },
       ],
     });
+    
+  // Configuración de Pusher
+  if (
+    typeof pusherKey !== "undefined" &&
+    typeof pusherCluster !== "undefined"
+  ) {
+    var pusher = new Pusher(pusherKey, {
+      cluster: pusherCluster,
+    });
+
+    var celery_task_channel = pusher.subscribe("celery-task-channel");
+    // The realtime update may contain task or alert data (or both).
+    celery_task_channel.bind("successful-upload-3d-excel", function (data) {
+      // If it's the combined structure with task_info/alert_info
+      console.log("Successful upload 3D Excel:", data);
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Successfull uploaded file",
+      });
+
+      if ($.fn.DataTable.isDataTable("#tabla-de-Datos")) {
+        $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
+      }
+
+    });
+    celery_task_channel.bind("failed-upload-3d-excel", function (data) {
+      // If it's the combined structure with task_info/alert_info
+      console.log("Failed upload 3D Excel:", data);
+      const errorDetail = data && data.error_detail ? data.error_detail : "Unknown error";
+      Swal.close();
+      Swal.fire({
+        icon: "error",
+        title: "Upload failed",
+        text: "The file could not be processed. " + errorDetail,
+      });
+    });
+  } else {
+    console.warn(
+      "Pusher keys no definidas. Las alertas en tiempo real no funcionarán."
+    );
+  }
 });
 
 $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
@@ -358,18 +414,14 @@ form.addEventListener("submit", function (event) {
     } else {
       $("#modal-crear-elemento").modal("hide");
       load.hidden = false;
+      showFileProcessingMessage();
       axios
         .post(write_url, data)
         .then((response) => {
           if (response.status === 201) {
             load.hidden = true;
-            table.ajax.reload();
-            Swal.fire({
-              icon: "success",
-              title: "Elemento creado con éxito",
-              showConfirmButton: false,
-              timer: 1500,
-            });
+            // The success message and table refresh are handled by Pusher
+            // event "successful-upload-3d-excel".
           }
         })
         .catch((error) => {
