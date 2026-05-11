@@ -9,6 +9,18 @@ const DEFAULT_COLOR = "255,255,255";
 const DEBUG = false;
 const RENDER_ROWS_PER_FRAME = 30;
 
+// ============================================
+// CONFIGURACIÓN DE TAMAÑOS (VARIABLES GLOBALES)
+// ============================================
+const CELL_CONFIG = {
+    FONT_SIZE: '5px',              // Tamaño del texto 9
+    HEADER_FONT_SIZE: '6px',       // Tamaño del texto en cabeceras 9
+    CELL_PADDING_VERTICAL: '1px',   // Padding arriba/abajo
+    CELL_PADDING_HORIZONTAL: '1px', // Padding izquierda/derecha 5
+    MIN_CELL_WIDTH: '30px',         // Ancho mínimo de celda 50
+    MIN_FIRST_COL_WIDTH: '50px',    // Ancho de la primera columna 80
+};
+
 // Cache de estilos por color para evitar parseos repetidos en tablas grandes
 const colorStyleCache = new Map();
 
@@ -690,17 +702,52 @@ function renderizarTablaExcel(data) {
     }
     
     if (DEBUG) {
-        console.log(`Renderizando tabla: ${filas.length} filas x ${columnas.length} columnas`);
-        console.log(`Coordenada inicial: (${minFila}, ${minCol})`);
+        console.log(`Renderizando tabla: ${matriz.length} filas x ${matriz[0]?.length} columnas`);
+    }
+    
+    // ========== EXTRAER NOMBRES DE PROTEÍNAS (Primera fila, desde columna 1) ==========
+    const proteinNames = [];
+    if (matriz.length > 0 && matriz[0]) {
+        // Comenzar desde índice 1 para saltar la primera columna (alelos)
+        for (let idxCol = 1; idxCol < matriz[0].length; idxCol++) {
+            const celdaProteina = matriz[0][idxCol];
+            // Para proteínas, si está vacío mostrar "Protein_X" (opcional)
+            const proteinValue = celdaProteina.valor || "";
+            proteinNames.push(proteinValue);
+        }
+        console.log("Nombres de proteínas extraídos:", proteinNames);
+    } else {
+        for (let i = 1; i < columnas.length; i++) {
+            proteinNames.push("");
+        }
+    }
+    
+    // ========== EXTRAER NOMBRES DE ALELOS (Primera columna, desde fila 1) ==========
+    const alleleNames = [];
+    if (matriz.length > 0) {
+        // Comenzar desde índice 1 para saltar la primera fila (proteínas)
+        for (let idxRow = 1; idxRow < matriz.length; idxRow++) {
+            if (matriz[idxRow] && matriz[idxRow][0]) {
+                const celdaAlelo = matriz[idxRow][0];
+                // SI EL VALOR ESTÁ VACÍO O ES SOLO ESPACIOS, MANTENER COMO STRING VACÍO
+                const alleleValue = (celdaAlelo.valor && celdaAlelo.valor.trim() !== "") 
+                    ? celdaAlelo.valor 
+                    : "";  // ← Cambiado: antes era `Row${idxRow}`, ahora es string vacío
+                alleleNames.push(alleleValue);
+            } else {
+                alleleNames.push("");  // Si no existe la celda, string vacío
+            }
+        }
+        console.log("Nombres de alelos extraídos:", alleleNames);
     }
     
     // Mostrar indicador de carga
     container.innerHTML = '<div style="padding: 20px; text-align: center;"><i class="fas fa-spinner fa-pulse"></i> Rendering table...</div>';
     
-    // Usar setTimeout para arrancar fuera del ciclo de eventos actual
     setTimeout(() => {
         const table = document.createElement("table");
         table.className = "excel-table";
+        table.style.fontSize = CELL_CONFIG.FONT_SIZE;
         
         // ========== CABECERA ==========
         const thead = document.createElement("thead");
@@ -709,35 +756,30 @@ function renderizarTablaExcel(data) {
         // Esquina superior izquierda
         const thCorner = document.createElement("th");
         thCorner.textContent = "Alleles \\ Proteins";
-        thCorner.style.minWidth = "100px";
+        thCorner.style.minWidth = CELL_CONFIG.MIN_FIRST_COL_WIDTH;
         thCorner.style.position = "sticky";
         thCorner.style.left = "0";
         thCorner.style.backgroundColor = "#f3f3f3";
         thCorner.style.zIndex = "20";
+        thCorner.style.fontSize = CELL_CONFIG.HEADER_FONT_SIZE;
+        thCorner.style.padding = `${CELL_CONFIG.CELL_PADDING_VERTICAL} ${CELL_CONFIG.CELL_PADDING_HORIZONTAL}`;
         headerRow.appendChild(thCorner);
         
-        // Columnas (mostrar nombres de proteínas)
-        //columnas.forEach(proteina => {
-        //    const th = document.createElement("th");
-        //    th.textContent = proteina;
-        //    th.style.minWidth = "80px";
-        //    th.style.backgroundColor = "#f3f3f3";
-        //    th.style.position = "sticky";
-        //    th.style.top = "0";
-        //    th.style.zIndex = "10";
-        //    headerRow.appendChild(th);
-        //});
-
-        // Columnas - AHORA CON LETRAS EN LUGAR DE NÚMEROS
+        // Columnas con nombres reales de proteínas
         const headerFragment = document.createDocumentFragment();
-        columnas.forEach(proteina => {
+        proteinNames.forEach((proteinName, idx) => {
             const th = document.createElement("th");
-            th.textContent = numeroALetra(proteina); // ← Cambiado de 'proteina' a letras
-            th.style.minWidth = "80px";
+            // Si el nombre de proteína está vacío, mostrar string vacío
+            th.textContent = proteinName || "";
+            th.style.minWidth = CELL_CONFIG.MIN_CELL_WIDTH;
             th.style.backgroundColor = "#f3f3f3";
             th.style.position = "sticky";
             th.style.top = "0";
             th.style.zIndex = "10";
+            th.style.fontSize = CELL_CONFIG.HEADER_FONT_SIZE;
+            th.style.padding = `${CELL_CONFIG.CELL_PADDING_VERTICAL} ${CELL_CONFIG.CELL_PADDING_HORIZONTAL}`;
+            th.style.fontWeight = "bold";
+            th.style.whiteSpace = "nowrap";
             headerFragment.appendChild(th);
         });
         headerRow.appendChild(headerFragment);
@@ -747,17 +789,15 @@ function renderizarTablaExcel(data) {
         
         // ========== CUERPO ==========
         const tbody = document.createElement("tbody");
-        
         table.appendChild(tbody);
         container.innerHTML = "";
         container.appendChild(table);
-
-        // Delegación de eventos para minimizar listeners por celda
+        
+        // Eventos (delegación)
         tbody.addEventListener("click", (event) => {
             const td = event.target.closest("td.clickable-cell");
             if (!td) return;
             event.stopPropagation();
-
             mostrarDetalleCelda(
                 td.dataset.alelo,
                 Number(td.dataset.columna),
@@ -766,107 +806,120 @@ function renderizarTablaExcel(data) {
                 td.dataset.valor
             );
         });
-
+        
         tbody.addEventListener("mouseover", (event) => {
             const td = event.target.closest("td.clickable-cell");
             if (!td || td.contains(event.relatedTarget)) return;
-            td.style.backgroundColor = "#e3f2fd";
             td.style.transform = "scale(1.02)";
             td.style.transition = "all 0.2s ease";
-            td.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+            td.style.outline = "1px solid #0078d4";
+            td.style.zIndex = "20";
+            td.style.position = "relative";
         });
-
+        
         tbody.addEventListener("mouseout", (event) => {
             const td = event.target.closest("td.clickable-cell");
             if (!td || td.contains(event.relatedTarget)) return;
-            td.style.backgroundColor = td.dataset.baseBg || "";
             td.style.transform = "scale(1)";
-            td.style.boxShadow = "none";
+            td.style.outline = "none";
+            td.style.zIndex = "auto";
         });
-
-        // Render incremental por lotes para mantener UI responsiva
-        let idxFila = 0;
+        
+        // ========== RENDER INCREMENTAL ==========
+        let idxFila = 1;  // Comenzar desde fila 1 (saltando la fila de proteínas)
         const totalFilas = matriz.length;
-
+        
         const renderChunk = () => {
             const bodyFragment = document.createDocumentFragment();
             const end = Math.min(idxFila + RENDER_ROWS_PER_FRAME, totalFilas);
-
+            
             for (; idxFila < end; idxFila++) {
                 const fila = matriz[idxFila];
+                if (!fila) continue;
+                
                 const tr = document.createElement("tr");
-
-                // Primera columna - Nombre del alelo (SIN acción)
+                
+                // ========== PRIMERA COLUMNA - Nombre del alelo ==========
+                const idxAlelo = idxFila - 1;  // Ajustar índice porque alleleNames comienza desde 0
+                const nombreAlelo = alleleNames[idxAlelo] || "";  // Si no existe, string vacío
+                
                 const tdAlelo = document.createElement("td");
-                tdAlelo.textContent = filas[idxFila];
+                tdAlelo.textContent = nombreAlelo;  // Mostrar el valor (puede ser string vacío)
                 tdAlelo.style.fontWeight = "bold";
                 tdAlelo.style.backgroundColor = "#f8f8f8";
                 tdAlelo.style.position = "sticky";
                 tdAlelo.style.left = "0";
-                tdAlelo.style.minWidth = "100px";
-                tdAlelo.style.textAlign = "center";
+                tdAlelo.style.minWidth = CELL_CONFIG.MIN_FIRST_COL_WIDTH;
+                tdAlelo.style.textAlign = "left";
                 tdAlelo.style.zIndex = "5";
+                tdAlelo.style.fontSize = CELL_CONFIG.FONT_SIZE;
+                tdAlelo.style.padding = `${CELL_CONFIG.CELL_PADDING_VERTICAL} ${CELL_CONFIG.CELL_PADDING_HORIZONTAL}`;
+                tdAlelo.style.whiteSpace = "nowrap";
+                
+                // Si el nombre está vacío, mantener la celda pero sin contenido visible
+                if (nombreAlelo === "") {
+                    tdAlelo.style.backgroundColor = "#f8f8f8";  // Mantener color de fondo
+                    tdAlelo.style.fontStyle = "normal";
+                }
+                
                 tr.appendChild(tdAlelo);
-
-                // Celdas de datos
-                for (let idxCol = 0; idxCol < fila.length; idxCol++) {
+                
+                // ========== CELDAS DE DATOS (comenzar desde columna 1) ==========
+                // Comenzar desde índice 1 para saltar la primera columna (alelos)
+                for (let idxCol = 1; idxCol < fila.length; idxCol++) {
                     const celda = fila[idxCol];
                     const td = document.createElement("td");
                     td.textContent = celda.valor || "";
                     td.style.textAlign = "center";
-                    td.style.padding = "8px 12px";
+                    td.style.padding = `${CELL_CONFIG.CELL_PADDING_VERTICAL} ${CELL_CONFIG.CELL_PADDING_HORIZONTAL}`;
                     td.style.border = "1px solid #ddd";
-
+                    td.style.fontSize = CELL_CONFIG.FONT_SIZE;
+                    td.style.whiteSpace = "nowrap";
+                    
+                    // Aplicar colores
                     const colorStyle = getColorStyle(celda.color, Boolean(celda.valor));
                     if (colorStyle.bg) {
                         td.style.backgroundColor = colorStyle.bg;
                         td.style.color = colorStyle.textColor;
-                        td.style.fontWeight = "bold";
+                        td.style.fontWeight = colorStyle.bold ? "bold" : "normal";
                     }
-
-                    // ========== AGREGAR ACCIÓN SOLO A CELDAS CON VALOR ==========
+                    
+                    // Hacer clickeable solo si tiene valor
                     if (celda.valor && celda.valor !== "") {
                         td.style.cursor = "pointer";
                         td.classList.add("clickable-cell");
-                        td.dataset.alelo = filas[idxFila];
+                        td.dataset.alelo = nombreAlelo;
                         td.dataset.columna = String(columnas[idxCol]);
                         td.dataset.fila = String(celda.fila);
                         td.dataset.colNum = String(celda.columna);
                         td.dataset.valor = celda.valor;
-                        td.dataset.baseBg = colorStyle.bg;
-                        td.title = `Click a cell to view details "${celda.valor}" in ${filas[idxFila]}`;
+                        td.dataset.baseBg = colorStyle.bg || '';
+                        td.title = `Click to view details: ${celda.valor}`;
                     }
-
+                    
                     tr.appendChild(td);
                 }
-
+                
                 bodyFragment.appendChild(tr);
             }
-
+            
             tbody.appendChild(bodyFragment);
-
+            
             if (idxFila < totalFilas) {
                 requestAnimationFrame(renderChunk);
                 return;
             }
-
-            // Actualizar estadísticas al finalizar el render
+            
+            // Actualizar estadísticas
             const statsSpan = document.getElementById("info-stats");
             if (statsSpan) {
-                statsSpan.innerHTML = `${filas.length} rows × ${columnas.length} columns | ${data.celdasConDatos} cells with data`;
-                statsSpan.className = "badge";
+                const totalDataRows = totalFilas - 1;
+                statsSpan.innerHTML = `${totalDataRows} rows × ${proteinNames.length} columns | ${data.celdasConDatos} cells with data`;
             }
-
+            
             if (DEBUG) console.log("✅ Tabla renderizada correctamente");
-
-            // Agregar información adicional en el indicador virtual
-            const indicator = document.getElementById("virtualScrollIndicator");
-            if (indicator) {
-                indicator.classList.remove("hidden");
-                indicator.innerHTML = `<i class="fas fa-table"></i> Matrix from (${data.minFila},${data.minCol}) to (${data.maxFila},${data.maxCol}) | Total cells: ${data.totalCeldas.toLocaleString()} | Cells with data: ${data.celdasConDatos}`;
-            }
         };
-
+        
         requestAnimationFrame(renderChunk);
         
     }, 100);
