@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions
 
 from apps.business_app.models.gene import Gene
-from apps.business_app.serializers.gene_serializer import GeneSerializer
+from apps.business_app.serializers.gene import GeneSerializer
 
 
 # Funciona

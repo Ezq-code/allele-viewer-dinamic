@@ -10,7 +10,7 @@ const csrfToken = document.cookie
 const url = "/allele-formation/uploaded-snp-files/";
 
 // url para obtener genes
-const geneUrl = "/business-gestion/gene/";
+const geneUrl = "/business-gestion/gene/list-for-dropdown/";
 
 var load = document.getElementById("load");
 let select2Ready = false;
@@ -25,6 +25,20 @@ function hideLoadingOverlay() {
   if (load) {
     load.hidden = true;
   }
+}
+
+function showFileProcessingMessage() {
+  Swal.fire({
+    title: "Processing",
+    text: "The file is being processed. You will be notified when the upload is finished.",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    timer: 5000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
 }
 
 function updateSelect2ReadyState() {
@@ -225,6 +239,45 @@ $(document).ready(function () {
         },
       ],
     });
+
+  // Configuración de Pusher
+  if (
+    typeof pusherKey !== "undefined" &&
+    typeof pusherCluster !== "undefined"
+  ) {
+    var pusher = new Pusher(pusherKey, {
+      cluster: pusherCluster,
+    });
+
+    var celery_task_channel = pusher.subscribe("celery-task-channel");
+    celery_task_channel.bind("successful-upload-conformation-excel", function (data) {
+      console.log("Successful upload conformation Excel:", data);
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Successfull uploaded file",
+      });
+
+      if ($.fn.DataTable.isDataTable("#tabla-de-Datos")) {
+        $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
+      }
+    });
+
+    celery_task_channel.bind("failed-upload-conformation-excel", function (data) {
+      console.log("Failed upload conformation Excel:", data);
+      const errorDetail = data && data.error_detail ? data.error_detail : "Unknown error";
+      Swal.close();
+      Swal.fire({
+        icon: "error",
+        title: "Upload failed",
+        text: "The file could not be processed. " + errorDetail,
+      });
+    });
+  } else {
+    console.warn(
+      "Pusher keys no definidas. Las alertas en tiempo real no funcionarán."
+    );
+  }
 });
 
 $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
@@ -288,7 +341,7 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
         // Llenar el formulario con los datos del usuario
         form.elements.name.value = elemento.custom_name;
         form.elements.description.value = elemento.description;
-        loadGenes(elemento.gene);
+        setGeneValue(elemento.gene);
       })
       .catch(function (error) {});
   } else {
@@ -299,11 +352,7 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
 $("#modal-crear-elemento").on("shown.bs.modal", function () {
   showLoadingOverlay();
   initializeGeneSelect2();
-  if (document.getElementById("gene").options.length <= 1) {
-    loadGenes();
-  } else {
-    updateSelect2ReadyState();
-  }
+  updateSelect2ReadyState();
 });
 
 $(function () {
@@ -409,18 +458,14 @@ form.addEventListener("submit", function (event) {
     } else {
       $("#modal-crear-elemento").modal("hide");
       load.hidden = false;
+      showFileProcessingMessage();
       axios
         .post(url, data)
         .then((response) => {
           if (response.status === 201) {
             load.hidden = true;
-            table.ajax.reload();
-            Swal.fire({
-              icon: "success",
-              title: "Elemento creado con éxito",
-              showConfirmButton: false,
-              timer: 1500,
-            });
+            // The success message and table refresh are handled by Pusher
+            // event "successful-upload-conformation-excel".
           }
         })
         .catch((error) => {

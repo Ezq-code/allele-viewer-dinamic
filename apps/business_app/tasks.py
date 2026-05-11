@@ -3,6 +3,8 @@ import os
 from celery import shared_task
 from django.core.management import call_command
 from django.core.cache import cache
+from django.db import close_old_connections
+from django.db.utils import OperationalError
 
 from apps.users_app.models.country import Country
 from apps.business_app.models.sub_country import SubCountry
@@ -18,14 +20,32 @@ from apps.business_app.utils.xslx_to_pdb_graph import (
     extract_children_tree,
     extract_parents_tree,
 )
+from apps.common.utils.pusher_client import PusherClient
+from apps.common.tasks import send_pusher_trigger_task
 
 logger = logging.getLogger(__name__)
 
 
-@shared_task(name="process_uploaded_file_task")
-def process_uploaded_file_task(uploaded_file_id):
+def _is_db_locked_error(error):
+    current_error = error
+    while current_error:
+        current_error_msg = str(current_error).lower()
+        if (
+            isinstance(current_error, OperationalError)
+            and "database is locked" in current_error_msg
+        ):
+            return True
+        if "database is locked" in current_error_msg:
+            return True
+        current_error = current_error.__cause__ or current_error.__context__
+    return False
+
+
+@shared_task(bind=True, name="process_uploaded_file_task", max_retries=4)
+def process_uploaded_file_task(self, uploaded_file_id):
     from apps.business_app.models.uploaded_files import UploadedFiles
 
+    close_old_connections()
     uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
     try:
         original_file = uploaded_file.original_file
@@ -53,16 +73,39 @@ def process_uploaded_file_task(uploaded_file_id):
             )
             uploaded_file.processed = True
             uploaded_file.save(update_fields=["processed"])
+        send_pusher_trigger_task.delay(
+            channel=PusherClient.CELERY_TASK_CHANNEL,
+            event=PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL,
+            data={"uploaded_file_id": uploaded_file_id},
+        )
 
         return {"status": "success", "uploaded_file_id": uploaded_file_id}
     except Exception as e:
+        if _is_db_locked_error(e) and self.request.retries < self.max_retries:
+            countdown = 5 * (2**self.request.retries)
+            logger.warning(
+                "Database is locked while processing uploaded file %s. Retrying in %ss (retry %s/%s).",
+                uploaded_file_id,
+                countdown,
+                self.request.retries + 1,
+                self.max_retries,
+            )
+            close_old_connections()
+            raise self.retry(exc=e, countdown=countdown)
+
         logger.error(
             "Error processing uploaded file %s: %s",
             uploaded_file_id,
             e,
             exc_info=True,
         )
-        uploaded_file.delete()
+
+        send_pusher_trigger_task.delay(
+            channel=PusherClient.CELERY_TASK_CHANNEL,
+            event=PusherClient.FAILED_UPLOAD_3D_EXCEL,
+            data={"error_detail": e.__str__()},
+        )
+        # uploaded_file.delete()
         raise
 
 

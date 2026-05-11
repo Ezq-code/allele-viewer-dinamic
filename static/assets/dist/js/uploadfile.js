@@ -11,9 +11,23 @@ const write_url = "/business-gestion/uploaded-files/";
 const read_url = write_url + "simple-list/";
 
 // url para obtener genes
-const geneUrl = "/business-gestion/gene/";
+const geneUrl = "/business-gestion/gene/list-for-dropdown/";
 
 var load = document.getElementById("load");
+
+function showFileProcessingMessage() {
+  Swal.fire({
+    title: "Processing",
+    text: "The file is being processed. You will be notified when the upload is finished.",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    timer: 4500,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+}
 
 // Función para cargar la lista de genes
 function loadGenes() {
@@ -167,6 +181,48 @@ $(document).ready(function () {
         },
       ],
     });
+    
+  // Configuración de Pusher
+  if (
+    typeof pusherKey !== "undefined" &&
+    typeof pusherCluster !== "undefined"
+  ) {
+    var pusher = new Pusher(pusherKey, {
+      cluster: pusherCluster,
+    });
+
+    var celery_task_channel = pusher.subscribe("celery-task-channel");
+    // The realtime update may contain task or alert data (or both).
+    celery_task_channel.bind("successful-upload-3d-excel", function (data) {
+      // If it's the combined structure with task_info/alert_info
+      console.log("Successful upload 3D Excel:", data);
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Successfull uploaded file",
+      });
+
+      if ($.fn.DataTable.isDataTable("#tabla-de-Datos")) {
+        $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
+      }
+
+    });
+    celery_task_channel.bind("failed-upload-3d-excel", function (data) {
+      // If it's the combined structure with task_info/alert_info
+      console.log("Failed upload 3D Excel:", data);
+      const errorDetail = data && data.error_detail ? data.error_detail : "Unknown error";
+      Swal.close();
+      Swal.fire({
+        icon: "error",
+        title: "Upload failed",
+        text: "The file could not be processed. " + errorDetail,
+      });
+    });
+  } else {
+    console.warn(
+      "Pusher keys no definidas. Las alertas en tiempo real no funcionarán."
+    );
+  }
 });
 
 $("#modal-eliminar-elemento").on("show.bs.modal", function (event) {
@@ -211,8 +267,7 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
 
   // Resetear Select2 sin destruir la instancia
   $('#gene').val(null).trigger('change');
-  // Recargar la lista de genes
-  loadGenes();
+  document.getElementById("predefined").checked = false;
 });
 
 let edit_elemento = false;
@@ -236,19 +291,8 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
         // Llenar el formulario con los datos del usuario
         form.elements.name.value = elemento.custom_name;
         form.elements.description.value = elemento.description;
-
-        // Asegurar que los genes estén cargados antes de establecer el valor
-        if (document.getElementById("gene").options.length > 1) {
-          $('#gene').val(elemento.gene).trigger('change');
-          document.getElementById("predefined").checked = elemento.predefined;
-        } else {
-          // Si los genes no están cargados, esperar y luego establecer el valor
-          loadGenes();
-          setTimeout(() => {
-            $('#gene').val(elemento.gene).trigger('change');
-            document.getElementById("predefined").checked = elemento.predefined;
-          }, 100);
-        }
+        $('#gene').val(elemento.gene).trigger('change');
+        document.getElementById("predefined").checked = elemento.predefined;
       })
       .catch(function (error) {});
   } else {
@@ -370,18 +414,14 @@ form.addEventListener("submit", function (event) {
     } else {
       $("#modal-crear-elemento").modal("hide");
       load.hidden = false;
+      showFileProcessingMessage();
       axios
         .post(write_url, data)
         .then((response) => {
           if (response.status === 201) {
             load.hidden = true;
-            table.ajax.reload();
-            Swal.fire({
-              icon: "success",
-              title: "Elemento creado con éxito",
-              showConfirmButton: false,
-              timer: 1500,
-            });
+            // The success message and table refresh are handled by Pusher
+            // event "successful-upload-3d-excel".
           }
         })
         .catch((error) => {
