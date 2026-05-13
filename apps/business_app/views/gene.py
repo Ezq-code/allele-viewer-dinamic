@@ -17,8 +17,10 @@ from ..filters.gene_filter import GeneFilter
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 from apps.common.views import CommonOrderingFilter
+from apps.business_app.utils.gene_list_cache import build_gene_list_cache_key
 
 
 # Create your views here.
@@ -97,12 +99,18 @@ class GeneViewSet(
         """
         return self.list(request)
 
-    @method_decorator(cache_page(timeout=None))
     def list(self, request, *args, **kwargs):
         """
         Lista todos los AlleleRegion con filtros aplicados
         """
-        return super().list(request, *args, **kwargs)
+        cache_key = build_gene_list_cache_key(request.query_params)
+        cached_payload = cache.get(cache_key)
+        if cached_payload is not None:
+            return Response(cached_payload)
+
+        response = super().list(request, *args, **kwargs)
+        cache.set(cache_key, response.data, timeout=None)
+        return response
 
     @action(
         detail=False,
