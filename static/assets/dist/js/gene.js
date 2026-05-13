@@ -429,7 +429,10 @@ async function determineDiseaseGroupsFromDisorders(disorderIds) {
                         data-disorders='${JSON.stringify(row.disorders)}'
                         id="${row.id}">
                         <i class="fas fa-edit"></i>
-                      </button>                    
+                      </button>
+                      <button type="button" title="Edit Statuses" class="btn bg-purple" onclick="openStatusModal(${row.id}, '${row.name}')">
+                        <i class="fas fa-chart-bar"></i>
+                      </button>
                       <button type="button" title="Delete" class="btn bg-olive" data-toggle="modal" data-target="#modal-eliminar-elemento" data-name="${row.name}" data-id="${row.id}">
                         <i class="fas fa-trash"></i>
                       </button>
@@ -754,6 +757,154 @@ form.addEventListener("submit", function (event) {
     }
 });
 
+
+// ===================== GENE STATUS MIDDLE =====================
+
+async function openStatusModal(geneId, geneName) {
+    document.getElementById('status-modal-gene-name').textContent = geneName;
+    document.getElementById('status-modal-gene-id').value = geneId;
+    document.getElementById('status-modal-body').innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading statuses...</div>';
+    $('#modal-gene-status').modal('show');
+
+    try {
+        const response = await axios.get('/business-gestion/gene-status-middle/', {
+            params: { gene: geneId, page_size: 200 }
+        });
+        const statuses = response.data.results || response.data;
+        renderStatusForm(statuses);
+    } catch (error) {
+        document.getElementById('status-modal-body').innerHTML = '<div class="alert alert-danger">Error loading statuses</div>';
+        console.error('Error loading gene statuses:', error);
+    }
+}
+
+function renderStatusForm(statuses) {
+    if (!statuses || statuses.length === 0) {
+        document.getElementById('status-modal-body').innerHTML = '<div class="alert alert-info">No statuses found for this gene.</div>';
+        return;
+    }
+
+    let html = '<div class="table-responsive"><table class="table table-sm table-bordered">';
+    html += '<thead><tr><th>Status</th><th>Type</th><th>Value%</th><th>Evidence</th><th>Last Updated</th></tr></thead><tbody>';
+
+    statuses.forEach(status => {
+        const isBoolean = status.gene_status_type === 'B';
+        const requiresEvidence = status.gene_status_requires_evidence;
+        let valueInput;
+
+        if (isBoolean) {
+            valueInput = `
+                <select class="form-control form-control-sm" id="status-val-${status.id}" data-id="${status.id}">
+                    <option value="0" ${parseInt(status.value) === 0 ? 'selected' : ''}>No (0)</option>
+                    <option value="1" ${parseInt(status.value) === 1 ? 'selected' : ''}>Yes (1)</option>
+                </select>`;
+        } else {
+            valueInput = `<input type="number" class="form-control form-control-sm" id="status-val-${status.id}" data-id="${status.id}" min="0" max="100" value="${status.value}" placeholder="0-100">`;
+        }
+
+        let evidenceHtml = `<small class="text-muted">`;
+        if (status.evidence) {
+            const filename = status.evidence.split('/').pop();
+            evidenceHtml += `<a href="${status.evidence}" target="_blank" title="View evidence"><i class="fas fa-file"></i> ${filename}</a><br>`;
+        }
+        evidenceHtml += `<input type="file" class="form-control-file form-control-file-sm" id="status-ev-${status.id}" data-id="${status.id}" accept="image/*,.pdf" title="${requiresEvidence ? 'Required' : 'Optional'}">`;
+        if (requiresEvidence) {
+            evidenceHtml += ` <span class="badge badge-danger">required</span>`;
+        }
+        evidenceHtml += `</small>`;
+
+        html += `<tr>
+            <td><strong>${status.gene_status}</strong></td>
+            <td><span class="badge badge-${isBoolean ? 'warning' : 'info'}">${isBoolean ? 'Boolean' : 'Percent'}</span></td>
+            <td style="min-width:120px">${valueInput}</td>
+            <td>${evidenceHtml}</td>
+            <td><small>${status.updated_since !== null ? status.updated_since + ' days ago' : 'Never'}</small></td>
+        </tr>`;
+    });
+
+    html += '</tbody></table></div>';
+    document.getElementById('status-modal-body').innerHTML = html;
+}
+
+async function saveGeneStatuses() {
+    const geneId = document.getElementById('status-modal-gene-id').value;
+    const valueInputs = document.querySelectorAll('#status-modal-body [data-id]');
+
+    // Collect unique ids (each row may have value + evidence inputs)
+    const idMap = {};
+    valueInputs.forEach(input => {
+        const id = input.dataset.id;
+        if (!idMap[id]) idMap[id] = {};
+        if (input.type === 'file') {
+            idMap[id].file = input.files[0] || null;
+        } else if (input.tagName === 'INPUT' && input.type === 'number') {
+            idMap[id].value = input.value;
+        } else if (input.tagName === 'SELECT') {
+            idMap[id].value = input.value;
+        }
+    });
+
+    // Validate values
+    for (const [id, data] of Object.entries(idMap)) {
+        if (data.value === undefined || data.value === '') {
+            Toast.fire({ icon: 'error', title: 'Error', text: 'All status values are required' });
+            return;
+        }
+        // Ensure value is a number and within range
+        const numValue = parseInt(data.value);
+        if (isNaN(numValue) || numValue < 0 || numValue > 100) {
+            Toast.fire({ icon: 'error', title: 'Error', text: 'Status values must be between 0 and 100' });
+            return;
+        }
+        data.value = numValue;
+    }
+
+    axios.defaults.headers.common['X-CSRFToken'] = csrfToken;
+    const promises = [];
+
+    for (const [id, data] of Object.entries(idMap)) {
+        if (data.file) {
+            const formData = new FormData();
+            formData.append('value', data.value);
+            formData.append('evidence', data.file);
+            promises.push(
+                axios.patch(`/business-gestion/gene-status-middle/${id}/`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }).catch(err => {
+                    console.error(`Error updating status ${id}:`, err.response?.data);
+                    throw err;
+                })
+            );
+        } else {
+            promises.push(
+                axios.patch(`/business-gestion/gene-status-middle/${id}/`, { value: data.value })
+                    .catch(err => {
+                        console.error(`Error updating status ${id}:`, err.response?.data);
+                        throw err;
+                    })
+            );
+        }
+    }
+
+    try {
+        load.hidden = false;
+        await Promise.all(promises);
+        $('#modal-gene-status').modal('hide');
+        load.hidden = true;
+        Toast.fire({ icon: 'success', title: 'Statuses updated successfully' });
+        $('#tabla-de-Datos').DataTable().ajax.reload(null, false);
+    } catch (error) {
+        load.hidden = true;
+        const errorMsg = error.response?.data?.non_field_errors?.[0] || 
+                        error.response?.data?.value?.[0] ||
+                        error.response?.data?.detail ||
+                        'Error updating statuses';
+        Toast.fire({ icon: 'error', title: 'Error updating statuses', text: errorMsg });
+        console.error('Error saving statuses:', error);
+    }
+}
+
+// ===================== END GENE STATUS MIDDLE =====================
 
 function ia_algorithms_recalculate(id, name) {
     Swal.fire({

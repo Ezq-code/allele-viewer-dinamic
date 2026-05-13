@@ -36,3 +36,20 @@ class GeneStatusMiddleReadSerializer(serializers.ModelSerializer):
 
         time_difference = now - naive_last_updated
         return time_difference.days
+
+
+class GeneStatusMiddleWriteSerializer(serializers.ModelSerializer):
+    """Serializer para actualizar value y evidence de GeneStatusMiddle"""
+    
+    def validate_value(self, value):
+        """Validar que el valor no supere 100"""
+        if value > 100:
+            raise serializers.ValidationError("Value cannot exceed 100%")
+        if value < 0:
+            raise serializers.ValidationError("Value cannot be negative")
+        return value
+
+    class Meta:
+        model = GeneStatusMiddle
+        fields = ["value", "evidence"]
+

@@ -5,12 +5,21 @@ import pytest
 import networkx as nx
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.cache import cache
+from django.urls import reverse
+from rest_framework.test import APIClient
 
 from apps.business_app.models.allele_node import AlleleNode
 from apps.business_app.models.allowed_extensions import AllowedExtensions
+from apps.business_app.models.gene import Gene
+from apps.business_app.models.gene_status import GeneStatus
+from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.uploaded_files import UploadedFiles
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from apps.business_app.serializers.uploaded_files import UploadedFilesSerializer
+from apps.business_app.utils.gene_list_cache import (
+    GENE_LIST_VERSION_KEY,
+    get_gene_list_cache_version,
+)
 from apps.users_app.models.system_user import SystemUser
 
 
@@ -102,12 +111,12 @@ def test_allele_node_serializer_enqueues_task_when_graph_cache_miss():
     cache.delete(cache_key)
 
     with patch(
-        "apps.business_app.serializers.allele_nodes.build_uploaded_file_graph_cache_task.delay"
-    ) as mocked_delay:
+        "apps.business_app.serializers.allele_nodes.build_uploaded_file_graph_cache_task"
+    ) as mocked_task:
         result = serializer.get_predecessors(obj)
 
     assert result == []
-    mocked_delay.assert_called_once_with(obj.uploaded_file_id)
+    mocked_task.assert_called_once_with(obj.uploaded_file_id)
     assert cache.get(cache_key) is None
 
 
@@ -136,39 +145,86 @@ def test_allele_node_serializer_uses_cached_graph_without_enqueuing_task():
     mocked_delay.assert_not_called()
 
 
-def test_uploaded_files_serializer_list_action_returns_cached_allele_nodes():
-    serializer = UploadedFilesSerializer(
-        context={"view": SimpleNamespace(action="list")}
-    )
-    obj = SimpleNamespace(id=1)
-    cache_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
-        uploaded_file_id=obj.id
-    )
-    cache.set(cache_key, [], timeout=None)
-
-    with patch(
-        "apps.business_app.serializers.uploaded_files.AlleleNodeSerializer"
-    ) as mocked_allele_node_serializer:
-        result = serializer.get_allele_nodes(obj)
-
-    assert result == []
-    mocked_allele_node_serializer.assert_not_called()
+def test_uploaded_files_serializer_exposes_allele_nodes_field():
+    serializer = UploadedFilesSerializer(context={"view": SimpleNamespace(action="list")})
+    assert "allele_nodes" in serializer.fields
 
 
-def test_uploaded_files_serializer_create_action_returns_cached_allele_nodes():
-    serializer = UploadedFilesSerializer(
-        context={"view": SimpleNamespace(action="create")}
-    )
-    obj = SimpleNamespace(id=2)
-    cache_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
-        uploaded_file_id=obj.id
-    )
-    cache.set(cache_key, [], timeout=None)
+def test_uploaded_files_serializer_does_not_implement_get_allele_nodes_method():
+    serializer = UploadedFilesSerializer(context={"view": SimpleNamespace(action="create")})
+    assert not hasattr(serializer, "get_allele_nodes")
 
-    with patch(
-        "apps.business_app.serializers.uploaded_files.AlleleNodeSerializer"
-    ) as mocked_allele_node_serializer:
-        result = serializer.get_allele_nodes(obj)
 
-    assert result == []
-    mocked_allele_node_serializer.assert_not_called()
+@pytest.mark.django_db
+def test_gene_list_cache_version_bumps_on_gene_change():
+    cache.clear()
+    client = APIClient()
+    GeneStatus.objects.create(name="Completeness", type=GeneStatus.TypeRepresentation.PERCENT)
+    gene = Gene.objects.create(name="GeneCache01", description="before")
+
+    list_url = reverse("gene-list")
+    first_response = client.get(list_url)
+    assert first_response.status_code == 200
+    assert any(row["id"] == gene.id for row in first_response.data["results"])
+
+    version_before = get_gene_list_cache_version()
+    gene.description = "after"
+    gene.save(update_fields=["description"])
+    version_after = get_gene_list_cache_version()
+
+    assert version_after == version_before + 1
+
+    second_response = client.get(list_url)
+    assert second_response.status_code == 200
+    row = next(item for item in second_response.data["results"] if item["id"] == gene.id)
+    assert row["description"] == "after"
+
+
+@pytest.mark.django_db
+def test_gene_list_cache_version_bumps_on_gene_status_middle_change():
+    cache.clear()
+    client = APIClient()
+    status = GeneStatus.objects.create(name="Quality", type=GeneStatus.TypeRepresentation.PERCENT)
+    gene = Gene.objects.create(name="GeneCache02")
+    gsm = GeneStatusMiddle.objects.get(gene=gene, gene_status=status)
+
+    list_url = reverse("gene-list")
+    first_response = client.get(list_url)
+    assert first_response.status_code == 200
+
+    version_before = get_gene_list_cache_version()
+    gsm.value = 77
+    gsm.save(update_fields=["value"])
+    version_after = get_gene_list_cache_version()
+
+    assert version_after == version_before + 1
+
+    second_response = client.get(list_url)
+    assert second_response.status_code == 200
+    row = next(item for item in second_response.data["results"] if item["id"] == gene.id)
+    assert row["status"] == 77
+
+
+@pytest.mark.django_db
+def test_gene_list_cache_version_bumps_on_m2m_changes():
+    cache.clear()
+    GeneStatus.objects.create(name="Stability", type=GeneStatus.TypeRepresentation.PERCENT)
+    gene = Gene.objects.create(name="GeneCache03")
+    baseline_version = get_gene_list_cache_version()
+
+    # Using clear() triggers post_clear m2m signal even when relation is empty.
+    gene.groups.clear()
+    assert get_gene_list_cache_version() == baseline_version + 1
+
+    baseline_version = get_gene_list_cache_version()
+    gene.disorders.clear()
+    assert get_gene_list_cache_version() == baseline_version + 1
+
+
+@pytest.mark.django_db
+def test_gene_list_cache_version_key_exists_after_first_read():
+    cache.clear()
+    GeneStatus.objects.create(name="Coverage", type=GeneStatus.TypeRepresentation.PERCENT)
+    Gene.objects.create(name="GeneCache04")
+
+    assert cache.get(GENE_LIST_VERSION_KEY) is not None
