@@ -4,6 +4,7 @@ from rest_framework.viewsets import GenericViewSet
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.serializers.gene_status_middle import (
     GeneStatusMiddleReadSerializer,
+    GeneStatusMiddleWriteSerializer,
 )
 from apps.common.pagination import AllResultsSetPagination
 
@@ -19,7 +20,6 @@ class GeneStatusMiddleViewSet(
     pagination_class = AllResultsSetPagination
     queryset = GeneStatusMiddle.objects.all()
 
-    serializer_class = GeneStatusMiddleReadSerializer
     search_fields = [
         "gene__name",
         "gene_status__name",
@@ -30,4 +30,10 @@ class GeneStatusMiddleViewSet(
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
+    filterset_fields = ['gene']
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.action in ['update', 'partial_update', 'create']:
+            return GeneStatusMiddleWriteSerializer
+        return GeneStatusMiddleReadSerializer
