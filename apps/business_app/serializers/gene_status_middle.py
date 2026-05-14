@@ -40,7 +40,7 @@ class GeneStatusMiddleReadSerializer(serializers.ModelSerializer):
 
 class GeneStatusMiddleWriteSerializer(serializers.ModelSerializer):
     """Serializer para actualizar value y evidence de GeneStatusMiddle"""
-    
+
     def validate_value(self, value):
         """Validar que el valor no supere 100"""
         if value > 100:
@@ -52,4 +52,3 @@ class GeneStatusMiddleWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = GeneStatusMiddle
         fields = ["value", "evidence"]
-

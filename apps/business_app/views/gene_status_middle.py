@@ -30,10 +30,10 @@ class GeneStatusMiddleViewSet(
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
-    filterset_fields = ['gene']
+    filterset_fields = ["gene"]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_serializer_class(self):
-        if self.action in ['update', 'partial_update', 'create']:
+        if self.action in ["update", "partial_update", "create"]:
             return GeneStatusMiddleWriteSerializer
         return GeneStatusMiddleReadSerializer
