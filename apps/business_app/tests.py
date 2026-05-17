@@ -9,10 +9,12 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from apps.business_app.models.allele_node import AlleleNode
+from apps.business_app.models.base_allele_node import BaseAlleleNode
 from apps.business_app.models.allowed_extensions import AllowedExtensions
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
+from apps.business_app.models.protein_node import ProteinNode
 from apps.business_app.models.uploaded_files import UploadedFiles
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from apps.business_app.serializers.uploaded_files import UploadedFilesSerializer
@@ -244,3 +246,19 @@ def test_gene_list_cache_version_key_exists_after_first_read():
     Gene.objects.create(name="GeneCache04")
 
     assert cache.get(GENE_LIST_VERSION_KEY) is not None
+
+
+def test_node_models_share_abstract_base_for_dry_structure():
+    assert issubclass(AlleleNode, BaseAlleleNode)
+    assert issubclass(ProteinNode, BaseAlleleNode)
+
+
+def test_dry_refactor_keeps_existing_concrete_model_fields():
+    allele_fields = {field.name for field in AlleleNode._meta.local_fields}
+    protein_fields = {field.name for field in ProteinNode._meta.local_fields}
+
+    # Inherited fields are no longer local fields on child models.
+    assert allele_fields == {"id"}
+
+    # ProteinNode only keeps the fields that are truly protein specific.
+    assert protein_fields == {"id", "allele_name", "is_final_for_allele"}
