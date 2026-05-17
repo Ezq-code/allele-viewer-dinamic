@@ -21,9 +21,6 @@ class BaseAlleleNode(models.Model):
     region = models.CharField(
         verbose_name=_("Region"), max_length=100, null=True, blank=True
     )
-    rs = models.TextField(
-        verbose_name=_("RS"),
-    )
     children = models.ManyToManyField("self", symmetrical=False, blank=True)
     predecessors = models.JSONField(default=list)
     sucessors = models.JSONField(default=list)
