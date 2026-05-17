@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from apps.business_app.serializers.gene_serializer import GeneSimpleSerializer
+from apps.business_app.serializers.gene import GeneSimpleSerializer
 from apps.business_app.models.gene import Gene
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -14,7 +14,9 @@ from ..models.caracteristica_gen import CaracteristicaGen
 from apps.common.views import GetAllMixin
 
 
-class CaracteristicaGenViewSet(GetAllMixin, viewsets.ReadOnlyModelViewSet, GenericAPIView):
+class CaracteristicaGenViewSet(
+    GetAllMixin, viewsets.ReadOnlyModelViewSet, GenericAPIView
+):
     queryset = CaracteristicaGen.objects.all()
     serializer_class = CaracteristicaGenSerializer
     permission_classes = [permissions.AllowAny]
@@ -38,13 +40,14 @@ class CaracteristicaGenViewSet(GetAllMixin, viewsets.ReadOnlyModelViewSet, Gener
         )
 
         return Response({"results": serializer.data})
-    
+
     @method_decorator(cache_page(timeout=None))  # Cache por 15 minutos
     def list(self, request, *args, **kwargs):
         """
         Lista todos los AlleleRegionInfo con filtros aplicados
         """
         return super().list(request, *args, **kwargs)
+
 
 """
     @action(detail=False, methods=['get'], url_path='matriz')

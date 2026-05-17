@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from apps.business_app.models.gene import Gene
 from rest_framework.viewsets import GenericViewSet
 from apps.business_app.models.uploaded_files import UploadedFiles
-from apps.business_app.serializers.gene_serializer import (
+from apps.business_app.serializers.gene import (
     GeneGetAllInfoSerializer,
     GeneSerializer,
     GeneSimpleSerializer,
@@ -17,8 +17,10 @@ from ..filters.gene_filter import GeneFilter
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 from apps.common.views import CommonOrderingFilter
+from apps.business_app.utils.gene_list_cache import build_gene_list_cache_key
 
 
 # Create your views here.
@@ -97,12 +99,18 @@ class GeneViewSet(
         """
         return self.list(request)
 
-    @method_decorator(cache_page(timeout=None))
     def list(self, request, *args, **kwargs):
         """
         Lista todos los AlleleRegion con filtros aplicados
         """
-        return super().list(request, *args, **kwargs)
+        cache_key = build_gene_list_cache_key(request.query_params)
+        cached_payload = cache.get(cache_key)
+        if cached_payload is not None:
+            return Response(cached_payload)
+
+        response = super().list(request, *args, **kwargs)
+        cache.set(cache_key, response.data, timeout=None)
+        return response
 
     @action(
         detail=False,
@@ -122,7 +130,21 @@ class GeneViewSet(
         Returns:
             Response: List of genes that have uploaded files
         """
-        return self.list(request)
+        return super().list(request)
+
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="list-for-dropdown",
+        url_name="list-for-dropdown",
+        serializer_class=GeneSimpleSerializer,
+        queryset=Gene.objects.all().only("id", "name"),
+    )
+    def list_for_dropdown(self, request):
+        """
+        Retrieve a simplified list of all genes for dropdown selection.
+        """
+        return super().list(request)
 
     @action(
         detail=False,

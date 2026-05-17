@@ -26,6 +26,26 @@
     left: auto;
 }
 
+/* Estilos para el modal de estatus */
+.form-control-file-sm {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    height: auto;
+}
+
+.table-responsive .form-control-file-sm {
+    max-width: 250px;
+}
+
+#status-modal-body table td {
+    vertical-align: middle;
+}
+
+#status-modal-body table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
 </style>
 {% endblock %}
 
@@ -145,6 +165,34 @@
           <button type="submit" class="btn btn-primary">Submit</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Gene Status Middle -->
+<div class="modal fade" id="modal-gene-status" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="geneStatusModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-purple">
+        <h4 class="modal-title text-white" id="geneStatusModalLabel">
+          <i class="fas fa-chart-bar mr-2"></i>Edit Statuses: <span id="status-modal-gene-name"></span>
+        </h4>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="status-modal-gene-id">
+        <div id="status-modal-body">
+          <!-- Filled dynamically -->
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="saveGeneStatuses()">
+          <i class="fas fa-save mr-1"></i>Save Statuses
+        </button>
+      </div>
     </div>
   </div>
 </div>

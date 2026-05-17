@@ -68,18 +68,65 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <div class="card card-outline card-primary col-12 row">
+        <div class="card col-12 row">
             <div class="card-header">
-              <h3 class="card-title">Tools</h3>
+              <h3 class="card-title">Allele Viewer</h3>
               <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                  <i class="fas fa-minus"></i>
+                {% comment %} <button
+                  type="button"
+                  class="btn btn-tool"
+                  data-toggle="modal"
+                  title="Map"
+                  id="MapModalShowBotton"
+                  data-target="#modal-map"
+                >
+                  <i class="fas fa-map text-warning"></i>
+                </button> {% endcomment %}
+                <button
+                  type="button"
+                  class="btn btn-tool"
+                  data-toggle="modal"
+                  title="xyz Expand"
+                  disabled
+                  hidden
+                  id="ExpandModalShowBotton"
+                  data-target="#modal-xyz"
+                >
+                  <i class="fas fa-expand-alt text-success"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-tool"
+                  data-toggle="modal"
+                  title="SNP"
+                  disabled
+                  hidden
+                  id="snpModalShowBotton"
+                  data-target="#modal-xl"
+                >
+                  <i class="fas fa-sliders-h text-primary"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-tool"
+                  title="Filter by Region"
+                  id="filter_region"
+                  onclick="filter_Region()" disabled>
+                  <i class="nav-icon fas fa-globe-africa text-success "></i>
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-tool"
+                  title="Actions"
+                  data-widget="control-sidebar"
+                  data-controlsidebar-slide="true"
+                >
+                  <i class="fas fa-th-large text-danger"></i>
                 </button>
               </div>
             </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-              <div class="row">
+            <div class="row">
                 <div
                   class="input-group col-12 col-lg-4 border-right"
                   style="padding-top: 5px"
@@ -194,71 +241,9 @@
                   <input type="text" id="buscar" class="form-control" />
                 </div>
               </div>
-            </div>
-          </div>
-        
-
-          <div class="card col-12 row">
-            <div class="card-header">
-              <h3 class="card-title">Allele Viewer</h3>
-              <div class="card-tools">
-                {% comment %} <button
-                  type="button"
-                  class="btn btn-tool"
-                  data-toggle="modal"
-                  title="Map"
-                  id="MapModalShowBotton"
-                  data-target="#modal-map"
-                >
-                  <i class="fas fa-map text-warning"></i>
-                </button> {% endcomment %}
-                <button
-                  type="button"
-                  class="btn btn-tool"
-                  data-toggle="modal"
-                  title="xyz Expand"
-                  disabled
-                  hidden
-                  id="ExpandModalShowBotton"
-                  data-target="#modal-xyz"
-                >
-                  <i class="fas fa-expand-alt text-success"></i>
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-tool"
-                  data-toggle="modal"
-                  title="SNP"
-                  disabled
-                  hidden
-                  id="snpModalShowBotton"
-                  data-target="#modal-xl"
-                >
-                  <i class="fas fa-sliders-h text-primary"></i>
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-tool"
-                  title="Filter by Region"
-                  id="filter_region"
-                  onclick="filter_Region()" disabled>
-                  <i class="nav-icon fas fa-globe-africa text-success "></i>
-                </button>
-
-                <button
-                  type="button"
-                  class="btn btn-tool"
-                  title="Actions"
-                  data-widget="control-sidebar"
-                  data-controlsidebar-slide="true"
-                >
-                  <i class="fas fa-th-large text-danger"></i>
-                </button>
-              </div>
-            </div>
-            
             <!-- /.card-header -->
             <div class="card-body">
+               
               <div
                 id="container"
                 style="width: 100%; height: 600px; position: relative"

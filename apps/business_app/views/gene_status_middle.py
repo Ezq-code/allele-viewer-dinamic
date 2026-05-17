@@ -1,8 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.viewsets import GenericViewSet
-from apps.business_app.models.gene_status import GeneStatus
-from apps.business_app.serializers.gene_status_serializer import GeneStatusSerializer
+from apps.business_app.models.gene_status_middle import GeneStatusMiddle
+from apps.business_app.serializers.gene_status_middle import (
+    GeneStatusMiddleReadSerializer,
+    GeneStatusMiddleWriteSerializer,
+)
 from apps.common.pagination import AllResultsSetPagination
 
 
@@ -10,17 +13,16 @@ from apps.common.views import CommonOrderingFilter
 
 
 # Create your views here.
-class GeneStatusViewSet(
+class GeneStatusMiddleViewSet(
     viewsets.ModelViewSet,
     GenericViewSet,
 ):
     pagination_class = AllResultsSetPagination
-    queryset = GeneStatus.objects.all()
+    queryset = GeneStatusMiddle.objects.all()
 
-    serializer_class = GeneStatusSerializer
     search_fields = [
-        "name",
-        "description",
+        "gene__name",
+        "gene_status__name",
     ]
     ordering_fields = "__all__"
     filter_backends = [
@@ -28,4 +30,10 @@ class GeneStatusViewSet(
         filters.SearchFilter,
         CommonOrderingFilter,
     ]
+    filterset_fields = ["gene"]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.action in ["update", "partial_update", "create"]:
+            return GeneStatusMiddleWriteSerializer
+        return GeneStatusMiddleReadSerializer

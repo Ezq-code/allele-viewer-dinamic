@@ -181,6 +181,9 @@ if RUNNING_FROM == RUNNING_FROM_LOCAL:
     conexion = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "OPTIONS": {
+            "timeout": 30,
+        },
     }
 else:
     conexion = {
@@ -195,7 +198,8 @@ else:
 DATABASES = {
     "default": {
         **conexion,
-        "CONN_MAX_AGE": 600,  # Reutilizar conexiones por 10 minutos para mejor rendimiento
+        # SQLite local + Celery puede producir locks con conexiones persistentes.
+        "CONN_MAX_AGE": 0 if RUNNING_FROM == RUNNING_FROM_LOCAL else 600,
     },
 }
 
@@ -379,3 +383,11 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+
+PUSHER_APP_ID = env.str("PUSHER_APP_ID", default="")  # Example ID TODO: change it
+PUSHER_KEY = env.str("PUSHER_KEY", default="")  # Example key TODO: change it
+PUSHER_SECRET = env.str("PUSHER_SECRET", default="")  # Example secret TODO: change it
+PUSHER_CLUSTER = env.str(
+    "PUSHER_CLUSTER", default=""
+)  # Example cluster TODO: change it

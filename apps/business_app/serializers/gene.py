@@ -2,10 +2,10 @@ from rest_framework import serializers
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.gene_group import GeneGroups
 from apps.business_app.models.disorder import Disorder
-from apps.business_app.serializers.disorder_serializer import (
+from apps.business_app.serializers.disorder import (
     DisorderTableSerializer,
 )
-from apps.business_app.serializers.gene_status_middle_serializer import (
+from apps.business_app.serializers.gene_status_middle import (
     GeneStatusMiddleReadSerializer,
 )
 
