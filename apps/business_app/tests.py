@@ -15,9 +15,11 @@ from apps.business_app.models.gene import Gene
 from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.protein_node import ProteinNode
+from apps.business_app.models.study import Study
 from apps.business_app.models.uploaded_files import UploadedFiles
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from apps.business_app.serializers.protein_nodes import ProteinNodeSerializer
+from apps.business_app.serializers.study import StudySerializer
 from apps.business_app.serializers.uploaded_files import UploadedFilesSerializer
 from apps.business_app.utils.gene_list_cache import (
     GENE_LIST_VERSION_KEY,
@@ -160,6 +162,79 @@ def test_uploaded_files_serializer_does_not_implement_get_allele_nodes_method():
         context={"view": SimpleNamespace(action="create")}
     )
     assert not hasattr(serializer, "get_allele_nodes")
+
+
+def test_study_serializer_exposes_study_type_display():
+    uploaded_file = UploadedFiles(custom_name="Study Upload")
+    study = Study(
+        uploaded_file=uploaded_file,
+        study_type=Study.STUDY_TYPE.LOCATION,
+        successfull_load=True,
+        extra_info="Coordinates loaded",
+    )
+
+    data = StudySerializer(study).data
+
+    assert data["study_type"] == Study.STUDY_TYPE.LOCATION
+    assert data["study_type_display"] == "Location"
+
+
+@pytest.mark.django_db
+def test_study_viewset_lists_studies_by_uploaded_file(tmp_path, settings):
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(username="study_list", password="secret")
+
+    upload_one = SimpleUploadedFile(
+        "study_one.xlsx",
+        b"file-one",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    upload_two = SimpleUploadedFile(
+        "study_two.xlsx",
+        b"file-two",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    with patch(
+        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
+    ):
+        uploaded_file_one = UploadedFiles.objects.create(
+            custom_name="Upload One",
+            original_file=upload_one,
+            system_user=user,
+        )
+        uploaded_file_two = UploadedFiles.objects.create(
+            custom_name="Upload Two",
+            original_file=upload_two,
+            system_user=user,
+        )
+
+    Study.objects.create(
+        uploaded_file=uploaded_file_one,
+        study_type=Study.STUDY_TYPE.LOCATION,
+        successfull_load=True,
+        extra_info="Included",
+    )
+    Study.objects.create(
+        uploaded_file=uploaded_file_two,
+        study_type=Study.STUDY_TYPE.ANCESTERS,
+        successfull_load=False,
+        extra_info="Excluded",
+    )
+
+    client = APIClient()
+    response = client.get(
+        reverse(
+            "study-by-uploaded-file-list",
+            kwargs={"parent_lookup_uploaded_file": uploaded_file_one.id},
+        )
+    )
+
+    assert response.status_code == 200
+    assert len(response.data["results"]) == 1
+    assert response.data["results"][0]["uploaded_file"] == uploaded_file_one.id
+    assert response.data["results"][0]["study_type_display"] == "Location"
 
 
 @pytest.mark.django_db

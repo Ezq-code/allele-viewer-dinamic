@@ -4,6 +4,7 @@ from rest_framework_extensions.routers import ExtendedSimpleRouter
 from apps.business_app.views import (
     AllowedExtensionsViewSet,
     SiteConfigurationViewSet,
+    StudyViewSet,
     UploadedFilesViewSet,
     InitialFileDataViewSet,
     NewCoordinatesProcessorViewSet,
@@ -104,12 +105,24 @@ uploaded_files_router.register(
 )
 
 uploaded_files_router.register(
+    "study-by-uploaded-file",
+    StudyViewSet,
+    basename="study-by-uploaded-file",
+    parents_query_lookups=["uploaded_file"],
+)
+
+uploaded_files_router.register(
     "initial-file-data",
     InitialFileDataViewSet,
     basename="initial-file-data",
     parents_query_lookups=["uploaded_file"],
 )
 
+router.register(
+    "studies",
+    StudyViewSet,
+    basename="study",
+)
 router.register(
     "allele-nodes",
     AlleleNodeViewSet,

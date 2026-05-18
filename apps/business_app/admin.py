@@ -12,6 +12,7 @@ from apps.business_app.models import (
     Layer,
     Marker,
     SiteConfiguration,
+    Study,
     UploadedFiles,
     WorkingCopyOfOriginalFile,
     ProteinNode,
@@ -149,6 +150,24 @@ class ProteinNodeAdmin(admin.ModelAdmin):
         "frec_afr_nor",
         "frec_ca",
         "frec_sa",
+    ]
+
+
+@admin.register(Study)
+class StudyAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "uploaded_file",
+        "study_type",
+        "successfull_load",
+        "created_at",
+    ]
+    fields = [
+        "uploaded_file",
+        "study_type",
+        "successfull_load",
+        "extra_info",
     ]
     fields = [
         "number",
