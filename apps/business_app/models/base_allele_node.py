@@ -10,6 +10,13 @@ class BaseAlleleNode(models.Model):
     CACHE_KEY_SUCESSORS = "sucessors_for_{uploaded_file_id}-{number}"
     CACHE_KEY_LIST_OR_SEARCH = "allele_nodes_list_{parent_lookup_key}{search_criteria}"
 
+    study = models.ForeignKey(
+        "Study",
+        on_delete=models.CASCADE,
+        verbose_name=_("Study ID"),
+        null=True,
+        blank=True,
+    )
     number = models.PositiveIntegerField(verbose_name=_("Number"))
 
     unique_number = models.CharField(

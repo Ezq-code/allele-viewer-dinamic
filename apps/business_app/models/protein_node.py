@@ -11,12 +11,6 @@ class ProteinNode(BaseAlleleNode):
         verbose_name=_("Is Final For Allele"), default=False
     )
 
-    uploaded_file = models.ForeignKey(
-        to="UploadedFiles",
-        on_delete=models.CASCADE,
-        related_name="protein_nodes",
-    )
-
     class Meta:
         verbose_name = _("Protein Node")
         verbose_name_plural = _("Protein Nodes")

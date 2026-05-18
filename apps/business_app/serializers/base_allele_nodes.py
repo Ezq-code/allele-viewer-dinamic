@@ -81,12 +81,13 @@ class BaseAlleleNodeSerializer(serializers.ModelSerializer):
             set: Set of node numbers in the graph, or None if graph not available
         """
         model_class = self.Meta.model
+        uploaded_file_id = obj.study.uploaded_file_id
         graph_key = model_class.CACHE_KEY_GRAPH_FOR_FILE.format(
-            uploaded_file_id=obj.uploaded_file_id
+            uploaded_file_id=uploaded_file_id
         )
         graph = cache.get(graph_key)
         if not graph:
-            build_uploaded_file_graph_cache_task(obj.uploaded_file_id)
+            build_uploaded_file_graph_cache_task(uploaded_file_id)
             return None
 
         return set(function_to_call(graph, [], obj.number))
@@ -94,8 +95,9 @@ class BaseAlleleNodeSerializer(serializers.ModelSerializer):
     def get_predecessors(self, obj):
         """Retrieve predecessor nodes from cache or compute them."""
         model_class = self.Meta.model
+        uploaded_file_id = obj.study.uploaded_file_id
         cache_key = model_class.CACHE_KEY_DESCENDANTS.format(
-            uploaded_file_id=obj.uploaded_file_id, number=obj.number
+            uploaded_file_id=uploaded_file_id, number=obj.number
         )
         if not cache.has_key(cache_key):
             graph_info = self._get_graph_info(obj, extract_parents_tree)
@@ -107,8 +109,9 @@ class BaseAlleleNodeSerializer(serializers.ModelSerializer):
     def get_sucessors(self, obj):
         """Retrieve successor nodes from cache or compute them."""
         model_class = self.Meta.model
+        uploaded_file_id = obj.study.uploaded_file_id
         cache_key = model_class.CACHE_KEY_SUCESSORS.format(
-            uploaded_file_id=obj.uploaded_file_id, number=obj.number
+            uploaded_file_id=uploaded_file_id, number=obj.number
         )
         if not cache.has_key(cache_key):
             graph_info = self._get_graph_info(obj, extract_children_tree)
