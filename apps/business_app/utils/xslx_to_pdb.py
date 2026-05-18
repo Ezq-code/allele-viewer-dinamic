@@ -184,7 +184,7 @@ class XslxToPdb(ExcelReader):
                 allele_nodes[allele_number] = AlleleNode.objects.create(
                     element=element,
                     number=allele_number,
-                    custom_element_name=allele,
+                    allele=allele,
                     rs=rs,
                     uploaded_file_id=uploaded_file_id,
                     region=region,

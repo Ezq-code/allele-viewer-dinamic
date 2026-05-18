@@ -17,6 +17,7 @@ __all__ = [
     "RegionCountry",
     "GeneGroups",
     "SubCountry",
+    "ProteinNode",
 ]
 
 from .allele_node import AlleleNode
@@ -37,3 +38,4 @@ from .site_configurations import SiteConfiguration
 from .sub_country import SubCountry
 from .uploaded_files import UploadedFiles
 from .working_copy_of_original_file import WorkingCopyOfOriginalFile
+from .protein_node import ProteinNode

@@ -40,7 +40,7 @@ class AlleleNodeViewSet(
     search_fields = [
         "number",
         "element",
-        "custom_element_name",
+        "allele",
         "loss",
         "increment",
         "region",
@@ -54,7 +54,7 @@ class AlleleNodeViewSet(
     ]
     filterset_fields = {
         "element": ["exact"],
-        "custom_element_name": ["exact"],
+        "allele": ["exact"],
         "rs": ["exact"],
         "number": ["exact"],
         "timeline_appearence": ["exact", "gte", "lte"],

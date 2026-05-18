@@ -38,7 +38,7 @@ class AlleleNodeSerializer(serializers.ModelSerializer):
             "number",
             "unique_number",
             "element",
-            "custom_element_name",
+            "allele",
             "rs",
             # "uploaded_file",
             # "children_qty",

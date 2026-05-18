@@ -14,6 +14,7 @@ from apps.business_app.models import (
     SiteConfiguration,
     UploadedFiles,
     WorkingCopyOfOriginalFile,
+    ProteinNode,
 )
 from apps.business_app.models.disease_group import DiseaseGroup
 from apps.business_app.models.disease_subgroup import DiseaseSubGroup
@@ -78,7 +79,7 @@ class AlleleNodeAdmin(admin.ModelAdmin):
         "number",
         "unique_number",
         "element",
-        "custom_element_name",
+        "allele",
         "rs",
         "uploaded_file",
         "timeline_appearence",
@@ -100,7 +101,60 @@ class AlleleNodeAdmin(admin.ModelAdmin):
     fields = [
         "number",
         "element",
-        "custom_element_name",
+        "allele",
+        "rs",
+        "uploaded_file",
+        "timeline_appearence",
+        "frec_afr_amr",
+        "frec_amr",
+        "frec_csa",
+        "frec_eas",
+        "frec_eur",
+        "frec_lat",
+        "frec_nea",
+        "frec_oce",
+        "frec_ssa",
+        "frec_afr_eas",
+        "frec_afr_swe",
+        "frec_afr_nor",
+        "frec_ca",
+        "frec_sa",
+    ]
+
+
+@admin.register(ProteinNode)
+class ProteinNodeAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "number",
+        "unique_number",
+        "element",
+        "allele",
+        "is_final_for_allele",
+        "rs",
+        "uploaded_file",
+        "timeline_appearence",
+        "frec_afr_amr",
+        "frec_amr",
+        "frec_csa",
+        "frec_eas",
+        "frec_eur",
+        "frec_lat",
+        "frec_nea",
+        "frec_oce",
+        "frec_ssa",
+        "frec_afr_eas",
+        "frec_afr_swe",
+        "frec_afr_nor",
+        "frec_ca",
+        "frec_sa",
+    ]
+    fields = [
+        "number",
+        "element",
+        "allele",
+        "is_final_for_allele",
         "rs",
         "uploaded_file",
         "timeline_appearence",

@@ -738,7 +738,7 @@ async function showInfo(atom) {
           <i class="fas fa-eye"></i>
         </button>
         <button type="button" class="btn btn-info"   data-target="#timelineModal" data-toggle="tooltip" title="Formation" onclick="showFormation('${
-          elemento.custom_element_name
+          elemento.allele
         }')">
           <i class="fas fa-stream"></i>
         </button>
@@ -771,12 +771,12 @@ async function showInfo(atom) {
 
       const subtitle =
         elemento.children_qty === 0
-          ? `${elemento.custom_element_name} - ${elemento.children_qty}`
+          ? `${elemento.allele} - ${elemento.children_qty}`
           : `${elemento.number} <span class="badge badge-danger">Childs ${elemento.children_qty}</span>`;
 
       $(document).Toasts("create", {
         class: toastClass,
-        title: elemento.custom_element_name,
+        title: elemento.allele,
         subtitle: subtitle,
         body:
           // imageHtml +
@@ -1469,7 +1469,7 @@ function mostrarElementos(lista, tiempo) {
   const atom = obtenerAtomoDesdeViewer(viewer, element.number);
   if (atom) {
     const nodeLabel =
-      element.custom_element_name ||
+      element.allele ||
       element.allele ||
       `Node ${element.number}`;
     currentAnimationLabel = viewer.addLabel(nodeLabel, {

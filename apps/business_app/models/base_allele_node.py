@@ -15,8 +15,11 @@ class BaseAlleleNode(models.Model):
         verbose_name=_("Unique Number"), unique=True, max_length=100
     )
     element = models.CharField(verbose_name=_("Element"), max_length=3)
-    custom_element_name = models.CharField(
-        verbose_name=_("Custom Element Name"), null=True, blank=True, max_length=150
+    allele = models.CharField(
+        verbose_name=_("Allele"), null=True, blank=True, max_length=150
+    )
+    rs = models.TextField(
+        verbose_name=_("RS"),
     )
     region = models.CharField(
         verbose_name=_("Region"), max_length=100, null=True, blank=True
@@ -24,11 +27,7 @@ class BaseAlleleNode(models.Model):
     children = models.ManyToManyField("self", symmetrical=False, blank=True)
     predecessors = models.JSONField(default=list)
     sucessors = models.JSONField(default=list)
-    uploaded_file = models.ForeignKey(
-        to="UploadedFiles",
-        on_delete=models.CASCADE,
-        related_name="allele_nodes",
-    )
+
     timeline_appearence = models.IntegerField(
         verbose_name="Appearance on the timeline", null=True
     )
@@ -96,4 +95,4 @@ class BaseAlleleNode(models.Model):
         abstract = True
 
     def __str__(self):
-        return f"{self.number}-{self.custom_element_name}"
+        return f"{self.number}-{self.allele}"

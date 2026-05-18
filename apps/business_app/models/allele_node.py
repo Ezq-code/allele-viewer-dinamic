@@ -7,8 +7,10 @@ from django.db import models
 class AlleleNode(BaseAlleleNode):
     """Concrete allele graph node backed by the existing AlleleNode table."""
 
-    rs = models.TextField(
-        verbose_name=_("RS"),
+    uploaded_file = models.ForeignKey(
+        to="UploadedFiles",
+        on_delete=models.CASCADE,
+        related_name="allele_nodes",
     )
 
     class Meta:
