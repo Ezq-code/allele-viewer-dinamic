@@ -114,7 +114,7 @@ def test_allele_node_serializer_enqueues_task_when_graph_cache_miss():
     cache.delete(cache_key)
 
     with patch(
-        "apps.business_app.serializers.allele_nodes.build_uploaded_file_graph_cache_task"
+        "apps.business_app.serializers.base_allele_nodes.build_uploaded_file_graph_cache_task"
     ) as mocked_task:
         result = serializer.get_predecessors(obj)
 
@@ -140,7 +140,7 @@ def test_allele_node_serializer_uses_cached_graph_without_enqueuing_task():
     cache.delete(cache_key)
 
     with patch(
-        "apps.business_app.serializers.allele_nodes.build_uploaded_file_graph_cache_task.delay"
+        "apps.business_app.serializers.base_allele_nodes.build_uploaded_file_graph_cache_task.delay"
     ) as mocked_delay:
         result = serializer.get_predecessors(obj)
 
@@ -286,7 +286,7 @@ def test_protein_node_serializer_enqueues_task_when_graph_cache_miss():
     cache.delete(cache_key)
 
     with patch(
-        "apps.business_app.serializers.protein_nodes.build_uploaded_file_graph_cache_task"
+        "apps.business_app.serializers.base_allele_nodes.build_uploaded_file_graph_cache_task"
     ) as mocked_task:
         result = serializer.get_predecessors(obj)
 
@@ -313,7 +313,7 @@ def test_protein_node_serializer_uses_cached_graph_without_enqueuing_task():
     cache.delete(cache_key)
 
     with patch(
-        "apps.business_app.serializers.protein_nodes.build_uploaded_file_graph_cache_task.delay"
+        "apps.business_app.serializers.base_allele_nodes.build_uploaded_file_graph_cache_task.delay"
     ) as mocked_delay:
         result = serializer.get_predecessors(obj)
 
