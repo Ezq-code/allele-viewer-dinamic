@@ -103,13 +103,13 @@ def test_uploaded_files_save_does_not_dispatch_task_for_pdb(tmp_path, settings):
 
 def test_allele_node_serializer_enqueues_task_when_graph_cache_miss():
     serializer = AlleleNodeSerializer()
-    obj = SimpleNamespace(uploaded_file_id=999, number=10)
+    obj = SimpleNamespace(study=SimpleNamespace(uploaded_file_id=999), number=10)
 
     graph_key = AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-        uploaded_file_id=obj.uploaded_file_id
+        uploaded_file_id=obj.study.uploaded_file_id
     )
     cache_key = AlleleNode.CACHE_KEY_DESCENDANTS.format(
-        uploaded_file_id=obj.uploaded_file_id,
+        uploaded_file_id=obj.study.uploaded_file_id,
         number=obj.number,
     )
     cache.delete(graph_key)
@@ -121,21 +121,21 @@ def test_allele_node_serializer_enqueues_task_when_graph_cache_miss():
         result = serializer.get_predecessors(obj)
 
     assert result == []
-    mocked_task.assert_called_once_with(obj.uploaded_file_id)
+    mocked_task.assert_called_once_with(obj.study.uploaded_file_id)
     assert cache.get(cache_key) is None
 
 
 def test_allele_node_serializer_uses_cached_graph_without_enqueuing_task():
     serializer = AlleleNodeSerializer()
-    obj = SimpleNamespace(uploaded_file_id=1001, number=2)
+    obj = SimpleNamespace(study=SimpleNamespace(uploaded_file_id=1001), number=2)
     graph = nx.DiGraph()
     graph.add_edge(1, 2)
 
     graph_key = AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-        uploaded_file_id=obj.uploaded_file_id
+        uploaded_file_id=obj.study.uploaded_file_id
     )
     cache_key = AlleleNode.CACHE_KEY_DESCENDANTS.format(
-        uploaded_file_id=obj.uploaded_file_id,
+        uploaded_file_id=obj.study.uploaded_file_id,
         number=obj.number,
     )
     cache.set(graph_key, graph, timeout=None)
@@ -339,22 +339,22 @@ def test_dry_refactor_keeps_existing_concrete_model_fields():
     protein_fields = {field.name for field in ProteinNode._meta.local_fields}
     assert "is_final_for_allele" in protein_fields
 
-    # Both models have the uploaded_file FK (defined in their concrete implementations)
+    # Both models have the study FK (defined in BaseAlleleNode)
     allele_fields = {field.name for field in AlleleNode._meta.local_fields}
-    assert "uploaded_file" in allele_fields
-    assert "uploaded_file" in protein_fields
+    assert "study" in allele_fields
+    assert "study" in protein_fields
 
 
 def test_protein_node_serializer_enqueues_task_when_graph_cache_miss():
     """Test that ProteinNodeSerializer requests graph cache task on cache miss."""
     serializer = ProteinNodeSerializer()
-    obj = SimpleNamespace(uploaded_file_id=999, number=10)
+    obj = SimpleNamespace(study=SimpleNamespace(uploaded_file_id=999), number=10)
 
     graph_key = ProteinNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-        uploaded_file_id=obj.uploaded_file_id
+        uploaded_file_id=obj.study.uploaded_file_id
     )
     cache_key = ProteinNode.CACHE_KEY_DESCENDANTS.format(
-        uploaded_file_id=obj.uploaded_file_id,
+        uploaded_file_id=obj.study.uploaded_file_id,
         number=obj.number,
     )
     cache.delete(graph_key)
@@ -366,22 +366,22 @@ def test_protein_node_serializer_enqueues_task_when_graph_cache_miss():
         result = serializer.get_predecessors(obj)
 
     assert result == []
-    mocked_task.assert_called_once_with(obj.uploaded_file_id)
+    mocked_task.assert_called_once_with(obj.study.uploaded_file_id)
     assert cache.get(cache_key) is None
 
 
 def test_protein_node_serializer_uses_cached_graph_without_enqueuing_task():
     """Test that ProteinNodeSerializer uses cached graph without requesting new computation."""
     serializer = ProteinNodeSerializer()
-    obj = SimpleNamespace(uploaded_file_id=1001, number=2)
+    obj = SimpleNamespace(study=SimpleNamespace(uploaded_file_id=1001), number=2)
     graph = nx.DiGraph()
     graph.add_edge(1, 2)
 
     graph_key = ProteinNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-        uploaded_file_id=obj.uploaded_file_id
+        uploaded_file_id=obj.study.uploaded_file_id
     )
     cache_key = ProteinNode.CACHE_KEY_DESCENDANTS.format(
-        uploaded_file_id=obj.uploaded_file_id,
+        uploaded_file_id=obj.study.uploaded_file_id,
         number=obj.number,
     )
     cache.set(graph_key, graph, timeout=None)
