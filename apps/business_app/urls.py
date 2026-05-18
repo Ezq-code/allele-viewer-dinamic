@@ -17,6 +17,7 @@ from apps.business_app.views import (
 )
 from apps.business_app.views.allele_full_family import AlleleFullFamilyViewSet
 from apps.business_app.views.allele_nodes import AlleleNodeViewSet
+from apps.business_app.views.protein_nodes import ProteinNodeViewSet
 
 
 from apps.business_app.views.disease_group import DiseaseGroupViewSet
@@ -96,6 +97,13 @@ uploaded_files_router.register(
 )
 
 uploaded_files_router.register(
+    "protein-node-by-uploaded-file",
+    ProteinNodeViewSet,
+    basename="protein-node-by-uploaded-file",
+    parents_query_lookups=["uploaded_file"],
+)
+
+uploaded_files_router.register(
     "initial-file-data",
     InitialFileDataViewSet,
     basename="initial-file-data",
@@ -106,6 +114,11 @@ router.register(
     "allele-nodes",
     AlleleNodeViewSet,
     basename="allele-nodes",
+)
+router.register(
+    "protein-nodes",
+    ProteinNodeViewSet,
+    basename="protein-nodes",
 )
 router.register(
     "xyz-expansion",

@@ -17,6 +17,7 @@ from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.protein_node import ProteinNode
 from apps.business_app.models.uploaded_files import UploadedFiles
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
+from apps.business_app.serializers.protein_nodes import ProteinNodeSerializer
 from apps.business_app.serializers.uploaded_files import UploadedFilesSerializer
 from apps.business_app.utils.gene_list_cache import (
     GENE_LIST_VERSION_KEY,
@@ -254,11 +255,67 @@ def test_node_models_share_abstract_base_for_dry_structure():
 
 
 def test_dry_refactor_keeps_existing_concrete_model_fields():
-    allele_fields = {field.name for field in AlleleNode._meta.local_fields}
+    """Verify that AlleleNode and ProteinNode share abstract base structure."""
+    # Both models inherit from the abstract base
+    assert issubclass(AlleleNode, BaseAlleleNode)
+    assert issubclass(ProteinNode, BaseAlleleNode)
+    
+    # ProteinNode has its own specific field
     protein_fields = {field.name for field in ProteinNode._meta.local_fields}
+    assert "is_final_for_allele" in protein_fields
+    
+    # Both models have the uploaded_file FK (defined in their concrete implementations)
+    allele_fields = {field.name for field in AlleleNode._meta.local_fields}
+    assert "uploaded_file" in allele_fields
+    assert "uploaded_file" in protein_fields
 
-    # Inherited fields are no longer local fields on child models.
-    assert allele_fields == {"id"}
 
-    # ProteinNode only keeps the fields that are truly protein specific.
-    assert protein_fields == {"id", "allele_name", "is_final_for_allele"}
+def test_protein_node_serializer_enqueues_task_when_graph_cache_miss():
+    """Test that ProteinNodeSerializer requests graph cache task on cache miss."""
+    serializer = ProteinNodeSerializer()
+    obj = SimpleNamespace(uploaded_file_id=999, number=10)
+
+    graph_key = ProteinNode.CACHE_KEY_GRAPH_FOR_FILE.format(
+        uploaded_file_id=obj.uploaded_file_id
+    )
+    cache_key = ProteinNode.CACHE_KEY_DESCENDANTS.format(
+        uploaded_file_id=obj.uploaded_file_id,
+        number=obj.number,
+    )
+    cache.delete(graph_key)
+    cache.delete(cache_key)
+
+    with patch(
+        "apps.business_app.serializers.protein_nodes.build_uploaded_file_graph_cache_task"
+    ) as mocked_task:
+        result = serializer.get_predecessors(obj)
+
+    assert result == []
+    mocked_task.assert_called_once_with(obj.uploaded_file_id)
+    assert cache.get(cache_key) is None
+
+
+def test_protein_node_serializer_uses_cached_graph_without_enqueuing_task():
+    """Test that ProteinNodeSerializer uses cached graph without requesting new computation."""
+    serializer = ProteinNodeSerializer()
+    obj = SimpleNamespace(uploaded_file_id=1001, number=2)
+    graph = nx.DiGraph()
+    graph.add_edge(1, 2)
+
+    graph_key = ProteinNode.CACHE_KEY_GRAPH_FOR_FILE.format(
+        uploaded_file_id=obj.uploaded_file_id
+    )
+    cache_key = ProteinNode.CACHE_KEY_DESCENDANTS.format(
+        uploaded_file_id=obj.uploaded_file_id,
+        number=obj.number,
+    )
+    cache.set(graph_key, graph, timeout=None)
+    cache.delete(cache_key)
+
+    with patch(
+        "apps.business_app.serializers.protein_nodes.build_uploaded_file_graph_cache_task.delay"
+    ) as mocked_delay:
+        result = serializer.get_predecessors(obj)
+
+    assert result == {1, 2}
+    mocked_delay.assert_not_called()

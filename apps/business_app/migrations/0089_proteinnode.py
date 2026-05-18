@@ -6,13 +6,14 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("business_app", "0089_alter_allelenode_allele"),
+        ("business_app", "0088_allelenode_predecessors_allelenode_sucessors"),
     ]
 
     operations = [
-        migrations.RemoveField(
+        migrations.RenameField(
             model_name="allelenode",
-            name="custom_element_name",
+            old_name="custom_element_name",
+            new_name="allele",
         ),
         migrations.CreateModel(
             name="ProteinNode",
@@ -127,7 +128,9 @@ class Migration(migrations.Migration):
                 (
                     "frec_nea",
                     models.FloatField(
-                        blank=True, null=True, verbose_name="Frequency Near Eastern"
+                        blank=True,
+                        null=True,
+                        verbose_name="Frequency Near Eastern",
                     ),
                 ),
                 (
@@ -161,7 +164,9 @@ class Migration(migrations.Migration):
                 (
                     "frec_afr_nor",
                     models.FloatField(
-                        blank=True, null=True, verbose_name="Frequency North-African"
+                        blank=True,
+                        null=True,
+                        verbose_name="Frequency North-African",
                     ),
                 ),
                 (
@@ -181,10 +186,6 @@ class Migration(migrations.Migration):
                     models.BooleanField(
                         default=False, verbose_name="Is Final For Allele"
                     ),
-                ),
-                (
-                    "children",
-                    models.ManyToManyField(blank=True, to="business_app.proteinnode"),
                 ),
                 (
                     "uploaded_file",

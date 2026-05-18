@@ -12,6 +12,7 @@ __all__ = [
     "FeatureViewSet",
     "LayerViewSet",
     "SubCountryViewSet",
+    "ProteinNodeViewSet",
 ]
 from .allowed_extensions import AllowedExtensionsViewSet
 from .site_configurations import SiteConfigurationViewSet
@@ -26,3 +27,4 @@ from .event_gallery import EventGalleryViewSet
 from .layer import LayerViewSet
 from .feature import FeatureViewSet
 from .sub_country import SubCountryViewSet
+from .protein_nodes import ProteinNodeViewSet
