@@ -259,11 +259,11 @@ def test_dry_refactor_keeps_existing_concrete_model_fields():
     # Both models inherit from the abstract base
     assert issubclass(AlleleNode, BaseAlleleNode)
     assert issubclass(ProteinNode, BaseAlleleNode)
-    
+
     # ProteinNode has its own specific field
     protein_fields = {field.name for field in ProteinNode._meta.local_fields}
     assert "is_final_for_allele" in protein_fields
-    
+
     # Both models have the uploaded_file FK (defined in their concrete implementations)
     allele_fields = {field.name for field in AlleleNode._meta.local_fields}
     assert "uploaded_file" in allele_fields
