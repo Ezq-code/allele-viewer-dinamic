@@ -31,7 +31,7 @@ urlpatterns = [
         "v1/upload_excel_file",
         uploadexcelview.UploadExcelView.as_view(),
         name="upload-excel-file",
-    ),
+    )
 ]
 
 urlpatterns += router.urls

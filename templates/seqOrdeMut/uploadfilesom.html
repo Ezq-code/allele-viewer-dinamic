@@ -1,0 +1,346 @@
+{% extends "index.html" %} {% load static %} {% block head-extra %}
+<link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}" />
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}"
+/>
+<style>
+  /* Estilos para upload de archivos */
+  .upload-section {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+
+  .upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 50px 20px;
+    text-align: center;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .upload-area:hover {
+    border-color: #007bff;
+    background: #f0f0ff;
+    transform: scale(1.02);
+  }
+
+  .upload-area i {
+    font-size: 64px;
+    color: #007bff;
+    margin-bottom: 15px;
+  }
+
+  .btn-upload {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-upload:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .btn-reset {
+    background: #6c757d;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-reset:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+  }
+
+  .requirements-list {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    border-left: 4px solid #007bff;
+  }
+
+  .requirements-list h6 {
+    color: #007bff;
+    margin-bottom: 15px;
+  }
+
+  .requirements-list ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .requirements-list li {
+    margin: 8px 0;
+    font-size: 13px;
+  }
+
+  .requirements-list li i {
+    color: #28a745;
+    margin-right: 8px;
+  }
+
+  .progress {
+    height: 35px;
+    border-radius: 20px;
+    background-color: #e9ecef;
+    display: none;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    line-height: 35px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: width 0.3s ease;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    backdrop-filter: blur(3px);
+  }
+
+  .file-info {
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .info-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .upload-section {
+      padding: 15px;
+    }
+    
+    .upload-area {
+      padding: 30px 15px;
+    }
+    
+    .upload-area i {
+      font-size: 48px;
+    }
+    
+    .requirements-list ul {
+      padding-left: 15px;
+    }
+    
+    .requirements-list li {
+      font-size: 11px;
+    }
+  }
+
+  /* Animación para éxito */
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .upload-success {
+    animation: pulse 0.5s ease;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+  <!-- Overlay de carga -->
+  <div class="overlay" id="load" hidden>
+    <div class="text-center">
+      <i class="fas fa-3x fa-sync fa-spin"></i>
+      <p class="mt-3 mb-0">Processing file...</p>
+      <small class="text-muted">Please wait</small>
+    </div>
+  </div>
+
+  <!-- Header de la página -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Upload Excel File</h1>
+          <h6 class="text-muted">Process Genetic Data</h6>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Upload Excel</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contenido principal -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- Sección de upload -->
+      <div class="upload-section">
+        <h5 class="mb-3">
+          <i class="fas fa-cloud-upload-alt text-primary"></i> 
+          Upload Excel File
+        </h5>
+        <hr class="mt-0">
+        
+        <form id="uploadForm">
+          <div class="row">
+            <!-- Columna izquierda - Área de drop -->
+            <div class="col-lg-6">
+              <div class="upload-area" id="dropZone" onclick="document.getElementById('excelFile').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h5>Click or drag file here</h5>
+                <p class="text-muted mb-0">
+                  <small>Formats: .xlsx, .xls (Max 10MB)</small>
+                </p>
+                <input type="file" id="excelFile" accept=".xlsx,.xls" style="display: none;">
+              </div>
+              
+              <!-- Información del archivo seleccionado -->
+              <div id="fileInfo" style="display: none;"></div>
+            </div>
+            
+            <!-- Columna derecha - Formulario -->
+            <div class="col-lg-6">
+              <!-- Nombre personalizado -->
+              <div class="form-group">
+                <label for="customName">
+                  <i class="fas fa-tag"></i> Custom name (optional)
+                </label>
+                <input type="text" class="form-control" id="customName" 
+                       placeholder="Ej: Study_BRCA1_2024">
+                <small class="text-muted">
+                  <i class="fas fa-info-circle"></i> Leave empty to use original filename
+                </small>
+              </div>
+              
+              <!-- Botones de acción -->
+              <div class="row">
+                <div class="col-6">
+                  <button type="submit" class="btn btn-upload btn-primary btn-block" id="btnUpload">
+                    <i class="fas fa-upload"></i> Upload & Process
+                  </button>
+                </div>
+                <div class="col-6">
+                  <button type="button" id="resetBtn" class="btn btn-reset btn-secondary btn-block">
+                    <i class="fas fa-trash-alt"></i> Clear
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Barra de progreso -->
+              <div class="form-group mt-3">
+                <div id="uploadProgress" class="progress">
+                  <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                       role="progressbar" style="width: 0%">0%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Requisitos del archivo -->
+          <div class="requirements-list">
+            <h6><i class="fas fa-list-check"></i> Required columns in Excel file:</h6>
+            <div class="row">
+              <div class="col-md-3 col-6">
+                <ul class="mb-0">
+                  <li><i class="fas fa-check-circle"></i> <strong>Gene</strong></li>
+                  <li><i class="fas fa-check-circle"></i> <strong>Cord</strong></li>
+                  <li><i class="fas fa-check-circle"></i> <strong>Valor</strong></li>
+                </ul>
+              </div>
+              <div class="col-md-3 col-6">
+                <ul class="mb-0">
+                  <li><i class="fas fa-check-circle"></i> <strong>Color</strong></li>
+                  <li><i class="fas fa-check-circle"></i> <strong>Protein</strong></li>
+                  <li><i class="fas fa-check-circle"></i> <strong>Alleleasoc</strong></li>
+                </ul>
+              </div>
+              <div class="col-md-3 col-6">
+                <ul class="mb-0">
+                  <li><i class="fas fa-check-circle"></i> <strong>Species</strong></li>
+                  <li><i class="fas fa-check-circle"></i> <strong>Variant</strong></li>
+                  <li><i class="fas fa-check-circle"></i> <strong>Order1</strong></li>
+                </ul>
+              </div>
+              <div class="col-md-3 col-6">
+                <ul class="mb-0">
+                  <li><i class="fas fa-check-circle"></i> <strong>Order2</strong></li>
+                  <li><i class="fas fa-check-circle"></i> <strong>Order3</strong></li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="alert alert-info mt-3 mb-0">
+              <i class="fas fa-info-circle"></i>
+              <strong>Note:</strong> The file can contain multiple sheets. All sheets will be processed and combined automatically.
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static 'assets/plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'assets/plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
+
+<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
