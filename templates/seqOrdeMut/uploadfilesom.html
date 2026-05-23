@@ -231,7 +231,7 @@
                 <i class="fas fa-cloud-upload-alt"></i>
                 <h5>Click or drag file here</h5>
                 <p class="text-muted mb-0">
-                  <small>Formats: .xlsx, .xls (Max 10MB)</small>
+                  <small>Formats: .xlsx, .xls (Max 50MB)</small>
                 </p>
                 <input type="file" id="excelFile" accept=".xlsx,.xls" style="display: none;">
               </div>
@@ -248,7 +248,7 @@
                   <i class="fas fa-tag"></i> Custom name (optional)
                 </label>
                 <input type="text" class="form-control" id="customName" 
-                       placeholder="Ej: Study_BRCA1_2024">
+                       placeholder="Ej: HLA-A 2026">
                 <small class="text-muted">
                   <i class="fas fa-info-circle"></i> Leave empty to use original filename
                 </small>
@@ -343,4 +343,5 @@
 
 <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'assets/dist/js/uploadfilesom.js' %}"></script>
 {% endblock %}

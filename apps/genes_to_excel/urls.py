@@ -28,7 +28,7 @@ urlpatterns = [
     ),
     path("v1/listgenes", genview.GenListView.as_view(), name="list-genes"),
     path(
-        "v1/upload_excel_file",
+        "v1/upload-excel-file/",
         uploadexcelview.UploadExcelView.as_view(),
         name="upload-excel-file",
     )
