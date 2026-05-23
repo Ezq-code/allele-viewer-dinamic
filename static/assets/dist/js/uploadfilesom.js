@@ -26,9 +26,9 @@ function showMessage(icon, title, text) {
 }
 
 // Mostrar loading
-function showLoading(message = 'Procesando archivo...') {
+function showLoading(message = 'Processing file...') {
     Swal.fire({
-        title: 'Cargando...',
+        title: 'Loading...',
         text: message,
         allowOutsideClick: false,
         allowEscapeKey: false,
@@ -49,7 +49,7 @@ function closeLoading() {
 // Validar archivo
 function validateFile(file) {
     if (!file) {
-        showMessage('warning', 'Sin archivo', 'Por favor selecciona un archivo');
+        showMessage('warning', 'Missing file', 'Please select a file');
         return false;
     }
     
@@ -57,13 +57,13 @@ function validateFile(file) {
     const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
     
     if (!validExtensions.includes(extension)) {
-        showMessage('error', 'Formato inválido', 'Solo se permiten archivos Excel (.xlsx, .xls)');
+        showMessage('error', 'Unavilable format', 'Only Excel files available (.xlsx, .xls)');
         return false;
     }
     
     const maxSize = 50 * 1024 * 1024; // 50MB (aumentado)
     if (file.size > maxSize) {
-        showMessage('error', 'Archivo muy grande', 'El tamaño máximo es 50MB');
+        showMessage('error', 'File oversize', 'The maximum size avalilable is 50MB');
         return false;
     }
     
@@ -81,8 +81,8 @@ function displayFileInfo(file) {
         infoDiv.innerHTML = `
             <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
                 <i class="fas fa-check-circle"></i>
-                <strong>Archivo seleccionado:</strong> ${file.name}<br>
-                <strong>Tamaño:</strong> ${sizeText}
+                <strong>Selected file:</strong> ${file.name}<br>
+                <strong>Size:</strong> ${sizeText}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         `;
@@ -99,7 +99,7 @@ function showResultsModal(data) {
                 <div class="modal-content">
                     <div class="modal-header bg-success text-white">
                         <h5 class="modal-title">
-                            <i class="fas fa-chart-bar"></i> Resultados del Procesamiento
+                            <i class="fas fa-chart-bar"></i> Results of the file proccess
                         </h5>
                         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -135,7 +135,7 @@ function showResultsModal(data) {
             modalContent += `
                 <div class="alert alert-success">
                     <i class="fas fa-check-circle"></i>
-                    El archivo se procesó correctamente pero no hay datos adicionales para mostrar.
+                    The file was processed correctly.
                 </div>
             `;
         }
@@ -148,7 +148,7 @@ function showResultsModal(data) {
                             <i class="fas fa-times"></i> Cerrar
                         </button>
                         ${data.download_url ? `<button type="button" class="btn btn-primary" onclick="window.open('${data.download_url}', '_blank')">
-                            <i class="fas fa-download"></i> Descargar Resultados
+                            <i class="fas fa-download"></i> Download results
                         </button>` : ''}
                     </div>
                 </div>
@@ -177,19 +177,19 @@ function showResultsModal(data) {
 
 // Función para renderizar diferentes tipos de resultados
 function renderResultados(data) {
-    if (!data) return '<p>No hay datos disponibles</p>';
+    if (!data) return '<p>There are not data available</p>';
     
     // Si es un array (lista de registros)
     if (Array.isArray(data)) {
         if (data.length === 0) {
-            return '<div class="alert alert-warning">No se encontraron registros</div>';
+            return '<div class="alert alert-warning">Non records finded</div>';
         }
         
         // Mostrar resumen estadístico
         let html = `
             <div class="alert alert-success">
                 <i class="fas fa-chart-line"></i>
-                <strong>Resumen:</strong> Se procesaron ${data.length} registros
+                <strong>Summary:</strong> A total of ${data.length} records processed
             </div>
             <div class="table-responsive" style="max-height: 500px;">
                 <table class="table table-bordered table-striped table-hover">
@@ -225,7 +225,7 @@ function renderResultados(data) {
         if (data.length > maxDisplay) {
             html += `<div class="alert alert-info mt-2">
                 <i class="fas fa-info-circle"></i>
-                Mostrando ${maxDisplay} de ${data.length} registros
+                Showing ${maxDisplay} of ${data.length} records
             </div>`;
         }
         
@@ -380,7 +380,7 @@ async function uploadFile(file, customName) {
             closeLoading();
             
             // Mostrar mensaje de éxito
-            showMessage('success', '¡Éxito!', response.data.mensaje || 'Archivo procesado correctamente');
+            showMessage('success', 'Success!', response.data.mensaje || 'File correctly processed');
             
             // Mostrar resultados en modal
             if (response.data) {
@@ -397,12 +397,12 @@ async function uploadFile(file, customName) {
         return false;
         
     } catch (error) {
-        console.error('Error en upload:', error);
+        console.error('Error in upload:', error);
         
         const progressDiv = document.getElementById('uploadProgress');
         if (progressDiv) progressDiv.style.display = 'none';
         
-        let errorMsg = 'Error al procesar el archivo';
+        let errorMsg = 'Error processing the file';
         
         if (error.response) {
             console.error('Error response data:', error.response.data);
@@ -424,11 +424,11 @@ async function uploadFile(file, customName) {
                     }
                 }
                 if (errors.length) {
-                    errorMsg = `Errores de validación: ${errors.join('; ')}`;
+                    errorMsg = `Validation errors: ${errors.join('; ')}`;
                 }
             }
         } else if (error.request) {
-            errorMsg = 'No se pudo conectar con el servidor. Verifica que el servidor esté corriendo.';
+            errorMsg = 'Server conection error. Verify if the server is running.';
         } else if (error.message) {
             errorMsg = error.message;
         }
@@ -474,12 +474,12 @@ async function handleSubmit(event) {
     
     // Evitar múltiples envíos simultáneos
     if (isProcessing) {
-        showMessage('warning', 'Espera', 'Ya se está procesando un archivo. Por favor espera...');
+        showMessage('warning', 'Wait', 'The file is processing. Please wait a moment...');
         return;
     }
     
     if (!selectedFile) {
-        showMessage('warning', 'Sin archivo', 'Por favor selecciona un archivo Excel');
+        showMessage('warning', 'File missing', 'Please select an Excel file');
         return;
     }
     
@@ -493,7 +493,7 @@ async function handleSubmit(event) {
     setProcessingState(true);
     
     // Mostrar loading
-    showLoading('Subiendo y procesando archivo...');
+    showLoading('Uploading and processing file...');
     
     try {
         const success = await uploadFile(selectedFile, customName);
@@ -505,13 +505,13 @@ async function handleSubmit(event) {
     } catch (error) {
         console.error('Error inesperado:', error);
         closeLoading();
-        showMessage('error', 'Error inesperado', 'Ocurrió un error durante el procesamiento');
+        showMessage('error', 'Unespected error', 'An error happends processing the file');
     } finally {
         // Desbloquear interfaz
         setProcessingState(false);
         // Asegurar que el loading se cierre
         setTimeout(() => {
-            if (Swal.isVisible() && Swal.getTitle() === 'Cargando...') {
+            if (Swal.isVisible() && Swal.getTitle() === 'Loading...') {
                 closeLoading();
             }
         }, 1000);
