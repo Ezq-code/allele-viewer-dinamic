@@ -1,291 +1,234 @@
 {% extends "index.html" %} {% load static %} {% block head-extra %}
-<link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}" />
-<link rel="stylesheet" href="{% static 'assets/dist/css/load.css' %}" />
-<link
-  rel="stylesheet"
-  href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}"
-/>
-<link
-  rel="stylesheet"
-  href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}"
-/>
-<link
-  rel="stylesheet"
-  href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}"
-/>
-<link
-  rel="stylesheet"
-  href="{% static 'assets/plugins/bs-stepper/css/bs-stepper.min.css' %}"
-/>
-<link
-  rel="stylesheet"
-  href="{% static 'assets/plugins/toastr/toastr.min.css' %}"
-/>
-<link
-  rel="stylesheet"
-  href="{% static 'assets/plugins/ion-rangeslider/css/ion.rangeSlider.min.css' %}"
-/>
-<link
-  rel="stylesheet"
-  href="{% static 'assets/plugins/bootstrap-slider/css/bootstrap-slider.min.css' %}"
-/>
+    <link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/dist/css/load.css' %}"/>
+    <link
+            rel="stylesheet"
+            href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}"
+    />
+    <link
+            rel="stylesheet"
+            href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}"
+    />
+    <link
+            rel="stylesheet"
+            href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}"
+    />
+    <link
+            rel="stylesheet"
+            href="{% static 'assets/plugins/bs-stepper/css/bs-stepper.min.css' %}"
+    />
+    <link
+            rel="stylesheet"
+            href="{% static 'assets/plugins/toastr/toastr.min.css' %}"
+    />
+    <link
+            rel="stylesheet"
+            href="{% static 'assets/plugins/ion-rangeslider/css/ion.rangeSlider.min.css' %}"
+    />
+    <link
+            rel="stylesheet"
+            href="{% static 'assets/plugins/bootstrap-slider/css/bootstrap-slider.min.css' %}"
+    />
 
-<link
-  rel="stylesheet"
-  href="{% static 'assets/plugins/jvectormap/jquery-jvectormap.min.css' %}"
-/>
+    <link
+            rel="stylesheet"
+            href="{% static 'assets/plugins/jvectormap/jquery-jvectormap.min.css' %}"
+    />
 
-<link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
 
-<link rel="stylesheet"
-      href="{% static 'assets/plugins/bootstrap-slider/css/bootstrap-slider.min.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'assets/plugins/bootstrap-slider/css/bootstrap-slider.min.css' %}">
 
-<script src="{% static 'assets/plugins/jvectormap/jquery-1.11.2.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/jvectormap/jquery-1.11.2.min.js' %}"></script>
 
-<script src="{% static 'assets/plugins/jvectormap/jquery-jvectormap.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/jvectormap/jquery-jvectormap.min.js' %}"></script>
 
-<script src="{% static 'assets/plugins/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+    <script src="{% static 'assets/plugins/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
 
-<script src="{% static 'assets/plugins/jvectormap/jvectormapAlleleColors.js' %}"></script>
+    <script src="{% static 'assets/plugins/jvectormap/jvectormapAlleleColors.js' %}"></script>
 
-<script src="{% static 'assets/dist/js/3Dmol-min.js' %}"></script>
-<script src="{% static 'assets/dist/js/3Dmol.ui-min.js' %}"></script>
-<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/dist/js/3Dmol-min.js' %}"></script>
+    <script src="{% static 'assets/dist/js/3Dmol.ui-min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-<script src="{% static 'assets/plugins/bootstrap-slider/bootstrap-slider.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootstrap-slider/bootstrap-slider.min.js' %}"></script>
 
 
 {% endblock %} {% block content %}
 
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-  <section class="content-header"></section>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header"></section>
 
-  <!-- Main content -->
-  <section class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
 
-          <div class="card col-12 row">
-            <div class="card-header">
-              <h3 class="card-title">Allele Map</h3>
-              <div class="card-tools">
+                        <div class="card col-12 row">
+                            <div class="card-header">
+                                <h3 class="card-title">Allele Map</h3>
+                                <div class="card-tools d-flex flex-wrap align-items-center w-100">
+                                    <div class="d-inline-block align-middle mr-2"
+                                         style="font-size:.6rem; width: 100px;">
+                                        <strong class="text-muted"> primary source:
+                                            <a href="https://www.allelefrequencies.net/hla6006a.asp">allelefrequencies.net</a>
+                                        </strong>
+                                    </div>
 
+                                    <div class="d-inline-block align-middle mr-3" style="width:230px;">
+                                        <label for="sampleSizeRange" class="mb-0" style="font-size:.75rem;">
+                                            Sample size
+                                            <span id="sampleSizeRangeLabel"
+                                                  class="text-muted">(10001 – 4,000,000)</span>
+                                        </label>
+                                        <input style="width: 100%"
+                                               id="sampleSizeRange"
+                                               type="text"
+                                               data-slider-min="1"
+                                               data-slider-max="4000000"
+                                               data-slider-step="1"
+                                               data-slider-value="[10001,4000000]"
+                                        />
+                                    </div>
 
-                <div class="d-inline-block align-middle" style="font-size:.6rem; margin-right: 50px; width: 100px;">
-                  <strong class="text-muted"> primary source:
-                    <a href="https://www.allelefrequencies.net/hla6006a.asp">
-                      allelefrequencies.net</a>
-                </strong>
+                                    <div class="mr-2">
+                                        <select class="form-control form-control-sm" id="primarysecondary"
+                                                style="width:140px;">
+                                            <option value="Primary">Primary</option>
+                                            <option value="Secondary">Secondary</option>
+                                            <option value="Both">Both</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mr-2">
+                                        <select class="form-control form-control-sm" id="country"
+                                                style="width:140px;"></select>
+                                    </div>
+
+                                    <div class="mr-2">
+                                        <select class="form-control form-control-sm" id="genes"
+                                                style="width:140px;"></select>
+                                    </div>
+
+                                    <div class="d-inline-block" style="margin-right: 2px;">
+                                        <label style="font-size:.75rem;">
+                                            <input type="checkbox" id="AllAlleles" name="AllAlleles">
+                                            All Alleles</label>
+                                    </div>
+
+                                    <div class="d-inline-block" style="margin-right: 8px;">
+                                        <select class="form-control form-control-sm select2 select2-sm-custom"
+                                                id="allele-list" name="allele-list" multiple="multiple"
+                                                data-placeholder="Select allele..." style="width: 100%;">
+                                            <option value="51-100">Sample Size: 51-100</option>
+                                            <option value="1-50">Sample Size: 1-50</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <button class="btn btn-primary btn-sm" id="btreloadgene">Load</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body"
+                                 style="padding-top: 0.70rem; padding-bottom: 0.70rem; padding-left: 2rem; padding-right: 2rem;">
+                                <div class="right-sidebar d-flex">
+                                    <div id="map" style="width:100%; height:590px; position:relative;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-  
-                  <div class="d-inline-block align-middle" style="width:230px; margin-right: 170px;">
-                    <label for="sampleSizeRange" class="mb-0" style="font-size:.75rem;">
-                      Sample size
-                      <span id="sampleSizeRangeLabel" class="text-muted">
-                        (10001 – 4,000,000)
-                      </span>
-                    </label>
-                  
-                    <input style="width: 340px"
-                      id="sampleSizeRange"
-                      type="text"           
-                      data-slider-min="1"
-                      data-slider-max="4000000"
-                      data-slider-step="1"
-                      data-slider-value="[10001,4000000]"
-                    />
-                  </div>
-  
-
-              <!--
-              <div class="d-inline-block align-middle" style="font-size:.75rem; margin-right: 100px;">
-                <strong class="text-muted"> primary source:
-                  <a href="https://www.allelefrequencies.net/hla6006a.asp">
-                    allelefrequencies.net</a>
-              </strong>
-              </div>
-              -->
-
-<!--              
-                <div class="d-inline-block align-middle" style="width:210px; margin-right: 15px;">
-                  <label for="sampleSizeRange" class="mb-0" style="font-size:.75rem;">
-                    Sample size<
-                    <span id="sampleSizeRangeLabel" class="text-muted">
-                      (10001 – 4,000,000)
-                    </span>
-                  </label>
-                
-                  <input
-                    id="sampleSizeRange"
-                    type="text"           
-                    data-slider-min="1"
-                    data-slider-max="4000000"
-                    data-slider-step="1"
-                    data-slider-value="[10001,4000000]"
-                  />
-                </div>
--->
-
-
-<!--
-<div class="d-inline-block align-middle" style="width:460px; margin-right: 15px;">
-  <label for="sampleSizeRange" class="mb-0" style="font-size:.75rem;">
-    Sample size
-    <span id="sampleSizeRangeLabel" class="text-muted">
-      (1 – 3,456,066)
-    </span>
-  </label>
-
-  <input
-    id="sampleSizeRange"
-    type="text"           
-    data-slider-min="1"
-    data-slider-max="3456066"
-    data-slider-step="1"
-    data-slider-value="[1,3456066]"
-    style="width: 100%;"
-  />
-</div>
--->
-
-                <div class="d-inline-block" style="margin-right: 8px; height: 45px;">
-                  <select class="form-control form-control-sm"
-                          id="primarysecondary" style="width:140px;">
-                          <option value="Primary">Primary</option>
-                          <option value="Secondary">Secondary</option>
-                          <option value="Both">Both</option>
-                  </select>
-                </div>
-
-                <div class="d-inline-block" style="margin-right: 8px; height: 45px;">
-                  <select class="form-control form-control-sm"
-                          id="country" style="width:140px;">
-                  </select>
-                </div>
-
-                <div class="d-inline-block" style="margin-right: 8px; height: 45px;">
-                  <select class="form-control form-control-sm"
-                          id="genes" style="width:140px;">
-                  </select>
-                </div>
-
-
-                <div class="d-inline-block" style="margin-right: 2px;">
-                <label style="font-size:.75rem;">
-                  <input type="checkbox" id="AllAlleles" name="AllAlleles">
-                  All Alleles</label>
-                </div> 
-              <div class="d-inline-block" style="margin-right: 8px;">
-                <select class="form-control form-control-sm select2 select2-sm-custom" id="allele-list" name="allele-list" multiple="multiple" data-placeholder="Select allele..." style="width: 100%;" >
-                  <option value="51-100">Sample Size: 51-100</option>
-                  <option value="1-50">Sample Size: 1-50</option>
-                </select>
-              </div>
-
-              <div class="d-inline-block" style="height: 45px;">
-                  <button class="btnok btn-primary btn-sm border-right" id="btreloadgene">Load
-                  </button>
-              </div>
-                {% comment %} {% endcomment %}
-              </div>
             </div>
-
-            <div class="card-body" style= "padding-top: 0.70rem; padding-bottom: 0.70rem; padding-left: 2rem; padding-right: 2rem;">
-              <div class="right-sidebar d-flex">
-                <div id="map" style="width:1280px; height:590px; position:relative;"></div>
-              </div>
-              </div>
-          </div>
-        </div>
-      </div>
+        </section>
     </div>
-  </section>
-  </div>
 
-<!-- Modal para mostrar la información de los alelos -->
-  <div class="modal fade" id="alleleModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalTitle"></h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-md-5">
-                <div id="modalPieChart"></div>
-              </div>
-              <div class="col-md-7">
-                <div id="alleleColumns" class="row"></div>
-              </div>
+    <!-- Modal para mostrar la información de los alelos -->
+    <div class="modal fade" id="alleleModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div id="modalPieChart"></div>
+                            </div>
+                            <div class="col-md-7">
+                                <div id="alleleColumns" class="row"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
 
-<link rel="stylesheet" href="{% static 'assets/dist/css/allelemap-style.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/dist/css/allelemap-style.css' %}"/>
 
-<script>
+    <script>
 
- if (!sessionStorage.getItem('inicializado')) {
-      sessionStorage.setItem('gene', 'HLA-A');
-      sessionStorage.setItem('group_allele', JSON.stringify(["A*01:01"]));
-      sessionStorage.setItem('minSampleSize', '1');
-      sessionStorage.setItem('maxSampleSize', '3456066');
-      sessionStorage.setItem('country', 'All Countries');
-      sessionStorage.setItem('lat', '0');
-      sessionStorage.setItem('long', '0');
-      sessionStorage.setItem('zoom', '1');     
-      sessionStorage.setItem('primarysecondary', 'Primary');       
-      sessionStorage.setItem('AllAlleles', 'F');
-      sessionStorage.setItem('inicializado', 'true');
-    }
+        if (!sessionStorage.getItem('inicializado')) {
+            sessionStorage.setItem('gene', 'HLA-A');
+            sessionStorage.setItem('group_allele', JSON.stringify(["A*01:01"]));
+            sessionStorage.setItem('minSampleSize', '1');
+            sessionStorage.setItem('maxSampleSize', '3456066');
+            sessionStorage.setItem('country', 'All Countries');
+            sessionStorage.setItem('lat', '0');
+            sessionStorage.setItem('long', '0');
+            sessionStorage.setItem('zoom', '1');
+            sessionStorage.setItem('primarysecondary', 'Primary');
+            sessionStorage.setItem('AllAlleles', 'F');
+            sessionStorage.setItem('inicializado', 'true');
+        }
 
-</script>
+    </script>
 
-<!-- /.card-body -->
+    <!-- /.card-body -->
 
-<script src="{% static 'assets/dist/js/allelemap-pie.js' %}"></script>
+    <script src="{% static 'assets/dist/js/allelemap-pie.js' %}"></script>
 
 {% endblock %}
 {% block script %}
 
-<!-- DataTables & Plugins -->
-<script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+    <!-- DataTables & Plugins -->
+    <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
 
-<script src="{% static 'assets/plugins/pdfmake/vfs_fonts.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
-<script src="{% static 'assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
-<script src="{% static 'assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
-<script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
-<script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
-<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
-<script src="{% static 'assets/plugins/bs-stepper/js/bs-stepper.min.js' %}"></script>
-<script src="{% static 'assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script>
-<script src="{% static 'assets/plugins/bootstrap-slider/bootstrap-slider.min.js' %}"></script>
-<script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/pdfmake/vfs_fonts.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
+    <script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bs-stepper/js/bs-stepper.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootstrap-slider/bootstrap-slider.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
 
-<script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
+    <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
 
-<script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
 
 {% endblock %}
