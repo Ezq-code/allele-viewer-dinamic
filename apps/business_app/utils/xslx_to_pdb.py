@@ -167,7 +167,7 @@ class XslxToPdb(ExcelReader):
                     z_value = row[f"Z{current_coordinate_index}"]
                     if pd.isna(x_value) or pd.isna(y_value) or pd.isna(z_value):
                         raise ValueError(
-                            f"Faltan elementos relacionados con las coordenadas. Revisar el alelo {allele_number}"
+                            f"Missing coordinate-related elements. Check allele {allele_number}"
                         )
                     memory_file.write(
                         ExcelNomenclators.get_atom_record_string(

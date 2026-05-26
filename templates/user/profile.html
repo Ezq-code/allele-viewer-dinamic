@@ -20,7 +20,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>{% blocktranslate %}Perfil{% endblocktranslate %}</h1>
+          <h1>{% blocktranslate %}Profile{% endblocktranslate %}</h1>
         </div>
         <!-- <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -52,13 +52,13 @@
 
               <ul class="list-group list-group-unbordered mb-3">
                 <li class="list-group-item">
-                  <b>{% blocktranslate %}Nombre{% endblocktranslate %}</b> <a class="float-right">
+                  <b>{% blocktranslate %}Name{% endblocktranslate %}</b> <a class="float-right">
                     <h6>{{ user.first_name }}</h6>
 
                   </a>
                 </li>
                 <li class="list-group-item">
-                  <b>{% blocktranslate %}Apellidos{% endblocktranslate %}</b> <a class="float-right">
+                  <b>{% blocktranslate %}Last Name{% endblocktranslate %}</b> <a class="float-right">
                     <h6>{{user.last_name}}</h6>
                   </a>
                 </li>
@@ -67,7 +67,7 @@
 
               <!-- <a href="" class="btn btn-primary btn-block" data-target="#modal-crear-usuario"><b>Follow</b></a> -->
               <button type="button" class="btn btn-danger" data-toggle="modal"
-                data-target="#modal-edit-profile">{% blocktranslate %}Editar{% endblocktranslate %}</button>
+                data-target="#modal-edit-profile">{% blocktranslate %}Edit{% endblocktranslate %}</button>
             </div>
             <!-- /.card-body -->
           </div>
@@ -81,13 +81,13 @@
           <div class="card">
             <div class="card-header p-2">
               <ul class="nav nav-pills">
-                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">{% blocktranslate %}Modalidad{% endblocktranslate %}
+                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">{% blocktranslate %}Modality{% endblocktranslate %}
                   </a></li>
-                <li class="nav-item"><a class="nav-link" href="#work" id="head-work" data-toggle="tab">{% blocktranslate %}Subir trabajos{% endblocktranslate %}</a>
+                <li class="nav-item"><a class="nav-link" href="#work" id="head-work" data-toggle="tab">{% blocktranslate %}Upload Works{% endblocktranslate %}</a>
                 </li>
                 <li class="nav-item"><a class="nav-link" id="head-timeline" href="#timeline"
-                    data-toggle="tab">{% blocktranslate %}Línea de tiempo{% endblocktranslate %}</a></li>
-                <li class="nav-item"><a class="nav-link"  id="" href="{% static 'assets/dist/document/NORMAS DE PRESENTACIÓN DE LAS PONENCIAS.pdf' %}">{% blocktranslate %}Normas de Presentación{% endblocktranslate %}</a></li>
+                    data-toggle="tab">{% blocktranslate %}Timeline{% endblocktranslate %}</a></li>
+                <li class="nav-item"><a class="nav-link"  id="" href="{% static 'assets/dist/document/NORMAS DE PRESENTACIÓN DE LAS PONENCIAS.pdf' %}">{% blocktranslate %}Presentation Guidelines{% endblocktranslate %}</a></li>
                     
               </ul>
             </div><!-- /.card-header -->
@@ -135,7 +135,7 @@
                   <form class="form-horizontal" id="form-workshop-ponents">
 
                     <div class="form-group row">
-                      <label class="col-sm-2 col-form-label" for="workshop">{% blocktranslate %}Taller{% endblocktranslate %}</label>
+                      <label class="col-sm-2 col-form-label" for="workshop">{% blocktranslate %}Workshop{% endblocktranslate %}</label>
                       <div class="col-sm-10">
                         <select class="form-control select2" id="workshop" style="width: 100%;" tabindex="-1"></select>
                         </select>
@@ -143,54 +143,54 @@
 
                     </div>
                     <div class="form-group row">
-                      <label for="work_spanish_title" class="col-sm-2 col-form-label">{% blocktranslate %}Título en español{% endblocktranslate %}</label>
+                      <label for="work_spanish_title" class="col-sm-2 col-form-label">{% blocktranslate %}Title in Spanish{% endblocktranslate %}</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" name="work_spanish_title" id="work_spanish_title"
-                          placeholder="{% blocktranslate %}Título en español{% endblocktranslate %}" required>
+                          placeholder="{% blocktranslate %}Title in Spanish{% endblocktranslate %}" required>
                       </div>
                     </div>
 
                     <div class="form-group row">
-                      <label for="work_spanish_summary" class="col-sm-2 col-form-label">{% blocktranslate %}Resumen en español{% endblocktranslate %}</label>
+                      <label for="work_spanish_summary" class="col-sm-2 col-form-label">{% blocktranslate %}Abstract in Spanish{% endblocktranslate %}</label>
                       <div class="col-sm-10">
                         <textarea class="form-control" id="work_spanish_summary" name="work_spanish_summary"
-                          placeholder="{% blocktranslate %}Resumen en español{% endblocktranslate %}" required></textarea>
+                          placeholder="{% blocktranslate %}Abstract in Spanish{% endblocktranslate %}" required></textarea>
                       </div>
                     </div>
                     <div class="form-group row">
-                      <label for="work_spanish_keywords" class="col-sm-2 col-form-label">{% blocktranslate %}Palabras claves{% endblocktranslate %}</label>
+                      <label for="work_spanish_keywords" class="col-sm-2 col-form-label">{% blocktranslate %}Keywords{% endblocktranslate %}</label>
                       <div class="col-sm-10">
                         <textarea class="form-control" id="work_spanish_keywords" name="work_spanish_keywords"
-                          placeholder="{% blocktranslate %}Palabras claves{% endblocktranslate %}" required></textarea>
+                          placeholder="{% blocktranslate %}Keywords{% endblocktranslate %}" required></textarea>
                       </div>
                     </div>
 
 
                     <div class="form-group row">
-                      <label for="work_english_title" class="col-sm-2 col-form-label">{% blocktranslate %}Título en inglés{% endblocktranslate %}</label>
+                      <label for="work_english_title" class="col-sm-2 col-form-label">{% blocktranslate %}Title in English{% endblocktranslate %}</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" id="work_english_title" name="work_english_title"
-                          placeholder="{% blocktranslate %}Título en inglés{% endblocktranslate %}" required>
+                          placeholder="{% blocktranslate %}Title in English{% endblocktranslate %}" required>
                       </div>
                     </div>
 
                     <div class="form-group row">
-                      <label for="work_english_summary" class="col-sm-2 col-form-label">{% blocktranslate %}Resumen en inglés{% endblocktranslate %}</label>
+                      <label for="work_english_summary" class="col-sm-2 col-form-label">{% blocktranslate %}Abstract in English{% endblocktranslate %}</label>
                       <div class="col-sm-10">
                         <textarea class="form-control" id="work_english_summary" name="work_english_summary"
-                          placeholder="{% blocktranslate %}Resumen en inglés{% endblocktranslate %}" required></textarea>
+                          placeholder="{% blocktranslate %}Abstract in English{% endblocktranslate %}" required></textarea>
                       </div>
                     </div>
                     <div class="form-group row">
-                      <label for="author_list" class="col-sm-2 col-form-label">Autores</label>
+                      <label for="author_list" class="col-sm-2 col-form-label">Authors</label>
                       <div class="col-sm-10">
                         <textarea class="form-control" id="author_list" name="author_list"
-                          placeholder="{% blocktranslate %}Listado de Autores, separados por comas{% endblocktranslate %}" required></textarea>
+                          placeholder="{% blocktranslate %}List of Authors, separated by commas{% endblocktranslate %}" required></textarea>
                       </div>
                     </div>
 
                     <div class="form-group row">
-                      <label for="DocumentCustomFile" class="col-sm-2 col-form-label">{% blocktranslate %}Subir documento{% endblocktranslate %}</label>
+                      <label for="DocumentCustomFile" class="col-sm-2 col-form-label">{% blocktranslate %}Upload Document{% endblocktranslate %}</label>
                       <div class="input-group col-sm-10">
                         <div class="custom-file">
                           <input type="file" class="document-file-input" id="DocumentCustomFile">
@@ -212,7 +212,7 @@
                     </div>
                     <div class="form-group row">
                       <div class="offset-sm-2 col-sm-10">
-                        <button type="submit" class="btn btn-danger">{% blocktranslate %}Enviar{% endblocktranslate %}</button>
+                        <button type="submit" class="btn btn-danger">{% blocktranslate %}Submit{% endblocktranslate %}</button>
                       </div>
                     </div>
                   </form>
@@ -242,7 +242,7 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">{% blocktranslate %}Editar perfil{% endblocktranslate %}</h4>
+          <h4 class="modal-title">{% blocktranslate %}Edit Profile{% endblocktranslate %}</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -252,31 +252,31 @@
           <div class="card-body">
             <div class="row">
               <div class="form-group col-md-6">
-                <label for="first_name">{% blocktranslate %}Nombre{% endblocktranslate %}</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="{% blocktranslate %}Entre el nombre{% endblocktranslate %}"
+                <label for="first_name">{% blocktranslate %}Name{% endblocktranslate %}</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="{% blocktranslate %}Enter your name{% endblocktranslate %}"
                   required>
               </div>
               <div class="form-group col-md-6">
-                <label for="last_name">{% blocktranslate %}Apellidos{% endblocktranslate %}</label>
-                <input type="text" class="form-control" id="last_name" placeholder="{% blocktranslate %}Entre los Apellidos{% endblocktranslate %}" required>
+                <label for="last_name">{% blocktranslate %}Last Name{% endblocktranslate %}</label>
+                <input type="text" class="form-control" id="last_name" placeholder="{% blocktranslate %}Enter your last name{% endblocktranslate %}" required>
               </div>
             </div>
             <div class="row">
               <div class="form-group col-md-6">
-                <label for="ci">{% blocktranslate %}Número de Identificación{% endblocktranslate %}</label>
+                <label for="ci">{% blocktranslate %}ID Number{% endblocktranslate %}</label>
                 <input type="text" class="form-control" id="ci" name="ci"
-                  placeholder="{% blocktranslate %}Entre el número de identificación{% endblocktranslate %}" required>
+                  placeholder="{% blocktranslate %}Enter your ID number{% endblocktranslate %}" required>
               </div>
 
               <div class="form-group col-md-6">
-                <label for="email">{% blocktranslate %}Correo{% endblocktranslate %}</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="{% blocktranslate %}Entre el correo{% endblocktranslate %}" required>
+                <label for="email">{% blocktranslate %}Email{% endblocktranslate %}</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="{% blocktranslate %}Enter your email{% endblocktranslate %}" required>
               </div>
 
             </div>
             <div class="row">
               <div class="form-group col-md-6">
-                <label>{% blocktranslate %}Género{% endblocktranslate %}</label>
+                <label>{% blocktranslate %}Gender{% endblocktranslate %}</label>
                 <select class="form-control" id="gender" name="gender">
                   <option value="F">F</option>
                   <option value="M">M</option>
@@ -285,7 +285,7 @@
 
 
               <div class="form-group col-md-6">
-                <label for="exampleInputFile">{% blocktranslate %}Subir Foto{% endblocktranslate %}</label>
+                <label for="exampleInputFile">{% blocktranslate %}Upload Photo{% endblocktranslate %}</label>
                 <div class="input-group">
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="customFile" accept="image/png, image/jpeg">
@@ -298,15 +298,15 @@
 
             <div class="row">
               <div class="form-group col-md-6">
-                <label>{% blocktranslate %}País{% endblocktranslate %}</label>
+                <label>{% blocktranslate %}Country{% endblocktranslate %}</label>
                 <select class="form-control select2" id="country" name="country" style="width: 100%;" tabindex="-1">
                 </select>
               </div>
 
               <div class="form-group col-md-6">
-                <label for="username2">{% blocktranslate %}Usuario{% endblocktranslate %}</label>
+                <label for="username2">{% blocktranslate %}Username{% endblocktranslate %}</label>
                 <input type="username2" class="form-control" id="username2" name="username2"
-                  placeholder="{% blocktranslate %}Entre el usuario{% endblocktranslate %}" required>
+                  placeholder="{% blocktranslate %}Enter your username{% endblocktranslate %}" required>
               </div>
             </div>
 
@@ -314,8 +314,8 @@
           </div>
           <!-- /.card-body -->
           <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-default" data-dismiss="modal">{% blocktranslate %}Cerrar{% endblocktranslate %}</button>
-            <button type="submit" class="btn btn-primary">{% blocktranslate %}Enviar{% endblocktranslate %}</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">{% blocktranslate %}Close{% endblocktranslate %}</button>
+            <button type="submit" class="btn btn-primary">{% blocktranslate %}Submit{% endblocktranslate %}</button>
           </div>
 
         </form>
