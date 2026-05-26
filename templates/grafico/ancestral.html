@@ -150,12 +150,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1> Formación de Alelos CYP2D6 </h1>
+          <h1> CYP2D6 Allele Formation </h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Alelos CYP2D6</li>
+            <li class="breadcrumb-item active">CYP2D6 Alleles</li>
           </ol>
         </div>
       </div>
@@ -177,7 +177,7 @@
               <i class="fas fa-2x fa-sync fa-spin"></i>
             </div>
             <div class="card-header">
-              <h3 class="card-title">Formación de Alelos CYP2D6</h3>
+              <h3 class="card-title">CYP2D6 Allele Formation</h3>
             </div>
             <div class="modal-body">
 
@@ -185,8 +185,8 @@
         <!-- Header -->
         <div class="row bg-primary text-white p-3 mb-4">
             <div class="col">
-                <h1><i class="fas fa-dna"></i> Formación de Alelos CYP2D6</h1>
-                <p class="mb-0">Organigrama genético mostrando la formación y variantes del gen CYP2D6</p>
+                <h1><i class="fas fa-dna"></i> CYP2D6 Allele Formation</h1>
+                <p class="mb-0">Genetic chart showing the formation and variants of the CYP2D6 gene</p>
             </div>
         </div>
         
@@ -194,13 +194,13 @@
         <div class="row">
             <div class="col-12">
                 <div class="controls-panel">
-                    <h5 class="mb-3"><i class="fas fa-dna"></i> Controles para Gestión de Alelos CYP2D6</h5>
+                    <h5 class="mb-3"><i class="fas fa-dna"></i> CYP2D6 Allele Management Controls</h5>
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="searchInput">Buscar Alelos:</label>
+                                <label for="searchInput">Search Alleles:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="searchInput" placeholder="Buscar por nombre o descripción...">
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Search by name or description...">
                                     <button class="btn btn-outline-secondary" type="button" onclick="searchNodes($('#searchInput').val())">
                                         <i class="fas fa-search"></i>
                                     </button>
@@ -209,27 +209,27 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="parentIdInput">ID Alelo Padre:</label>
-                                <input type="text" class="form-control" id="parentIdInput" placeholder="ID del alelo padre">
+                                <label for="parentIdInput">Parent Allele ID:</label>
+                                <input type="text" class="form-control" id="parentIdInput" placeholder="Parent allele ID">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="newNodeTitle">Nombre del Nuevo Alelo:</label>
-                                <input type="text" class="form-control" id="newNodeTitle" placeholder="Nombre del alelo">
+                                <label for="newNodeTitle">New Allele Name:</label>
+                                <input type="text" class="form-control" id="newNodeTitle" placeholder="Allele name">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="newNodeContent">Descripción del Alelo:</label>
-                                <input type="text" class="form-control" id="newNodeContent" placeholder="Descripción del alelo">
+                                <label for="newNodeContent">Allele Description:</label>
+                                <input type="text" class="form-control" id="newNodeContent" placeholder="Allele description">
                             </div>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <button class="btn btn-success me-2" onclick="addNewNodeFromForm()">
-                                <i class="fas fa-plus"></i> Agregar Alelo
+                                <i class="fas fa-plus"></i> Add Allele
                             </button>
                             <button class="btn btn-info me-2" onclick="exportOrgChart()">
                                 <i class="fas fa-download"></i> Exportar
@@ -239,7 +239,7 @@
                             </button>
                         </div>
                         <div class="col-md-6 text-end">
-                            <span class="badge bg-primary" id="nodeCount">Total Alelos: 0</span>
+                            <span class="badge bg-primary" id="nodeCount">Total Alleles: 0</span>
                             <span class="badge bg-success" id="selectedNode">Seleccionado: Ninguno</span>
                         </div>
                     </div>
@@ -269,41 +269,41 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-chart-pie"></i> Estadísticas de Alelos CYP2D6</h6>
+                        <h6 class="mb-0"><i class="fas fa-chart-pie"></i> CYP2D6 Allele Statistics</h6>
                     </div>
                     <div class="card-body">
-                        <p><strong>Nivel Máximo:</strong> <span id="maxLevel">0</span></p>
-                        <p><strong>Total de Alelos:</strong> <span id="totalNodes">0</span></p>
-                        <p><strong>Alelos con Variantes:</strong> <span id="nodesWithChildren">0</span></p>
+                        <p><strong>Max Level:</strong> <span id="maxLevel">0</span></p>
+                        <p><strong>Total Alleles:</strong> <span id="totalNodes">0</span></p>
+                        <p><strong>Alleles with Variants:</strong> <span id="nodesWithChildren">0</span></p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-info-circle"></i> Información del Organigrama Genético</h6>
+                        <h6 class="mb-0"><i class="fas fa-info-circle"></i> Genetic Chart Information</h6>
                     </div>
                     <div class="card-body">
-                        <p><strong>Tipo:</strong> Organigrama Genético</p>
-                        <p><strong>Gen:</strong> CYP2D6</p>
-                        <p><strong>Funcionalidad:</strong> Metabolismo de Fármacos</p>
+                        <p><strong>Type:</strong> Genetic Chart</p>
+                        <p><strong>Gene:</strong> CYP2D6</p>
+                        <p><strong>Functionality:</strong> Drug Metabolism</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
-                        <h6 class="mb-0"><i class="fas fa-cogs"></i> Acciones Rápidas para Alelos</h6>
+                        <h6 class="mb-0"><i class="fas fa-cogs"></i> Quick Actions for Alleles</h6>
                     </div>
                     <div class="card-body">
                         <button class="btn btn-sm btn-outline-primary w-100 mb-2" onclick="expandAll()">
-                            <i class="fas fa-expand"></i> Expandir Todo
+                            <i class="fas fa-expand"></i> Expand All
                         </button>
                         <button class="btn btn-sm btn-outline-secondary w-100 mb-2" onclick="collapseAll()">
-                            <i class="fas fa-compress"></i> Colapsar Todo
+                            <i class="fas fa-compress"></i> Collapse All
                         </button>
                         <button class="btn btn-sm btn-outline-info w-100" onclick="centerOrgChart()">
-                            <i class="fas fa-crosshairs"></i> Centrar Vista
+                            <i class="fas fa-crosshairs"></i> Center View
                         </button>
                     </div>
                 </div>
@@ -360,7 +360,7 @@
             var content = $('#newNodeContent').val();
             
             if (!parentId || !title || !content) {
-                showNotification('Por favor completa todos los campos', 'error');
+                showNotification('Please fill in all fields', 'error');
                 return;
             }
             
@@ -374,7 +374,7 @@
         
         // Función para resetear el organigrama
         function resetOrgChart() {
-            if (confirm('¿Estás seguro de que quieres resetear el organigrama?')) {
+            if (confirm('Are you sure you want to reset the chart?')) {
                 location.reload();
             }
         }
@@ -391,7 +391,7 @@
                     $btn.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
                 }
             });
-            showNotification('Todos los nodos han sido expandidos', 'success');
+            showNotification('All nodes have been expanded', 'success');
         }
         
         // Función para colapsar todos los nodos
@@ -406,7 +406,7 @@
                     $btn.find('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
                 }
             });
-            showNotification('Todos los nodos han sido colapsados', 'success');
+            showNotification('All nodes have been collapsed', 'success');
         }
         
         // Función para centrar la vista del organigrama
@@ -414,7 +414,7 @@
             var $orgchart = $('.orgchart');
             $orgchart.scrollTop($orgchart.height() / 2);
             $orgchart.scrollLeft($orgchart.width() / 2);
-            showNotification('Vista centrada', 'info');
+            showNotification('View centered', 'info');
         }
         
         // Función para actualizar estadísticas
@@ -433,7 +433,7 @@
             $('#totalNodes').text(totalNodes);
             $('#nodesWithChildren').text(nodesWithChildren);
             $('#maxLevel').text(maxLevel);
-            $('#nodeCount').text('Total Alelos: ' + totalNodes);
+            $('#nodeCount').text('Total Alleles: ' + totalNodes);
         }
         
         // Actualizar estadísticas cuando se carga la página

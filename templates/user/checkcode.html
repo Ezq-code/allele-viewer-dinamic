@@ -7,7 +7,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Caracol2023 | {% blocktranslate %}página de registro{% endblocktranslate %} </title>
+  <title>Caracol2023 | {% blocktranslate %}registration page{% endblocktranslate %} </title>
   <link rel="icon" type="image/png" href="{% static 'assets/spa/assets/img/logo.png' %}">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -54,7 +54,7 @@
     <!-- lockscreen credentials (contains the form) -->
     <form class="lockscreen-credentials">
       <div class="input-group">
-        <input type="text" class="form-control" id="codeinput" placeholder="{% blocktranslate %}Código{% endblocktranslate %}">
+        <input type="text" class="form-control" id="codeinput" placeholder="{% blocktranslate %}Code{% endblocktranslate %}">
 
         <div class="input-group-append">
           <button type="button" class="btn">
@@ -68,18 +68,18 @@
   </div>
   <!-- /.lockscreen-item -->
   <div class="help-block text-center">
-    <b><span id="user"></span></b> {% blocktranslate %}se ha enviado un código de confirmación al correo{% endblocktranslate %} <span id="email">xx</span>, {% blocktranslate %}este
-    código
-    expira en{% endblocktranslate %}
+    <b><span id="user"></span></b> {% blocktranslate %}a confirmation code has been sent to the email{% endblocktranslate %} <span id="email">xx</span>, {% blocktranslate %}this
+    code
+    expires in{% endblocktranslate %}
     <div class="lockscreen-logo">
-      <b> <span id="temporizador" class="text-black">2</span> </b><a href="" class="text-black">{% blocktranslate %}minutos{% endblocktranslate %}</a>
+      <b> <span id="temporizador" class="text-black">2</span> </b><a href="" class="text-black">{% blocktranslate %}minutes{% endblocktranslate %}</a>
     </div>
   </div>
   <div class="text-center">
     <span class="username text-bold" id="intento" style="color: brown;"></span>
   </div>
   <div class="lockscreen-footer text-center">
-    {% blocktranslate %}Diseñado por {% endblocktranslate %} <b><a href="https://adminlte.io" class="text-black"> HJHGJ
+    {% blocktranslate %}Designed by {% endblocktranslate %} <b><a href="https://adminlte.io" class="text-black"> HJHGJ
        GHJG</a></b><br>
 
   </div>

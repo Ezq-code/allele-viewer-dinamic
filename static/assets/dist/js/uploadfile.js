@@ -41,7 +41,7 @@ function loadGenes() {
         $(geneSelect).select2('destroy');
       }
       
-      geneSelect.innerHTML = '<option value="">Seleccione un gen</option>';
+      geneSelect.innerHTML = '<option value="">Select a gene</option>';
 
       response.data.results.forEach((gene) => {
         const option = document.createElement("option");
@@ -53,7 +53,7 @@ function loadGenes() {
       // Reinicializar Select2 después de cargar los genes
       $(geneSelect).select2({
         theme: 'bootstrap4',
-        placeholder: 'Seleccione un gen',
+        placeholder: 'Select a gene',
         allowClear: true,
         width: '100%',
         dropdownParent: $('#modal-crear-elemento'),
@@ -69,7 +69,7 @@ $(document).ready(function () {
   // Inicializar Select2 antes de cargar genes
   $('#gene').select2({
     theme: 'bootstrap4',
-    placeholder: 'Seleccione un gen',
+    placeholder: 'Select a gene',
     allowClear: true,
     width: '100%',
     dropdownParent: $('#modal-crear-elemento'),
