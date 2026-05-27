@@ -1,9 +1,10 @@
+from builtins import NotImplemented
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class ExcelNomenclators:
+class ExcelNomenclatorsBase:
     _atom_record_format = "{:<6s}{:>5d} {:<4s}{:1s}{:<3s} {:1s}{:>4d}{:1s}   {:8d}{:8d}{:8d}{:6.2f}{:6.2f}          {:>2s}{:>2s}"
     _conect_record_format = "{:<6s}{:5d}{:5d}{:5d}{:5d}"
     output_allele_column_name = "Allele"
@@ -40,7 +41,10 @@ class ExcelNomenclators:
     input_column_to_change_value_column_name = "Test1"
 
     input_sheet = "InValues"
-    output_sheet = "For3D"
+
+    output_sheet = NotImplemented
+    study_type = NotImplemented
+
     tmp_sheet = "Temp"
     constants_sheet = "Constants"
 
@@ -51,11 +55,11 @@ class ExcelNomenclators:
 
     @classmethod
     def get_atom_record_string(
-        cls, allele_number, element, x_coordinate, y_coordinate, z_coordinate
+        cls, row_number, element, x_coordinate, y_coordinate, z_coordinate
     ):
         return cls._atom_record_format.format(
             "ATOM",
-            allele_number,
+            row_number,
             element,
             "",
             "ALA",

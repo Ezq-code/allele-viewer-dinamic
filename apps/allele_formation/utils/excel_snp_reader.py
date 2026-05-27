@@ -83,7 +83,7 @@ class ExcelSNPReader:
             try:
                 first_row_output[column]
             except KeyError as e:
-                logger.error(f"{str(e)}")
+                logger.exception(f"{str(e)}")
                 raise ValueError(
                     f"Invalid file structure, the table on the sheet '{sheet}' "
                     f"has at least the next column missing: {column}."
@@ -157,19 +157,19 @@ class ExcelSNPReader:
         try:
             with transaction.atomic():
                 if not data:
-                    logger.error("No data to proccess")
+                    logger.exception("No data to proccess")
                     raise Exception(
                         "Check the excel file, remove any blank line at the first rows"
                     )
                 AlleleSNPInfo.objects.bulk_create(data)
         except IntegrityError as e:
-            logger.error(f"Integrity error while creating AlleleSNPInfo: {e}")
+            logger.exception(f"Integrity error while creating AlleleSNPInfo: {e}")
             raise ValueError(
                 "Integrity error while processing allele data. "
                 "Please check for duplicate entries."
             )
         except Exception as e:
-            logger.error(f"Unexpected error processing allele data: {e}")
+            logger.exception(f"Unexpected error processing allele data: {e}")
             raise ValueError(
                 "An unexpected error occurred while processing allele data. "
                 "Please check the file format and try again."
@@ -211,13 +211,13 @@ class ExcelSNPReader:
         try:
             with transaction.atomic():
                 if not data:
-                    logger.error("No data to proccess")
+                    logger.exception("No data to proccess")
                     raise Exception(
                         "Check the excel file, remove any blank line at the first rows"
                     )
                 model.objects.bulk_create(data)
         except Exception as e:
-            logger.error(f"Unexpected error processing allele data: {e}")
+            logger.exception(f"Unexpected error processing allele data: {e}")
             raise ValueError(
                 "An unexpected error occurred while processing allele data. "
                 "Please check the file format and try again."

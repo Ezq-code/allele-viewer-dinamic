@@ -37,7 +37,7 @@ def send_email_task(subject, message, html_message, recipient_list, from_email=N
         logger.info(f"Email sent successfully to {recipient_list}")
         return result
     except Exception as e:
-        logger.error(f"Error sending email: {str(e)}")
+        logger.exception(f"Error sending email: {str(e)}")
         raise
 
 

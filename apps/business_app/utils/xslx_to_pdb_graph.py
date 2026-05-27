@@ -1,14 +1,13 @@
 import io
 import logging
 
-from networkx import Graph
-import pandas as pd
+from .excel_nomenclators_base import ExcelNomenclatorsBase
+
 
 from apps.business_app.models.pdb_files import PdbFiles
-from apps.business_app.models.allele_node import AlleleNode
 from apps.business_app.models.site_configurations import SiteConfiguration
-from apps.business_app.utils.excel_reader import ExcelNomenclators, ExcelReader
-from django.core.cache import cache
+from apps.business_app.utils.excel_reader import ExcelReader
+from .graph_functions import extract_parents_tree, create_graph
 
 # Esta es la bilbioteca necesaria para trabajar con grafos
 import networkx as nx
@@ -16,50 +15,11 @@ import networkx as nx
 logger = logging.getLogger(__name__)
 
 
-def find_root_nodes(G):
-    """La raíz del grafo dirigido y conexo es el nodo
-    que solamente emite, o sea que su orden de out_degree es positivo
-    pero su orden de in_degree es igual a 0.
-    Encontrar la raíz de un grafo
-    Es importante pues en nuestro caso, la raíz indica cual nodo es el generador de todo el grafo
-    """
-    nodes_in_degree = [(k, v) for k, v in G.in_degree()]
-    root_list = []
-    for k, v in nodes_in_degree:
-        if v == 0:
-            root_list.append(k)
-    return root_list
-
-
-def extract_tree(G: Graph, to_return: list, node: int, graph_function):
-    if node in to_return:
-        return to_return
-
-    to_return.append(node)
-    for element in graph_function(node):
-        if element not in to_return:
-            extract_tree(G, to_return, element, graph_function)
-
-    return to_return
-
-
-def extract_parents_tree(G: Graph, to_return: list, node: int):
-    return extract_tree(
-        G=G, to_return=to_return, node=node, graph_function=G.predecessors
-    )
-
-
-def extract_children_tree(G: Graph, to_return: list, node: int):
-    return extract_tree(
-        G=G, to_return=to_return, node=node, graph_function=G.successors
-    )
-
-
 class XslxToPdbGraph(ExcelReader):
     def __init__(
         self, origin_file, global_configuration=None, uploaded_file_id=None
     ) -> None:
-        super().__init__(origin_file)
+        super().__init__(origin_file, None)
         self.uploaded_file_id = uploaded_file_id
         self.dim = (
             3  # La dimensión no la podemos variar (relacionado con x,y,z por eso tres)
@@ -74,75 +34,77 @@ class XslxToPdbGraph(ExcelReader):
         # Se crea una variable para el grafo
         self.G = nx.DiGraph()
 
-    def proccess_initial_file_data(self, *args):
-        logger.info("Proccessing initial file data for generate graph...")
+    def proccess_initial_file_data(self, uploaded_file_id, study):
         """
         Esta función recibe como parámetro el ide del fichero
         (uploaded_file_id) y almacena los datos del dataframe
-        'output_df' en en un grafo. Luego este grafo puede ser usado 
-        como base de datos de nodos y ejes. 
+        'output_df' en en un grafo. Luego este grafo puede ser usado
+        como base de datos de nodos y ejes.
         """
-        # Construyendo el grafo con una instancia de NetworkX
-        if (
-            AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-                uploaded_file_id=self.uploaded_file_id
-            )
-            in cache
-        ):
-            return
+        create_graph(self.G, study, ExcelNomenclatorsBase, self.output_df)
+        # logger.info("Proccessing initial file data for generate graph...")
 
-        edges_list = []
-        self.ilu_list = []
-        try:
-            # Loop over each row in the Excel file
-            for _, row in self.output_df.iterrows():
-                allele_name = row[
-                    ExcelNomenclators.output_allele_column_name
-                ]  # Solo modifique esta línea
-                allele_number = row[ExcelNomenclators.output_number_column_name]
+        # # Construyendo el grafo con una instancia de NetworkX
+        # if (
+        #     BaseAlleleNode.CACHE_KEY_GRAPH_FOR_STUDY.format(
+        #         study_id=study_id
+        #     )
+        #     in cache
+        # ):
+        #     return
 
-                if pd.isna(allele_name) or pd.isna(allele_number):
-                    break
-                # if self.ilu_search_criteria in allele_name:
-                #     self.ilu_list.append(allele_number)
-                #     continue
+        # edges_list = []
+        # self.ilu_list = []
+        # try:
+        #     # Loop over each row in the Excel file
+        #     for _, row in self.output_df.iterrows():
+        #         allele_name = row[
+        #             ExcelNomenclatorsBase.output_allele_column_name
+        #         ]  # Solo modifique esta línea
+        #         allele_number = row[ExcelNomenclatorsBase.output_number_column_name]
 
-                self.G.add_node(
-                    allele_number,
-                    name=allele_name,
-                    rs=row[ExcelNomenclators.output_rs_column_name],
-                    parent=row[ExcelNomenclators.output_number_column_name],
-                    region=row[ExcelNomenclators.output_region_column_name],
-                    # SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
-                    # date=row[ExcelNomenclators.output_date_column_name],
-                )
-                parents_info = row[ExcelNomenclators.output_parent_column_name]
-                parents = []
-                if not pd.isna(parents_info):
-                    parents = (
-                        (parent.strip()) for parent in str(parents_info).split(",")
-                    )
-                for parent in parents:
-                    if parent == allele_number:  # or allele_number in self.ilu_list:
-                        continue
-                    int_parent = int(parent)
-                    int_allele_number = int(allele_number)
-                    if (int_parent, int_allele_number) not in edges_list:
-                        edges_list.append((int_parent, int_allele_number))
+        #         if pd.isna(allele_name) or pd.isna(allele_number):
+        #             break
+        #         # if self.ilu_search_criteria in allele_name:
+        #         #     self.ilu_list.append(allele_number)
+        #         #     continue
 
-            # Recorrer el diccionario de nodos
-            self.G.add_edges_from(edges_list)  # Add a edges list
-            cache.set(
-                AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-                    uploaded_file_id=self.uploaded_file_id
-                ),
-                self.G,
-                timeout=None,
-            )
-            # edges_list = []
+        #         self.G.add_node(
+        #             allele_number,
+        #             name=allele_name,
+        #             rs=row[ExcelNomenclatorsBase.output_rs_column_name],
+        #             parent=allele_number,  # Allways include itself as parent
+        #             region=row[ExcelNomenclatorsBase.output_region_column_name],
+        #             # SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
+        #             # date=row[ExcelNomenclatorsBase.output_date_column_name],
+        #         )
+        #         parents_info = row[ExcelNomenclatorsBase.output_parent_column_name]
+        #         parents = []
+        #         if not pd.isna(parents_info):
+        #             parents = (
+        #                 (parent.strip()) for parent in str(parents_info).split(",")
+        #             )
+        #         for parent in parents:
+        #             if parent == allele_number:  # or allele_number in self.ilu_list:
+        #                 continue
+        #             int_parent = int(parent)
+        #             int_allele_number = int(allele_number)
+        #             if (int_parent, int_allele_number) not in edges_list:
+        #                 edges_list.append((int_parent, int_allele_number))
 
-        except Exception as e:
-            raise ValueError(f"An error occurred during file parsing: {e}.") from e
+        #     # Recorrer el diccionario de nodos
+        #     self.G.add_edges_from(edges_list)  # Add a edges list
+        #     cache.set(
+        #         BaseAlleleNode.CACHE_KEY_GRAPH_FOR_STUDY.format(
+        #             study_id=study_id
+        #         ),
+        #         self.G,
+        #         timeout=None,
+        #     )
+        #     # edges_list = []
+
+        # except Exception as e:
+        #     raise ValueError(f"An error occurred during file parsing: {e}.") from e
 
     def proccess_pdb_file(
         self, uploaded_file_id, pdb_filename_base, existing_pdb_file=None
@@ -179,7 +141,7 @@ class XslxToPdbGraph(ExcelReader):
                 for memory_file in pdb_files:
                     try:
                         memory_file.write(
-                            ExcelNomenclators.get_atom_record_string(
+                            ExcelNomenclatorsBase.get_atom_record_string(
                                 allele_number=int(node),
                                 element=element,
                                 x_coordinate=int(
@@ -204,7 +166,7 @@ class XslxToPdbGraph(ExcelReader):
                 try:
                     for memory_file in pdb_files:
                         memory_file.write(
-                            ExcelNomenclators.get_atom_connection_record_string(
+                            ExcelNomenclatorsBase.get_atom_connection_record_string(
                                 origin_index=int(edge[0]),
                                 destination_index=int(edge[1]),
                             )
@@ -227,7 +189,7 @@ class XslxToPdbGraph(ExcelReader):
                             file_content=file_content,
                             pdb_filename_base=pdb_filename_base,
                             suffix=f"graph_{index}",
-                            uploaded_file_id=uploaded_file_id,
+                            study_id=None,
                             kind=PdbFiles.KIND.GRAPH_GENERATED,
                         )
                     else:

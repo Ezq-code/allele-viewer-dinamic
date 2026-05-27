@@ -1,16 +1,7 @@
-import os
 import logging
 
-from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
-from apps.business_app.models import AllowedExtensions
-from apps.business_app.models.gene import Gene
-from apps.business_app.models.initial_file_data import InitialFileData
-from apps.business_app.tasks import process_uploaded_file_task
-from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDriveApi
-from django.core.cache import cache
 
 logger = logging.getLogger(__name__)
 

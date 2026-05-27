@@ -103,13 +103,12 @@ def test_uploaded_files_save_does_not_dispatch_task_for_pdb(tmp_path, settings):
 
 def test_allele_node_serializer_enqueues_task_when_graph_cache_miss():
     serializer = AlleleNodeSerializer()
-    obj = SimpleNamespace(study=SimpleNamespace(uploaded_file_id=999), number=10)
+    obj = SimpleNamespace(study=SimpleNamespace(id=999), number=10)
+    obj.study_id = 999
 
-    graph_key = AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-        uploaded_file_id=obj.study.uploaded_file_id
-    )
+    graph_key = AlleleNode.CACHE_KEY_GRAPH_FOR_STUDY.format(study_id=obj.study_id)
     cache_key = AlleleNode.CACHE_KEY_DESCENDANTS.format(
-        uploaded_file_id=obj.study.uploaded_file_id,
+        study_id=obj.study.id,
         number=obj.number,
     )
     cache.delete(graph_key)
@@ -121,21 +120,20 @@ def test_allele_node_serializer_enqueues_task_when_graph_cache_miss():
         result = serializer.get_predecessors(obj)
 
     assert result == []
-    mocked_task.assert_called_once_with(obj.study.uploaded_file_id)
+    mocked_task.assert_called_once_with(obj.study.id)
     assert cache.get(cache_key) is None
 
 
 def test_allele_node_serializer_uses_cached_graph_without_enqueuing_task():
     serializer = AlleleNodeSerializer()
-    obj = SimpleNamespace(study=SimpleNamespace(uploaded_file_id=1001), number=2)
+    obj = SimpleNamespace(study=SimpleNamespace(id=1001), number=2)
+    obj.study_id = 1001
     graph = nx.DiGraph()
     graph.add_edge(1, 2)
 
-    graph_key = AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-        uploaded_file_id=obj.study.uploaded_file_id
-    )
+    graph_key = AlleleNode.CACHE_KEY_GRAPH_FOR_STUDY.format(study_id=obj.study_id)
     cache_key = AlleleNode.CACHE_KEY_DESCENDANTS.format(
-        uploaded_file_id=obj.study.uploaded_file_id,
+        study_id=obj.study.id,
         number=obj.number,
     )
     cache.set(graph_key, graph, timeout=None)
@@ -348,13 +346,12 @@ def test_dry_refactor_keeps_existing_concrete_model_fields():
 def test_protein_node_serializer_enqueues_task_when_graph_cache_miss():
     """Test that ProteinNodeSerializer requests graph cache task on cache miss."""
     serializer = ProteinNodeSerializer()
-    obj = SimpleNamespace(study=SimpleNamespace(uploaded_file_id=999), number=10)
+    obj = SimpleNamespace(study=SimpleNamespace(id=999), number=10)
+    obj.study_id = 999
 
-    graph_key = ProteinNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-        uploaded_file_id=obj.study.uploaded_file_id
-    )
+    graph_key = ProteinNode.CACHE_KEY_GRAPH_FOR_STUDY.format(study_id=obj.study_id)
     cache_key = ProteinNode.CACHE_KEY_DESCENDANTS.format(
-        uploaded_file_id=obj.study.uploaded_file_id,
+        study_id=obj.study.id,
         number=obj.number,
     )
     cache.delete(graph_key)
@@ -366,22 +363,21 @@ def test_protein_node_serializer_enqueues_task_when_graph_cache_miss():
         result = serializer.get_predecessors(obj)
 
     assert result == []
-    mocked_task.assert_called_once_with(obj.study.uploaded_file_id)
+    mocked_task.assert_called_once_with(obj.study.id)
     assert cache.get(cache_key) is None
 
 
 def test_protein_node_serializer_uses_cached_graph_without_enqueuing_task():
     """Test that ProteinNodeSerializer uses cached graph without requesting new computation."""
     serializer = ProteinNodeSerializer()
-    obj = SimpleNamespace(study=SimpleNamespace(uploaded_file_id=1001), number=2)
+    obj = SimpleNamespace(study=SimpleNamespace(id=1001), number=2)
+    obj.study_id = 1001
     graph = nx.DiGraph()
     graph.add_edge(1, 2)
 
-    graph_key = ProteinNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-        uploaded_file_id=obj.study.uploaded_file_id
-    )
+    graph_key = ProteinNode.CACHE_KEY_GRAPH_FOR_STUDY.format(study_id=obj.study.id)
     cache_key = ProteinNode.CACHE_KEY_DESCENDANTS.format(
-        uploaded_file_id=obj.study.uploaded_file_id,
+        study_id=obj.study.id,
         number=obj.number,
     )
     cache.set(graph_key, graph, timeout=None)

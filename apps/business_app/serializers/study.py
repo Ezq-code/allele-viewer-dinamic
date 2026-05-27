@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from apps.business_app.serializers.pdb_files import PdbFilesSerializer
+from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 
 from apps.business_app.models.study import Study
 
@@ -10,6 +12,8 @@ class StudySerializer(serializers.ModelSerializer):
         source="get_study_type_display",
         read_only=True,
     )
+    pdb_files = PdbFilesSerializer(many=True, read_only=True)
+    study_allele_nodes = AlleleNodeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Study
@@ -21,6 +25,8 @@ class StudySerializer(serializers.ModelSerializer):
             "successfull_load",
             "created_at",
             "extra_info",
+            "pdb_files",
+            "study_allele_nodes",
         ]
         read_only_fields = [
             "id",

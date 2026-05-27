@@ -69,7 +69,7 @@ class AlleleMappingFiles(models.Model):
                 process_allele_mapping_file_task.delay(file.path, self.id)
 
             except Exception as e:
-                logger.error(f"An error occurred: {e}", exc_info=True)
+                logger.exception(f"An error occurred: {e}", exc_info=True)
 
                 self.delete()
                 raise e

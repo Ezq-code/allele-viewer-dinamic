@@ -161,6 +161,7 @@ class StudyAdmin(admin.ModelAdmin):
         "uploaded_file",
         "study_type",
         "successfull_load",
+        "extra_info",
         "created_at",
     ]
     fields = [
@@ -168,29 +169,6 @@ class StudyAdmin(admin.ModelAdmin):
         "study_type",
         "successfull_load",
         "extra_info",
-    ]
-    fields = [
-        "number",
-        "element",
-        "allele",
-        "is_final_for_allele",
-        "rs",
-        "uploaded_file",
-        "timeline_appearence",
-        "frec_afr_amr",
-        "frec_amr",
-        "frec_csa",
-        "frec_eas",
-        "frec_eur",
-        "frec_lat",
-        "frec_nea",
-        "frec_oce",
-        "frec_ssa",
-        "frec_afr_eas",
-        "frec_afr_swe",
-        "frec_afr_nor",
-        "frec_ca",
-        "frec_sa",
     ]
 
 
@@ -396,7 +374,7 @@ class UploadedFilesAdmin(admin.ModelAdmin):
         try:
             obj.save()
         except Exception as e:
-            logger.error(f"{str(e)}")
+            logger.exception(f"{str(e)}")
             # Display the exception in the admin interface
             self.message_user(request, f"{str(e)}", level="error")
 
@@ -408,7 +386,7 @@ class PdbFilesAdmin(admin.ModelAdmin):
         "id",
         "custom_name",
         "description",
-        "original_file",
+        "study",
         "pdb_content",
         "kind",
     ]
@@ -418,7 +396,7 @@ class PdbFilesAdmin(admin.ModelAdmin):
         "kind",
     ]
     list_filter = [
-        "original_file__gene__name",
+        "study__uploaded_file__gene__name",
     ]
 
 

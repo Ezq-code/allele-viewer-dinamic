@@ -13624,7 +13624,7 @@ class Command(BaseCommand):
                 disorder.genes.add(gene)
                 gene_group.genes.add(gene)
             except Exception as ex:
-                logger.error(f"Error processing line {line}: {ex}")
+                logger.exception(f"Error processing line {line}: {ex}")
                 continue
         GeneStatusMiddle.objects.bulk_create(gene_status_middle_list)
         logger.info("Successfully loaded gene-disorder associations.")

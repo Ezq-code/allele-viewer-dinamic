@@ -548,16 +548,16 @@ function poblarArchivosPorGen(geneId) {
     return;
   }
   axios
-    .get("/business-gestion/uploaded-files/?gene=" + geneId)
+    .get("/business-gestion/study/?uploaded_file__gene=" + geneId)
     .then(function (response) {
       globalData = response.data.results;
       localStorage.setItem("globalData", globalData);
       console.log("✌️response.data.results --->", response.data.results);
       console.log("✌️globalData --->", globalData);
-      response.data.results.forEach(function (file) {
+      response.data.results.forEach(function (study) {
         const option = document.createElement("option");
-        option.value = file.id;
-        option.textContent = file.custom_name;
+        option.value = study.id;
+        option.textContent = study.study_type_display;
         selectfile.appendChild(option);
       });
       // Si hay archivos, poblar los pdb del primero
@@ -933,7 +933,7 @@ function child() {
   const uploadFileId = localStorage.getItem("uploadFileId");
 
   const elemento = globalData[findPosition(globalData, uploadFileId)];
-  datos = elemento.allele_nodes;
+  datos = elemento.study_allele_nodes;
 
   datos.forEach(({ number, stick_radius, sphere_radius }) => {
     viewer.setStyle(

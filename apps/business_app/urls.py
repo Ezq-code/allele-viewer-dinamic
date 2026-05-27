@@ -104,6 +104,12 @@ uploaded_files_router.register(
     parents_query_lookups=["uploaded_file"],
 )
 
+router.register(
+    "study",
+    StudyViewSet,
+    basename="study",
+)
+
 uploaded_files_router.register(
     "study-by-uploaded-file",
     StudyViewSet,
@@ -118,11 +124,6 @@ uploaded_files_router.register(
     parents_query_lookups=["uploaded_file"],
 )
 
-router.register(
-    "studies",
-    StudyViewSet,
-    basename="study",
-)
 router.register(
     "allele-nodes",
     AlleleNodeViewSet,

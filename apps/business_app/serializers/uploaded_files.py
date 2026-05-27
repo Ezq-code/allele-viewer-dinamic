@@ -33,7 +33,7 @@ class SimpleListUploadedFilesSerializer(serializers.ModelSerializer):
         try:
             return super().save()
         except Exception as e:
-            logger.error(f"{str(e)}")
+            logger.exception(f"{str(e)}")
             raise serializers.ValidationError(e) from e
 
 

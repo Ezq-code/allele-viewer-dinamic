@@ -5,9 +5,9 @@ from django.utils.translation import gettext_lazy as _
 class BaseAlleleNode(models.Model):
     """Abstract base model with shared node fields for allele-like entities."""
 
-    CACHE_KEY_GRAPH_FOR_FILE = "graph_for_{uploaded_file_id}"
-    CACHE_KEY_DESCENDANTS = "descendants_for_{uploaded_file_id}-{number}"
-    CACHE_KEY_SUCESSORS = "sucessors_for_{uploaded_file_id}-{number}"
+    CACHE_KEY_GRAPH_FOR_STUDY = "graph_for_{study_id}"
+    CACHE_KEY_DESCENDANTS = "descendants_for_{study_id}-{number}"
+    CACHE_KEY_SUCESSORS = "sucessors_for_{study_id}-{number}"
     CACHE_KEY_LIST_OR_SEARCH = "allele_nodes_list_{parent_lookup_key}{search_criteria}"
 
     study = models.ForeignKey(
