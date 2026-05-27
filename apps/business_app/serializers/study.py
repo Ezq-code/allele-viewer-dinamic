@@ -13,7 +13,7 @@ class StudySerializer(serializers.ModelSerializer):
         read_only=True,
     )
     pdb_files = PdbFilesSerializer(many=True, read_only=True)
-    study_allele_nodes = AlleleNodeSerializer(many=True, read_only=True)
+    allele_nodes = AlleleNodeSerializer(source="study_allele_nodes", many=True, read_only=True)
 
     class Meta:
         model = Study
@@ -26,7 +26,7 @@ class StudySerializer(serializers.ModelSerializer):
             "created_at",
             "extra_info",
             "pdb_files",
-            "study_allele_nodes",
+            "allele_nodes",
         ]
         read_only_fields = [
             "id",

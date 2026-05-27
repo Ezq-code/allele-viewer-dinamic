@@ -933,7 +933,7 @@ function child() {
   const uploadFileId = localStorage.getItem("uploadFileId");
 
   const elemento = globalData[findPosition(globalData, uploadFileId)];
-  datos = elemento.study_allele_nodes;
+  datos = elemento.allele_nodes;
 
   datos.forEach(({ number, stick_radius, sphere_radius }) => {
     viewer.setStyle(
