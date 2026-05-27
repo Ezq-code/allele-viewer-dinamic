@@ -7,7 +7,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Caracol2023 | {% blocktranslate %}página de registro{% endblocktranslate %}</title>
+  <title>Caracol2023 | {% blocktranslate %}registration page{% endblocktranslate %}</title>
   <link rel="icon" type="image/png" href="{% static 'assets/spa/assets/img/logo.png' %}">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -86,31 +86,31 @@
           <div class="card-body">
             <div class="row">
               <div class="form-group col-md-6">
-                <label for="first_name">{% blocktranslate %}Nombre{% endblocktranslate %}</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="{% blocktranslate %}Entre el nombre{% endblocktranslate %}"
+                <label for="first_name">{% blocktranslate %}Name{% endblocktranslate %}</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="{% blocktranslate %}Enter your name{% endblocktranslate %}"
                   required>
               </div>
               <div class="form-group col-md-6">
-                <label for="last_name">{% blocktranslate %}Apellidos{% endblocktranslate %}</label>
-                <input type="text" class="form-control" id="last_name" placeholder="{% blocktranslate %}Entre los Apellidos{% endblocktranslate %}" required>
+                <label for="last_name">{% blocktranslate %}Last Name{% endblocktranslate %}</label>
+                <input type="text" class="form-control" id="last_name" placeholder="{% blocktranslate %}Enter your last name{% endblocktranslate %}" required>
               </div>
             </div>
             <div class="row">
               <div class="form-group col-md-6">
-                <label for="ci">{% blocktranslate %}Número de Identificación{% endblocktranslate %}</label>
+                <label for="ci">{% blocktranslate %}ID Number{% endblocktranslate %}</label>
                 <input type="text" class="form-control" id="ci" name="ci"
-                  placeholder="{% blocktranslate %}Entre el número de identificación{% endblocktranslate %}" required>
+                  placeholder="{% blocktranslate %}Enter your ID number{% endblocktranslate %}" required>
               </div>
 
               <div class="form-group col-md-6">
-                <label for="email">{% blocktranslate %}Correo{% endblocktranslate %}</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="{% blocktranslate %}Entre el email{% endblocktranslate %}" required>
+                <label for="email">{% blocktranslate %}Email{% endblocktranslate %}</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="{% blocktranslate %}Enter your email{% endblocktranslate %}" required>
               </div>
 
             </div>
             <div class="row">
               <div class="form-group col-md-6">
-                <label>{% blocktranslate %}Género{% endblocktranslate %}</label>
+                <label>{% blocktranslate %}Gender{% endblocktranslate %}</label>
                 <select class="form-control" id="gender" name="gender">
                   <option value="F">F</option>
                   <option value="M">M</option>
@@ -119,7 +119,7 @@
 
 
               <div class="form-group col-md-6">
-                <label for="exampleInputFile">{% blocktranslate %}Subir Foto{% endblocktranslate %}</label>
+                <label for="exampleInputFile">{% blocktranslate %}Upload Photo{% endblocktranslate %}</label>
                 <div class="input-group">
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="customFile" accept="image/png, image/jpeg">
@@ -131,40 +131,40 @@
 
             <div class="row">
               <div class="form-group col-md-6">
-                <label>{% blocktranslate %}País{% endblocktranslate %}</label>
+                <label>{% blocktranslate %}Country{% endblocktranslate %}</label>
                 <select class="form-control select2" id="country" style="width: 100%;" tabindex="-1">
                 </select>
               </div>
               <div class="form-group col-md-6">
-                <label for="username2">{% blocktranslate %}Usuario{% endblocktranslate %}</label>
+                <label for="username2">{% blocktranslate %}Username{% endblocktranslate %}</label>
                 <input type="username2" class="form-control" id="username2" name="username2"
-                  placeholder="{% blocktranslate %}Entre el usuario{% endblocktranslate %}" required>
+                  placeholder="{% blocktranslate %}Enter your username{% endblocktranslate %}" required>
               </div>
             </div>
 
             <div class="form-check" id="credencial" style="display: none;">
               <input class="form-check-input" type="checkbox" id="checkcredencial">
-              <label class="form-check-label">{% blocktranslate %}Editar Contraseña{% endblocktranslate %}</label>
+              <label class="form-check-label">{% blocktranslate %}Edit Password{% endblocktranslate %}</label>
               <br>
             </div>
 
 
             <div class="row">
               <div class="form-group col-md-6">
-                <label for="password">{% blocktranslate %}Contraseña{% endblocktranslate %}</label>
-                <input type="password" class="form-control" name="password" id="password" placeholder="{% blocktranslate %}Contraseña{% endblocktranslate %}"
+                <label for="password">{% blocktranslate %}Password{% endblocktranslate %}</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="{% blocktranslate %}Password{% endblocktranslate %}"
                   required>
               </div>
               <div class="form-group col-md-6">
-                <label for="inputPasswordValidate">{% blocktranslate %}Repetir Contraseña{% endblocktranslate %}</label>
+                <label for="inputPasswordValidate">{% blocktranslate %}Repeat Password{% endblocktranslate %}</label>
                 <input type="password" class="form-control" name="inputPasswordValidate" id="inputPasswordValidate"
-                  placeholder="{% blocktranslate %}Contraseña{% endblocktranslate %}" required>
+                  placeholder="{% blocktranslate %}Password{% endblocktranslate %}" required>
               </div>
             </div>
           </div>
           <!-- /.card-body -->
           <div class="modal-footer justify-content-between">
-            <button type="submit" class="btn btn-primary float-right">{% blocktranslate %}Enviar{% endblocktranslate %}</button>
+            <button type="submit" class="btn btn-primary float-right">{% blocktranslate %}Submit{% endblocktranslate %}</button>
           </div>
 
         </form>
@@ -172,7 +172,7 @@
 
         <div class="spinner-overlay">
           <div class="spinner"></div>
-          <div class="spinner-text">{% blocktranslate %}Estamos trabajando en su perfil{% endblocktranslate %}</div>
+          <div class="spinner-text">{% blocktranslate %}We are processing your profile{% endblocktranslate %}</div>
         </div>
 
       </div>

@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 def excel_upload_schema():
     """Decorador para endpoints que reciben archivos Excel"""
     return extend_schema(
-        summary="Subir archivo Excel",
-        description="Sube un archivo Excel para procesar datos genéticos",
+        summary="Upload Excel file",
+        description="Upload an Excel file to process genetic data",
         request={
             "multipart/form-data": {
                 "type": "object",
@@ -29,11 +29,11 @@ def excel_upload_schema():
                     "archivo": {
                         "type": "string",
                         "format": "binary",
-                        "description": "Archivo Excel (.xlsx, .xls) con columnas: Gene, Cord, Valor, Color, Protein, Alleleasoc, Species, Variant",
+                        "description": "Excel file (.xlsx, .xls) with columns: Gene, Cord, Valor, Color, Protein, Alleleasoc, Species, Variant",
                     },
                     "nombre_archivo": {
                         "type": "string",
-                        "description": "Nombre descriptivo para el archivo (opcional)",
+                        "description": "Descriptive name for the file (optional)",
                         "required": False,
                     },
                 },
@@ -42,7 +42,7 @@ def excel_upload_schema():
         },
         responses={
             201: {
-                "description": "Archivo procesado exitosamente",
+                "description": "File processed successfully",
                 "content": {
                     "application/json": {
                         "schema": {
@@ -132,7 +132,7 @@ class UploadExcelView(APIView):
             logger.info(resultados)
             return Response(
                 {
-                    "mensaje": f"Archivo {nombre_archivo} procesado exitosamente",
+                    "mensaje": f"File {nombre_archivo} processed successfully",
                     #'resultados': resultados
                 },
                 status=status.HTTP_201_CREATED,
@@ -140,6 +140,6 @@ class UploadExcelView(APIView):
 
         except Exception as e:
             return Response(
-                {"error": f"Error al procesar el archivo: {str(e)}"},
+                {"error": f"Error processing the file: {str(e)}"},
                 status=status.HTTP_400_BAD_REQUEST,
             )

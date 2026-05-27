@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-/* Chips un poco m�s compactos */
+/* Chips un poco más compactos */
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
   min-height: 25px !important; /*calc(1.8125rem + 2px); */ /* altura aproximada de .form-control-sm en Bootstrap 4 */
   height: 25px !important;
@@ -60,7 +60,7 @@
   border-radius: 3px;
 }
 
-/* Estilo para el gr�fico de pastel en el modal */
+/* Estilo para el gráfico de pastel en el modal */
 .pie-slice {
   cursor: pointer;
   transition: opacity 0.2s;
@@ -68,4 +68,51 @@
 
 .pie-slice:hover {
   opacity: 0.8;
+}
+
+/* Centrar etiquetas nativas del slider */
+.slider .slider-tick-label {
+    text-align: center !important;
+    white-space: nowrap;
+    font-size: 0.7rem;          /* ajustable */
+    color: #555;                /* opcional */
+    margin-top: 4px;            /* separación vertical */
+}
+
+/* ------------------------------ */
+/*   Barra de filtros flexible    */
+/* ------------------------------ */
+
+/* Asegura que la barra de filtros use todo el ancho y sea flexible */
+.card-tools {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;      /* permite que los filtros bajen a la siguiente línea si no caben */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;                     /* espacio uniforme entre elementos, soportado en navegadores modernos */
+}
+
+/* Para navegadores que no soporten gap en flex, añadimos un margen lateral a cada hijo */
+.card-tools > * {
+    margin-right: 0.5rem;
+}
+
+/* El último elemento no necesita margen derecho extra */
+.card-tools > *:last-child {
+    margin-right: 0;
+}
+
+/* Ajuste adicional para que el input del slider no se salga */
+
+
+/* ------------------------------ */
+/*        Mapa responsivo         */
+/* ------------------------------ */
+
+#map {
+    max-width: 90% !important;      /* evita que el mapa se salga del contenedor */
+    width: 90% !important;
+    height: 590px;
+    margin: 0 auto;
 }

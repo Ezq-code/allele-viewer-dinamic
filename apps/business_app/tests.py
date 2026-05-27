@@ -146,12 +146,16 @@ def test_allele_node_serializer_uses_cached_graph_without_enqueuing_task():
 
 
 def test_uploaded_files_serializer_exposes_allele_nodes_field():
-    serializer = UploadedFilesSerializer(context={"view": SimpleNamespace(action="list")})
+    serializer = UploadedFilesSerializer(
+        context={"view": SimpleNamespace(action="list")}
+    )
     assert "allele_nodes" in serializer.fields
 
 
 def test_uploaded_files_serializer_does_not_implement_get_allele_nodes_method():
-    serializer = UploadedFilesSerializer(context={"view": SimpleNamespace(action="create")})
+    serializer = UploadedFilesSerializer(
+        context={"view": SimpleNamespace(action="create")}
+    )
     assert not hasattr(serializer, "get_allele_nodes")
 
 
@@ -159,7 +163,9 @@ def test_uploaded_files_serializer_does_not_implement_get_allele_nodes_method():
 def test_gene_list_cache_version_bumps_on_gene_change():
     cache.clear()
     client = APIClient()
-    GeneStatus.objects.create(name="Completeness", type=GeneStatus.TypeRepresentation.PERCENT)
+    GeneStatus.objects.create(
+        name="Completeness", type=GeneStatus.TypeRepresentation.PERCENT
+    )
     gene = Gene.objects.create(name="GeneCache01", description="before")
 
     list_url = reverse("gene-list")
@@ -176,7 +182,9 @@ def test_gene_list_cache_version_bumps_on_gene_change():
 
     second_response = client.get(list_url)
     assert second_response.status_code == 200
-    row = next(item for item in second_response.data["results"] if item["id"] == gene.id)
+    row = next(
+        item for item in second_response.data["results"] if item["id"] == gene.id
+    )
     assert row["description"] == "after"
 
 
@@ -184,7 +192,9 @@ def test_gene_list_cache_version_bumps_on_gene_change():
 def test_gene_list_cache_version_bumps_on_gene_status_middle_change():
     cache.clear()
     client = APIClient()
-    status = GeneStatus.objects.create(name="Quality", type=GeneStatus.TypeRepresentation.PERCENT)
+    status = GeneStatus.objects.create(
+        name="Quality", type=GeneStatus.TypeRepresentation.PERCENT
+    )
     gene = Gene.objects.create(name="GeneCache02")
     gsm = GeneStatusMiddle.objects.get(gene=gene, gene_status=status)
 
@@ -201,14 +211,18 @@ def test_gene_list_cache_version_bumps_on_gene_status_middle_change():
 
     second_response = client.get(list_url)
     assert second_response.status_code == 200
-    row = next(item for item in second_response.data["results"] if item["id"] == gene.id)
+    row = next(
+        item for item in second_response.data["results"] if item["id"] == gene.id
+    )
     assert row["status"] == 77
 
 
 @pytest.mark.django_db
 def test_gene_list_cache_version_bumps_on_m2m_changes():
     cache.clear()
-    GeneStatus.objects.create(name="Stability", type=GeneStatus.TypeRepresentation.PERCENT)
+    GeneStatus.objects.create(
+        name="Stability", type=GeneStatus.TypeRepresentation.PERCENT
+    )
     gene = Gene.objects.create(name="GeneCache03")
     baseline_version = get_gene_list_cache_version()
 
@@ -224,7 +238,9 @@ def test_gene_list_cache_version_bumps_on_m2m_changes():
 @pytest.mark.django_db
 def test_gene_list_cache_version_key_exists_after_first_read():
     cache.clear()
-    GeneStatus.objects.create(name="Coverage", type=GeneStatus.TypeRepresentation.PERCENT)
+    GeneStatus.objects.create(
+        name="Coverage", type=GeneStatus.TypeRepresentation.PERCENT
+    )
     Gene.objects.create(name="GeneCache04")
 
     assert cache.get(GENE_LIST_VERSION_KEY) is not None

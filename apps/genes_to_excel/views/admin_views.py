@@ -42,8 +42,8 @@ class ClearAppDataView(APIView):
                 )
 
         except Exception as e:
-            logger.error(f"Error al eliminar datos: {str(e)}")
+            logger.error(f"Error deleting data: {str(e)}")
             return Response(
-                {"error": "Error al eliminar datos", "detail": str(e)},
+                {"error": "Error deleting data", "detail": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
