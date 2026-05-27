@@ -122,7 +122,7 @@ function loadGenes(selectedGene = "") {
         $geneSelect.select2("destroy");
       }
 
-      geneSelect.innerHTML = '<option value="">Seleccione un gen</option>';
+      geneSelect.innerHTML = '<option value="">Select a gene</option>';
 
       genes.forEach((gene) => {
         const option = document.createElement("option");

@@ -56,7 +56,7 @@ class CaracteristicaGenViewSet(
         gen_nombre = request.query_params.get('gen')
         
         if not gen_nombre:
-            return Response({'error': 'Se requiere el parámetro gen'}, status=400)
+            return Response({'error': 'The gene parameter is required'}, status=400)
         
         # Obtener todos los registros del gen
         queryset = self.get_queryset().filter(gen__name=gen_nombre)

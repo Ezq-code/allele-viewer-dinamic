@@ -74,7 +74,7 @@
   <div class="modal-dialog">
     <div class="modal-content bg-danger">
       <div class="modal-header">
-        <h4 class="modal-title">Eliminar Ficheros</h4>
+        <h4 class="modal-title">Delete Files</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -85,7 +85,7 @@
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-outline-light" data-dismiss="modal"
-          onclick="function_delete(selected_id)">Eliminar</button>
+          onclick="function_delete(selected_id)">Delete</button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -101,7 +101,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="staticBackdropLabel">Crear Ficheros</h4>
+        <h4 class="modal-title" id="staticBackdropLabel">Create Files</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -111,12 +111,12 @@
         <div class="card-body">
 
           <div class="form-group col-md-12">
-            <label for="name">Nombre</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Entre el nombre" required>
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter the name" required>
           </div>
          
           <div class="form-group col-md-12">
-            <label for="customFile">Subir Fichero</label>
+            <label for="customFile">Upload File</label>
             <div class="input-group">
               <div class="custom-file">
                 <input type="file" class="custom-file-input" id="customFile" accept=" application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel.sheet.macroEnabled.12">
@@ -125,14 +125,14 @@
             </div>
           </div>
           <div class="form-group col-md-12">
-            <label for="description">Descripción</label>
-            <textarea class="form-control" id="description" placeholder="Entre la descripción "></textarea>
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" placeholder="Enter the description "></textarea>
           </div>
 
           <div class="form-group col-md-12">
-            <label for="gene">Gen</label>
+            <label for="gene">Gene</label>
             <select class="form-control select2" id="gene" name="gene" style="width: 100%;" required>
-              <option value="">Seleccione un gen</option>
+              <option value="">Select a gene</option>
             </select>
           </div>
         </div>
@@ -140,7 +140,7 @@
         <!-- /.card-body -->
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Enviar</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </div>
 
       </form>
