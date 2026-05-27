@@ -234,7 +234,7 @@ function viewRingsFrom(axis) {
   // Permite visualizar el gráfico desde el eje seleccionado usando 3Dmol.js
   const validAxes = ["x", "y", "z"];
   if (!validAxes.includes(axis)) {
-    console.error("Eje no válido. Debe ser 'x', 'y' o 'z'.");
+    console.error("Invalid axis. Must be 'x', 'y', or 'z'.");
     return;
   }
 
@@ -431,7 +431,7 @@ function viewRingsFrom2(axis) {
       eje: "z",
     });
   } else {
-    console.error("Eje no válido. Debe ser 'x', 'y' o 'z'.");
+    console.error("Invalid axis. Must be 'x', 'y', or 'z'.");
   }
 
   viewer.render();
@@ -479,7 +479,7 @@ $(function () {
     });
     var celery_task_channel = pusher.subscribe("celery-task-channel");
     celery_task_channel.bind("successful-upload-3d-excel", function (data) {
-      console.log("Nuevo archivo subido, recargando genes...", data);
+      console.log("New file uploaded, reloading genes...", data);
       const selectGene = document.getElementById("selectGene");
       selectGene.innerHTML = "";
       cargarGenes();
@@ -520,11 +520,11 @@ function cargarGenes() {
     })
     .catch(function (error) {
       load.hidden = true;
-      console.error("Error cargando genes:", error);
+      console.error("Error loading genes:", error);
       Swal.fire({
         icon: "error",
-        title: "Error al cargar genes",
-        text: "No se pudieron cargar los genes. Por favor, intenta más tarde.",
+        title: "Error loading genes",
+        text: "Could not load genes. Please try again later.",
         showConfirmButton: true,
       });
     });
@@ -569,8 +569,8 @@ function poblarArchivosPorGen(geneId) {
         load.hidden = true;
         Swal.fire({
           icon: "warning",
-          title: "Sin archivos",
-          text: "No hay archivos disponibles para el gen seleccionado.",
+          title: "No files",
+          text: "No files available for the selected gene.",
           showConfirmButton: false,
           timer: 2000,
         });
@@ -578,11 +578,11 @@ function poblarArchivosPorGen(geneId) {
     })
     .catch(function (error) {
       load.hidden = true;
-      console.error("Error cargando archivos:", error);
+      console.error("Error loading files:", error);
       Swal.fire({
         icon: "error",
-        title: "Error al cargar archivos",
-        text: "No se pudieron cargar los archivos. Por favor, intenta más tarde.",
+        title: "Error loading files",
+        text: "Could not load files. Please try again later.",
         showConfirmButton: true,
       });
     });
@@ -599,8 +599,8 @@ function poblarListasPdb(versionAllele) {
     load.hidden = true;
     Swal.fire({
       icon: "warning",
-      title: "Sin archivos PDB",
-      text: "No hay archivos PDB disponibles.",
+      title: "No PDB files",
+      text: "No PDB files available.",
       showConfirmButton: false,
       timer: 2000,
     });
@@ -637,8 +637,8 @@ function selectUrl() {
       load.hidden = true;
       Swal.fire({
         icon: "warning",
-        title: "Selecciona un archivo",
-        text: "Por favor, selecciona un gen, archivo y PDB.",
+        title: "Select a file",
+        text: "Please select a gene, file, and PDB.",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -655,7 +655,7 @@ function selectUrl() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No se puede encontrar el archivo seleccionado.",
+        text: "The selected file could not be found.",
         showConfirmButton: true,
       });
       return;
@@ -668,7 +668,7 @@ function selectUrl() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No se puede encontrar el archivo PDB seleccionado.",
+        text: "The selected PDB file could not be found.",
         showConfirmButton: true,
       });
       return;
@@ -682,11 +682,11 @@ function selectUrl() {
     ExpandModalShowBotton.disabled = false;
   } catch (error) {
     load.hidden = true;
-    console.error("Error en selectUrl:", error);
+    console.error("Error in selectUrl:", error);
     Swal.fire({
       icon: "error",
-      title: "Error al cargar el archivo",
-      text: "Ocurrió un error inesperado. Por favor, intenta más tarde.",
+      title: "Error loading the file",
+      text: "An unexpected error occurred. Please try again later.",
       showConfirmButton: true,
     });
   }
