@@ -23,6 +23,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
       rel="stylesheet"
       href="{% static 'assets/plugins/fontawesome-free/css/all.min.css' %}"
     />
+    <link
+      rel="stylesheet"
+      href="{% static 'assets/iLanding/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}"
+     />
+
     <!-- Theme style -->
     <link
       rel="stylesheet"
@@ -671,18 +676,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
       {% endcomment %}
       <!-- /.control-sidebar -->
 
-      <!-- Main Footer -->
-      <footer class="main-footer">
-        <!-- To the right -->
-        <div class="float-right d-none d-sm-inline"></div>
-        <!-- Default to the left -->
-        <strong>
-          {% blocktranslate %}Designed by{% endblocktranslate %}
-          <a href="https://login.pgxsoftware.com/signIn"
-            >{% blocktranslate %} PGxSoftware.com{% endblocktranslate %}</a
-          >
-        </strong>
-      </footer>
+          <!-- Main Footer -->
+    <footer class="main-footer">
+      <!-- To the right -->
+      <div class="float-right d-none d-sm-inline">
+      </div>
+      <div class="col-lg-4 col-md-6 footer-about">
+          <a href="{% url 'alleleviewer' %}" class="logo d-flex align-items-center">
+              <span class="sitename">PGxSoftwaress</span>
+          </a>
+          <div class="footer-contact pt-3">
+          </div>
+          <div class="social-links d-flex mt-4">
+              <a href="mailto:info@pgxsoftware.com" style="margin-left: 10px;"><i class="bi bi-envelope"></i></a>
+              <a href="https://www.linkedin.com/in/oreste-ezequiel-salavaggione-ba059b22/" style="margin-left: 10px;"><i
+                      class="bi bi-linkedin"></i></a>
+          </div>
+      </div>
+      <div class="copyright">&copy; Genomic Ancestry Project. Designed by <strong>PGxSoftware.com</strong></div>
+  </footer>
     </div>
     <!-- ./wrapper -->
 
