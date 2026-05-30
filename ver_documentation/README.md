@@ -96,3 +96,5 @@ docker compose exec web python manage.py load_gene_data
 !!!For BE Develop...
 
 pip-chill >.\req.txt
+
+TODO: migrate pip to new soft
