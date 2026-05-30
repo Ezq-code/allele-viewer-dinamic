@@ -6,14 +6,16 @@ from apps.business_app.models.study import Study
 
 
 class StudySerializer(serializers.ModelSerializer):
-    """Serializer for Study model including the display label for study_type."""
+    """Serializer for Study model. Exposes study_type_display as the name of the related StudyType."""
 
     study_type_display = serializers.CharField(
-        source="get_study_type_display",
+        source="study_type.name",
         read_only=True,
     )
     pdb_files = PdbFilesSerializer(many=True, read_only=True)
-    allele_nodes = AlleleNodeSerializer(source="study_allele_nodes", many=True, read_only=True)
+    allele_nodes = AlleleNodeSerializer(
+        source="study_allele_nodes", many=True, read_only=True
+    )
 
     class Meta:
         model = Study

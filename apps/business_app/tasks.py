@@ -168,14 +168,15 @@ def fill_predecessors_and_sucessors_for_all_nodes(study_id: int):
 @shared_task(name="build_uploaded_file_graph_cache_task")
 def build_uploaded_file_graph_cache_task(study_id):
     try:
-        study = Study.objects.get(id=study_id)
+        study = Study.objects.select_related("study_type").get(id=study_id)
         uploaded_file = study.uploaded_file
         excel_nomenclator_class = ExcelNomenclatorsBase
-        if study.study_type == Study.STUDY_TYPE.ANCESTERS:
+        study_type_name = study.study_type.name if study.study_type else ""
+        if study_type_name == "Ancestors":
             excel_nomenclator_class = ExcelNomenclatorsByAncestersStudy
-        elif study.study_type == Study.STUDY_TYPE.LOCATION:
+        elif study_type_name == "Location":
             excel_nomenclator_class = ExcelNomenclatorsByLocationStudy
-        elif study.study_type == Study.STUDY_TYPE.GEN_ALLELE:
+        elif study_type_name == "Genetic Allele":
             excel_nomenclator_class = ExcelNomenclatorsByAlleleStudy
 
         create_graph(uploaded_file.original_file, study, excel_nomenclator_class)

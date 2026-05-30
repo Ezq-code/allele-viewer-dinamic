@@ -3,6 +3,7 @@ __all__ = [
     "SiteConfiguration",
     "UploadedFiles",
     "Study",
+    "StudyType",
     "AlleleNode",
     "PdbFiles",
     "InitialFileData",
@@ -37,6 +38,7 @@ from .region import Region
 from .region_county import RegionCountry
 from .site_configurations import SiteConfiguration
 from .study import Study
+from .study_type import StudyType
 from .sub_country import SubCountry
 from .uploaded_files import UploadedFiles
 from .working_copy_of_original_file import WorkingCopyOfOriginalFile

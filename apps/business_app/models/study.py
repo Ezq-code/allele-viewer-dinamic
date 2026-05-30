@@ -7,16 +7,13 @@ logger = logging.getLogger(__name__)
 
 
 class Study(models.Model):
-    class STUDY_TYPE(models.TextChoices):
-        GEN_ALLELE = "G", _("Genetic Allele")
-        LOCATION = "L", _("Location")
-        ANCESTERS = "A", _("Ancestors")
-
-    study_type = models.CharField(
+    study_type = models.ForeignKey(
+        to="StudyType",
+        on_delete=models.PROTECT,
+        related_name="studies",
         verbose_name=_("Study Type"),
-        max_length=1,
-        choices=STUDY_TYPE.choices,
-        default=STUDY_TYPE.GEN_ALLELE,
+        null=True,
+        blank=True,
     )
     uploaded_file = models.ForeignKey(
         to="UploadedFiles",
@@ -38,4 +35,4 @@ class Study(models.Model):
         verbose_name_plural = _("Studies")
 
     def __str__(self):
-        return f"{self.uploaded_file.custom_name} - {self.get_study_type_display()}"
+        return f"{self.uploaded_file.custom_name} - {self.study_type}"

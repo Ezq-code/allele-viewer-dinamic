@@ -70,12 +70,10 @@ def uploadfileconformation(request):
         },
     )
 
+
 @cache_page(60 * 15)
 def uploadfilesom(request):
-    return render(
-        request,
-        "seqOrdeMut/uploadfilesom.html"
-    )
+    return render(request, "seqOrdeMut/uploadfilesom.html")
 
 
 @cache_page(60 * 15)

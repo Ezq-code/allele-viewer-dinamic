@@ -13,6 +13,7 @@ from apps.business_app.models import (
     Marker,
     SiteConfiguration,
     Study,
+    StudyType,
     UploadedFiles,
     WorkingCopyOfOriginalFile,
     ProteinNode,
@@ -151,6 +152,13 @@ class ProteinNodeAdmin(admin.ModelAdmin):
         "frec_ca",
         "frec_sa",
     ]
+
+
+@admin.register(StudyType)
+class StudyTypeAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = ["id", "name", "sheet_name"]
+    fields = ["name", "sheet_name"]
 
 
 @admin.register(Study)
