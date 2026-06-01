@@ -17,7 +17,7 @@ class XslxToPdbByAlleleStudy(XslxToPdb):
     def __init__(self, origin_file, global_configuration, uploaded_file_id) -> None:
         gen_allele_study_type, _ = StudyType.objects.get_or_create(
             name="Genetic Allele",
-            defaults={"sheet_name": "For3DAllele"},
+            defaults={"sheet_name": ""},
         )
         self.study, _ = Study.objects.get_or_create(
             study_type=gen_allele_study_type,
