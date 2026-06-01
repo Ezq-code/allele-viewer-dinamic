@@ -162,17 +162,33 @@ def test_uploaded_files_serializer_does_not_implement_get_allele_nodes_method():
     )
     assert not hasattr(serializer, "get_allele_nodes")
 
-
-def test_study_serializer_exposes_study_type_display():
+@pytest.mark.django_db
+def test_study_serializer_exposes_study_type_display(tmp_path, settings):
     """study_type_display debe ser el nombre del StudyType relacionado."""
-    uploaded_file = UploadedFiles(custom_name="Study Upload")
-    study_type = StudyType(name="Location", sheet_name="Location Sheet")
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(username="study_serializer", password="secret")
+    upload = SimpleUploadedFile(
+        "study_serializer.xlsx",
+        b"serializer-file",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    with patch(
+        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
+    ):
+        uploaded_file = UploadedFiles.objects.create(
+            custom_name="Study Upload",
+            original_file=upload,
+            system_user=user,
+        )
+    study_type = StudyType.objects.create(name="Location", sheet_name="Location Sheet")
     study = Study(
         uploaded_file=uploaded_file,
         successfull_load=True,
         extra_info="Coordinates loaded",
     )
     study.study_type = study_type
+    study.save()
 
     data = StudySerializer(study).data
 

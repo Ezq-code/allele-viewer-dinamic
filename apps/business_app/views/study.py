@@ -46,3 +46,15 @@ class StudyViewSet(viewsets.ModelViewSet):
         "created_at": ["exact", "gte", "lte"],
     }
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        """Filter by uploaded_file when accessed through nested route."""
+        queryset = (
+            Study.objects.select_related("uploaded_file")
+            .prefetch_related("pdb_files", "study_allele_nodes")
+            .all()
+        )
+        parent_lookup_uploaded_file = self.kwargs.get("parent_lookup_uploaded_file")
+        if parent_lookup_uploaded_file is not None:
+            queryset = queryset.filter(uploaded_file_id=parent_lookup_uploaded_file)
+        return queryset
