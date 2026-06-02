@@ -15,20 +15,23 @@ logger = logging.getLogger(__name__)
 
 class XslxToPdbByAlleleStudy(XslxToPdb):
     def __init__(self, origin_file, global_configuration, uploaded_file_id) -> None:
-        gen_allele_study_type, _ = StudyType.objects.get_or_create(
+        self.gen_allele_study_type, _ = StudyType.objects.get_or_create(
             name="Genetic Allele",
-            defaults={"sheet_name": ""},
+            defaults={"sheet_name": "For3DAllele"},
         )
         self.study, _ = Study.objects.get_or_create(
-            study_type=gen_allele_study_type,
+            study_type=self.gen_allele_study_type,
             uploaded_file_id=uploaded_file_id,
             successfull_load=True,
         )
         try:
+            excel_nomenclator = ExcelNomenclatorsByAlleleStudy(
+                output_sheet=self.gen_allele_study_type.sheet_name
+            )
             super().__init__(
                 origin_file,
                 global_configuration,
-                excel_nomenclator_class=ExcelNomenclatorsByAlleleStudy,
+                excel_nomenclator_class=excel_nomenclator,
             )
         except Exception as e:
             self.study.successfull_load = False
