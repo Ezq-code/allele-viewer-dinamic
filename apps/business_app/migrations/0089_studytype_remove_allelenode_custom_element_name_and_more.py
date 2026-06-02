@@ -26,7 +26,6 @@ def reverse_study_types(apps, schema_editor):
     ).delete()
 
 
-
 class Migration(migrations.Migration):
     dependencies = [
         ("business_app", "0088_allelenode_predecessors_allelenode_sucessors"),
@@ -57,7 +56,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.RunPython(create_study_types, reverse_study_types),
-
         migrations.RenameField(
             model_name="allelenode",
             old_name="custom_element_name",

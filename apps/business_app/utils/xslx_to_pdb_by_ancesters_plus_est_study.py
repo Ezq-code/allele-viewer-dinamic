@@ -3,8 +3,8 @@ import logging
 
 from apps.business_app.models.allele_node import AlleleNode
 from apps.business_app.models.study_type import StudyType
-from apps.business_app.utils.excel_nomenclator_by_allele_study import (
-    ExcelNomenclatorsByAlleleStudy,
+from apps.business_app.utils.excel_nomenclator_by_ancesters_plus_est_study import (
+    ExcelNomenclatorsByAncestersPlusEstStudy,
 )
 from apps.business_app.utils.xslx_to_pdb import XslxToPdb
 from apps.business_app.models.study import Study
@@ -13,11 +13,11 @@ from apps.business_app.models.study import Study
 logger = logging.getLogger(__name__)
 
 
-class XslxToPdbByAlleleStudy(XslxToPdb):
+class XslxToPdbByAncestersPlusEstStudy(XslxToPdb):
     def __init__(self, origin_file, global_configuration, uploaded_file_id) -> None:
         self.gen_allele_study_type, _ = StudyType.objects.get_or_create(
-            name=StudyType.STUDY_NAME_GENETIC_ALLELE,
-            defaults={"sheet_name": StudyType.SHEET_NAME_GENETIC_ALLELE},
+            name=StudyType.STUDY_NAME_ANCESTERS_PLUS_EST,
+            defaults={"sheet_name": StudyType.SHEET_NAME_ANCESTERS_PLUS_EST},
         )
         self.study, _ = Study.objects.get_or_create(
             study_type=self.gen_allele_study_type,
@@ -25,7 +25,7 @@ class XslxToPdbByAlleleStudy(XslxToPdb):
             successfull_load=True,
         )
         try:
-            excel_nomenclator = ExcelNomenclatorsByAlleleStudy(
+            excel_nomenclator = ExcelNomenclatorsByAncestersPlusEstStudy(
                 output_sheet=self.gen_allele_study_type.sheet_name
             )
             super().__init__(

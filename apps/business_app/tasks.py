@@ -17,6 +17,19 @@ from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.site_configurations import SiteConfiguration
 from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy
+
+from apps.business_app.utils.xslx_to_pdb_by_ancesters_plus_est_study import (
+    XslxToPdbByAncestersPlusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_ancesters_minus_est_study import (
+    XslxToPdbByAncestersMinusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_location_plus_est_study import (
+    XslxToPdbByLocationPlusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_location_minus_est_study import (
+    XslxToPdbByLocationMinusEstStudy,
+)
 from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
 from apps.business_app.utils.graph_functions import (
     extract_children_tree,
@@ -28,12 +41,20 @@ from apps.business_app.utils.excel_nomenclators_base import ExcelNomenclatorsBas
 from apps.business_app.utils.excel_nomenclator_by_allele_study import (
     ExcelNomenclatorsByAlleleStudy,
 )
-from apps.business_app.utils.excel_nomenclator_by_ancesters_study import (
-    ExcelNomenclatorsByAncestersStudy,
+from apps.business_app.utils.excel_nomenclator_by_ancesters_plus_est_study import (
+    ExcelNomenclatorsByAncestersPlusEstStudy,
 )
-from apps.business_app.utils.excel_nomenclator_by_location_study import (
-    ExcelNomenclatorsByLocationStudy,
+from apps.business_app.utils.excel_nomenclator_by_ancesters_minus_est_study import (
+    ExcelNomenclatorsByAncestersMinusEstStudy,
 )
+from apps.business_app.utils.excel_nomenclator_by_location_plus_est_study import (
+    ExcelNomenclatorsByLocationPlusEstStudy,
+)
+from apps.business_app.utils.excel_nomenclator_by_location_minus_est_study import (
+    ExcelNomenclatorsByLocationMinusEstStudy,
+)
+from apps.business_app.models.study_type import StudyType
+
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +86,13 @@ def process_uploaded_file_task(self, uploaded_file_id):
 
         global_configuration = SiteConfiguration.get_solo()
         # processor_classes = [XslxToPdbByAlleleStudy, XslxToPdbGraph]
-        processor_classes = [XslxToPdbByAlleleStudy]
+        processor_classes = [
+            XslxToPdbByAlleleStudy,
+            XslxToPdbByAncestersPlusEstStudy,
+            XslxToPdbByAncestersMinusEstStudy,
+            XslxToPdbByLocationPlusEstStudy,
+            XslxToPdbByLocationMinusEstStudy,
+        ]
 
         for processor_class in processor_classes:
             # if processor_class is XslxToPdbGraph:
@@ -172,11 +199,15 @@ def build_uploaded_file_graph_cache_task(study_id):
         uploaded_file = study.uploaded_file
         excel_nomenclator_class = ExcelNomenclatorsBase
         study_type_name = study.study_type.name if study.study_type else ""
-        if study_type_name == "Ancestors":
-            excel_nomenclator_class = ExcelNomenclatorsByAncestersStudy
-        elif study_type_name == "Location":
-            excel_nomenclator_class = ExcelNomenclatorsByLocationStudy
-        elif study_type_name == "Genetic Allele":
+        if study_type_name == StudyType.STUDY_NAME_ANCESTORS_PLUS_EST:
+            excel_nomenclator_class = ExcelNomenclatorsByAncestersPlusEstStudy
+        elif study_type_name == StudyType.STUDY_NAME_ANCESTORS_MINUS_EST:
+            excel_nomenclator_class = ExcelNomenclatorsByAncestersMinusEstStudy
+        elif study_type_name == StudyType.STUDY_NAME_LOCATION_PLUS_EST:
+            excel_nomenclator_class = ExcelNomenclatorsByLocationPlusEstStudy
+        elif study_type_name == StudyType.STUDY_NAME_LOCATION_MINUS_EST:
+            excel_nomenclator_class = ExcelNomenclatorsByLocationMinusEstStudy
+        elif study_type_name == StudyType.STUDY_NAME_GENETIC_ALLELE:
             excel_nomenclator_class = ExcelNomenclatorsByAlleleStudy
 
         create_graph(uploaded_file.original_file, study, excel_nomenclator_class)

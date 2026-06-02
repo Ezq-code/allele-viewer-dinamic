@@ -59,9 +59,7 @@ def create_graph(
     'output_df' en en un grafo. Luego este grafo puede ser usado
     como base de datos de nodos y ejes.
     """
-    logger.info(
-        f"Proccessing {study} study to generate graph..."
-    )
+    logger.info(f"Proccessing {study} study to generate graph...")
     G = nx.DiGraph()
     output_df = pd.read_excel(
         origin_file,

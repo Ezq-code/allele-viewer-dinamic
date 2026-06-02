@@ -162,12 +162,15 @@ def test_uploaded_files_serializer_does_not_implement_get_allele_nodes_method():
     )
     assert not hasattr(serializer, "get_allele_nodes")
 
+
 @pytest.mark.django_db
 def test_study_serializer_exposes_study_type_display(tmp_path, settings):
     """study_type_display debe ser el nombre del StudyType relacionado."""
     settings.MEDIA_ROOT = tmp_path
     AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
-    user = SystemUser.objects.create_user(username="study_serializer", password="secret")
+    user = SystemUser.objects.create_user(
+        username="study_serializer", password="secret"
+    )
     upload = SimpleUploadedFile(
         "study_serializer.xlsx",
         b"serializer-file",

@@ -14,6 +14,21 @@ class StudyType(models.Model):
     allowing dynamic management of study types from the database.
     """
 
+    STUDY_NAME_GENETIC_ALLELE = "Genetic Allele"
+    SHEET_NAME_GENETIC_ALLELE = "For3DAllele"
+
+    STUDY_NAME_LOCATION_PLUS_EST = "Location+Est"
+    SHEET_NAME_LOCATION_PLUS_EST = "For3DProt_L+Est"
+
+    STUDY_NAME_LOCATION_MINUS_EST = "Location-Est"
+    SHEET_NAME_LOCATION_MINUS_EST = "For3DProt_L-Est"
+
+    STUDY_NAME_ANCESTERS_PLUS_EST = "Ancesters+Est"
+    SHEET_NAME_ANCESTERS_PLUS_EST = "For3DProt_A+Est"
+
+    STUDY_NAME_ANCESTERS_MINUS_EST = "Ancesters-Est"
+    SHEET_NAME_ANCESTERS_MINUS_EST = "For3DProt_A-Est"
+
     name = models.CharField(
         verbose_name=_("Name"),
         max_length=100,
