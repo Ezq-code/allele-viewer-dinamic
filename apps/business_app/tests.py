@@ -7,6 +7,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.cache import cache
 from django.urls import reverse
 from rest_framework.test import APIClient
+from apps.common.utils.pusher_client import PusherClient
+
 
 from apps.business_app.models.allele_node import AlleleNode
 from apps.business_app.models.base_allele_node import BaseAlleleNode
@@ -26,6 +28,7 @@ from apps.business_app.utils.gene_list_cache import (
     GENE_LIST_VERSION_KEY,
     get_gene_list_cache_version,
 )
+from apps.business_app.tasks import process_uploaded_file_task
 from apps.users_app.models.system_user import SystemUser
 
 
@@ -418,3 +421,121 @@ def test_protein_node_serializer_uses_cached_graph_without_enqueuing_task():
 
     assert result == {1, 2}
     mocked_delay.assert_not_called()
+
+
+@pytest.mark.django_db
+def test_process_uploaded_file_task_sends_success_when_at_least_one_processor_succeeds(
+    tmp_path, settings
+):
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(
+        username="task_partial_success", password="secret"
+    )
+    upload = SimpleUploadedFile(
+        "task_partial_success.xlsx",
+        b"fake excel bytes",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    with patch(
+        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
+    ):
+        uploaded_file = UploadedFiles.objects.create(
+            custom_name="Task Partial Success",
+            original_file=upload,
+            system_user=user,
+        )
+
+    processor_ok = SimpleNamespace(
+        proccess_pdb_file=lambda *_args, **_kwargs: None,
+        study=SimpleNamespace(id=1),
+    )
+
+    with patch(
+        "apps.business_app.tasks.SiteConfiguration.get_solo"
+    ) as mocked_config, patch(
+        "apps.business_app.tasks.send_pusher_trigger_task.delay"
+    ) as mocked_pusher, patch(
+        "apps.business_app.tasks.fill_predecessors_and_sucessors_for_all_nodes"
+    ) as mocked_fill, patch(
+        "apps.business_app.tasks.XslxToPdbByAlleleStudy"
+    ) as mocked_processor_1, patch(
+        "apps.business_app.tasks.XslxToPdbByAncestersPlusEstStudy"
+    ) as mocked_processor_2, patch(
+        "apps.business_app.tasks.XslxToPdbByAncestersMinusEstStudy"
+    ) as mocked_processor_3, patch(
+        "apps.business_app.tasks.XslxToPdbByLocationPlusEstStudy"
+    ) as mocked_processor_4, patch(
+        "apps.business_app.tasks.XslxToPdbByLocationMinusEstStudy"
+    ) as mocked_processor_5:
+        mocked_config.return_value = SimpleNamespace(upload_to_drive=False)
+
+        mocked_processor_1.side_effect = RuntimeError("processor 1 failed")
+        mocked_processor_2.return_value = processor_ok
+        mocked_processor_3.side_effect = RuntimeError("processor 3 failed")
+        mocked_processor_4.side_effect = RuntimeError("processor 4 failed")
+        mocked_processor_5.side_effect = RuntimeError("processor 5 failed")
+
+        result = process_uploaded_file_task.run(uploaded_file.id)
+
+    uploaded_file.refresh_from_db()
+    assert uploaded_file.processed is True
+    assert result["status"] == "success"
+    mocked_fill.assert_called_once_with(study_id=1)
+    mocked_pusher.assert_called_once()
+    kwargs = mocked_pusher.call_args.kwargs
+    assert kwargs["event"] == PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL
+    assert kwargs["data"] == {"uploaded_file_id": uploaded_file.id}
+
+
+@pytest.mark.django_db
+def test_process_uploaded_file_task_fails_when_all_processors_fail(tmp_path, settings):
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(username="task_all_fail", password="secret")
+    upload = SimpleUploadedFile(
+        "task_all_fail.xlsx",
+        b"fake excel bytes",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    with patch(
+        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
+    ):
+        uploaded_file = UploadedFiles.objects.create(
+            custom_name="Task All Fail",
+            original_file=upload,
+            system_user=user,
+        )
+
+    with patch(
+        "apps.business_app.tasks.SiteConfiguration.get_solo"
+    ) as mocked_config, patch(
+        "apps.business_app.tasks.send_pusher_trigger_task.delay"
+    ) as mocked_pusher, patch(
+        "apps.business_app.tasks.XslxToPdbByAlleleStudy"
+    ) as mocked_processor_1, patch(
+        "apps.business_app.tasks.XslxToPdbByAncestersPlusEstStudy"
+    ) as mocked_processor_2, patch(
+        "apps.business_app.tasks.XslxToPdbByAncestersMinusEstStudy"
+    ) as mocked_processor_3, patch(
+        "apps.business_app.tasks.XslxToPdbByLocationPlusEstStudy"
+    ) as mocked_processor_4, patch(
+        "apps.business_app.tasks.XslxToPdbByLocationMinusEstStudy"
+    ) as mocked_processor_5:
+        mocked_config.return_value = SimpleNamespace(upload_to_drive=False)
+        mocked_processor_1.side_effect = RuntimeError("processor 1 failed")
+        mocked_processor_2.side_effect = RuntimeError("processor 2 failed")
+        mocked_processor_3.side_effect = RuntimeError("processor 3 failed")
+        mocked_processor_4.side_effect = RuntimeError("processor 4 failed")
+        mocked_processor_5.side_effect = RuntimeError("processor 5 failed")
+
+        with pytest.raises(RuntimeError):
+            process_uploaded_file_task.run(uploaded_file.id)
+
+    uploaded_file.refresh_from_db()
+    assert uploaded_file.processed is False
+    mocked_pusher.assert_called_once()
+    kwargs = mocked_pusher.call_args.kwargs
+    assert kwargs["event"] == PusherClient.FAILED_UPLOAD_3D_EXCEL

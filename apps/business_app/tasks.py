@@ -80,33 +80,26 @@ def process_uploaded_file_task(self, uploaded_file_id):
     from apps.business_app.models.uploaded_files import UploadedFiles
 
     uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
-    try:
-        original_file = uploaded_file.original_file
-        file_name, _ = os.path.splitext(original_file.name)
 
-        global_configuration = SiteConfiguration.get_solo()
-        # processor_classes = [XslxToPdbByAlleleStudy, XslxToPdbGraph]
-        processor_classes = [
-            XslxToPdbByAlleleStudy,
-            XslxToPdbByAncestersPlusEstStudy,
-            XslxToPdbByAncestersMinusEstStudy,
-            XslxToPdbByLocationPlusEstStudy,
-            XslxToPdbByLocationMinusEstStudy,
-        ]
+    original_file = uploaded_file.original_file
+    file_name, _ = os.path.splitext(original_file.name)
 
-        for processor_class in processor_classes:
-            # if processor_class is XslxToPdbGraph:
-            #     processor_object = processor_class(
-            #         original_file,
-            #         global_configuration,
-            #         uploaded_file_id=uploaded_file.id,
-            #     )
-            # else:
-            #     processor_object = processor_class(
-            #         original_file,
-            #         global_configuration,
-            #         uploaded_file_id=uploaded_file.id,
-            #     )
+    global_configuration = SiteConfiguration.get_solo()
+    # processor_classes = [XslxToPdbByAlleleStudy, XslxToPdbGraph]
+    processor_classes = [
+        XslxToPdbByAlleleStudy,
+        XslxToPdbByAncestersPlusEstStudy,
+        XslxToPdbByAncestersMinusEstStudy,
+        XslxToPdbByLocationPlusEstStudy,
+        XslxToPdbByLocationMinusEstStudy,
+    ]
+
+    successful_processors = 0
+    last_error = None
+    error_message_to_show = ""
+
+    for processor_class in processor_classes:
+        try:
             processor_object = processor_class(
                 original_file,
                 global_configuration,
@@ -121,42 +114,37 @@ def process_uploaded_file_task(self, uploaded_file_id):
                 fill_predecessors_and_sucessors_for_all_nodes(
                     study_id=processor_object.study.id
                 )
-            uploaded_file.processed = True
-            uploaded_file.save(update_fields=["processed"])
-        send_pusher_trigger_task.delay(
-            channel=PusherClient.CELERY_TASK_CHANNEL,
-            event=PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL,
-            data={"uploaded_file_id": uploaded_file_id},
-        )
-
-        return {"status": "success", "uploaded_file_id": uploaded_file_id}
-    except Exception as e:
-        if _is_db_locked_error(e) and self.request.retries < self.max_retries:
-            countdown = 5 * (2**self.request.retries)
-            logger.warning(
-                "Database is locked while processing uploaded file %s. Retrying in %ss (retry %s/%s).",
+            successful_processors += 1
+        except Exception as processor_error:
+            last_error = processor_error
+            error_message_to_show += f"{processor_class}: {processor_error}.\n"
+            logger.exception(
+                "Error processing uploaded file %s with processor %s: %s",
                 uploaded_file_id,
-                countdown,
-                self.request.retries + 1,
-                self.max_retries,
+                processor_class.__name__,
+                processor_error,
+                exc_info=True,
             )
-            close_old_connections()
-            raise self.retry(exc=e, countdown=countdown)
 
-        logger.exception(
-            "Error processing uploaded file %s: %s",
-            uploaded_file_id,
-            e,
-            exc_info=True,
-        )
-
+    if successful_processors == 0 and last_error is not None:
         send_pusher_trigger_task.delay(
             channel=PusherClient.CELERY_TASK_CHANNEL,
             event=PusherClient.FAILED_UPLOAD_3D_EXCEL,
-            data={"error_detail": e.__str__()},
+            data={"error_detail": error_message_to_show},
         )
-        # uploaded_file.delete()
-        raise
+        raise Exception(error_message_to_show)
+
+    if successful_processors > 0:
+        uploaded_file.processed = True
+        uploaded_file.save(update_fields=["processed"])
+
+    send_pusher_trigger_task.delay(
+        channel=PusherClient.CELERY_TASK_CHANNEL,
+        event=PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL,
+        data={"uploaded_file_id": uploaded_file_id},
+    )
+    # uploaded_file.delete()
+    return {"status": "success", "uploaded_file_id": uploaded_file_id}
 
 
 def _get_graph_info(study_id, node_number, function_to_call):
