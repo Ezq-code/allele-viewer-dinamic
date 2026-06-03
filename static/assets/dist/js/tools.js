@@ -431,10 +431,12 @@ function selectPdbContainer() {
   var $selectfile = document.getElementById("selectfile");
   var idFile = $selectfile.value;
   axios
-    .get("/business-gestion/uploaded-files/" + idFile + "/")
+    .get("/business-gestion/study/" + idFile + "/")
     .then(function (response) {
       const elemento = response.data;
       let versionAllele = elemento.pdb_files;
+      localStorage.setItem("selectedStudyId", String(elemento.id));
+      localStorage.setItem("uploadFileId", String(elemento.uploaded_file));
       poblarListasPdb(versionAllele);
       poblarListasCopy(elemento.id);
     })

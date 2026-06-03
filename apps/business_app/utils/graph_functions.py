@@ -51,25 +51,32 @@ def extract_children_tree(G: Graph, to_return: list, node: int):
 
 
 def create_graph(
-    origin_file, study: Study, excel_nomenclator_class: ExcelNomenclatorsBase
+    origin_file,
+    study: Study,
+    excel_nomenclator_class: ExcelNomenclatorsBase,
+    output_df=None,
 ):
     """
     Esta función recibe como parámetro el ide del fichero
     (uploaded_file_id) y almacena los datos del dataframe
     'output_df' en en un grafo. Luego este grafo puede ser usado
     como base de datos de nodos y ejes.
-    """
-    logger.info(f"Proccessing {study} study to generate graph...")
-    G = nx.DiGraph()
-    output_df = pd.read_excel(
-        origin_file,
-        sheet_name=excel_nomenclator_class.output_sheet,
-        engine="openpyxl",
-    )
 
-    # Construyendo el grafo con una instancia de NetworkX
+    Si se provee 'output_df', se reutiliza directamente sin releer el archivo Excel.
+    """
+    # Comprobar caché antes de hacer cualquier I/O
     if BaseAlleleNode.CACHE_KEY_GRAPH_FOR_STUDY.format(study_id=study.id) in cache:
         return
+
+    logger.info(f"Proccessing {study} study to generate graph...")
+    G = nx.DiGraph()
+
+    if output_df is None:
+        output_df = pd.read_excel(
+            origin_file,
+            sheet_name=excel_nomenclator_class.output_sheet,
+            engine="openpyxl",
+        )
 
     edges_list = []
     try:

@@ -111,6 +111,14 @@ def process_uploaded_file_task(self, uploaded_file_id):
                 processor_object.proccess_initial_file_data(uploaded_file.id)
             processor_object.proccess_pdb_file(uploaded_file.id, file_name)
             if hasattr(processor_object, "study"):
+                # Construir el grafo con el dataframe ya cargado en memoria
+                # para evitar releer el archivo Excel desde disco.
+                create_graph(
+                    origin_file=None,
+                    study=processor_object.study,
+                    excel_nomenclator_class=processor_object.excel_nomenclator_class,
+                    output_df=processor_object.output_df,
+                )
                 fill_predecessors_and_sucessors_for_all_nodes(
                     study_id=processor_object.study.id
                 )
@@ -187,9 +195,9 @@ def build_uploaded_file_graph_cache_task(study_id):
         uploaded_file = study.uploaded_file
         excel_nomenclator_class = ExcelNomenclatorsBase
         study_type_name = study.study_type.name if study.study_type else ""
-        if study_type_name == StudyType.STUDY_NAME_ANCESTORS_PLUS_EST:
+        if study_type_name == StudyType.STUDY_NAME_ANCESTERS_PLUS_EST:
             excel_nomenclator_class = ExcelNomenclatorsByAncestersPlusEstStudy
-        elif study_type_name == StudyType.STUDY_NAME_ANCESTORS_MINUS_EST:
+        elif study_type_name == StudyType.STUDY_NAME_ANCESTERS_MINUS_EST:
             excel_nomenclator_class = ExcelNomenclatorsByAncestersMinusEstStudy
         elif study_type_name == StudyType.STUDY_NAME_LOCATION_PLUS_EST:
             excel_nomenclator_class = ExcelNomenclatorsByLocationPlusEstStudy

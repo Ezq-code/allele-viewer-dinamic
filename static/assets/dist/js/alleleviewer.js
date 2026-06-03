@@ -536,6 +536,30 @@ document.getElementById("selectGene").addEventListener("change", function () {
   poblarArchivosPorGen(geneId);
 });
 
+// Evento: al cambiar el estudio, actualizar la lista de PDB asociada.
+document.getElementById("selectfile").addEventListener("change", function () {
+  actualizarSelectPdbPorStudyId(this.value);
+});
+
+function actualizarSelectPdbPorStudyId(studyId) {
+  if (!studyId || !Array.isArray(globalData)) {
+    document.getElementById("selectPdb").innerHTML = "";
+    return;
+  }
+
+  const studyPosition = findPosition(globalData, studyId);
+  if (studyPosition === -1) {
+    document.getElementById("selectPdb").innerHTML = "";
+    return;
+  }
+
+  const selectedStudy = globalData[studyPosition];
+  localStorage.setItem("selectedStudyId", String(selectedStudy.id));
+  localStorage.setItem("uploadFileId", String(selectedStudy.uploaded_file));
+  poblarListasPdb(selectedStudy.pdb_files || []);
+  poblarListasCopy(selectedStudy.id);
+}
+
 // Función para poblar archivos según el gen seleccionado
 function poblarArchivosPorGen(geneId) {
   console.log("✌️geneId --->", geneId);
@@ -551,7 +575,7 @@ function poblarArchivosPorGen(geneId) {
     .get("/business-gestion/study/?uploaded_file__gene=" + geneId)
     .then(function (response) {
       globalData = response.data.results;
-      localStorage.setItem("globalData", globalData);
+      localStorage.setItem("globalData", JSON.stringify(globalData));
       console.log("✌️response.data.results --->", response.data.results);
       console.log("✌️globalData --->", globalData);
       response.data.results.forEach(function (study) {
@@ -562,8 +586,9 @@ function poblarArchivosPorGen(geneId) {
       });
       // Si hay archivos, poblar los pdb del primero
       if (response.data.results.length > 0) {
-        poblarListasPdb(response.data.results[0].pdb_files);
-        poblarListasCopy(response.data.results[0].id);
+        const firstStudyId = response.data.results[0].id;
+        selectfile.value = firstStudyId;
+        actualizarSelectPdbPorStudyId(firstStudyId);
       } else {
         document.getElementById("selectPdb").innerHTML = "";
         load.hidden = true;
@@ -675,7 +700,8 @@ function selectUrl() {
     }
 
     let versionAllele = elemento.pdb_files[pos].pdb_content;
-    localStorage.setItem("uploadFileId", idFile);
+    localStorage.setItem("selectedStudyId", String(idFile));
+    localStorage.setItem("uploadFileId", String(elemento.uploaded_file));
     localStorage.setItem("pdb", versionAllele);
     graficar_string(versionAllele);
     snpModalShowBotton.disabled = false;
@@ -707,8 +733,8 @@ async function showInfo(atom) {
   const atomNumber = atom.serial;
   load.hidden = false;
   const toastClass = seleccionarEstiloAleatorio();
-  const uploadFileId = localStorage.getItem("uploadFileId");
-  const url = `/business-gestion/allele-nodes/${uploadFileId}-${atomNumber}/`;
+  const selectedStudyId = localStorage.getItem("selectedStudyId");
+  const url = `/business-gestion/allele-nodes/${selectedStudyId}-${atomNumber}/`;
 
   axios
     .get(url)
@@ -930,9 +956,13 @@ function getAtomBySerial(serial) {
 
 function child() {
   viewer.removeAllLabels();
-  const uploadFileId = localStorage.getItem("uploadFileId");
+  const selectedStudyId = localStorage.getItem("selectedStudyId");
 
-  const elemento = globalData[findPosition(globalData, uploadFileId)];
+  const elemento = globalData[findPosition(globalData, selectedStudyId)];
+  if (!elemento) {
+    load.hidden = true;
+    return;
+  }
   datos = elemento.allele_nodes;
 
   datos.forEach(({ number, stick_radius, sphere_radius }) => {
