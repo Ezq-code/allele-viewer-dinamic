@@ -5,6 +5,28 @@ from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from apps.business_app.models.study import Study
 
 
+class StudySerializerShort(serializers.ModelSerializer):
+    """Serializer for Study model. Exposes study_type_display as the name of the related StudyType."""
+
+    study_type_display = serializers.CharField(
+        source="study_type.name",
+        read_only=True,
+    )
+    class Meta:
+        model = Study
+        fields = [
+            "id",
+            "study_type_display",
+            "successfull_load",
+            "created_at",
+            "extra_info",
+        ]
+        read_only_fields = [
+            "id",
+            "created_at",
+            "study_type_display",
+        ]
+
 class StudySerializer(serializers.ModelSerializer):
     """Serializer for Study model. Exposes study_type_display as the name of the related StudyType."""
 

@@ -5,6 +5,7 @@ import logging
 
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from apps.business_app.serializers.pdb_files import PdbFilesSerializer
+from apps.business_app.serializers.study import StudySerializerShort
 
 
 logger = logging.getLogger(__name__)
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class SimpleListUploadedFilesSerializer(serializers.ModelSerializer):
     gene_name = serializers.CharField(source="gene.name", read_only=True, default=None)
+    studies = StudySerializerShort(many=True, read_only=True)
 
     class Meta:
         model = UploadedFiles
@@ -24,6 +26,7 @@ class SimpleListUploadedFilesSerializer(serializers.ModelSerializer):
             "gene",
             "gene_name",
             "predefined",
+            "studies",
         ]
         read_only_fields = [
             "id",
