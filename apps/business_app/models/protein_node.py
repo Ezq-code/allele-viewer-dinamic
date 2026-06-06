@@ -10,6 +10,14 @@ class ProteinNode(BaseAlleleNode):
     is_final_for_allele = models.BooleanField(
         verbose_name=_("Is Final For Allele"), default=False
     )
+    study = models.ForeignKey(
+        "Study",
+        on_delete=models.CASCADE,
+        verbose_name=_("Study ID"),
+        null=True,
+        blank=True,
+        related_name="study_protein_nodes",
+    )
 
     class Meta:
         verbose_name = _("Protein Node")

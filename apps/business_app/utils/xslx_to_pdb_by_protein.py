@@ -1,46 +1,82 @@
 import logging
 
 
-from apps.business_app.models.study_type import StudyType
-from apps.business_app.utils.excel_nomenclator_by_ancesters_plus_est_study import (
-    ExcelNomenclatorsByAncestersPlusEstStudy,
-)
-from apps.business_app.utils.xslx_to_pdb_by_protein import XslxToPdbByProtein
-from apps.business_app.models.study import Study
-from apps.business_app.models.protein_node import ProteinNode
+from apps.business_app.utils.xslx_to_pdb import XslxToPdb
+from .excel_nomenclators_base import ExcelNomenclatorsBase
 
 
 logger = logging.getLogger(__name__)
 
 
-class XslxToPdbByAncestersPlusEstStudy(XslxToPdbByProtein):
-    def __init__(self, origin_file, global_configuration, uploaded_file_id) -> None:
-        self.gen_allele_study_type, _ = StudyType.objects.get_or_create(
-            name=StudyType.STUDY_NAME_ANCESTERS_PLUS_EST,
-            defaults={"sheet_name": StudyType.SHEET_NAME_ANCESTERS_PLUS_EST},
+class XslxToPdbByProtein(XslxToPdb):
+    def __init__(
+        self,
+        origin_file,
+        global_configuration,
+        excel_nomenclator_class: ExcelNomenclatorsBase,
+    ) -> None:
+        super().__init__(
+            origin_file,
+            global_configuration,
+            excel_nomenclator_class=excel_nomenclator_class,
         )
-        self.study, _ = Study.objects.get_or_create(
-            study_type=self.gen_allele_study_type,
-            uploaded_file_id=uploaded_file_id,
-            successfull_load=True,
-        )
-        try:
-            excel_nomenclator = ExcelNomenclatorsByAncestersPlusEstStudy(
-                output_sheet=self.gen_allele_study_type.sheet_name
-            )
-            super().__init__(
-                origin_file,
-                global_configuration,
-                excel_nomenclator_class=excel_nomenclator,
-            )
-        except Exception as e:
-            self.study.successfull_load = False
-            self.study.extra_info = e.__str__()
-            self.study.save()
-            logger.exception(f"An error occurred during file parsing: {e}")
-            raise ValueError(f"An error occurred during file parsing: {e}.") from e
 
-        self.model = ProteinNode
+    def _node_factory(
+        self,
+        element,
+        row_number,
+        allele,
+        rs,
+        region,
+        age_1,
+        age_2,
+        frec_afr_amr,
+        frec_amr,
+        frec_csa,
+        frec_eas,
+        frec_eur,
+        frec_lat,
+        frec_nea,
+        frec_oce,
+        frec_ssa,
+        frec_afr_eas,
+        frec_afr_swe,
+        frec_afr_nor,
+        frec_ca,
+        frec_sa,
+        loss,
+        increment,
+    ):
+        created_node = super()._node_factory(
+            element,
+            row_number,
+            allele,
+            rs,
+            region,
+            age_1,
+            age_2,
+            frec_afr_amr,
+            frec_amr,
+            frec_csa,
+            frec_eas,
+            frec_eur,
+            frec_lat,
+            frec_nea,
+            frec_oce,
+            frec_ssa,
+            frec_afr_eas,
+            frec_afr_swe,
+            frec_afr_nor,
+            frec_ca,
+            frec_sa,
+            loss,
+            increment,
+        )
+
+        if len(allele) > 1:
+            created_node.is_final_for_allele = True
+            created_node.save(update_fields=["is_final_for_allele"])
+        return created_node
 
     # def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base):
     #     logger.info("Proccessing PDB file...")

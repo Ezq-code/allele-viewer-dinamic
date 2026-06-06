@@ -1,19 +1,19 @@
 import logging
 
 
-from apps.business_app.models.allele_node import AlleleNode
+from apps.business_app.models.protein_node import ProteinNode
 from apps.business_app.models.study_type import StudyType
 from apps.business_app.utils.excel_nomenclator_by_location_minus_est_study import (
     ExcelNomenclatorsByLocationMinusEstStudy,
 )
-from apps.business_app.utils.xslx_to_pdb import XslxToPdb
+from apps.business_app.utils.xslx_to_pdb_by_protein import XslxToPdbByProtein
 from apps.business_app.models.study import Study
 
 
 logger = logging.getLogger(__name__)
 
 
-class XslxToPdbByLocationMinusEstStudy(XslxToPdb):
+class XslxToPdbByLocationMinusEstStudy(XslxToPdbByProtein):
     def __init__(self, origin_file, global_configuration, uploaded_file_id) -> None:
         self.gen_allele_study_type, _ = StudyType.objects.get_or_create(
             name=StudyType.STUDY_NAME_LOCATION_MINUS_EST,
@@ -40,7 +40,7 @@ class XslxToPdbByLocationMinusEstStudy(XslxToPdb):
             logger.exception(f"An error occurred during file parsing: {e}")
             raise ValueError(f"An error occurred during file parsing: {e}.") from e
 
-        self.model = AlleleNode
+        self.model = ProteinNode
 
     # def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base):
     #     logger.info("Proccessing PDB file...")

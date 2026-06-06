@@ -50,8 +50,9 @@ class StudyViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Filter by uploaded_file when accessed through nested route."""
         queryset = (
-            Study.objects.filter(successfull_load=True).select_related("uploaded_file")
-            .prefetch_related("pdb_files", "study_allele_nodes")
+            Study.objects.filter(successfull_load=True)
+            .select_related("uploaded_file")
+            .prefetch_related("pdb_files", "study_allele_nodes", "study_protein_nodes")
             .all()
         )
         parent_lookup_uploaded_file = self.kwargs.get("parent_lookup_uploaded_file")

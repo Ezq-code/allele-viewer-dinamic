@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apps.business_app.serializers.pdb_files import PdbFilesSerializer
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
+from apps.business_app.serializers.protein_nodes import ProteinNodeSerializer
 
 from apps.business_app.models.study import Study
 
@@ -12,6 +13,7 @@ class StudySerializerShort(serializers.ModelSerializer):
         source="study_type.name",
         read_only=True,
     )
+
     class Meta:
         model = Study
         fields = [
@@ -27,6 +29,7 @@ class StudySerializerShort(serializers.ModelSerializer):
             "study_type_display",
         ]
 
+
 class StudySerializer(serializers.ModelSerializer):
     """Serializer for Study model. Exposes study_type_display as the name of the related StudyType."""
 
@@ -35,9 +38,7 @@ class StudySerializer(serializers.ModelSerializer):
         read_only=True,
     )
     pdb_files = PdbFilesSerializer(many=True, read_only=True)
-    allele_nodes = AlleleNodeSerializer(
-        source="study_allele_nodes", many=True, read_only=True
-    )
+    allele_nodes = serializers.SerializerMethodField()
 
     class Meta:
         model = Study
@@ -57,3 +58,11 @@ class StudySerializer(serializers.ModelSerializer):
             "created_at",
             "study_type_display",
         ]
+
+    def get_allele_nodes(self, obj):
+        if obj.study_allele_nodes.count():
+            return AlleleNodeSerializer(obj.study_allele_nodes.all(), many=True).data
+        elif obj.study_protein_nodes.count():
+            return ProteinNodeSerializer(obj.study_protein_nodes.all(), many=True).data
+        else:
+            return []

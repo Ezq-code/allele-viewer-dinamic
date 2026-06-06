@@ -555,6 +555,7 @@ function actualizarSelectPdbPorStudyId(studyId) {
 
   const selectedStudy = globalData[studyPosition];
   localStorage.setItem("selectedStudyId", String(selectedStudy.id));
+  localStorage.setItem("selectedStudyTypeDisplay", selectedStudy.study_type_display);
   localStorage.setItem("uploadFileId", String(selectedStudy.uploaded_file));
   poblarListasPdb(selectedStudy.pdb_files || []);
   poblarListasCopy(selectedStudy.id);
@@ -734,7 +735,15 @@ async function showInfo(atom) {
   load.hidden = false;
   const toastClass = seleccionarEstiloAleatorio();
   const selectedStudyId = localStorage.getItem("selectedStudyId");
-  const url = `/business-gestion/allele-nodes/${selectedStudyId}-${atomNumber}/`;
+  const selectedStudyTypeDisplay = localStorage.getItem("selectedStudyTypeDisplay");
+  let specific_node_url = ""
+  if (selectedStudyTypeDisplay == 'Genetic Allele') {
+    specific_node_url='allele-nodes'
+  }
+  else{
+    specific_node_url='protein-nodes'
+  }
+  const url = `/business-gestion/${specific_node_url}/${selectedStudyId}-${atomNumber}/`;
 
   axios
     .get(url)
