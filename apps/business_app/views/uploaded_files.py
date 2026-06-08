@@ -23,7 +23,7 @@ class UploadedFilesViewSet(viewsets.ModelViewSet, GenericAPIView):
     """
 
     queryset = (
-        UploadedFiles.objects.filter(processed=True)
+        UploadedFiles.objects
         .select_related("gene")
         .prefetch_related("studies")
     )
