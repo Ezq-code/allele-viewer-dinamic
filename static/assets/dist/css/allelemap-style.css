@@ -1,82 +1,82 @@
 /* Que el contenedor de Select2 use la misma altura que form-control-sm */
 .select2-container--bootstrap4 .select2-selection--multiple {
-  min-height: calc(1.8125rem + 2px);  /* altura aproximada de .form-control-sm en Bootstrap 4 */
-  padding-top: .15rem;
-  padding-bottom: .15rem;
-  display: flex;
-  align-items: center;
+    min-height: calc(1.8125rem + 2px); /* altura aproximada de .form-control-sm en Bootstrap 4 */
+    padding-top: .15rem;
+    padding-bottom: .15rem;
+    display: flex;
+    align-items: center;
 }
 
 /* Evitar que crezca demasiado cuando hay varios tags */
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow: hidden;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
 }
 
 /* Chips un poco más compactos */
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
-  min-height: 25px !important; /*calc(1.8125rem + 2px); */ /* altura aproximada de .form-control-sm en Bootstrap 4 */
-  height: 25px !important;
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: .75rem;
+    min-height: 25px !important; /*calc(1.8125rem + 2px); */ /* altura aproximada de .form-control-sm en Bootstrap 4 */
+    height: 25px !important;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: .75rem;
 }
 
 /* Si quieres forzar exactamente la misma altura que el resto */
 .select2-sm-custom + .select2-container--bootstrap4 .select2-selection--multiple {
-  height: 30px !important; /*  calc(1.8125rem + 2px); */
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  
+    height: 30px !important; /*  calc(1.8125rem + 2px); */
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
 }
 
 .select2-sm-custom + .select2-container--bootstrap4 {
-  width: 6.5rem;       /* ancho fijo ~9 caracteres */
-  min-width: 6.5rem;
+    width: 6.5rem; /* ancho fijo ~9 caracteres */
+    min-width: 6.5rem;
 }
 
 
 /* Estilos para las columnas de alelos en el modal */
 .allele-col {
-  min-width: 150px;
-  margin-bottom: 10px;
+    min-width: 150px;
+    margin-bottom: 10px;
 }
 
 .allele-col ul {
-  margin: 0;
-  padding-left: 20px;
+    margin: 0;
+    padding-left: 20px;
 }
 
 .allele-col li {
-  list-style: none;
-  padding: 2px 5px;
-  font-size: 0.85rem;
+    list-style: none;
+    padding: 2px 5px;
+    font-size: 0.85rem;
 }
 
 .allele-col li.highlighted {
-  font-weight: bold;
-  background-color: #e8f4f8;
-  border-radius: 3px;
+    font-weight: bold;
+    background-color: #e8f4f8;
+    border-radius: 3px;
 }
 
 /* Estilo para el gráfico de pastel en el modal */
 .pie-slice {
-  cursor: pointer;
-  transition: opacity 0.2s;
+    cursor: pointer;
+    transition: opacity 0.2s;
 }
 
 .pie-slice:hover {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 /* Centrar etiquetas nativas del slider */
 .slider .slider-tick-label {
     text-align: center !important;
     white-space: nowrap;
-    font-size: 0.7rem;          /* ajustable */
-    color: #555;                /* opcional */
-    margin-top: 4px;            /* separación vertical */
+    font-size: 0.7rem; /* ajustable */
+    color: #555; /* opcional */
+    margin-top: 4px; /* separación vertical */
 }
 
 /* ------------------------------ */
@@ -87,10 +87,10 @@
 .card-tools {
     width: 100% !important;
     display: flex !important;
-    flex-wrap: wrap !important;      /* permite que los filtros bajen a la siguiente línea si no caben */
+    flex-wrap: wrap !important; /* permite que los filtros bajen a la siguiente línea si no caben */
     justify-content: flex-start;
     align-items: center;
-    gap: 0.5rem;                     /* espacio uniforme entre elementos, soportado en navegadores modernos */
+    gap: 0.5rem; /* espacio uniforme entre elementos, soportado en navegadores modernos */
 }
 
 /* Para navegadores que no soporten gap en flex, añadimos un margen lateral a cada hijo */
@@ -111,8 +111,120 @@
 /* ------------------------------ */
 
 #map {
-    max-width: 90% !important;      /* evita que el mapa se salga del contenedor */
+    max-width: 90% !important; /* evita que el mapa se salga del contenedor */
     width: 90% !important;
     height: 590px;
     margin: 0 auto;
+}
+
+/* =============================================
+   ESTILOS PARA MÓVIL (hasta 768px de ancho)
+   ============================================= */
+@media (max-width: 768px) {
+    /* ---- 1. Reset general del card y sus hijos ---- */
+    .card,
+    .card-header,
+    .card-body,
+    .right-sidebar,
+    .content-wrapper,
+    .content,
+    .container-fluid,
+    .row,
+    .col-12 {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    /* ---- 2. Barra de filtros en columna ---- */
+    .card-tools {
+        flex-direction: column !important;
+        align-items: center !important; /* centrar hijos horizontalmente */
+        gap: 0.5rem;
+        width: 100% !important;
+    }
+
+    /* Cada filtro ocupa un ancho cómodo (92%) y se centra */
+    .card-tools > * {
+        width: 92% !important; /* no llega al borde, deja margen a los lados */
+        max-width: 400px; /* evita que se estire demasiado en tablets */
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* Excepción: el texto pequeño "primary source" que no debe centrarse */
+    .card-tools .d-inline-block.align-middle[style*="font-size:.6rem"] {
+        width: auto !important;
+        max-width: none;
+        margin-left: 0 !important;
+        margin-right: auto !important;
+        text-align: left;
+    }
+
+    /* ---- 3. Anular anchos fijos inline y darles el mismo ancho que el contenedor padre ---- */
+    .card-tools div[style*="width"],
+    .card-tools select,
+    .card-tools .select2-container,
+    .card-tools input[type="text"],
+    .card-tools .btn {
+        width: 100% !important; /* dentro del 92% del padre */
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    /* Select2 múltiple */
+    .select2-sm-custom + .select2-container--bootstrap4,
+    .select2-sm-custom + .select2-container--bootstrap4 .select2-selection--multiple {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+
+    /* Etiquetas (labels) */
+    .card-tools label {
+        width: 100% !important;
+        display: block;
+    }
+
+    /* ---- 4. Mapa: ancho completo, alto reducido ---- */
+    #map {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 300px !important; /* ajustable */
+        margin: 0 !important;
+        box-sizing: border-box;
+    }
+
+    /* ---- 5. Pequeños retoques visuales ---- */
+    .card-header h3.card-title {
+        font-size: 1rem;
+    }
+
+    /* Asegurar que nada se salga por overflow */
+    body,
+    .content-wrapper {
+        overflow-x: hidden;
+    }
+
+    /* ---- Corrección de las marcas del slider (1 y 4M) en móvil ---- */
+    .slider.slider-horizontal {
+        overflow: visible !important; /* permite ver las etiquetas */
+    }
+
+    .slider .slider-tick-label {
+        width: auto !important; /* anula el ancho fijo inline */
+        max-width: none !important;
+        transform: translateX(-50%) !important; /* centra la etiqueta sobre la marca */
+        white-space: nowrap;
+        font-size: 0.65rem; /* un poco más pequeño para móvil */
+        margin-top: 2px;
+        /* Las posiciones left ya las pone el plugin, solo centramos */
+    }
+
+    /* Opcional: dar más espacio inferior al slider para que las etiquetas no lo pisen */
+    .card-tools .d-inline-block.align-middle[style*="width:230px"] {
+        margin-bottom: 10px; /* separación extra para los ticks */
+    }
 }

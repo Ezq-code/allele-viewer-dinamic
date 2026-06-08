@@ -55,7 +55,7 @@ const populationRangesAfrica = [
     { start: 1870, end: 1937, mag: 355662677 },
     { start: 1940, end: 1985, mag: 355662677 },
     { start: 1986, end: 2010, mag: 811883854 },
-    { start: 2011, end: 2025, mag: 1420012436 }
+    { start: 2011, end: 2026, mag: 1420012436 }
 ];
 
 const populationRangesWesternAsia = [
@@ -75,7 +75,7 @@ const populationRangesWesternAsia = [
     { start: 1870, end: 1937, mag: 1095343523 },
     { start: 1940, end: 1985, mag: 1095343523 },
     { start: 1986, end: 2010, mag: 200404752 },
-    { start: 2011, end: 2025, mag: 319484333 }
+    { start: 2011, end: 2026, mag: 319484333 }
 ];
 
 const populationRangesEurope = [
@@ -95,7 +95,7 @@ const populationRangesEurope = [
     { start: 1870, end: 1937, mag: 231200015 },
     { start: 1940, end: 1985, mag: 599502979 },
     { start: 1986, end: 2010, mag: 772909404 },
-    { start: 2011, end: 2025, mag: 772909404 }
+    { start: 2011, end: 2026, mag: 772909404 }
 ];
 
 const populationRangesEasternAsia = [
@@ -115,7 +115,7 @@ const populationRangesEasternAsia = [
     { start: 1870, end: 1937, mag: 774796124 },
     { start: 1940, end: 1985, mag: 1699310746 },
     { start: 1986, end: 2010, mag: 4331271026 },
-    { start: 2011, end: 2025, mag: 4331271026 }
+    { start: 2011, end: 2026, mag: 4331271026 }
 ];
 
 const populationRangesOceania = [
@@ -135,7 +135,7 @@ const populationRangesOceania = [
     { start: 1870, end: 1937, mag: 7543319 },
     { start: 1940, end: 1985, mag: 19697133 },
     { start: 1986, end: 2010, mag: 44590927 },
-    { start: 2011, end: 2025, mag: 44590927 }
+    { start: 2011, end: 2026, mag: 44590927 }
 ];
 
 const populationRangesNorthAmerica = [
@@ -155,7 +155,7 @@ const populationRangesNorthAmerica = [
     { start: 1870, end: 1937, mag: 112843082 },
     { start: 1940, end: 1985, mag: 112843082 },
     { start: 1986, end: 2010, mag: 204884389 },
-    { start: 2011, end: 2025, mag: 379518336 }
+    { start: 2011, end: 2026, mag: 379518336 }
 ];
 
 const populationRangesLatinAmericaCarib = [
@@ -175,7 +175,7 @@ const populationRangesLatinAmericaCarib = [
     { start: 1870, end: 1937, mag: 73065409 },
     { start: 1940, end: 1985, mag: 231867728 },
     { start: 1986, end: 2010, mag: 668863908 },
-    { start: 2011, end: 2025, mag: 668863908 }
+    { start: 2011, end: 2026, mag: 668863908 }
 ];
 
 
