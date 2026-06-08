@@ -142,6 +142,44 @@ $(document).ready(function () {
         { data: "gene_name", title: "Gen" },
         { data: "predefined", title: "Predefinido" },
         {
+          data: "studies",
+          title: "Estudios Cargados",
+          render: (data, type, row) => {
+            if (!data || data.length === 0) {
+              return '<span class="badge badge-secondary">Sin estudios</span>';
+            }
+            
+            return data.map((study) => {
+              const icon = study.successfull_load 
+                ? '<i class="fas fa-check-circle" style="color: green;"></i>' 
+                : '<i class="fas fa-times-circle" style="color: red;"></i>';
+              const status = study.successfull_load ? 'Exitoso' : 'Error';
+              const statusClass = study.successfull_load ? 'badge-success' : 'badge-danger';
+              const date = new Date(study.created_at).toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+              });
+              
+              let html = `<div style="margin-bottom: 8px;">
+                <div>${icon} <strong>${study.study_type_display}</strong></div>
+                <span class="badge ${statusClass}">${status}</span>
+                <span class="badge badge-info" style="margin-left: 5px;">${date}</span>`;
+              
+              if (study.extra_info) {
+                html += `<div style="font-size: 0.85em; margin-top: 4px; color: #666;">
+                  ${study.extra_info}
+                </div>`;
+              }
+              
+              html += '</div>';
+              return html;
+            }).join('');
+          },
+        },
+        {
           data: "",
           title: "Acciones",
           render: (data, type, row) => {
