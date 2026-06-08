@@ -391,3 +391,7 @@ PUSHER_SECRET = env.str("PUSHER_SECRET", default="")  # Example secret TODO: cha
 PUSHER_CLUSTER = env.str(
     "PUSHER_CLUSTER", default=""
 )  # Example cluster TODO: change it
+
+
+# Para mejorar rendimiento de bulk_create
+DJANGO_BULK_CREATE_BATCH_SIZE = 5000
