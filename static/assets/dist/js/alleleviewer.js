@@ -536,20 +536,55 @@ document.getElementById("selectGene").addEventListener("change", function () {
   poblarArchivosPorGen(geneId);
 });
 
-// Evento: al cambiar el estudio, actualizar la lista de PDB asociada.
+// Evento: al cambiar el estudio, actualizar metadatos y validar su PDB por defecto.
 document.getElementById("selectfile").addEventListener("change", function () {
   actualizarSelectPdbPorStudyId(this.value);
 });
 
+// Obtiene el PDB por defecto de un estudio soportando payload legado y nuevo
+function obtenerPdbPorDefectoDelEstudio(study) {
+  if (!study) {
+    return null;
+  }
+
+  if (Array.isArray(study.pdb_files) && study.pdb_files.length > 0) {
+    return study.pdb_files[0];
+  }
+
+  if (
+    study.pdb_files &&
+    typeof study.pdb_files === "object" &&
+    study.pdb_files.pdb_content
+  ) {
+    return study.pdb_files;
+  }
+
+  if (
+    study.pdb_file &&
+    typeof study.pdb_file === "object" &&
+    study.pdb_file.pdb_content
+  ) {
+    return study.pdb_file;
+  }
+
+  if (study.pdb_content) {
+    return {
+      id: study.pdb_file_id || null,
+      custom_name: study.pdb_file_name || "Default PDB",
+      pdb_content: study.pdb_content,
+    };
+  }
+
+  return null;
+}
+
 function actualizarSelectPdbPorStudyId(studyId) {
   if (!studyId || !Array.isArray(globalData)) {
-    document.getElementById("selectPdb").innerHTML = "";
     return;
   }
 
   const studyPosition = findPosition(globalData, studyId);
   if (studyPosition === -1) {
-    document.getElementById("selectPdb").innerHTML = "";
     return;
   }
 
@@ -557,8 +592,8 @@ function actualizarSelectPdbPorStudyId(studyId) {
   localStorage.setItem("selectedStudyId", String(selectedStudy.id));
   localStorage.setItem("selectedStudyTypeDisplay", selectedStudy.study_type_display);
   localStorage.setItem("uploadFileId", String(selectedStudy.uploaded_file));
-  poblarListasPdb(selectedStudy.pdb_files || []);
-  poblarListasCopy(selectedStudy.id);
+  poblarListasPdb(obtenerPdbPorDefectoDelEstudio(selectedStudy));
+  // poblarListasCopy(selectedStudy.id);
 }
 
 // Función para poblar archivos según el gen seleccionado
@@ -591,7 +626,6 @@ function poblarArchivosPorGen(geneId) {
         selectfile.value = firstStudyId;
         actualizarSelectPdbPorStudyId(firstStudyId);
       } else {
-        document.getElementById("selectPdb").innerHTML = "";
         load.hidden = true;
         Swal.fire({
           icon: "warning",
@@ -614,14 +648,11 @@ function poblarArchivosPorGen(geneId) {
     });
 }
 
-// Función para poblar la lista desplegable de los pdb
-function poblarListasPdb(versionAllele) {
+// Valida disponibilidad del PDB por defecto y dispara carga automática cuando aplique
+function poblarListasPdb(pdbDefault) {
   load.hidden = false;
-  var $selectPdb = document.getElementById("selectPdb");
 
-  $selectPdb.innerHTML = "";
-  
-  if (!versionAllele || versionAllele.length === 0) {
+  if (!pdbDefault || !pdbDefault.pdb_content) {
     load.hidden = true;
     Swal.fire({
       icon: "warning",
@@ -633,11 +664,6 @@ function poblarListasPdb(versionAllele) {
     return;
   }
   
-  versionAllele.forEach(function (element) {
-    var option = new Option(element.custom_name, element.id);
-    $selectPdb.add(option);
-  });
-
   let autoLoad = localStorage.getItem("autoLoad");
 
   if (autoLoad == `true`) {
@@ -655,16 +681,15 @@ function selectUrl() {
     labelOn = false;
     zoom.value = 0;
     var $selectfile = document.getElementById("selectfile");
-    var $selectPdb = document.getElementById("selectPdb");
     var idFile = $selectfile.value;
     
-    // Validar que hay valores seleccionados
-    if (!idFile || !$selectPdb.value) {
+    // Validar que hay estudio seleccionado
+    if (!idFile) {
       load.hidden = true;
       Swal.fire({
         icon: "warning",
         title: "Select a file",
-        text: "Please select a gene, file, and PDB.",
+        text: "Please select a gene and file.",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -687,22 +712,26 @@ function selectUrl() {
       return;
     }
     
-    let pos = findPosition(elemento.pdb_files, $selectPdb.value);
-    
-    if (pos === -1) {
+    const pdbDefault = obtenerPdbPorDefectoDelEstudio(elemento);
+
+    if (!pdbDefault || !pdbDefault.pdb_content) {
       load.hidden = true;
       Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "The selected PDB file could not be found.",
-        showConfirmButton: true,
+        icon: "warning",
+        title: "No PDB files",
+        text: "No PDB files available for the selected file.",
+        showConfirmButton: false,
+        timer: 2000,
       });
       return;
     }
 
-    let versionAllele = elemento.pdb_files[pos].pdb_content;
+    let versionAllele = pdbDefault.pdb_content;
     localStorage.setItem("selectedStudyId", String(idFile));
     localStorage.setItem("uploadFileId", String(elemento.uploaded_file));
+    if (pdbDefault.id) {
+      localStorage.setItem("selectedPdbId", String(pdbDefault.id));
+    }
     localStorage.setItem("pdb", versionAllele);
     graficar_string(versionAllele);
     snpModalShowBotton.disabled = false;

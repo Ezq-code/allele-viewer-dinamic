@@ -426,24 +426,3 @@ function sendRSControlValues() {
     });
 }
 
-function selectPdbContainer() {
-  zoom.value = 0;
-  var $selectfile = document.getElementById("selectfile");
-  var idFile = $selectfile.value;
-  axios
-    .get("/business-gestion/study/" + idFile + "/")
-    .then(function (response) {
-      const elemento = response.data;
-      let versionAllele = elemento.pdb_files;
-      localStorage.setItem("selectedStudyId", String(elemento.id));
-      localStorage.setItem("uploadFileId", String(elemento.uploaded_file));
-      poblarListasPdb(versionAllele);
-      poblarListasCopy(elemento.id);
-    })
-    .catch(function (error) {
-      Toast.fire({
-        icon: "error",
-        title: `${error.response.data.detail}`,
-      });
-    });
-}
