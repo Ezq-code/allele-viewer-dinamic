@@ -23,9 +23,45 @@ var datos;
 var globalData;
 var sphereRadiusFactor = 12;
 var stickRadiusFactor = 0.003;
+var nonGeneticBaseSphereRadius = 4.2;
+var nonGeneticGroupColorBySerial = {};
+
+const nonGeneticGroupPalette = [
+  "#e63946",
+  "#3a86ff",
+  "#2a9d8f",
+  "#f4a261",
+  "#8e44ad",
+  "#ff006e",
+  "#06d6a0",
+  "#ffbe0b",
+  "#1d3557",
+  "#8338ec",
+];
 
 var snpModalShowBotton = document.getElementById("snpModalShowBotton");
 var ExpandModalShowBotton = document.getElementById("ExpandModalShowBotton");
+
+// Asegura id/name en campos internos de Select2 para evitar warnings de autofill.
+function ensureSelect2FieldsHaveIdentity() {
+  const fields = document.querySelectorAll(".select2-search__field");
+  fields.forEach((field, index) => {
+    if (!field.id) {
+      field.id = `select2-search-field-${index + 1}`;
+    }
+    if (!field.name) {
+      field.name = field.id;
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  ensureSelect2FieldsHaveIdentity();
+  $(document).on("select2:open", function () {
+    ensureSelect2FieldsHaveIdentity();
+  });
+});
+
 // Variable con el token
 const csrfToken = document.cookie
   .split(";")
@@ -38,6 +74,9 @@ viewer = $3Dmol.createViewer(element, {
   controls: "trackball orbit fps scroll dnd",
 });
 
+// ==========================
+// CONTROLES DE VISUALIZACION
+// ==========================
 // Inicio del menú de configuracion
 
 // Bloque para mostrar las esferas
@@ -55,20 +94,20 @@ checkbox.addEventListener("change", function () {
 // Bloque para mostrar los ejes de coordenadas
 var checkboxAxes = document.getElementById("show_axes");
 checkboxAxes.addEventListener("change", function () {
-  axes_hidden = checkboxAxes.checked ? checkboxAxes.value : null;
-  if (axes_hidden == 0) {
+  const showAxes = checkboxAxes.checked;
+  axes_hidden = showAxes ? checkboxAxes.value : null;
+  if (showAxes) {
     a.hidden = false;
     b.hidden = false;
     c.hidden = false;
     XYZLabels(true);
-    viewer.render();
   } else {
     a.hidden = true;
     b.hidden = true;
     c.hidden = true;
     XYZLabels(false);
-    viewer.render();
   }
+  viewer.render();
 });
 
 // Dibuja un anillo discontinuo usando cilindros en el viewer de $3Dmol
@@ -176,15 +215,16 @@ function mostrarAnilloCilindros(viewer, config) {
         position: position,
         fontSize: 14,
         fontColor: color,
-        backgroundColor: "rgba(255,255,255,0.7)",
+        backgroundColor: "#ffffff",
+        opacity: 0.7,
         borderThickness: 1,
         borderColor: color,
       });
     }
   }
-  viewer.render();
 }
 
+// Redibuja las etiquetas de escala para los anillos de referencia.
 function mostrarLabelsAnillos() {
   // Lista de textos de los labels de los anillos (ajusta si tus textos cambian)
   const textosAnillos = [
@@ -221,7 +261,8 @@ function mostrarLabelsAnillos() {
       },
       fontSize: 14,
       fontColor: anillo.color,
-      backgroundColor: "rgba(255,255,255,0.7)",
+      backgroundColor: "#ffffff",
+      opacity: 0.7,
       borderThickness: 1,
       borderColor: anillo.color,
     });
@@ -230,6 +271,7 @@ function mostrarLabelsAnillos() {
   viewer.render();
 }
 
+// Dibuja todos los anillos de referencia sobre el eje indicado.
 function viewRingsFrom(axis) {
   // Permite visualizar el gráfico desde el eje seleccionado usando 3Dmol.js
   const validAxes = ["x", "y", "z"];
@@ -265,6 +307,7 @@ function viewRingsFrom(axis) {
   viewer.render();
 }
 
+// Variante legacy para dibujar anillos por eje con configuración explícita.
 function viewRingsFrom2(axis) {
   // Permite visualizar el gráfico desde el eje seleccionado usando 3Dmol.js
 
@@ -463,6 +506,9 @@ checkboxMultiGraph.addEventListener("change", function () {
 
 // fin del menú de configuracion
 
+// =========================
+// INICIALIZACION DE PANTALLA
+// =========================
 // Inicializar las funciones
 $(function () {
   checkInternalStatus();
@@ -541,6 +587,7 @@ document.getElementById("selectfile").addEventListener("change", function () {
   actualizarSelectPdbPorStudyId(this.value);
 });
 
+// Obtiene el PDB por defecto tolerando formatos de respuesta nuevos y antiguos.
 // Obtiene el PDB por defecto de un estudio soportando payload legado y nuevo
 function obtenerPdbPorDefectoDelEstudio(study) {
   if (!study) {
@@ -578,6 +625,7 @@ function obtenerPdbPorDefectoDelEstudio(study) {
   return null;
 }
 
+// Actualiza metadatos en localStorage cuando cambia el estudio seleccionado.
 function actualizarSelectPdbPorStudyId(studyId) {
   if (!studyId || !Array.isArray(globalData)) {
     return;
@@ -598,7 +646,6 @@ function actualizarSelectPdbPorStudyId(studyId) {
 
 // Función para poblar archivos según el gen seleccionado
 function poblarArchivosPorGen(geneId) {
-  console.log("✌️geneId --->", geneId);
   load.hidden = false;
   const selectfile = document.getElementById("selectfile");
   selectfile.innerHTML = "";
@@ -612,9 +659,7 @@ function poblarArchivosPorGen(geneId) {
     .then(function (response) {
       globalData = response.data.results;
       localStorage.setItem("globalData", JSON.stringify(globalData));
-      console.log("✌️response.data.results --->", response.data.results);
-      console.log("✌️globalData --->", globalData);
-      response.data.results.forEach(function (study) {
+        response.data.results.forEach(function (study) {
         const option = document.createElement("option");
         option.value = study.id;
         option.textContent = study.study_type_display;
@@ -673,6 +718,7 @@ function poblarListasPdb(pdbDefault) {
   load.hidden = true;
 }
 
+// Carga el PDB activo en el viewer y habilita acciones de interacción.
 function selectUrl() {
   try {
     if (!multi_graph) {
@@ -700,6 +746,7 @@ function selectUrl() {
     document.getElementById("filter_region").disabled = false;
 
     const elemento = globalData[findPosition(globalData, $selectfile.value)];
+console.log('✌️elemento --->', elemento);
     
     if (!elemento) {
       load.hidden = true;
@@ -748,6 +795,7 @@ function selectUrl() {
   }
 }
 
+// Busca la posición de un elemento por id dentro de un arreglo.
 function findPosition(data, id) {
   for (var i = 0; i < data.length; i++) {
     if (data[i].id == id) {
@@ -757,27 +805,39 @@ function findPosition(data, id) {
   return -1;
 }
 
+// ==========================
+// INTERACCIONES CON UN NODO
+// ==========================
+
+// Consulta datos del nodo clickeado y muestra un toast con acciones contextuales.
 async function showInfo(atom) {
   $(".showalleleinfo").toast("hide");
 
   const atomNumber = atom.serial;
+
   load.hidden = false;
   const toastClass = seleccionarEstiloAleatorio();
   const selectedStudyId = localStorage.getItem("selectedStudyId");
-  const selectedStudyTypeDisplay = localStorage.getItem("selectedStudyTypeDisplay");
+   const selectedStudyTypeDisplay = localStorage.getItem("selectedStudyTypeDisplay");
+
   let specific_node_url = ""
   if (selectedStudyTypeDisplay == 'Genetic Allele') {
     specific_node_url='allele-nodes'
+console.log('✌️specific_node_url --->', specific_node_url);
   }
   else{
     specific_node_url='protein-nodes'
+console.log('✌️specific_node_url --->', specific_node_url+" "+selectedStudyId+" "+atomNumber);
   }
   const url = `/business-gestion/${specific_node_url}/${selectedStudyId}-${atomNumber}/`;
+console.log('✌️url --->', url);
 
   axios
     .get(url)
     .then((response) => {
       const elemento = response.data;
+console.log('✌️elemento --->', elemento);
+
       // const imageHtml = `
       //   <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
       // `;
@@ -862,6 +922,7 @@ async function showInfo(atom) {
     });
 }
 
+  // Muestra en un modal la lista de RS asociada al nodo.
 function mostrarRS(rsList) {
   Swal.fire({
     title: "RS List",
@@ -871,6 +932,7 @@ function mostrarRS(rsList) {
   });
 }
 
+// Selecciona aleatoriamente el estilo visual del toast de información.
 function seleccionarEstiloAleatorio() {
   const estilos = [
     "bg-info showalleleinfo",
@@ -883,11 +945,115 @@ function seleccionarEstiloAleatorio() {
   return estilos[indiceAleatorio];
 }
 
+// Dispara la búsqueda usando el valor actual del input de texto.
 function callBuscar() {
   const inputValue = document.getElementById("buscar").value;
   buscar(inputValue);
 }
 
+// Indica si el estudio actual usa el modo de tamaño uniforme para esferas.
+function isNonGeneticStudy() {
+  return localStorage.getItem("selectedStudyTypeDisplay") !== "Genetic Allele";
+}
+
+// Verifica si el nodo está marcado como final para alelo.
+function isFinalAlleleNode(node) {
+  return node.is_final_for_allele === true || node.is_final_for_allele === "true";
+}
+
+// Calcula el radio efectivo de la esfera según tipo de estudio y estado final.
+function resolveSphereRadius(node, zoomMultiplier = 1) {
+  if (isNonGeneticStudy()) {
+    const baseRadius = isFinalAlleleNode(node)
+      ? nonGeneticBaseSphereRadius * 2
+      : nonGeneticBaseSphereRadius;
+    return baseRadius * zoomMultiplier;
+  }
+
+  return (node.sphere_radius || nonGeneticBaseSphereRadius) * zoomMultiplier;
+}
+
+// Devuelve el color base de la esfera para el nodo según el grupo conectado.
+function resolveSphereColor(node) {
+  if (!isNonGeneticStudy()) {
+    return null;
+  }
+  return nonGeneticGroupColorBySerial[node.number] || "#3a86ff";
+}
+
+// Devuelve el color base del stick para el nodo actual.
+function resolveStickColor(node) {
+  if (!isNonGeneticStudy()) {
+    return "spectrum";
+  }
+  return nonGeneticGroupColorBySerial[node.number] || "#3a86ff";
+}
+
+// Calcula grupos conectados (componentes) y asigna un color distinto por grupo.
+function assignNonGeneticGroupColors() {
+  nonGeneticGroupColorBySerial = {};
+  if (!isNonGeneticStudy() || !Array.isArray(datos) || datos.length === 0) {
+    return;
+  }
+
+  const model = viewer.getModel();
+  if (!model || !Array.isArray(model.atoms)) {
+    return;
+  }
+
+  const nodesSerialSet = new Set(datos.map((node) => Number(node.number)));
+  const atomsBySerial = new Map();
+
+  model.atoms.forEach((atom, atomIndex) => {
+    if (!atom || !nodesSerialSet.has(Number(atom.serial))) {
+      return;
+    }
+    atomsBySerial.set(Number(atom.serial), { atom, atomIndex });
+  });
+
+  const visited = new Set();
+  let groupIndex = 0;
+
+  nodesSerialSet.forEach((serial) => {
+    if (visited.has(serial)) {
+      return;
+    }
+
+    const groupColor =
+      nonGeneticGroupPalette[groupIndex % nonGeneticGroupPalette.length];
+    groupIndex++;
+
+    const queue = [serial];
+    visited.add(serial);
+
+    while (queue.length > 0) {
+      const currentSerial = queue.shift();
+      nonGeneticGroupColorBySerial[currentSerial] = groupColor;
+
+      const current = atomsBySerial.get(currentSerial);
+      if (!current || !Array.isArray(current.atom.bonds)) {
+        continue;
+      }
+
+      current.atom.bonds.forEach((bondedAtomIndex) => {
+        const bondedAtom = model.atoms[bondedAtomIndex];
+        if (!bondedAtom) {
+          return;
+        }
+
+        const bondedSerial = Number(bondedAtom.serial);
+        if (!nodesSerialSet.has(bondedSerial) || visited.has(bondedSerial)) {
+          return;
+        }
+
+        visited.add(bondedSerial);
+        queue.push(bondedSerial);
+      });
+    }
+  });
+}
+
+// Filtra y resalta nodos en el viewer según un término de búsqueda.
 function buscar(params) {
   load.hidden = false;
   var searchurl =
@@ -904,7 +1070,7 @@ function buscar(params) {
       const highlightColor = "#ffaa02";
       datos.forEach((element) => {
         const stickRadius = element.stick_radius;
-        const sphereRadius = element.sphere_radius;
+        const sphereRadius = resolveSphereRadius(element);
         if (atomData.some((item) => item.number == element.number)) {
           viewer.setStyle(
             { serial: element.number },
@@ -942,16 +1108,22 @@ function buscar(params) {
     });
 }
 
+// Wrapper para cargar familia usando el nodo seleccionado actualmente.
 function loadFamilyClean() {
   childFamily(selectActual);
 }
+
+// Wrapper para cargar la familia visible de un nodo dado.
 function loadFamily(id) {
   childFamily(id);
 }
+
+// Wrapper legacy para mantener compatibilidad de llamadas completas.
 function loadFamilyFull(id) {
   childFamily(id);
 }
 
+// Resalta visualmente el nodo objetivo y sus hijos directos.
 function family(id) {
   const highlightColor = "#ffaa02";
 
@@ -962,7 +1134,7 @@ function family(id) {
       viewer.setStyle(
         { serial: element.number },
         {
-          sphere: { color: highlightColor, radius: element.sphere_radius, hidden: false },
+          sphere: { color: highlightColor, radius: resolveSphereRadius(element), hidden: false },
           stick: { color: highlightColor, radius: element.stick_radius, showNonBonded: false, hidden: false },
         }
       );
@@ -970,7 +1142,7 @@ function family(id) {
       viewer.setStyle(
         { serial: element.number },
         {
-          sphere: { color: "#eae8e8", radius: element.sphere_radius, hidden: false },
+          sphere: { color: "#eae8e8", radius: resolveSphereRadius(element), hidden: false },
           stick: { color: "#eae8e8", radius: element.stick_radius, showNonBonded: false, hidden: false },
         }
       );
@@ -980,6 +1152,7 @@ function family(id) {
   viewer.render();
 }
 
+// Devuelve un átomo por serial usando los átomos seleccionados del modelo.
 function getAtomBySerial(serial) {
   var atoms = viewer.getModel().selectedAtoms();
 
@@ -992,6 +1165,46 @@ function getAtomBySerial(serial) {
   return false; // Si no se encuentra el átomo con el serial especificado
 }
 
+
+// Agrega labels en nodos finales cuando el estudio no es tipo Genetic Allele.
+function addFinalAlleleLabelsIfNeeded() {
+  const selectedStudyTypeDisplay = localStorage.getItem(
+    "selectedStudyTypeDisplay"
+  );
+
+  if (selectedStudyTypeDisplay === "Genetic Allele") {
+    return;
+  }
+
+  datos.forEach((node) => {
+    const isFinalNode = isFinalAlleleNode(node);
+
+    if (!isFinalNode || !node.allele) {
+      return;
+    }
+
+    const atom = obtenerAtomoDesdeViewer(viewer, node.number);
+    if (!atom) {
+      return;
+    }
+
+    viewer.addLabel(String(node.allele), {
+      position: {
+        x: atom.x,
+        y: atom.y,
+        z: atom.z,
+      },
+      fontSize: 12,
+      fontColor: "#111111",
+      backgroundColor: "#ffffff",
+      opacity: 0.85,
+      borderThickness: 1,
+      borderColor: "#ff6b6b",
+    });
+  });
+}
+
+// Aplica estilo base a todos los nodos del estudio y centra la escena.
 function child() {
   viewer.removeAllLabels();
   const selectedStudyId = localStorage.getItem("selectedStudyId");
@@ -1002,26 +1215,36 @@ function child() {
     return;
   }
   datos = elemento.allele_nodes;
+  assignNonGeneticGroupColors();
 
-  datos.forEach(({ number, stick_radius, sphere_radius }) => {
+  datos.forEach((element) => {
+    const sphereColor = resolveSphereColor(element);
+    const stickColor = resolveStickColor(element);
     viewer.setStyle(
-      { serial: number },
+      { serial: element.number },
       {
-        sphere: { radius: sphere_radius },
+        sphere: {
+          radius: resolveSphereRadius(element),
+          color: sphereColor || undefined,
+        },
         stick: {
-          color: "spectrum",
-          radius: stick_radius,
+          color: stickColor,
+          radius: element.stick_radius,
           showNonBonded: false,
         },
       }
     );
   });
+
+  addFinalAlleleLabelsIfNeeded();
+
   viewer.zoomTo();
   viewer.zoom(5, 1000);
   viewer.render();
   load.hidden = true;
 }
 
+// Solicita y muestra el árbol familiar completo del nodo seleccionado.
 function childFull(id) {
   var data = {
     pdb: localStorage.getItem("uploadFileId"),
@@ -1072,6 +1295,7 @@ function childFull(id) {
     });
 }
 
+  // Muestra solo el nodo actual y sus descendientes inmediatos.
 function childFamily(id) {
   datos.forEach((element) => {
     const isVisible =
@@ -1107,6 +1331,7 @@ function childFamily(id) {
   viewer.render();
 }
 
+// Localiza un átomo en el modelo completo a partir del serial.
 function obtenerAtomoDesdeViewer(viewer, serial) {
   // 1. Acceder a la estructura molecular
   const estructura = viewer.getModel().atoms;
@@ -1114,6 +1339,7 @@ function obtenerAtomoDesdeViewer(viewer, serial) {
   return estructura.find((item) => item.serial === serial) || null;
 }
 
+// Pinta el árbol genealógico separando nodo principal, predecesores y sucesores.
 function genealogicalTree(id) {
   console.log("sucessors:", sucessors);
   console.log("predecessors:", predecessors);
@@ -1143,7 +1369,7 @@ function genealogicalTree(id) {
         {
           sphere: {
             color: "#ff0000", // Color rojo para destacar
-            radius: element.sphere_radius, // Mantener radio original
+            radius: resolveSphereRadius(element),
             hidden: false,
           },
           stick: {
@@ -1163,7 +1389,8 @@ function genealogicalTree(id) {
         },
         fontSize: 12,
         fontColor: "#ff0000",
-        backgroundColor: "rgba(21, 1, 1, 0.8)",
+        backgroundColor: "#150101",
+        opacity: 0.8,
         borderThickness: 1,
         borderColor: "#ff0000",
       });
@@ -1174,7 +1401,7 @@ function genealogicalTree(id) {
         {
           sphere: {
             color: "#00ff00", // Color verde
-            radius: element.sphere_radius, // Mantener radio original
+            radius: resolveSphereRadius(element),
             hidden: false,
           },
           stick: {
@@ -1199,7 +1426,8 @@ function genealogicalTree(id) {
           },
           fontSize: 12,
           fontColor: "#00ff00",
-          backgroundColor: "rgba(21, 1, 1, 0.8)",
+          backgroundColor: "#150101",
+          opacity: 0.8,
           borderThickness: 1,
           borderColor: "#00ff00",
         });
@@ -1212,7 +1440,7 @@ function genealogicalTree(id) {
         {
           sphere: {
             color: "#ffff00", // Color amarillo
-            radius: element.sphere_radius, // Mantener radio original
+            radius: resolveSphereRadius(element),
             hidden: false,
           },
           stick: {
@@ -1236,7 +1464,8 @@ function genealogicalTree(id) {
           },
           fontSize: 12,
           fontColor: "#ffff00",
-          backgroundColor: "rgba(21, 1, 1, 0.8)",
+          backgroundColor: "#150101",
+          opacity: 0.8,
           borderThickness: 1,
           borderColor: "#ffff00",
         });
@@ -1261,6 +1490,11 @@ function genealogicalTree(id) {
   load.hidden = true;
 }
 
+// ==========================
+// FILTROS Y TRANSFORMACIONES
+// ==========================
+
+// Abre un selector modal para filtrar nodos por región geográfica.
 function filter_Region() {
   Swal.fire({
     title: "Select a Region",
@@ -1293,6 +1527,7 @@ function filter_Region() {
   });
 }
 
+// Aplica el filtro de región ocultando nodos fuera de la selección.
 function applyRegionFilter(region) {
   resetGraficView();
   datos.forEach((element) => {
@@ -1315,15 +1550,20 @@ function applyRegionFilter(region) {
   viewer.render();
 }
 
+// Restablece la visibilidad completa de nodos y conexiones.
 function resetGraficView() {
   datos.forEach((element) => {
+    const sphereColor = resolveSphereColor(element);
+    const stickColor = resolveStickColor(element);
     viewer.setStyle(
       { serial: element.number },
       {
         sphere: {
+          color: sphereColor || undefined,
           hidden: false, // Ocultar esfera
         },
         stick: {
+          color: stickColor,
           hidden: false, // Ocultar stick
         },
       }
@@ -1332,6 +1572,7 @@ function resetGraficView() {
   // viewer.render();
 }
 
+// Variante directa del filtro por región para reutilización interna.
 function filterByRegion(region) {
   datos.forEach((element) => {
     const isVisible = element.region === region;
@@ -1353,15 +1594,18 @@ function filterByRegion(region) {
   viewer.render();
 }
 
+// Reescala radios de esfera según el nivel de zoom personalizado.
 function childZoom() {
   datos.forEach((element) => {
     const stickRadius = element.stick_radius;
-    const sphereRadius = element.sphere_radius * zoomLevel;
+    const sphereRadius = resolveSphereRadius(element, zoomLevel);
+    const sphereColor = resolveSphereColor(element);
+    const stickColor = resolveStickColor(element);
     viewer.setStyle(
       { serial: element.number },
       {
-        sphere: { radius: sphereRadius },
-        stick: { color: "spectrum", radius: stickRadius, showNonBonded: false },
+        sphere: { radius: sphereRadius, color: sphereColor || undefined },
+        stick: { color: stickColor, radius: stickRadius, showNonBonded: false },
       }
     );
   });
@@ -1386,6 +1630,7 @@ addchangessnp.addEventListener("click", function () {
   sendRSControlValues();
 });
 
+// Carga los valores actuales de expansión XYZ del archivo activo.
 function loadOriginalXYZ() {
   axios
     .get(
@@ -1423,6 +1668,7 @@ myRangeZ.addEventListener("change", () => {
   currZ.innerText = myRangeZ.valueAsNumber;
 });
 
+// Envía al backend los factores XYZ y repinta el PDB resultante.
 function sendExpantionValues() {
   var fileId = localStorage.getItem("uploadFileId");
 
@@ -1454,6 +1700,7 @@ function sendExpantionValues() {
     });
 }
 
+  // Inicializa el modo animación ocultando nodos y mostrando controles.
 function animation() {
   viewer.removeAllLabels();
   currentAnimationLabel = null;
@@ -1501,6 +1748,7 @@ let indiceActual = 0; // Índice del elemento actual
 let timeoutId; // Para almacenar el timeout
 let currentAnimationLabel = null; // Label activo durante la animación
 
+// Reproduce la animación paso a paso mostrando nodos por timeline.
 function mostrarElementos(lista, tiempo) {
   if (indiceActual >= lista.length) {
     if (currentAnimationLabel) {
@@ -1514,14 +1762,15 @@ function mostrarElementos(lista, tiempo) {
 
   const element = lista[indiceActual];
   const stickRadius = element.stick_radius;
-  const sphereRadius = element.sphere_radius;
+  const sphereRadius = resolveSphereRadius(element);
+  const stickColor = resolveStickColor(element);
 
   viewer.setStyle(
     { serial: element.number },
     {
       sphere: { radius: sphereRadius, hidden: false },
       stick: {
-        color: "spectrum",
+        color: stickColor,
         radius: stickRadius,
         showNonBonded: false,
         hidden: false,
@@ -1548,7 +1797,8 @@ function mostrarElementos(lista, tiempo) {
       },
       fontSize: 12,
       fontColor: "#ffffff",
-      backgroundColor: "rgba(21, 1, 1, 0.8)",
+      backgroundColor: "#150101",
+      opacity: 0.8,
       borderThickness: 1,
       borderColor: "#6c757d",
     });
@@ -1567,6 +1817,7 @@ function mostrarElementos(lista, tiempo) {
   }
 }
 
+// Retrocede un paso en la animación ocultando el nodo previo.
 function retroceder(lista) {
   if (indiceActual > 0) {
     indiceActual--;
@@ -1595,6 +1846,7 @@ function retroceder(lista) {
   }
 }
 
+// Avanza un paso en la animación de manera inmediata.
 function avanzar(lista) {
   if (indiceActual < lista.length) {
     mostrarElementos(lista, 0); // Mostrar el siguiente elemento inmediatamente
@@ -1611,6 +1863,7 @@ const speeds = [
   { label: "x4", value: 0.05 },
 ];
 
+// Construye el panel toast con controles de reproducción de la animación.
 function animationWindows() {
   $(document).Toasts("create", {
     class: "bg-lightblue controlpanel",
@@ -1659,6 +1912,7 @@ function animationWindows() {
   });
 }
 
+// Cambia la velocidad de reproducción entre presets configurados.
 function changeSpeed() {
   // Incrementar el índice de velocidad
   currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
@@ -1676,6 +1930,7 @@ function changeSpeed() {
   }
 }
 
+// Alterna entre pausar y reanudar la animación temporal.
 function playStopAnimation(button) {
   pausa = !pausa; // Cambiar el estado de pausa
   if (!pausa) {
@@ -1686,11 +1941,14 @@ function playStopAnimation(button) {
   togglePauseButton(button);
 }
 
+// Reencuadra el contenido del viewer al centro de la escena.
 function centerGrafig() {
   viewer.zoomTo();
   viewer.zoom(2, 1000);
   viewer.render();
 }
+
+// Limpia el viewer completo eliminando modelos y estilos activos.
 function selectClear() {
   viewer.clear();
   viewer.render();
