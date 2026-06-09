@@ -165,9 +165,22 @@ def _get_graph_info(study_id, node_number, function_to_call):
 
 
 def fill_predecessors_and_sucessors_for_all_nodes(study_id: int):
-    from apps.business_app.models.allele_node import AlleleNode
+    model_class = None
+    from apps.business_app.models.study_type import StudyType
 
-    nodes = AlleleNode.objects.filter(
+    if (
+        Study.objects.get(id=study_id).study_type.classification
+        == StudyType.CLASSIFICATION.ALLELE
+    ):
+        from apps.business_app.models.allele_node import AlleleNode
+
+        model_class = AlleleNode
+    else:
+        from apps.business_app.models.protein_node import ProteinNode
+
+        model_class = ProteinNode
+
+    nodes = model_class.objects.filter(
         study_id=study_id
     ).all()  # TODO make generic somehow
     list_to_update = []
@@ -185,7 +198,9 @@ def fill_predecessors_and_sucessors_for_all_nodes(study_id: int):
         node.sucessors = list(children_tree)
         node.predecessors = list(parent_tree)
         list_to_update.append(node)
-    AlleleNode.objects.bulk_update(list_to_update, fields=["sucessors", "predecessors"])
+    model_class.objects.bulk_update(
+        list_to_update, fields=["sucessors", "predecessors"]
+    )
 
 
 @shared_task(name="build_uploaded_file_graph_cache_task")

@@ -29,11 +29,9 @@ class StudyType(models.Model):
     STUDY_NAME_ANCESTERS_MINUS_EST = "Ancesters-Est"
     SHEET_NAME_ANCESTERS_MINUS_EST = "For3DProt_A-Est"
 
-    
     class CLASSIFICATION(models.TextChoices):
         ALLELE = "A", _("Allele")
         PROTEIN = "P", _("Protein")
-
 
     name = models.CharField(
         verbose_name=_("Name"),
@@ -47,7 +45,7 @@ class StudyType(models.Model):
         verbose_name=_("Classification"),
         max_length=1,
         choices=CLASSIFICATION,
-        default=CLASSIFICATION.ALLELE
+        default=CLASSIFICATION.ALLELE,
     )
 
     class Meta:

@@ -5,7 +5,6 @@ import logging
 import pandas as pd
 
 from apps.business_app.models.pdb_files import PdbFiles
-from apps.business_app.models.allele_node import AlleleNode
 from apps.business_app.utils.excel_reader import ExcelReader
 
 
@@ -276,7 +275,7 @@ class XslxToPdb(ExcelReader):
 
             # return pdb_file_0
         except Exception as e:
-            AlleleNode.objects.filter(study=self.study).delete()
+            self.model.objects.filter(study=self.study).delete()
             self.study.successfull_load = False
             self.study.extra_info = e.__str__()
             self.study.save()

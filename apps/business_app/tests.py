@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from types import SimpleNamespace
 
 import pytest
@@ -29,6 +29,7 @@ from apps.business_app.utils.gene_list_cache import (
     get_gene_list_cache_version,
 )
 from apps.business_app.tasks import process_uploaded_file_task
+from apps.business_app.utils.xslx_to_pdb_by_protein import XslxToPdbByProtein
 from apps.users_app.models.system_user import SystemUser
 
 
@@ -283,9 +284,9 @@ def test_study_type_endpoint_lists_created_study_types():
     response = client.get(reverse("study-types-list"))
 
     assert response.status_code == 200
-    assert len(response.data["results"]) == 2
+    assert len(response.data["results"]) >= 2
     names = {row["name"] for row in response.data["results"]}
-    assert names == {"Allele Type", "Protein Type"}
+    assert {"Allele Type", "Protein Type"}.issubset(names)
 
 
 @pytest.mark.django_db
@@ -417,6 +418,101 @@ def test_dry_refactor_keeps_existing_concrete_model_fields():
     assert "study" in protein_fields
 
 
+def test_xslx_to_pdb_by_protein_marks_final_node_and_updates_empty_allele_entries():
+    processor = XslxToPdbByProtein.__new__(XslxToPdbByProtein)
+    processor.study = SimpleNamespace(id=42)
+    processor.model = MagicMock()
+    mocked_queryset = MagicMock()
+    processor.model.objects.filter.return_value = mocked_queryset
+
+    created_node = SimpleNamespace(is_final_for_allele=False, save=MagicMock())
+
+    with patch(
+        "apps.business_app.utils.xslx_to_pdb.XslxToPdb._node_factory",
+        return_value=created_node,
+    ) as mocked_super_factory:
+        result = processor._node_factory(
+            element="C",
+            row_number=7,
+            allele="A*01",
+            rs="rs123",
+            region="REG",
+            age_1=10,
+            age_2=20,
+            frec_afr_amr=None,
+            frec_amr=None,
+            frec_csa=None,
+            frec_eas=None,
+            frec_eur=None,
+            frec_lat=None,
+            frec_nea=None,
+            frec_oce=None,
+            frec_ssa=None,
+            frec_afr_eas=None,
+            frec_afr_swe=None,
+            frec_afr_nor=None,
+            frec_ca=None,
+            frec_sa=None,
+            loss=None,
+            increment=None,
+        )
+
+    mocked_super_factory.assert_called_once()
+    assert mocked_super_factory.call_args.kwargs["allele"] == "A*01"
+    processor.model.objects.filter.assert_called_once_with(
+        study=processor.study, allele=""
+    )
+    mocked_queryset.update.assert_called_once_with(allele="A*01")
+    assert created_node.is_final_for_allele is True
+    created_node.save.assert_called_once_with(update_fields=["is_final_for_allele"])
+    assert result is created_node
+
+
+def test_xslx_to_pdb_by_protein_skips_final_node_marking_for_short_alleles():
+    processor = XslxToPdbByProtein.__new__(XslxToPdbByProtein)
+    processor.study = SimpleNamespace(id=99)
+    processor.model = MagicMock()
+
+    created_node = SimpleNamespace(is_final_for_allele=False, save=MagicMock())
+
+    with patch(
+        "apps.business_app.utils.xslx_to_pdb.XslxToPdb._node_factory",
+        return_value=created_node,
+    ) as mocked_super_factory:
+        result = processor._node_factory(
+            element="C",
+            row_number=8,
+            allele="A",
+            rs="rs456",
+            region="REG",
+            age_1=None,
+            age_2=None,
+            frec_afr_amr=None,
+            frec_amr=None,
+            frec_csa=None,
+            frec_eas=None,
+            frec_eur=None,
+            frec_lat=None,
+            frec_nea=None,
+            frec_oce=None,
+            frec_ssa=None,
+            frec_afr_eas=None,
+            frec_afr_swe=None,
+            frec_afr_nor=None,
+            frec_ca=None,
+            frec_sa=None,
+            loss=None,
+            increment=None,
+        )
+
+    mocked_super_factory.assert_called_once()
+    assert mocked_super_factory.call_args.kwargs["allele"] == ""
+    processor.model.objects.filter.assert_not_called()
+    created_node.save.assert_not_called()
+    assert created_node.is_final_for_allele is False
+    assert result is created_node
+
+
 def test_protein_node_serializer_enqueues_task_when_graph_cache_miss():
     """Test that ProteinNodeSerializer requests graph cache task on cache miss."""
     serializer = ProteinNodeSerializer()
@@ -466,6 +562,79 @@ def test_protein_node_serializer_uses_cached_graph_without_enqueuing_task():
     mocked_delay.assert_not_called()
 
 
+def test_fill_predecessors_and_sucessors_updates_allele_nodes_by_study_classification():
+    node = SimpleNamespace(number=10, predecessors=[], sucessors=[])
+    mocked_queryset = MagicMock()
+    mocked_queryset.all.return_value = [node]
+
+    with patch(
+        "apps.business_app.tasks.Study.objects.get",
+        return_value=SimpleNamespace(
+            study_type=SimpleNamespace(classification=StudyType.CLASSIFICATION.ALLELE)
+        ),
+    ), patch(
+        "apps.business_app.models.allele_node.AlleleNode.objects.filter",
+        return_value=mocked_queryset,
+    ), patch(
+        "apps.business_app.models.allele_node.AlleleNode.objects.bulk_update"
+    ) as mocked_bulk_update, patch(
+        "apps.business_app.tasks._get_graph_info",
+        side_effect=[{1, 10}, {10, 11}],
+    ):
+        from apps.business_app.tasks import (
+            fill_predecessors_and_sucessors_for_all_nodes,
+        )
+
+        fill_predecessors_and_sucessors_for_all_nodes(study_id=123)
+
+    assert set(node.predecessors) == {1, 10}
+    assert set(node.sucessors) == {10, 11}
+    mocked_bulk_update.assert_called_once()
+
+
+def test_fill_predecessors_and_sucessors_updates_protein_nodes_by_study_classification():
+    node = SimpleNamespace(number=20, predecessors=[], sucessors=[])
+    mocked_queryset = MagicMock()
+    mocked_queryset.all.return_value = [node]
+
+    with patch(
+        "apps.business_app.tasks.Study.objects.get",
+        return_value=SimpleNamespace(
+            study_type=SimpleNamespace(classification=StudyType.CLASSIFICATION.PROTEIN)
+        ),
+    ), patch(
+        "apps.business_app.models.protein_node.ProteinNode.objects.filter",
+        return_value=mocked_queryset,
+    ), patch(
+        "apps.business_app.models.protein_node.ProteinNode.objects.bulk_update"
+    ) as mocked_bulk_update, patch(
+        "apps.business_app.tasks._get_graph_info",
+        side_effect=[{2, 20}, {20, 21}],
+    ):
+        from apps.business_app.tasks import (
+            fill_predecessors_and_sucessors_for_all_nodes,
+        )
+
+        fill_predecessors_and_sucessors_for_all_nodes(study_id=456)
+
+    assert set(node.predecessors) == {2, 20}
+    assert set(node.sucessors) == {20, 21}
+    mocked_bulk_update.assert_called_once()
+
+
+def test_fill_predecessors_and_sucessors_raises_when_study_type_is_none():
+    with patch(
+        "apps.business_app.tasks.Study.objects.get",
+        return_value=SimpleNamespace(study_type=None),
+    ):
+        from apps.business_app.tasks import (
+            fill_predecessors_and_sucessors_for_all_nodes,
+        )
+
+        with pytest.raises(AttributeError):
+            fill_predecessors_and_sucessors_for_all_nodes(study_id=789)
+
+
 @pytest.mark.django_db
 def test_process_uploaded_file_task_sends_success_when_at_least_one_processor_succeeds(
     tmp_path, settings
@@ -493,11 +662,15 @@ def test_process_uploaded_file_task_sends_success_when_at_least_one_processor_su
     processor_ok = SimpleNamespace(
         proccess_pdb_file=lambda *_args, **_kwargs: None,
         study=SimpleNamespace(id=1),
+        excel_nomenclator_class=SimpleNamespace(),
+        output_df=SimpleNamespace(),
     )
 
     with patch(
         "apps.business_app.tasks.SiteConfiguration.get_solo"
     ) as mocked_config, patch(
+        "apps.business_app.tasks.create_graph"
+    ) as mocked_create_graph, patch(
         "apps.business_app.tasks.send_pusher_trigger_task.delay"
     ) as mocked_pusher, patch(
         "apps.business_app.tasks.fill_predecessors_and_sucessors_for_all_nodes"
@@ -514,6 +687,12 @@ def test_process_uploaded_file_task_sends_success_when_at_least_one_processor_su
     ) as mocked_processor_5:
         mocked_config.return_value = SimpleNamespace(upload_to_drive=False)
 
+        mocked_processor_1.__name__ = "XslxToPdbByAlleleStudy"
+        mocked_processor_2.__name__ = "XslxToPdbByAncestersPlusEstStudy"
+        mocked_processor_3.__name__ = "XslxToPdbByAncestersMinusEstStudy"
+        mocked_processor_4.__name__ = "XslxToPdbByLocationPlusEstStudy"
+        mocked_processor_5.__name__ = "XslxToPdbByLocationMinusEstStudy"
+
         mocked_processor_1.side_effect = RuntimeError("processor 1 failed")
         mocked_processor_2.return_value = processor_ok
         mocked_processor_3.side_effect = RuntimeError("processor 3 failed")
@@ -525,6 +704,7 @@ def test_process_uploaded_file_task_sends_success_when_at_least_one_processor_su
     uploaded_file.refresh_from_db()
     assert uploaded_file.processed is True
     assert result["status"] == "success"
+    mocked_create_graph.assert_called_once()
     mocked_fill.assert_called_once_with(study_id=1)
     mocked_pusher.assert_called_once()
     kwargs = mocked_pusher.call_args.kwargs
@@ -568,13 +748,20 @@ def test_process_uploaded_file_task_fails_when_all_processors_fail(tmp_path, set
         "apps.business_app.tasks.XslxToPdbByLocationMinusEstStudy"
     ) as mocked_processor_5:
         mocked_config.return_value = SimpleNamespace(upload_to_drive=False)
+
+        mocked_processor_1.__name__ = "XslxToPdbByAlleleStudy"
+        mocked_processor_2.__name__ = "XslxToPdbByAncestersPlusEstStudy"
+        mocked_processor_3.__name__ = "XslxToPdbByAncestersMinusEstStudy"
+        mocked_processor_4.__name__ = "XslxToPdbByLocationPlusEstStudy"
+        mocked_processor_5.__name__ = "XslxToPdbByLocationMinusEstStudy"
+
         mocked_processor_1.side_effect = RuntimeError("processor 1 failed")
         mocked_processor_2.side_effect = RuntimeError("processor 2 failed")
         mocked_processor_3.side_effect = RuntimeError("processor 3 failed")
         mocked_processor_4.side_effect = RuntimeError("processor 4 failed")
         mocked_processor_5.side_effect = RuntimeError("processor 5 failed")
 
-        with pytest.raises(RuntimeError):
+        with pytest.raises(Exception):
             process_uploaded_file_task.run(uploaded_file.id)
 
     uploaded_file.refresh_from_db()

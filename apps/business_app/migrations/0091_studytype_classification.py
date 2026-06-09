@@ -3,6 +3,13 @@
 from django.db import migrations, models
 
 
+def update_study_types_classifications(apps, schema_editor):
+    StudyType = apps.get_model("business_app", "StudyType")
+    StudyType.objects.exclude(name="Genetic Allele", sheet_name="For3DAllele").update(
+        classification="P"
+    )
+
+
 class Migration(migrations.Migration):
     dependencies = [
         ("business_app", "0090_alter_allelenode_allele_alter_proteinnode_study"),
@@ -19,4 +26,5 @@ class Migration(migrations.Migration):
                 verbose_name="Classification",
             ),
         ),
+        migrations.RunPython(update_study_types_classifications),
     ]
