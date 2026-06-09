@@ -91,18 +91,52 @@ function coordenadas() {
 var labelX, labelY, labelZ;
 function XYZLabels(state) {
   if (state) {
-    labelX = viewer.addLabel("X", { position: { x: 1000, y: 0, z: 0 } }); // Etiqueta del eje X
-    labelY = viewer.addLabel("Y", { position: { x: 0, y: 1000, z: 0 } }); // Etiqueta del eje Y
-    labelZ = viewer.addLabel("Z", { position: { x: 0, y: 0, z: 1000 } }); // Etiqueta del eje Z
+    if (labelX) viewer.removeLabel(labelX);
+    if (labelY) viewer.removeLabel(labelY);
+    if (labelZ) viewer.removeLabel(labelZ);
+
+    labelX = viewer.addLabel("X", {
+      position: { x: 1060, y: 0, z: 0 },
+      fontSize: 16,
+      fontColor: "#ffffff",
+      backgroundColor: "#111111",
+      opacity: 0.75,
+      borderThickness: 1,
+      borderColor: "#ffffff",
+    });
+    labelY = viewer.addLabel("Y", {
+      position: { x: 0, y: 1060, z: 0 },
+      fontSize: 16,
+      fontColor: "#ffffff",
+      backgroundColor: "#111111",
+      opacity: 0.75,
+      borderThickness: 1,
+      borderColor: "#ffffff",
+    });
+    labelZ = viewer.addLabel("Z", {
+      position: { x: 0, y: 0, z: 1060 },
+      fontSize: 16,
+      fontColor: "#ffffff",
+      backgroundColor: "#111111",
+      opacity: 0.75,
+      borderThickness: 1,
+      borderColor: "#ffffff",
+    });
   } else {
-    viewer.removeLabel(labelX);
-    viewer.removeLabel(labelY);
-    viewer.removeLabel(labelZ);
+    if (labelX) viewer.removeLabel(labelX);
+    if (labelY) viewer.removeLabel(labelY);
+    if (labelZ) viewer.removeLabel(labelZ);
+    labelX = null;
+    labelY = null;
+    labelZ = null;
   }
 }
 
 // Array global para almacenar las líneas
+// lineas: objetos actualmente en el viewer; lineasSpecs: specs para recrearlos
 var lineas = [];
+var lineasSpecs = [];
+
 function crearMatriz() {
   var startX = -1000;
   var endX = 1000;
@@ -110,87 +144,57 @@ function crearMatriz() {
   var endY = 1000;
   var startZ = -1000;
   var endZ = 1000;
-  var numLineas = 20; // Número de líneas en cada eje
+  var numLineas = 20;
 
-  // Plano XY
+  lineasSpecs = [];
+
+  // Plano XY (verde)
   for (var i = 0; i <= numLineas; i++) {
     var x = startX + (endX - startX) * (i / numLineas);
-    var lineObject = viewer.addLine({
-      start: { x: x, y: startY, z: 0 },
-      end: { x: x, y: endY, z: 0 },
-      color: "rgba(15, 191, 88, 0)",
-      lineWidth: 8,
-      hidden: true,
-    });
-    lineas.push(lineObject); // Agregar la línea al array global
+    lineasSpecs.push({ start: { x: x, y: startY, z: 0 }, end: { x: x, y: endY, z: 0 }, color: "#0fbf58", lineWidth: 8 });
   }
-
   for (var j = 0; j <= numLineas; j++) {
     var y = startY + (endY - startY) * (j / numLineas);
-    var lineObject = viewer.addLine({
-      start: { x: startX, y: y, z: 0 },
-      end: { x: endX, y: y, z: 0 },
-      color: "rgba(15, 191, 88, 0)",
-      lineWidth: 8,
-      hidden: true,
-    });
-    lineas.push(lineObject); // Agregar la línea al array global
+    lineasSpecs.push({ start: { x: startX, y: y, z: 0 }, end: { x: endX, y: y, z: 0 }, color: "#0fbf58", lineWidth: 8 });
   }
 
-  // Plano XZ
+  // Plano XZ (magenta)
   for (var k = 0; k <= numLineas; k++) {
     var x = startX + (endX - startX) * (k / numLineas);
-    var lineObject = viewer.addLine({
-      start: { x: x, y: 0, z: startZ },
-      end: { x: x, y: 0, z: endZ },
-      color: "rgba(255, 0, 255, 0)",
-      lineWidth: 8,
-      hidden: true,
-    });
-    lineas.push(lineObject); // Agregar la línea al array global
+    lineasSpecs.push({ start: { x: x, y: 0, z: startZ }, end: { x: x, y: 0, z: endZ }, color: "#ff00ff", lineWidth: 8 });
   }
-
   for (var l = 0; l <= numLineas; l++) {
     var z = startZ + (endZ - startZ) * (l / numLineas);
-    var lineObject = viewer.addLine({
-      start: { x: startX, y: 0, z: z },
-      end: { x: endX, y: 0, z: z },
-      color: "rgba(255, 0, 255, 0)",
-      lineWidth: 8,
-      hidden: true,
-    });
-    lineas.push(lineObject); // Agregar la línea al array global
-  }
-  // Plano YZ
-  for (var m = 0; m <= numLineas; m++) {
-    var y = startY + (endY - startY) * (m / numLineas);
-    var lineObject = viewer.addLine({
-      start: { x: 0, y: y, z: startZ },
-      end: { x: 0, y: y, z: endZ },
-      color: "rgba(0, 255, 255, 0)",
-      lineWidth: 8,
-      hidden: true,
-    });
-    lineas.push(lineObject); // Agregar la línea al array
+    lineasSpecs.push({ start: { x: startX, y: 0, z: z }, end: { x: endX, y: 0, z: z }, color: "#ff00ff", lineWidth: 8 });
   }
 
+  // Plano YZ (cian)
+  for (var m = 0; m <= numLineas; m++) {
+    var y = startY + (endY - startY) * (m / numLineas);
+    lineasSpecs.push({ start: { x: 0, y: y, z: startZ }, end: { x: 0, y: y, z: endZ }, color: "#00ffff", lineWidth: 8 });
+  }
   for (var n = 0; n <= numLineas; n++) {
     var z = startZ + (endZ - startZ) * (n / numLineas);
-    var lineObject = viewer.addLine({
-      start: { x: 0, y: startY, z: z },
-      end: { x: 0, y: endY, z: z },
-      color: "rgba(0, 255, 255, 0)",
-      lineWidth: 8,
-      hidden: true,
-    });
-    lineas.push(lineObject); // Agregar la línea al array
+    lineasSpecs.push({ start: { x: 0, y: startY, z: z }, end: { x: 0, y: endY, z: z }, color: "#00ffff", lineWidth: 8 });
   }
 }
 
+// mostrar=false → mostrar planos; mostrar=true → ocultar planos
 function mostrarOcultarPlanos(mostrar) {
+  // Eliminar líneas existentes del viewer
   lineas.forEach(function (lineObject) {
-    lineObject.hidden = mostrar;
+    viewer.removeShape(lineObject);
   });
+  lineas = [];
+
+  if (!mostrar) {
+    // Recrear todas las líneas desde los specs almacenados
+    lineasSpecs.forEach(function (spec) {
+      lineas.push(viewer.addLine(spec));
+    });
+  }
+
+  viewer.render();
 }
 
 let arrows = [];
@@ -426,24 +430,3 @@ function sendRSControlValues() {
     });
 }
 
-function selectPdbContainer() {
-  zoom.value = 0;
-  var $selectfile = document.getElementById("selectfile");
-  var idFile = $selectfile.value;
-  axios
-    .get("/business-gestion/study/" + idFile + "/")
-    .then(function (response) {
-      const elemento = response.data;
-      let versionAllele = elemento.pdb_files;
-      localStorage.setItem("selectedStudyId", String(elemento.id));
-      localStorage.setItem("uploadFileId", String(elemento.uploaded_file));
-      poblarListasPdb(versionAllele);
-      poblarListasCopy(elemento.id);
-    })
-    .catch(function (error) {
-      Toast.fire({
-        icon: "error",
-        title: `${error.response.data.detail}`,
-      });
-    });
-}
