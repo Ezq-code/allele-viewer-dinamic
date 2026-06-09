@@ -5,6 +5,7 @@ from apps.business_app.views import (
     AllowedExtensionsViewSet,
     SiteConfigurationViewSet,
     StudyViewSet,
+    StudyTypeViewSet,
     UploadedFilesViewSet,
     InitialFileDataViewSet,
     NewCoordinatesProcessorViewSet,
@@ -108,6 +109,12 @@ router.register(
     "study",
     StudyViewSet,
     basename="study",
+)
+
+router.register(
+    "study-types",
+    StudyTypeViewSet,
+    basename="study-types",
 )
 
 uploaded_files_router.register(

@@ -267,6 +267,49 @@ def test_study_viewset_lists_studies_by_uploaded_file(tmp_path, settings):
 
 
 @pytest.mark.django_db
+def test_study_type_endpoint_lists_created_study_types():
+    StudyType.objects.create(
+        name="Allele Type",
+        sheet_name="For3DAllele",
+        classification=StudyType.CLASSIFICATION.ALLELE,
+    )
+    StudyType.objects.create(
+        name="Protein Type",
+        sheet_name="For3DProt",
+        classification=StudyType.CLASSIFICATION.PROTEIN,
+    )
+
+    client = APIClient()
+    response = client.get(reverse("study-types-list"))
+
+    assert response.status_code == 200
+    assert len(response.data["results"]) == 2
+    names = {row["name"] for row in response.data["results"]}
+    assert names == {"Allele Type", "Protein Type"}
+
+
+@pytest.mark.django_db
+def test_study_type_endpoint_creates_item_with_default_classification():
+    user = SystemUser.objects.create_user(
+        username="study_type_creator",
+        password="secret",
+    )
+    client = APIClient()
+    client.force_authenticate(user=user)
+
+    payload = {
+        "name": "Location",
+        "sheet_name": "For3DProt_L+Est",
+    }
+
+    response = client.post(reverse("study-types-list"), payload, format="json")
+
+    assert response.status_code == 201
+    assert response.data["classification"] == StudyType.CLASSIFICATION.ALLELE
+    assert StudyType.objects.filter(name="Location").exists()
+
+
+@pytest.mark.django_db
 def test_gene_list_cache_version_bumps_on_gene_change():
     cache.clear()
     client = APIClient()

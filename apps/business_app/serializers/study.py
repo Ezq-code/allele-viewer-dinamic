@@ -13,12 +13,17 @@ class StudySerializerShort(serializers.ModelSerializer):
         source="study_type.name",
         read_only=True,
     )
+    study_type_classification = serializers.CharField(
+        source="study_type.classification",
+        read_only=True,
+    )
 
     class Meta:
         model = Study
         fields = [
             "id",
             "study_type_display",
+            "study_type_classification",
             "successfull_load",
             "created_at",
             "extra_info",
@@ -27,6 +32,7 @@ class StudySerializerShort(serializers.ModelSerializer):
             "id",
             "created_at",
             "study_type_display",
+            "study_type_classification",
         ]
 
 

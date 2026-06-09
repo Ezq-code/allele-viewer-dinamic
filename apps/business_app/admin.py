@@ -157,8 +157,8 @@ class ProteinNodeAdmin(admin.ModelAdmin):
 @admin.register(StudyType)
 class StudyTypeAdmin(admin.ModelAdmin):
     empty_value_display = "-empty-"
-    list_display = ["id", "name", "sheet_name"]
-    fields = ["name", "sheet_name"]
+    list_display = ["id", "name", "sheet_name", "classification"]
+    fields = ["name", "sheet_name", "classification"]
 
 
 @admin.register(Study)

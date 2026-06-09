@@ -6,11 +6,11 @@ from django.db import migrations, models
 
 def create_study_types(apps, schema_editor):
     StudyType = apps.get_model("business_app", "StudyType")
-    StudyType.objects.create(name="Genetic Allele", sheet_name="For3DAllele")
-    StudyType.objects.create(name="Location+Est", sheet_name="For3DProt_L+Est")
-    StudyType.objects.create(name="Location-Est", sheet_name="For3DProt_L-Est")
-    StudyType.objects.create(name="Ancesters+Est", sheet_name="For3DProt_A+Est")
-    StudyType.objects.create(name="Ancesters-Est", sheet_name="For3DProt_A-Est")
+    StudyType.objects.create(name="Genetic Allele", sheet_name="For3DAllele", classification="A")
+    StudyType.objects.create(name="Location+Est", sheet_name="For3DProt_L+Est", classification="P")
+    StudyType.objects.create(name="Location-Est", sheet_name="For3DProt_L-Est", classification="P")
+    StudyType.objects.create(name="Ancesters+Est", sheet_name="For3DProt_A+Est", classification="P")
+    StudyType.objects.create(name="Ancesters-Est", sheet_name="For3DProt_A-Est", classification="P")
 
 
 def reverse_study_types(apps, schema_editor):
