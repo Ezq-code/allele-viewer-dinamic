@@ -585,6 +585,7 @@ document.getElementById("selectGene").addEventListener("change", function () {
 // Evento: al cambiar el estudio, actualizar metadatos y validar su PDB por defecto.
 document.getElementById("selectfile").addEventListener("change", function () {
   actualizarSelectPdbPorStudyId(this.value);
+  selectUrl();
 });
 
 // Obtiene el PDB por defecto tolerando formatos de respuesta nuevos y antiguos.
@@ -842,12 +843,15 @@ console.log('✌️elemento --->', elemento);
       //   <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
       // `;
 
-      const map = `<div id="world-map3" style="width: 320px; height: 200px; margin: 0 auto; background-color: #fff;"></div>
+      const shouldShowMap = selectedStudyTypeDisplay === "Genetic Allele";
+      const map = shouldShowMap
+        ? `<div id="world-map3" style="width: 320px; height: 200px; margin: 0 auto; background-color: #fff;"></div>
         <!-- Map card -->
             <div class="location-label" style="background-color: #a5bfdd; color: #666666; padding-left: 2px;">
   <i class="fas fa-circle"></i>
   <span class="ml-2">Selected Region: ${elemento.region}</span>
-</div>`;
+</div>`
+        : "";
 
       children = elemento.children;
       predecessors = elemento.predecessors;
@@ -908,7 +912,9 @@ console.log('✌️elemento --->', elemento);
         position: "bottomRight",
       });
 
-      initializeWorldMap("#world-map3", elemento.region);
+      if (shouldShowMap) {
+        initializeWorldMap("#world-map3", elemento.region);
+      }
       // paintRegionEspecific(elemento.region);
     })
     .catch((error) => {
