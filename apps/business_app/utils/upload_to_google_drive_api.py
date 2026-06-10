@@ -81,7 +81,7 @@ class UploadToGoogleDriveApi(GoogleApiCoordinator):
             self.drive_service.files().delete(fileId=file_id).execute()
             logger.info(f"Successfully deleted file/folder with ID: {file_id}")
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Error deleting file/folder with ID: {file_id}, details: {e}",
                 exc_info=True,
             )

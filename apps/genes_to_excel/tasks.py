@@ -33,7 +33,7 @@ def process_genes_to_excel_file_task(file_path, uploaded_file_id):
             "resultados": resultados,
         }
     except Exception as e:
-        logger.error("Error processing genes file %s: %s", file_path, str(e))
+        logger.exception("Error processing genes file %s: %s", file_path, str(e))
         from apps.genes_to_excel.models.genes_to_excel_files import GenesToExcelFiles
 
         GenesToExcelFiles.objects.filter(id=uploaded_file_id).delete()

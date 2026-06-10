@@ -4,142 +4,129 @@ import logging
 
 import pandas as pd
 
-from apps.business_app.models.allele_node import AlleleNode
-from apps.business_app.models.initial_file_data import InitialFileData
-from apps.business_app.models.initial_xyz_expansion_data import InitialXyzExpansionData
 from apps.business_app.models.pdb_files import PdbFiles
-from apps.business_app.models.site_configurations import SiteConfiguration
-from apps.business_app.utils.excel_reader import ExcelNomenclators, ExcelReader
-from django.db import transaction
+from apps.business_app.utils.excel_reader import ExcelReader
 
 
 logger = logging.getLogger(__name__)
 
 
 class XslxToPdb(ExcelReader):
-    def __init__(self, origin_file, global_configuration) -> None:
-        super().__init__(origin_file)
-        self.upload_to_drive = global_configuration.upload_to_drive
-        if self.upload_to_drive:
-            self.input_df = pd.read_excel(
-                self.origin_file,
-                sheet_name=ExcelNomenclators.input_sheet,
-                engine="openpyxl",
-            )
-            self.constants_df = pd.read_excel(
-                self.origin_file,
-                sheet_name=ExcelNomenclators.constants_sheet,
-                engine="openpyxl",
-            )
+    def __init__(
+        self, origin_file, global_configuration, excel_nomenclator_class: None
+    ) -> None:
+        super().__init__(origin_file, excel_nomenclator_class)
+        # self.upload_to_drive = global_configuration.upload_to_drive
+        # if self.upload_to_drive:
+        #     self.input_df = pd.read_excel(
+        #         self.origin_file,
+        #         sheet_name=self.excel_nomenclator_class.input_sheet,
+        #         engine="openpyxl",
+        #     )
+        #     self.constants_df = pd.read_excel(
+        #         self.origin_file,
+        #         sheet_name=self.excel_nomenclator_class.constants_sheet,
+        #         engine="openpyxl",
+        #     )
+        #     self.input_mandatory_columns_for_validation = (
+        #         self.excel_nomenclator_class.input_original_value_column_name,
+        #         self.excel_nomenclator_class.input_min_value_column_name,
+        #         self.excel_nomenclator_class.input_max_value_column_name,
+        #         self.excel_nomenclator_class.input_allele_column_name,
+        #         self.excel_nomenclator_class.input_marker_column_name,
+        #         self.excel_nomenclator_class.input_column_to_change_value_column_name,
+        #     )
+        #     self._validate_input_sheet_file_structure()
+        self.stick_radius_min_value = global_configuration.stick_radius_min_value
+        self.stick_radius_if_children = global_configuration.stick_radius_if_children
+        self.stick_radius_factor = global_configuration.stick_radius_factor
+        self.sphere_radius_factor = global_configuration.sphere_radius_factor
+        self.model = None
 
-        if self.upload_to_drive:
-            self.input_mandatory_columns_for_validation = (
-                ExcelNomenclators.input_original_value_column_name,
-                ExcelNomenclators.input_min_value_column_name,
-                ExcelNomenclators.input_max_value_column_name,
-                ExcelNomenclators.input_allele_column_name,
-                ExcelNomenclators.input_marker_column_name,
-                ExcelNomenclators.input_column_to_change_value_column_name,
-            )
-            self._validate_input_sheet_file_structure()
-        config = SiteConfiguration.get_solo()
-        self.stick_radius_min_value = config.stick_radius_min_value
-        self.stick_radius_if_children = config.stick_radius_if_children
-        self.stick_radius_factor = config.stick_radius_factor
-        self.sphere_radius_factor = config.sphere_radius_factor
-
-    def _validate_input_sheet_file_structure(self):
-        first_row_input = self.input_df.iloc[0]
-        for column in self.input_mandatory_columns_for_validation:
-            try:
-                first_row_input[column]
-            except KeyError as e:
-                logger.error(f"{str(e)}")
-                raise ValueError(
-                    f"Invalid file structure, the table on the sheet '{ExcelNomenclators.input_sheet}' "
-                    f"has at least the next column missing: {column}."
-                ) from None
-
-    def proccess_initial_file_data(self, uploaded_file_id):
-        logger.info("Proccessing initial file data...")
-        data = []
-        for index, row in self.input_df.iterrows():
-            data.append(
-                InitialFileData(
-                    allele=row[ExcelNomenclators.input_allele_column_name],
-                    marker=row[ExcelNomenclators.input_marker_column_name],
-                    min_value=row[ExcelNomenclators.input_min_value_column_name],
-                    max_value=row[ExcelNomenclators.input_max_value_column_name],
-                    original_value=int(
-                        row[ExcelNomenclators.input_original_value_column_name]
-                    ),
-                    uploaded_file_id=uploaded_file_id,
-                    row_index=index + 2,
-                )
-            )
-        with transaction.atomic():
-            InitialFileData.objects.bulk_create(data)
-        info_row = 0
-        x_column = 0
-        y_column = 1
-        z_column = 2
-        x_value = self.constants_df.iat[info_row, x_column]
-        y_value = self.constants_df.iat[info_row, y_column]
-        z_value = self.constants_df.iat[info_row, z_column]
-        InitialXyzExpansionData.objects.create(
-            x_value=x_value,
-            y_value=y_value,
-            z_value=z_value,
-            uploaded_file_id=uploaded_file_id,
-        )
+    # def proccess_initial_file_data(self, uploaded_file_id):
+    #     logger.info("Proccessing initial file data...")
+    #     data = []
+    #     for index, row in self.input_df.iterrows():
+    #         data.append(
+    #             InitialFileData(
+    #                 allele=row[self.excel_nomenclator_class.input_allele_column_name],
+    #                 marker=row[self.excel_nomenclator_class.input_marker_column_name],
+    #                 min_value=row[self.excel_nomenclator_class.input_min_value_column_name],
+    #                 max_value=row[self.excel_nomenclator_class.input_max_value_column_name],
+    #                 original_value=int(
+    #                     row[self.excel_nomenclator_class.input_original_value_column_name]
+    #                 ),
+    #                 uploaded_file_id=uploaded_file_id,
+    #                 row_index=index + 2,
+    #             )
+    #         )
+    #     with transaction.atomic():
+    #         InitialFileData.objects.bulk_create(data)
+    #     info_row = 0
+    #     x_column = 0
+    #     y_column = 1
+    #     z_column = 2
+    #     x_value = self.constants_df.iat[info_row, x_column]
+    #     y_value = self.constants_df.iat[info_row, y_column]
+    #     z_value = self.constants_df.iat[info_row, z_column]
+    #     InitialXyzExpansionData.objects.create(
+    #         x_value=x_value,
+    #         y_value=y_value,
+    #         z_value=z_value,
+    #         uploaded_file_id=uploaded_file_id,
+    #     )
 
     def proccess_pdb_file(self, uploaded_file_id, pdb_filename_base):
         logger.info("Proccessing PDB file...")
-        allele_allele_number_pool = []
+        node_number_pool = []
         try:
             pdb_files = [io.StringIO() for _ in range(self.coordinates_sets)]
             # Open the PDB file for writing
-            allele_nodes = {}
+            nodes = {}
 
             # atom_number = 0
             relations_for_the_end = {}
             element = None
             # Loop over each row in the Excel file
             for _, row in self.output_df.iterrows():
-                allele = row[ExcelNomenclators.output_allele_column_name]
+                allele = row[self.excel_nomenclator_class.output_allele_column_name]
                 # if self.ilu_search_criteria in allele:
                 #     continue
-                # age = row.get(ExcelNomenclators.age)
-                age_1 = row.get(ExcelNomenclators.age_1)
-                age_2 = row.get(ExcelNomenclators.age_2)
-                loss = row.get(ExcelNomenclators.loss)
-                increment = row.get(ExcelNomenclators.increment)
+                # age = row.get(self.excel_nomenclator_class.age)
+                age_1 = row.get(self.excel_nomenclator_class.age_1)
+                age_2 = row.get(self.excel_nomenclator_class.age_2)
+                loss = row.get(self.excel_nomenclator_class.loss)
+                increment = row.get(self.excel_nomenclator_class.increment)
 
-                frec_afr_amr = row.get(ExcelNomenclators.frec_afr_amr)
-                frec_amr = row.get(ExcelNomenclators.frec_amr)
-                frec_csa = row.get(ExcelNomenclators.frec_csa)
-                frec_eas = row.get(ExcelNomenclators.frec_eas)
-                frec_eur = row.get(ExcelNomenclators.frec_eur)
-                frec_lat = row.get(ExcelNomenclators.frec_lat)
-                frec_nea = row.get(ExcelNomenclators.frec_nea)
-                frec_oce = row.get(ExcelNomenclators.frec_oce)
-                frec_ssa = row.get(ExcelNomenclators.frec_ssa)
-                frec_afr_eas = row.get(ExcelNomenclators.frec_afr_eas)
-                frec_afr_swe = row.get(ExcelNomenclators.frec_afr_swe)
-                frec_afr_nor = row.get(ExcelNomenclators.frec_afr_nor)
-                frec_ca = row.get(ExcelNomenclators.frec_ca)
-                frec_sa = row.get(ExcelNomenclators.frec_sa)
+                frec_afr_amr = row.get(self.excel_nomenclator_class.frec_afr_amr)
+                frec_amr = row.get(self.excel_nomenclator_class.frec_amr)
+                frec_csa = row.get(self.excel_nomenclator_class.frec_csa)
+                frec_eas = row.get(self.excel_nomenclator_class.frec_eas)
+                frec_eur = row.get(self.excel_nomenclator_class.frec_eur)
+                frec_lat = row.get(self.excel_nomenclator_class.frec_lat)
+                frec_nea = row.get(self.excel_nomenclator_class.frec_nea)
+                frec_oce = row.get(self.excel_nomenclator_class.frec_oce)
+                frec_ssa = row.get(self.excel_nomenclator_class.frec_ssa)
+                frec_afr_eas = row.get(self.excel_nomenclator_class.frec_afr_eas)
+                frec_afr_swe = row.get(self.excel_nomenclator_class.frec_afr_swe)
+                frec_afr_nor = row.get(self.excel_nomenclator_class.frec_afr_nor)
+                frec_ca = row.get(self.excel_nomenclator_class.frec_ca)
+                frec_sa = row.get(self.excel_nomenclator_class.frec_sa)
 
                 if pd.isna(allele) or pd.isna(
-                    row[ExcelNomenclators.output_number_column_name]
+                    row[self.excel_nomenclator_class.output_number_column_name]
                 ):
                     break
-                allele_number = int(row[ExcelNomenclators.output_number_column_name])
-                if allele_number in allele_allele_number_pool:
+                row_number = int(
+                    row[self.excel_nomenclator_class.output_number_column_name]
+                )
+                if row_number in node_number_pool:
                     continue
-                allele_allele_number_pool.append(allele_number)
-                rs = row[ExcelNomenclators.output_rs_column_name]
-                parents_info = row[ExcelNomenclators.output_parent_column_name]
+                node_number_pool.append(row_number)
+                rs = row[self.excel_nomenclator_class.output_rs_column_name]
+                parents_info = row[
+                    self.excel_nomenclator_class.output_parent_column_name
+                ]
 
                 parents = []
                 if not pd.isna(parents_info):
@@ -147,11 +134,11 @@ class XslxToPdb(ExcelReader):
                         int(parent.strip()) for parent in parents_info.split(",")
                     )
                 for parent in parents:
-                    if parent == allele_number:
+                    if parent == row_number:
                         continue
-                    relations_for_the_end.setdefault(parent, []).append(allele_number)
+                    relations_for_the_end.setdefault(parent, []).append(row_number)
                 # element = next(self.elements_symbol_iterator)
-                region = row.get(ExcelNomenclators.output_region_column_name)
+                region = row.get(self.excel_nomenclator_class.output_region_column_name)
                 if isinstance(region, str):
                     region = region.upper()
                 element = self.region_color_maping.get(
@@ -167,11 +154,11 @@ class XslxToPdb(ExcelReader):
                     z_value = row[f"Z{current_coordinate_index}"]
                     if pd.isna(x_value) or pd.isna(y_value) or pd.isna(z_value):
                         raise ValueError(
-                            f"Missing coordinate-related elements. Check allele {allele_number}"
+                            f"Missing coordinate-related elements. Check allele {row_number} in the excel file."
                         )
                     memory_file.write(
-                        ExcelNomenclators.get_atom_record_string(
-                            allele_number=allele_number,
+                        self.excel_nomenclator_class.get_atom_record_string(
+                            row_number=row_number,
                             element=element,
                             x_coordinate=int(x_value),
                             y_coordinate=int(y_value),
@@ -181,50 +168,76 @@ class XslxToPdb(ExcelReader):
                     memory_file.write("\n")
                     current_coordinate_index += 1
 
-                allele_nodes[allele_number] = AlleleNode.objects.create(
+                nodes[row_number] = self._node_factory(
                     element=element,
-                    number=allele_number,
-                    custom_element_name=allele,
+                    row_number=row_number,
+                    allele=allele,
                     rs=rs,
-                    uploaded_file_id=uploaded_file_id,
                     region=region,
-                    #! Age is no longer coming in the excel file, for timeline we will use temporarily age_1
-                    # timeline_appearence=None if pd.isna(age) else age,
-                    timeline_appearence=None if pd.isna(age_1) else age_1,
-                    age_1=None if pd.isna(age_1) else age_1,
-                    age_2=None if pd.isna(age_2) else age_2,
-                    frec_afr_amr=None if pd.isna(frec_afr_amr) else frec_afr_amr,
-                    frec_amr=None if pd.isna(frec_amr) else frec_amr,
-                    frec_csa=None if pd.isna(frec_csa) else frec_csa,
-                    frec_eas=None if pd.isna(frec_eas) else frec_eas,
-                    frec_eur=None if pd.isna(frec_eur) else frec_eur,
-                    frec_lat=None if pd.isna(frec_lat) else frec_lat,
-                    frec_nea=None if pd.isna(frec_nea) else frec_nea,
-                    frec_oce=None if pd.isna(frec_oce) else frec_oce,
-                    frec_ssa=None if pd.isna(frec_ssa) else frec_ssa,
-                    frec_afr_eas=None if pd.isna(frec_afr_eas) else frec_afr_eas,
-                    frec_afr_swe=None if pd.isna(frec_afr_swe) else frec_afr_swe,
-                    frec_afr_nor=None if pd.isna(frec_afr_nor) else frec_afr_nor,
-                    frec_ca=None if pd.isna(frec_ca) else frec_ca,
-                    frec_sa=None if pd.isna(frec_sa) else frec_sa,
+                    age_1=age_1,
+                    age_2=age_2,
+                    frec_afr_amr=frec_afr_amr,
+                    frec_amr=frec_amr,
+                    frec_csa=frec_csa,
+                    frec_eas=frec_eas,
+                    frec_eur=frec_eur,
+                    frec_lat=frec_lat,
+                    frec_nea=frec_nea,
+                    frec_oce=frec_oce,
+                    frec_ssa=frec_ssa,
+                    frec_afr_eas=frec_afr_eas,
+                    frec_afr_swe=frec_afr_swe,
+                    frec_afr_nor=frec_afr_nor,
+                    frec_ca=frec_ca,
+                    frec_sa=frec_sa,
                     loss=loss,
                     increment=increment,
-                    unique_number=f"{uploaded_file_id}-{allele_number}",
-                    sphere_radius=self._get_sphere_radius(0),
-                    stick_radius=self._get_stick_radius(0),
                 )
 
+                # # self.model.objects.create(
+                # #     element=element,
+                # #     number=row_number,
+                # #     allele=allele,
+                # #     rs=rs,
+                # #     study=self.study,
+                # #     region=region,
+                # #     #! Age is no longer coming in the excel file, for timeline we will use temporarily age_1
+                # # timeline_appearence=None if pd.isna(age) else age,
+                # #     timeline_appearence=None if pd.isna(age_1) else age_1,
+                # #     age_1=None if pd.isna(age_1) else age_1,
+                # #     age_2=None if pd.isna(age_2) else age_2,
+                # #     frec_afr_amr=None if pd.isna(frec_afr_amr) else frec_afr_amr,
+                # #     frec_amr=None if pd.isna(frec_amr) else frec_amr,
+                # #     frec_csa=None if pd.isna(frec_csa) else frec_csa,
+                # #     frec_eas=None if pd.isna(frec_eas) else frec_eas,
+                # #     frec_eur=None if pd.isna(frec_eur) else frec_eur,
+                # #     frec_lat=None if pd.isna(frec_lat) else frec_lat,
+                # #     frec_nea=None if pd.isna(frec_nea) else frec_nea,
+                # #     frec_oce=None if pd.isna(frec_oce) else frec_oce,
+                # #     frec_ssa=None if pd.isna(frec_ssa) else frec_ssa,
+                # #     frec_afr_eas=None if pd.isna(frec_afr_eas) else frec_afr_eas,
+                # #     frec_afr_swe=None if pd.isna(frec_afr_swe) else frec_afr_swe,
+                # #     frec_afr_nor=None if pd.isna(frec_afr_nor) else frec_afr_nor,
+                # #     frec_ca=None if pd.isna(frec_ca) else frec_ca,
+                # #     frec_sa=None if pd.isna(frec_sa) else frec_sa,
+                # #     loss=loss,
+                # #     increment=increment,
+                # #     unique_number=f"{self.study.id}-{row_number}",
+                # #     sphere_radius=self._get_sphere_radius(0),
+                # #     stick_radius=self._get_stick_radius(0),
+                # # )
+
             for k, v in relations_for_the_end.items():
-                current_node = allele_nodes.get(k)
+                current_node = nodes.get(k)
                 if current_node and current_node.pk:
                     children_list = []
                     for value in v:
-                        child = allele_nodes.get(value)
+                        child = nodes.get(value)
                         if child and child.pk:
                             children_list.append(child)
                             for memory_file in pdb_files:
                                 memory_file.write(
-                                    ExcelNomenclators.get_atom_connection_record_string(
+                                    self.excel_nomenclator_class.get_atom_connection_record_string(
                                         origin_index=k,
                                         destination_index=value,
                                     )
@@ -255,16 +268,79 @@ class XslxToPdb(ExcelReader):
                     file_content=file_content,
                     pdb_filename_base=pdb_filename_base,
                     suffix=f"excel_{index}",
-                    uploaded_file_id=uploaded_file_id,
+                    study_id=self.study.id,
                     kind=PdbFiles.KIND.EXCEL_GENERATED,
                 )
                 index += 1
 
             # return pdb_file_0
         except Exception as e:
-            AlleleNode.objects.filter(uploaded_file__isnull=True).delete()
-            logger.error(f"An error occurred during file parsing: {e}")
+            self.model.objects.filter(study=self.study).delete()
+            self.study.successfull_load = False
+            self.study.extra_info = e.__str__()
+            self.study.save()
+            logger.exception(f"An error occurred during file parsing: {e}")
             raise ValueError(f"An error occurred during file parsing: {e}.") from e
+
+    def _node_factory(
+        self,
+        element,
+        row_number,
+        allele,
+        rs,
+        region,
+        age_1,
+        age_2,
+        frec_afr_amr,
+        frec_amr,
+        frec_csa,
+        frec_eas,
+        frec_eur,
+        frec_lat,
+        frec_nea,
+        frec_oce,
+        frec_ssa,
+        frec_afr_eas,
+        frec_afr_swe,
+        frec_afr_nor,
+        frec_ca,
+        frec_sa,
+        loss,
+        increment,
+    ):
+        created_node = self.model.objects.create(
+            element=element,
+            number=row_number,
+            allele=allele,
+            rs=rs,
+            study=self.study,
+            region=region,
+            #! Age is no longer coming in the excel file, for timeline we will use temporarily age_1
+            # timeline_appearence=None if pd.isna(age) else age,
+            timeline_appearence=None if pd.isna(age_1) else age_1,
+            age_1=None if pd.isna(age_1) else age_1,
+            age_2=None if pd.isna(age_2) else age_2,
+            frec_afr_amr=None if pd.isna(frec_afr_amr) else frec_afr_amr,
+            frec_amr=None if pd.isna(frec_amr) else frec_amr,
+            frec_csa=None if pd.isna(frec_csa) else frec_csa,
+            frec_eas=None if pd.isna(frec_eas) else frec_eas,
+            frec_eur=None if pd.isna(frec_eur) else frec_eur,
+            frec_lat=None if pd.isna(frec_lat) else frec_lat,
+            frec_nea=None if pd.isna(frec_nea) else frec_nea,
+            frec_oce=None if pd.isna(frec_oce) else frec_oce,
+            frec_ssa=None if pd.isna(frec_ssa) else frec_ssa,
+            frec_afr_eas=None if pd.isna(frec_afr_eas) else frec_afr_eas,
+            frec_afr_swe=None if pd.isna(frec_afr_swe) else frec_afr_swe,
+            frec_afr_nor=None if pd.isna(frec_afr_nor) else frec_afr_nor,
+            frec_ca=None if pd.isna(frec_ca) else frec_ca,
+            frec_sa=None if pd.isna(frec_sa) else frec_sa,
+            loss=loss,
+            increment=increment,
+            unique_number=f"{self.study.id}-{row_number}",
+            sphere_radius=self._get_sphere_radius(0),
+            stick_radius=self._get_stick_radius(0),
+        )
+        return created_node
 
     def _get_sphere_radius(self, children_count):
         cached_sphere_radious = cache.get(

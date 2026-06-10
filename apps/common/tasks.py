@@ -20,5 +20,5 @@ def send_pusher_trigger_task(channel, event, data):
         pusher_client.trigger(channel, event, data)
         logger.info(f"Pusher trigger sent: channel={channel}, event={event}")
     except Exception as e:
-        logger.error(f"Error sending Pusher trigger: {e}", exc_info=True)
+        logger.exception(f"Error sending Pusher trigger: {e}", exc_info=True)
         raise

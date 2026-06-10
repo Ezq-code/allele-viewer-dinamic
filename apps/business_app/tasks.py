@@ -5,23 +5,56 @@ from django.core.management import call_command
 from django.core.cache import cache
 from django.db import close_old_connections
 from django.db.utils import OperationalError
+from apps.business_app.utils.graph_functions import create_graph
 
 from apps.users_app.models.country import Country
 from apps.business_app.models.sub_country import SubCountry
 from apps.business_app.models.gene import Gene
+from apps.business_app.models.study import Study
 from apps.business_app.models.allele_node import AlleleNode
 from apps.business_app.models.gene_group import GeneGroups
 from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.site_configurations import SiteConfiguration
-from apps.business_app.utils.xslx_to_pdb import XslxToPdb
+from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy
+
+from apps.business_app.utils.xslx_to_pdb_by_ancesters_plus_est_study import (
+    XslxToPdbByAncestersPlusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_ancesters_minus_est_study import (
+    XslxToPdbByAncestersMinusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_location_plus_est_study import (
+    XslxToPdbByLocationPlusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_location_minus_est_study import (
+    XslxToPdbByLocationMinusEstStudy,
+)
 from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
-from apps.business_app.utils.xslx_to_pdb_graph import (
+from apps.business_app.utils.graph_functions import (
     extract_children_tree,
     extract_parents_tree,
 )
 from apps.common.utils.pusher_client import PusherClient
 from apps.common.tasks import send_pusher_trigger_task
+from apps.business_app.utils.excel_nomenclators_base import ExcelNomenclatorsBase
+from apps.business_app.utils.excel_nomenclator_by_allele_study import (
+    ExcelNomenclatorsByAlleleStudy,
+)
+from apps.business_app.utils.excel_nomenclator_by_ancesters_plus_est_study import (
+    ExcelNomenclatorsByAncestersPlusEstStudy,
+)
+from apps.business_app.utils.excel_nomenclator_by_ancesters_minus_est_study import (
+    ExcelNomenclatorsByAncestersMinusEstStudy,
+)
+from apps.business_app.utils.excel_nomenclator_by_location_plus_est_study import (
+    ExcelNomenclatorsByLocationPlusEstStudy,
+)
+from apps.business_app.utils.excel_nomenclator_by_location_minus_est_study import (
+    ExcelNomenclatorsByLocationMinusEstStudy,
+)
+from apps.business_app.models.study_type import StudyType
+
 
 logger = logging.getLogger(__name__)
 
@@ -43,123 +76,168 @@ def _is_db_locked_error(error):
 
 @shared_task(bind=True, name="process_uploaded_file_task", max_retries=4)
 def process_uploaded_file_task(self, uploaded_file_id):
+    close_old_connections()
     from apps.business_app.models.uploaded_files import UploadedFiles
 
-    close_old_connections()
     uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
-    try:
-        original_file = uploaded_file.original_file
-        file_name, _ = os.path.splitext(original_file.name)
 
-        global_configuration = SiteConfiguration.get_solo()
-        processor_classes = [XslxToPdb, XslxToPdbGraph]
+    original_file = uploaded_file.original_file
+    file_name, _ = os.path.splitext(original_file.name)
 
-        for processor_class in processor_classes:
-            if processor_class is XslxToPdbGraph:
-                processor_object = processor_class(
-                    original_file,
-                    global_configuration,
-                    uploaded_file_id=uploaded_file.id,
-                )
-            else:
-                processor_object = processor_class(original_file, global_configuration)
+    global_configuration = SiteConfiguration.get_solo()
+    # processor_classes = [XslxToPdbByAlleleStudy, XslxToPdbGraph]
+    processor_classes = [
+        XslxToPdbByAlleleStudy,
+        XslxToPdbByAncestersPlusEstStudy,
+        XslxToPdbByAncestersMinusEstStudy,
+        XslxToPdbByLocationPlusEstStudy,
+        XslxToPdbByLocationMinusEstStudy,
+    ]
+
+    successful_processors = 0
+    last_error = None
+    error_message_to_show = ""
+
+    for processor_class in processor_classes:
+        try:
+            processor_object = processor_class(
+                original_file,
+                global_configuration,
+                uploaded_file_id=uploaded_file.id,
+            )
             if global_configuration.upload_to_drive or isinstance(
                 processor_object, XslxToPdbGraph
             ):
                 processor_object.proccess_initial_file_data(uploaded_file.id)
             processor_object.proccess_pdb_file(uploaded_file.id, file_name)
-            fill_predecessors_and_sucessors_for_all_nodes(
-                uploaded_file_id=uploaded_file_id
-            )
-            uploaded_file.processed = True
-            uploaded_file.save(update_fields=["processed"])
-        send_pusher_trigger_task.delay(
-            channel=PusherClient.CELERY_TASK_CHANNEL,
-            event=PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL,
-            data={"uploaded_file_id": uploaded_file_id},
-        )
-
-        return {"status": "success", "uploaded_file_id": uploaded_file_id}
-    except Exception as e:
-        if _is_db_locked_error(e) and self.request.retries < self.max_retries:
-            countdown = 5 * (2**self.request.retries)
-            logger.warning(
-                "Database is locked while processing uploaded file %s. Retrying in %ss (retry %s/%s).",
+            if hasattr(processor_object, "study"):
+                # Construir el grafo con el dataframe ya cargado en memoria
+                # para evitar releer el archivo Excel desde disco.
+                create_graph(
+                    origin_file=None,
+                    study=processor_object.study,
+                    excel_nomenclator_class=processor_object.excel_nomenclator_class,
+                    output_df=processor_object.output_df,
+                )
+                fill_predecessors_and_sucessors_for_all_nodes(
+                    study_id=processor_object.study.id
+                )
+            successful_processors += 1
+        except Exception as processor_error:
+            last_error = processor_error
+            error_message_to_show += f"{processor_class}: {processor_error}.\n"
+            logger.exception(
+                "Error processing uploaded file %s with processor %s: %s",
                 uploaded_file_id,
-                countdown,
-                self.request.retries + 1,
-                self.max_retries,
+                processor_class.__name__,
+                processor_error,
+                exc_info=True,
             )
-            close_old_connections()
-            raise self.retry(exc=e, countdown=countdown)
 
-        logger.error(
-            "Error processing uploaded file %s: %s",
-            uploaded_file_id,
-            e,
-            exc_info=True,
-        )
-
+    if successful_processors == 0 and last_error is not None:
         send_pusher_trigger_task.delay(
             channel=PusherClient.CELERY_TASK_CHANNEL,
             event=PusherClient.FAILED_UPLOAD_3D_EXCEL,
-            data={"error_detail": e.__str__()},
+            data={"error_detail": error_message_to_show},
         )
-        # uploaded_file.delete()
-        raise
+        raise Exception(error_message_to_show)
 
+    if successful_processors > 0:
+        uploaded_file.processed = True
+        uploaded_file.save(update_fields=["processed"])
 
-def _get_graph_info(uploaded_file_id, node_number, function_to_call):
-    graph_key = AlleleNode.CACHE_KEY_GRAPH_FOR_FILE.format(
-        uploaded_file_id=uploaded_file_id
+    send_pusher_trigger_task.delay(
+        channel=PusherClient.CELERY_TASK_CHANNEL,
+        event=PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL,
+        data={"uploaded_file_id": uploaded_file_id},
     )
+    # uploaded_file.delete()
+    return {"status": "success", "uploaded_file_id": uploaded_file_id}
+
+
+def _get_graph_info(study_id, node_number, function_to_call):
+    graph_key = AlleleNode.CACHE_KEY_GRAPH_FOR_STUDY.format(study_id=study_id)
     graph = cache.get(graph_key)
     if not graph:
-        build_uploaded_file_graph_cache_task(uploaded_file_id)
+        build_uploaded_file_graph_cache_task(study_id)
         graph = cache.get(graph_key)
     return set(function_to_call(graph, [], node_number))
 
 
-def fill_predecessors_and_sucessors_for_all_nodes(uploaded_file_id: int):
-    from apps.business_app.models.allele_node import AlleleNode
+def fill_predecessors_and_sucessors_for_all_nodes(study_id: int):
+    model_class = None
+    from apps.business_app.models.study_type import StudyType
 
-    nodes = AlleleNode.objects.filter(uploaded_file_id=uploaded_file_id).all()
+    if (
+        Study.objects.get(id=study_id).study_type.classification
+        == StudyType.CLASSIFICATION.ALLELE
+    ):
+        from apps.business_app.models.allele_node import AlleleNode
+
+        model_class = AlleleNode
+    else:
+        from apps.business_app.models.protein_node import ProteinNode
+
+        model_class = ProteinNode
+
+    nodes = model_class.objects.filter(
+        study_id=study_id
+    ).all()  # TODO make generic somehow
     list_to_update = []
     for node in nodes:
         parent_tree = _get_graph_info(
-            uploaded_file_id=uploaded_file_id,
+            study_id=study_id,
             node_number=node.number,
             function_to_call=extract_parents_tree,
         )
         children_tree = _get_graph_info(
-            uploaded_file_id=uploaded_file_id,
+            study_id=study_id,
             node_number=node.number,
             function_to_call=extract_children_tree,
         )
         node.sucessors = list(children_tree)
         node.predecessors = list(parent_tree)
         list_to_update.append(node)
-    AlleleNode.objects.bulk_update(list_to_update, fields=["sucessors", "predecessors"])
+    model_class.objects.bulk_update(
+        list_to_update, fields=["sucessors", "predecessors"]
+    )
 
 
 @shared_task(name="build_uploaded_file_graph_cache_task")
-def build_uploaded_file_graph_cache_task(uploaded_file_id):
+def build_uploaded_file_graph_cache_task(study_id):
     try:
-        from apps.business_app.models.uploaded_files import UploadedFiles
+        study = Study.objects.select_related("study_type").get(id=study_id)
+        uploaded_file = study.uploaded_file
+        excel_nomenclator_class = ExcelNomenclatorsBase
+        study_type_name = study.study_type.name if study.study_type else ""
+        if study_type_name == StudyType.STUDY_NAME_ANCESTERS_PLUS_EST:
+            excel_nomenclator_class = ExcelNomenclatorsByAncestersPlusEstStudy
+        elif study_type_name == StudyType.STUDY_NAME_ANCESTERS_MINUS_EST:
+            excel_nomenclator_class = ExcelNomenclatorsByAncestersMinusEstStudy
+        elif study_type_name == StudyType.STUDY_NAME_LOCATION_PLUS_EST:
+            excel_nomenclator_class = ExcelNomenclatorsByLocationPlusEstStudy
+        elif study_type_name == StudyType.STUDY_NAME_LOCATION_MINUS_EST:
+            excel_nomenclator_class = ExcelNomenclatorsByLocationMinusEstStudy
+        elif study_type_name == StudyType.STUDY_NAME_GENETIC_ALLELE:
+            excel_nomenclator_class = ExcelNomenclatorsByAlleleStudy
 
-        uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
-        global_configuration = SiteConfiguration.get_solo()
-        processor_object = XslxToPdbGraph(
-            uploaded_file.original_file,
-            global_configuration,
-            uploaded_file_id=uploaded_file.id,
-        )
-        processor_object.proccess_initial_file_data(uploaded_file.id)
-        return {"status": "success", "uploaded_file_id": uploaded_file_id}
+        create_graph(uploaded_file.original_file, study, excel_nomenclator_class)
+        # from apps.business_app.models.uploaded_files import UploadedFiles
+
+        # uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
+        # global_configuration = SiteConfiguration.get_solo()
+        # processor_object = XslxToPdbGraph(
+        #     uploaded_file.original_file,
+        #     global_configuration,
+        #     uploaded_file_id=uploaded_file.id,
+        # )
+        # processor_object.proccess_initial_file_data(study_id)
+        return {"status": "success", "study_id": study_id}
     except Exception as e:
-        logger.error(
-            "Error building graph cache for uploaded file %s: %s",
-            uploaded_file_id,
+        logger.exception(
+            "Error building graph cache for study %s in uploaded file %s: %s",
+            study_id,
+            uploaded_file.id,
             str(e),
         )
         raise
@@ -438,7 +516,7 @@ def update_gene_list_for_groups_task():
             gene_group.genes.add(*genes_to_add)
 
         except GeneGroups.DoesNotExist:
-            logger.error(
+            logger.exception(
                 "Error: GeneGroups con id=%s no fue encontrado. Omitiendo este grupo.",
                 gene_group_id,
             )

@@ -2,6 +2,8 @@ __all__ = [
     "AllowedExtensionsViewSet",
     "SiteConfigurationViewSet",
     "UploadedFilesViewSet",
+    "StudyViewSet",
+    "StudyTypeViewSet",
     "InitialFileDataViewSet",
     "NewCoordinatesProcessorViewSet",
     "PdbFileViewSet",
@@ -12,9 +14,12 @@ __all__ = [
     "FeatureViewSet",
     "LayerViewSet",
     "SubCountryViewSet",
+    "ProteinNodeViewSet",
 ]
 from .allowed_extensions import AllowedExtensionsViewSet
 from .site_configurations import SiteConfigurationViewSet
+from .study import StudyViewSet
+from .study_type import StudyTypeViewSet
 from .uploaded_files import UploadedFilesViewSet
 from .initial_file_data import InitialFileDataViewSet
 from .new_coordinate_processor import NewCoordinatesProcessorViewSet
@@ -26,3 +31,4 @@ from .event_gallery import EventGalleryViewSet
 from .layer import LayerViewSet
 from .feature import FeatureViewSet
 from .sub_country import SubCountryViewSet
+from .protein_nodes import ProteinNodeViewSet

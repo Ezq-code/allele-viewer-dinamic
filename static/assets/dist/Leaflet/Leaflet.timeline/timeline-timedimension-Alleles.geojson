@@ -1,0 +1,141 @@
+{
+
+"type": "FeatureCollection",
+"name": "track_bus699-4",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+		
+	
+
+
+	
+
+ { "type": "Feature",
+    "properties": { "id": 66, "mag": 10, "place": "First Homo Sapiens 200000 ago ", "time": -16206, "title": "*39-ILU (Ancestral)", "timefinal": -68950,
+        "name": "200000 years ago, First Homo Sapiens ",
+        "times": [
+-18000000, -16000000, -14000000
+
+]},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [35.727192404502063, -5.245925220835992]
+}},	
+
+ { "type": "Feature",
+    "properties": { "id": 66, "mag": 10, "place": "First Homo Sapiens 200000 ago ", "time": -16206, "title": "*39-ILU (Ancestral - Orangutan)", "timefinal": -68950,
+        "name": "200000 years ago, First Homo Sapiens ",
+        "times": [
+-18000000, -16000000, -14000000
+]},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [35.727192404502063, 16.245925220835992]
+}},
+
+ { "type": "Feature",
+    "properties": { "id": 66, "mag": 10, "place": "First Homo Sapiens 200000 ago ", "time": -16206, "title": "*39 + *1.038-ILU (Ancestral - Orangutan)", "timefinal": -68950,
+        "name": "200000 years ago, First Homo Sapiens ",
+        "times": [
+-18000000, -16000000, -14000000
+]},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [35.727192404502063, 1.245925220835992]
+}},
+
+
+ { "type": "Feature",
+    "properties": { "id": 66, "mag": 10, "place": "First Homo Sapiens 200000 ago ", "time": -16206, "title": "*39 + *10-ILU (Ancestral - Orangutan)", "timefinal": -68950,
+        "name": "200000 years ago, First Homo Sapiens ",
+        "times": [
+-18000000, -16000000, -14000000
+
+]},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [36.727192404502063, -11.245925220835992]
+}},
+
+
+ { "type": "Feature",
+    "properties": { "id": 66, "mag": 10, "place": "First Homo Sapiens 200000 ago ", "time": -16206, "title": "*39+*2.016/*45/*46/*127/*139-ILU(Ancestral-Orangutan/Chimpanzee)", "timefinal": -68950,
+        "name": "200000 years ago, First Homo Sapiens ",
+        "times": [
+-18000000, -16000000, -14000000, -12000000, -10000000, -8000000, -7050000, -6050000, -6000000
+]},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [48.727192404502063, 9.245925220835992]
+}},
+
+ { "type": "Feature",
+    "properties": { "id": 66, "mag": 10, "place": "First Homo Sapiens 200000 ago ", "time": -16206, "title": "*1.002-ILU (Ancestral - Chimpanzee)", "timefinal": -68950,
+        "name": "200000 years ago, First Homo Sapiens ",
+        "times": [
+-8000000, -7050000 , -6050000
+]},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [38.727192404502063, -13.245925220835992]
+}},
+
+
+ { "type": "Feature",
+    "properties": { "id": 66, "mag": 10, "place": "First Homo Sapiens 200000 ago ", "time": -16206, "title": "*39 + *1.002-ILU (Ancestral - Chimpanzee)", "timefinal": -68950,
+        "name": "200000 years ago, First Homo Sapiens ",
+        "times": [
+-8000000, -7050000 , -6050000, -6000000 
+]},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [28.727192404502063, 4.245925220835992]
+}},
+
+ { "type": "Feature",
+    "properties": { "id": 66, "mag": 10, "place": "First Homo Sapiens 200000 ago ", "time": -16206, "title": "*2-ILU Ergaster/Erectus/CommonRoot", "timefinal": -68950,
+        "name": "200000 years ago, First Homo Sapiens ",
+        "times": [
+-1800000, -1700000, -1600000, -1500000, -1400000, -1300000, -1200000 
+]},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [30.727192404502063, -4.245925220835992]
+}},
+
+ { "type": "Feature",
+    "properties": { "id": 66, "mag": 10, "place": "First Homo Sapiens 200000 ago ", "time": -16206, "title": "*2/*17/*73-Ergaster/Erectus/CommonRoot/Orangutan", "timefinal": -68950,
+        "name": "200000 years ago, First Homo Sapiens ",
+        "times": [
+-1600000, -1500000, -1400000, -1300000, -1200000 
+]},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [35.727192404502063, 7.245925220835992]
+}},
+  
+  
+ { "type": "Feature",
+    "properties": { "id": 66, "mag": 10, "place": "First Homo Sapiens 200000 ago ", "time": -16206, "title": "*10.002", "timefinal": -68950,
+        "name": "200000 years ago, First Homo Sapiens ",
+        "times": [
+-1500000, -1400000, -1300000, -1200000, -1100000, -1000000, -900000 
+]},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [35.727192404502063, 15.245925220835992]
+}},  
+  
+ { "type": "Feature", "properties": { "id": 55, "mag": "#0000FF", "place": null, "time": -1, "title": null, "timefinal": -68950, "name": "Allele HLY-Y*Y:Y",
+"times": [ 
+-18000000, -16000000, -14000000, -12000000, -10000000, -8000000, -7050000, -6050000,
+-6000000, -5050000, -4050000, -3050000, -2050000, -2000000, -1800000,
+-1700000, -1600000, -1500000, -1400000, -1300000, -1200000, -1100000, -1000000, -900000
+] },
+ "geometry": { "type": "LineString", "coordinates": 
+ [ [ 35.727192404502063, -2.245925220835992 ]]
+ } }  
+ 
+
+]
+}

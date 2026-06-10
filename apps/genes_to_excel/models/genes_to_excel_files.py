@@ -79,7 +79,7 @@ class GenesToExcelFiles(models.Model):
                 process_genes_to_excel_file_task.delay(file.path, self.id)
 
             except Exception as e:
-                logger.error(f"An error occurred: {e}", exc_info=True)
+                logger.exception(f"An error occurred: {e}", exc_info=True)
 
                 self.delete()
                 raise e
