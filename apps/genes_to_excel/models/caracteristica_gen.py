@@ -44,4 +44,5 @@ class CaracteristicaGen(models.Model):
             models.Index(fields=["gene", "cord"]),
             models.Index(fields=["gene"]),
             models.Index(fields=["species"]),
+            models.Index(fields=["archivo_origen"]),
         ]

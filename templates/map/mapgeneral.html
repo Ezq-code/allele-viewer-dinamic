@@ -236,12 +236,12 @@
                                         <div class="d-inline-block">
                                             <select class="form-control form-control-sm" name="timeRange" id="timeRange"
                                                     disabled>
-                                                <option value="-15000/2025">From 15000 YBP to year 2025</option>
+                                                <option value="-15000/2025">From 15000 YBP to year 2026</option>
                                                 <option value="-1800000/-804400">Homo Erectus Migrations</option>
                                                 <option value="-700000/-190539">Heidelbergensis Migrations</option>
                                                 <option value="-69000/-15000" selected>Homo Sapiens Migrations</option>
-                                                <option value="-130000/-115000">-130000 to -115000 High Temperature
-                                                </option>
+                                                <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
+                                                <option value="-18000000/-6000000">Allele Migrations</option>
                                             </select>
                                         </div>
                                         <button type="button" class="btnok btn-sm btn-toggle-panel btn-warning"
@@ -264,11 +264,12 @@
                                     <div id="timeRangeMigraions" class="time-range-container">
                                         <h5>Time Range Selection</h5>
                                         <select class="custom-multiselect" size="5">
-                                            <option value="-15000/2025">From 15000 YBP to year 2025</option>
+                                            <option value="-15000/2025">From 15000 YBP to year 2026</option>
                                             <option value="-1800000/-804400">Homo Erectus Migrations</option>
                                             <option value="-700000/-190539">Heidelbergensis Migrations</option>
                                             <option value="-69000/-15000" selected>Homo Sapiens Migrations</option>
                                             <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
+                                            <option value="-18000000/-6000000">Allele Migrations</option>
                                         </select>
                                     </div>
                                 </div>
@@ -521,11 +522,13 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                     var timelinetimedimensionHomoHerectus = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-homoherectus.geojson' %}";
                                     var timelinetimedimensiontimeline_130000_115000_HighTemperature = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-130000-115000-High-Temperature.geojson' %}";
                                     var timelinetimedimensiontimeline_15000_2025 = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-15000-2025.geojson' %}";
+                                    var timelinetimedimensiontimeline_Alleles = "{% static 'assets/dist/Leaflet/Leaflet.timeline/timeline-timedimension-Alleles.geojson' %}";
 
                                     var iconUrlpath = "{% static 'assets/dist/Leaflet/marker_black.png' %}";
                                     var iconUrlpathDestinationMigration = "{% static 'assets/dist/Leaflet/primitive-man4.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHeidel = "{% static 'assets/dist/Leaflet/primitive-man1.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHerectus = "{% static 'assets/dist/Leaflet/primitive-man25.png' %}";
+                                    var iconUrlpathDestinationMigrationAllele = "{% static 'assets/dist/Leaflet/buble1.png' %}";
 
                                     // Función para crear la leyenda deslizante
                                     function createSlidingLegend() {
@@ -832,7 +835,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                                 element: '#map',
                                                 popover: {
                                                     title: '🗺️ Mapa Principal',
-                                                    description: 'This is the interactive map where all human migrations and the expansion of CYP2D6 alleles are displayed.',
+                                                    description: 'Este es el mapa interactivo donde se visualizan todas las migraciones humanas y la expansión de los alelos CYP2D6.',
                                                     side: "bottom",
                                                     align: 'center'
                                                 }
@@ -841,7 +844,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                                 element: '#regionTimeLine',
                                                 popover: {
                                                     title: '🌍 Filtro por Región',
-                                                    description: 'Select a specific geographic region to filter migrations.',
+                                                    description: 'Selecciona una región geográfica específica para filtrar las migraciones.',
                                                     side: "left",
                                                     align: 'start'
                                                 }
@@ -850,7 +853,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                                 element: '#btreload',
                                                 popover: {
                                                     title: '🔄 Cargar Datos',
-                                                    description: 'Click here to apply the selected filters.',
+                                                    description: 'Haz clic aquí para aplicar los filtros seleccionados.',
                                                     side: "bottom",
                                                     align: 'center'
                                                 }
@@ -859,7 +862,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                                 element: '#timeRange',
                                                 popover: {
                                                     title: '⏰ Rango de Tiempo',
-                                                    description: 'Select different historical periods to visualize specific migrations.',
+                                                    description: 'Selecciona diferentes períodos históricos para visualizar migraciones específicas.',
                                                     side: "bottom",
                                                     align: 'center'
                                                 }
@@ -877,7 +880,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                                 element: '#toggleLegendPanel',
                                                 popover: {
                                                     title: '📖 Leyenda',
-                                                    description: 'Opens/closes the map legend panel.',
+                                                    description: 'Abre/cierra el panel de leyenda del mapa.',
                                                     side: "left",
                                                     align: 'start'
                                                 }
@@ -886,7 +889,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                                 element: '#toggleWalking',
                                                 popover: {
                                                     title: '👣 Lista de Migraciones',
-                                                    description: 'Side panel with a chronological list of events.',
+                                                    description: 'Panel lateral con lista cronológica de eventos.',
                                                     side: "left",
                                                     align: 'start'
                                                 }
@@ -895,7 +898,7 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                                 element: '#startTourBtn',
                                                 popover: {
                                                     title: '❓ Ayuda',
-                                                    description: 'Restart this tour whenever you need it.',
+                                                    description: 'Reinicia este tour cuando lo necesites.',
                                                     side: "bottom",
                                                     align: 'center'
                                                 }

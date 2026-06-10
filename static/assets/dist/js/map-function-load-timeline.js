@@ -125,7 +125,7 @@ function addGeoJSONLayer(map, data) {
 
 var geoJsonData;
 // 1. Función de conversión de años a fechas
-const BASE_YEAR = 2025; // Año de referencia (actual)
+const BASE_YEAR = 2026; // Año de referencia (actual)
 const yearToDate = (yearsBP) => {
     const date = new Date(`${BASE_YEAR}-01-01T00:00:00Z`);
     date.setFullYear(date.getFullYear() - yearsBP);
@@ -163,9 +163,11 @@ const allTimes = data.features
         getLineId: f => f.properties.name
     });
     
+    
+
     // 2. Capa de destinos de las migraciones
     var pointLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
-        filter: f => f.geometry.type === 'Point',
+        filter: f => f.geometry.type === 'Point' && f.properties.id >= 10  && f.properties.id <= 14,
         pointToLayer: (f, latlng) => {
             var marker = L.marker(latlng, {
                 icon: L.icon({
@@ -207,6 +209,52 @@ const allTimes = data.features
         return feature.properties.times.map(t => t * 1000);
       }
     });
+
+
+        // 2. Capa de destinos de las migraciones
+        var pointLayerAllele = L.timeDimension.layer.geoJson(L.geoJSON(data, {
+            filter: f => f.geometry.type === 'Point' && f.properties.id === 66,
+            pointToLayer: (f, latlng) => {
+                var marker = L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: iconUrlpathDestinationMigrationAllele,
+                        iconSize: [20, 20],
+                        shadowSize: [20, 20],
+                        shadowAnchor: [10, 11]
+                    })
+                });
+                // Bind a popup for click (if you still want it)
+                //marker.bindPopup(f.properties.title);
+                // Bind a tooltip to show the title permanently
+                marker.bindTooltip(f.properties.title, {
+                    permanent: true,
+                    direction: 'left',
+                    offset: [-6, -5],
+                    className: 'marker-tooltip'
+                });
+                return marker;
+            }
+            /*
+            pointToLayer: (f, latlng) => L.marker(latlng, {
+                icon:
+                    L.icon({
+                        iconUrl: iconUrlpathDestinationMigrationHomoHeidel,
+                        iconSize: [45, 45],
+                        shadowSize: [45, 45],
+                        shadowAnchor: [17, 23]
+                    })
+            }).bindPopup(f.properties.title)
+            */
+        }), {
+          updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
+          duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+          timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
+          addlastPoint: false,                  // Evita saltos al final
+          timeField: function(feature) {
+            // Convert each time from seconds to milliseconds
+            return feature.properties.times.map(t => t * 1000);
+          }
+        });
 
     const validEvents = this.validateEvents(allEvents);
     
@@ -425,6 +473,7 @@ const allTimes = data.features
        lineLayer.addTo(map);
        pointLayer.addTo(map);
        pointMarkerLayer.addTo(map);
+       pointLayerAllele.addTo(map);
     
      // creación de las capas bases y adición al control de capas del mapa
     const baseLayers = {
@@ -439,7 +488,8 @@ const allTimes = data.features
         'Glacials': areaLayerHielo,
         'Population by Region': areaLayerPoblacion,
         'Land Emerge': areaLayerTierra,
-        'Marker Layer': markerLayer
+        'Marker Layer': markerLayer,
+        'Migration Allele': pointLayerAllele
     };
     
     var layerControl = L.control.layers(baseLayers, overlays, {
@@ -489,8 +539,8 @@ const allTimes = data.features
                                             }                                             
                                             else
                                             {
-                                                sessionStorage.setItem('timedelayice', 'PT5S');
-                                                sessionStorage.setItem('timedelayland', 'PT5S');
+                                                sessionStorage.setItem('timedelayice', 'PT9S');
+                                                sessionStorage.setItem('timedelayland', 'PT9S');
                                             } 
 
                                             // se manda a recargar toda la página para actualizar la línea del tiempo con los cambios en los marcadores
@@ -652,6 +702,12 @@ map.timeDimension.on('timeloading', function (e) {
      var player = timeDimensionControl._player || map.timeDimension.getPlayer(); // Acceso al reproductor
      player.setTransitionTime(1000);
     }
+
+    if (currentTime == -18000000)
+    {
+     var player = timeDimensionControl._player || map.timeDimension.getPlayer(); // Acceso al reproductor
+     player.setTransitionTime(400);
+    }
    
   if ((currentTime != currentTimeAnt) && (currentTime != -26508) && (currentTime != -890400)){  
     
@@ -713,6 +769,10 @@ if (timeRange == "-15000/2025"){
     if (timeRange == "-130000/-115000"){
         oReq.open('GET', timelinetimedimensiontimeline_130000_115000_HighTemperature);
    }
+   else
+   if (timeRange == "-18000000/-6000000"){
+       oReq.open('GET', timelinetimedimensiontimeline_Alleles);
+  }
 
 //oReq.open('GET', timelinetimedimension);
 oReq.send();
