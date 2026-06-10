@@ -8,6 +8,8 @@ from apps.business_app.serializers.allele_parents import AlleleParentsSerializer
 
 from apps.business_app.utils.xslx_to_pdb_graph import (
     XslxToPdbGraph,
+)
+from apps.business_app.utils.graph_functions import (
     extract_parents_tree,
 )
 

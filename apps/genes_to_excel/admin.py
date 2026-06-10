@@ -34,7 +34,7 @@ class GenesToExcelFilesAdmin(admin.ModelAdmin):
         try:
             obj.save()
         except Exception as e:
-            logger.error(f"{str(e)}")
+            logger.exception(f"{str(e)}")
             # Display the exception in the admin interface
             self.message_user(request, f"{str(e)}", level="error")
 

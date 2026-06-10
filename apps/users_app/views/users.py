@@ -97,7 +97,7 @@ class UserViewSet(viewsets.ModelViewSet, GenericAPIView):
                 fail_silently=False,
             )
         except Exception as e:
-            logger.error(f"{str(e)}")
+            logger.exception(f"{str(e)}")
             return None
 
         return confirmation_code

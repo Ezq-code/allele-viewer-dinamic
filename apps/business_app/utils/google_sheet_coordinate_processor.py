@@ -10,7 +10,7 @@ from apps.business_app.models.pdb_files import PdbFiles
 from apps.business_app.models.working_copy_of_original_file import (
     WorkingCopyOfOriginalFile,
 )
-from apps.business_app.utils.excel_nomenclators import ExcelNomenclators
+from apps.business_app.utils.excel_nomenclators_base import ExcelNomenclatorsBase
 from apps.business_app.utils.google_api_coordinator import GoogleApiCoordinator
 from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDriveApi
 from project_site import settings
@@ -43,7 +43,7 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
             )
             created = True
         except Exception as e:
-            logger.error(f"Error creating WorkingCopyOfOriginalFile object: {e}")
+            logger.exception(f"Error creating WorkingCopyOfOriginalFile object: {e}")
             raise e from e
         try:
             if not self.working_files.google_sheet_id_copy:
@@ -55,7 +55,7 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
                 self.working_files.save(update_fields=["google_sheet_id_copy"])
             self.working_files_status_is_created = created
         except Exception as e:
-            logger.error(f"Error creating WorkingCopyOfOriginalFile object: {e}")
+            logger.exception(f"Error creating WorkingCopyOfOriginalFile object: {e}")
             raise e from e
 
     def _format_coordinate(self, coordinate_string):
@@ -68,7 +68,7 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
             )
             return int(value)
         except Exception as e:
-            logger.error(f"Error formatting coordinate: {e}")
+            logger.exception(f"Error formatting coordinate: {e}")
             return 0
 
     def _write_tmp_pdb_file(self, updated_lines):
@@ -122,7 +122,7 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
                 x_string = self._format_coordinate(row[x_column_index])
                 y_string = self._format_coordinate(row[y_column_index])
                 z_string = self._format_coordinate(row[z_column_index])
-                new_line = ExcelNomenclators._atom_record_format.format(
+                new_line = ExcelNomenclatorsBase._atom_record_format.format(
                     "ATOM",
                     int(atom_record[1]),
                     atom_record[2],
@@ -154,7 +154,7 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
             uploaded_file=self.working_files.uploaded_file
         ).count()
         output_range = (
-            f"{ExcelNomenclators.output_sheet}!A2:J{existing_allele_nodes_qty + 1}"
+            f"{ExcelNomenclatorsBase.output_sheet}!A2:J{existing_allele_nodes_qty + 1}"
         )
         try:
             updated_lines = []
@@ -231,7 +231,7 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
     def proccess_snp_input(self, input_list):
         print("Processing SNP input...")
         try:
-            input_column = f"{ExcelNomenclators.input_sheet}!C"
+            input_column = f"{ExcelNomenclatorsBase.input_sheet}!C"
             input_data = []
             numeric_value_set = set()
             for element in input_list:
@@ -275,20 +275,20 @@ class GoogleSheetCoordinateProcessor(GoogleApiCoordinator):
 
     def proccess_expansion_input(self, x_value, y_value, z_value):
         print("Processing EXPANSION input...")
-        input_x_column = f"{ExcelNomenclators.constants_sheet}!{ExcelNomenclators.x_expansion_column_name}"
-        input_y_column = f"{ExcelNomenclators.constants_sheet}!{ExcelNomenclators.y_expansion_column_name}"
-        input_z_column = f"{ExcelNomenclators.constants_sheet}!{ExcelNomenclators.z_expansion_column_name}"
+        input_x_column = f"{ExcelNomenclatorsBase.constants_sheet}!{ExcelNomenclatorsBase.x_expansion_column_name}"
+        input_y_column = f"{ExcelNomenclatorsBase.constants_sheet}!{ExcelNomenclatorsBase.y_expansion_column_name}"
+        input_z_column = f"{ExcelNomenclatorsBase.constants_sheet}!{ExcelNomenclatorsBase.z_expansion_column_name}"
         input_data = [
             {
-                "range": f"{input_x_column}{ExcelNomenclators.xyz_expansion_row_index}",
+                "range": f"{input_x_column}{ExcelNomenclatorsBase.xyz_expansion_row_index}",
                 "values": [[x_value]],
             },
             {
-                "range": f"{input_y_column}{ExcelNomenclators.xyz_expansion_row_index}",
+                "range": f"{input_y_column}{ExcelNomenclatorsBase.xyz_expansion_row_index}",
                 "values": [[y_value]],
             },
             {
-                "range": f"{input_z_column}{ExcelNomenclators.xyz_expansion_row_index}",
+                "range": f"{input_z_column}{ExcelNomenclatorsBase.xyz_expansion_row_index}",
                 "values": [[z_value]],
             },
         ]

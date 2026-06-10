@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.business_app.models import AllowedExtensions
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.initial_file_data import InitialFileData
+from apps.business_app.models.base_allele_node import BaseAlleleNode
 from apps.business_app.tasks import process_uploaded_file_task
 from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDriveApi
 from django.core.cache import cache
@@ -102,7 +103,7 @@ class UploadedFiles(models.Model):
                 process_uploaded_file_task.apply_async(args=[self.id], retry=False)
 
             except Exception as e:
-                logger.error(f"An error occurred: {e}", exc_info=True)
+                logger.exception(f"An error occurred: {e}", exc_info=True)
                 self.delete()
                 raise e
         if self.predefined:
@@ -116,11 +117,12 @@ class UploadedFiles(models.Model):
         if self.google_sheet_id:
             processor = UploadToGoogleDriveApi()
             processor.delete_file_from_google_drive(self.google_sheet_id)
-        cache.delete(
-            UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
-                uploaded_file_id=self.id
+        # Clean up graph cache for all studies associated with this file
+        for study in self.studies.all():
+            graph_cache_key = BaseAlleleNode.CACHE_KEY_GRAPH_FOR_STUDY.format(
+                study_id=study.id
             )
-        )
+            cache.delete(graph_cache_key)
         super().delete(*args, **kwargs)
 
     def delete_physical_file(self, file_field):

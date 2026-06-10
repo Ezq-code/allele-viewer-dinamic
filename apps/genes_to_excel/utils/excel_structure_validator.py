@@ -31,7 +31,7 @@ class ExcelStructureValidator:
             try:
                 first_row_output[column]
             except KeyError as e:
-                logger.error(f"{str(e)}")
+                logger.exception(f"{str(e)}")
                 raise ValueError(
                     f"Invalid file structure, the table on the sheet '{ExcelNomenclators.output_sheet}' "
                     f"has at least the next column missing: {column}."

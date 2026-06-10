@@ -26,7 +26,7 @@ def process_uploaded_snp_file_task(uploaded_file_id):
 
         return {"status": "success", "uploaded_file_id": uploaded_file_id}
     except Exception as e:
-        logger.error(
+        logger.exception(
             "Error processing uploaded SNP file %s: %s",
             uploaded_file_id,
             e,

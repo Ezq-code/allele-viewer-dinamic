@@ -3,9 +3,11 @@ from django.utils.translation import gettext_lazy as _
 
 
 def user_processed_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    to_return = f"user_{instance.original_file.system_user_id}/"
-    to_return += f"processed_files/pdb_for_file_{instance.original_file.id}/{filename}"
+    # file will be uploaded to MEDIA_ROOT/user_<id>/processed_files/pdb_for_study_<study_id>/<filename>
+    system_user_id = instance.study.uploaded_file.system_user_id
+    study_id = instance.study.id
+    to_return = f"user_{system_user_id}/"
+    to_return += f"processed_files/pdb_for_study_{study_id}/{filename}"
     return to_return
 
 
@@ -24,10 +26,12 @@ class PdbFiles(models.Model):
         blank=True,
         null=True,
     )
-    original_file = models.ForeignKey(
-        verbose_name=_("Original File"),
-        to="UploadedFiles",
+    study = models.ForeignKey(
+        "Study",
         on_delete=models.CASCADE,
+        verbose_name=_("Study ID"),
+        null=True,
+        blank=True,
         related_name="pdb_files",
     )
     pdb_content = models.TextField(

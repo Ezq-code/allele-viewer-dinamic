@@ -46,7 +46,9 @@ class ExcelStructureValidator:
         for sheet_name, df in self.sheets_data.items():
             logger.info(f"Validando hoja: '{sheet_name}'")
             if not Gene.objects.filter(name=sheet_name).exists():
-                logger.error(f"La hoja '{sheet_name}' no corresponde a un gen válido.")
+                logger.exception(
+                    f"La hoja '{sheet_name}' no corresponde a un gen válido."
+                )
                 self.sheet_names.remove(sheet_name)
                 continue
             first_row = df.iloc[0]
@@ -56,7 +58,7 @@ class ExcelStructureValidator:
                     # Intenta acceder a la columna en la primera fila
                     first_row[column]
                 except KeyError:
-                    logger.error(
+                    logger.exception(
                         f"Error en la hoja '{sheet_name}': Columna '{column}' no encontrada."
                     )
                     raise ValueError(

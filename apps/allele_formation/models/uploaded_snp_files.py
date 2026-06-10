@@ -80,7 +80,7 @@ class UploadedSNPFiles(models.Model):
             try:
                 process_uploaded_snp_file_task.delay(self.id)
             except Exception as e:
-                logger.error(
+                logger.exception(
                     f"Failed to queue task for file processing: {e}", exc_info=True
                 )
                 self.delete()

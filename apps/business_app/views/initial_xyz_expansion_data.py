@@ -64,13 +64,13 @@ class InitialXyzExpansionDataViewSet(
                 )
                 return Response(output_serializer.data)
         except RefreshError as e:
-            logger.error(e, exc_info=True)
+            logger.exception(e, exc_info=True)
             return Response(
                 data={"detail": f"Error accessing the Google Sheet API: {e}"},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
         except Exception as e:
-            logger.error(e, exc_info=True)
+            logger.exception(e, exc_info=True)
             return Response(
                 data={
                     "detail": f"An error occurred during the processing of the data: {e}."

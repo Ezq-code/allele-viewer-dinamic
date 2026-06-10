@@ -12,8 +12,11 @@ from apps.business_app.models import (
     Layer,
     Marker,
     SiteConfiguration,
+    Study,
+    StudyType,
     UploadedFiles,
     WorkingCopyOfOriginalFile,
+    ProteinNode,
 )
 from apps.business_app.models.disease_group import DiseaseGroup
 from apps.business_app.models.disease_subgroup import DiseaseSubGroup
@@ -78,9 +81,9 @@ class AlleleNodeAdmin(admin.ModelAdmin):
         "number",
         "unique_number",
         "element",
-        "custom_element_name",
+        "allele",
         "rs",
-        "uploaded_file",
+        "study",
         "timeline_appearence",
         "frec_afr_amr",
         "frec_amr",
@@ -100,9 +103,9 @@ class AlleleNodeAdmin(admin.ModelAdmin):
     fields = [
         "number",
         "element",
-        "custom_element_name",
+        "allele",
         "rs",
-        "uploaded_file",
+        "study",
         "timeline_appearence",
         "frec_afr_amr",
         "frec_amr",
@@ -118,6 +121,62 @@ class AlleleNodeAdmin(admin.ModelAdmin):
         "frec_afr_nor",
         "frec_ca",
         "frec_sa",
+    ]
+
+
+@admin.register(ProteinNode)
+class ProteinNodeAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "number",
+        "unique_number",
+        "element",
+        "allele",
+        "is_final_for_allele",
+        "rs",
+        "study",
+        "timeline_appearence",
+        "frec_afr_amr",
+        "frec_amr",
+        "frec_csa",
+        "frec_eas",
+        "frec_eur",
+        "frec_lat",
+        "frec_nea",
+        "frec_oce",
+        "frec_ssa",
+        "frec_afr_eas",
+        "frec_afr_swe",
+        "frec_afr_nor",
+        "frec_ca",
+        "frec_sa",
+    ]
+
+
+@admin.register(StudyType)
+class StudyTypeAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = ["id", "name", "sheet_name", "classification"]
+    fields = ["name", "sheet_name", "classification"]
+
+
+@admin.register(Study)
+class StudyAdmin(admin.ModelAdmin):
+    empty_value_display = "-empty-"
+    list_display = [
+        "id",
+        "uploaded_file",
+        "study_type",
+        "successfull_load",
+        "extra_info",
+        "created_at",
+    ]
+    fields = [
+        "uploaded_file",
+        "study_type",
+        "successfull_load",
+        "extra_info",
     ]
 
 
@@ -323,7 +382,7 @@ class UploadedFilesAdmin(admin.ModelAdmin):
         try:
             obj.save()
         except Exception as e:
-            logger.error(f"{str(e)}")
+            logger.exception(f"{str(e)}")
             # Display the exception in the admin interface
             self.message_user(request, f"{str(e)}", level="error")
 
@@ -335,7 +394,7 @@ class PdbFilesAdmin(admin.ModelAdmin):
         "id",
         "custom_name",
         "description",
-        "original_file",
+        "study",
         "pdb_content",
         "kind",
     ]
@@ -345,7 +404,7 @@ class PdbFilesAdmin(admin.ModelAdmin):
         "kind",
     ]
     list_filter = [
-        "original_file__gene__name",
+        "study__uploaded_file__gene__name",
     ]
 
 

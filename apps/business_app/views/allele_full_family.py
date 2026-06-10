@@ -6,12 +6,11 @@ from django.core.cache import cache
 
 from apps.business_app.serializers.allele_parents import AlleleParentsSerializer
 
-from apps.business_app.utils.xslx_to_pdb_graph import (
-    XslxToPdbGraph,
+from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
+from apps.business_app.utils.graph_functions import (
     extract_children_tree,
     extract_parents_tree,
 )
-
 from apps.business_app.models.uploaded_files import UploadedFiles
 
 
