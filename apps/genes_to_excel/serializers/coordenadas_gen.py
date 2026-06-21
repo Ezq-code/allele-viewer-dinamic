@@ -20,6 +20,7 @@ class CaracteristicaGenCoordinatesSerializer(serializers.ModelSerializer):
     Order1 = serializers.CharField(source="order_one", read_only=True)
     Order2 = serializers.CharField(source="order_two", read_only=True)
     Order3 = serializers.CharField(source="order_three", read_only=True)
+    NCBI_Link = serializers.CharField(source="ncbi_link", read_only=True)
 
     class Meta:
         model = CaracteristicaGen
@@ -35,4 +36,5 @@ class CaracteristicaGenCoordinatesSerializer(serializers.ModelSerializer):
             "Order1",
             "Order2",
             "Order3",
+            "NCBI_Link"
         ]

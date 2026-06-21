@@ -508,6 +508,8 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         }
         
         const detalle = data.results[0];
+
+        console.log(detalle)
         
         // Sanitizar todos los campos
         const gen = sanitizarHTML(detalle.Gene);
@@ -520,6 +522,7 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         const order1 = sanitizarHTML(detalle.Order1);
         const order2 = sanitizarHTML(detalle.Order2);
         const order3 = sanitizarHTML(detalle.Order3);
+        const ncbi_link = sanitizarHTML(detalle.NCBI_Link);
         
         // Procesar alelos asociados de forma segura
         let alelosAsociados = [];
@@ -600,6 +603,14 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
                     <tr style="border-bottom: 1px solid #ddd;">
                         <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Order3:</td>
                         <td style="padding: 8px;">${order3}</td>
+                    </tr>
+                    ` : ''}
+                    ${ncbi_link !== 'N/A' ? `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">NCBI_Link:</td>
+                        <td style="padding: 8px;">
+                            <a href="${ncbi_link}" target="_blank">${ncbi_link}</a>
+                        </td>
                     </tr>
                     ` : ''}
                 </table>
@@ -926,7 +937,7 @@ function renderizarTablaExcel(data) {
 }
 
 // ============================================
-// FUNCION DE DEPUACION
+// FUNCION DE DEPURACION
 // ============================================
 // Función para depurar y mostrar información de las coordenadas
 function depurarCoordenadas(registros, genName) {
