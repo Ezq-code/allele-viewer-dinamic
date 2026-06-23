@@ -24,6 +24,7 @@ class CaracteristicaGen(models.Model):
     order_one = models.CharField(max_length=100, blank=True)
     order_two = models.CharField(max_length=100, blank=True)
     order_three = models.CharField(max_length=100, blank=True)
+    ncbi_link = models.CharField(max_length=250, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
 

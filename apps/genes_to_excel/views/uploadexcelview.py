@@ -102,7 +102,7 @@ class UploadExcelView(APIView):
         columnas_requeridas = [
             "Gene", "Cord", "Valor", "Color", "Protein", 
             "Alleleasoc", "Species", "Variant", "Order1", 
-            "Order2", "Order3"
+            "Order2", "Order3", "NCBI_Link"
         ]
         
         columnas_faltantes = [col for col in columnas_requeridas if col not in df.columns]
@@ -366,6 +366,7 @@ class UploadExcelView(APIView):
                 "Order1",
                 "Order2",
                 "Order3",
+                "NCBI_Link",
             ]
             for col in columnas_requeridas:
                 if col not in df.columns:
