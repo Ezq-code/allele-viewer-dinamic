@@ -161,7 +161,7 @@ class XslxReader:
         campos_actualizar = [
             'archivo_origen', 'gene', 'valor', 'color', 'protein',
             'alleleasoc', 'species', 'variant', 'order_one', 
-            'order_two', 'order_three'
+            'order_two', 'order_three', 'ncbi_link'
         ]
         
         # Procesar cada fila
@@ -183,6 +183,7 @@ class XslxReader:
                     "order_one": str(row.get("Order1", "")),
                     "order_two": str(row.get("Order2", "")),
                     "order_three": str(row.get("Order3", "")),
+                    "ncbi_link": str(row.get("NCBI_Link", "")),
                 }
                 
                 # Limpiar valores 'nan' y 'None'

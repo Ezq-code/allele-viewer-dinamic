@@ -23,6 +23,7 @@ class CaracteristicaGenSerializer(serializers.ModelSerializer):
             "order_one",
             "order_two",
             "order_three",
+            "ncbi_link",
             "fecha_creacion",
         ]
         read_only_fields = ["fecha_creacion", "fecha_actualizacion"]
