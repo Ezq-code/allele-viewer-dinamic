@@ -239,30 +239,19 @@ $(document).ready(function () {
 
     var celery_task_channel = pusher.subscribe("celery-task-channel");
     // The realtime update may contain task or alert data (or both).
-    celery_task_channel.bind("successful-upload-3d-excel", function (data) {
+    celery_task_channel.bind("study-processed", function (data) {
       // If it's the combined structure with task_info/alert_info
-      console.log("Successful upload 3D Excel:", data);
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Successfull uploaded file",
-      });
+      console.log("New study processed:", data);
+      // Swal.fire({
+      //   icon: "success",
+      //   title: "Success",
+      //   text: "Successfull uploaded file",
+      // });
 
       if ($.fn.DataTable.isDataTable("#tabla-de-Datos")) {
         $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
       }
 
-    });
-    celery_task_channel.bind("failed-upload-3d-excel", function (data) {
-      // If it's the combined structure with task_info/alert_info
-      console.log("Failed upload 3D Excel:", data);
-      const errorDetail = data && data.error_detail ? data.error_detail : "Unknown error";
-      Swal.close();
-      Swal.fire({
-        icon: "error",
-        title: "Upload failed",
-        text: "The file could not be processed. " + errorDetail,
-      });
     });
   } else {
     console.warn(
@@ -468,6 +457,7 @@ form.addEventListener("submit", function (event) {
             load.hidden = true;
             // The success message and table refresh are handled by Pusher
             // event "successful-upload-3d-excel".
+            $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
           }
         })
         .catch((error) => {
