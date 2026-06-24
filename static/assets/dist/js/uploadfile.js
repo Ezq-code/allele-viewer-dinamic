@@ -15,19 +15,19 @@ const geneUrl = "/business-gestion/gene/list-for-dropdown/";
 
 var load = document.getElementById("load");
 
-function showFileProcessingMessage() {
-  Swal.fire({
-    title: "Processing",
-    text: "The file is being processed. You will be notified when the upload is finished.",
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    timer: 4500,
-    timerProgressBar: true,
-    didOpen: () => {
-      Swal.showLoading();
-    },
-  });
-}
+// function showFileProcessingMessage() {
+//   Swal.fire({
+//     title: "Processing",
+//     text: "The file is being processed. You will be notified when the upload is finished.",
+//     allowOutsideClick: false,
+//     allowEscapeKey: false,
+//     timer: 4500,
+//     timerProgressBar: true,
+//     didOpen: () => {
+//       Swal.showLoading();
+//     },
+//   });
+// }
 
 // Función para cargar la lista de genes
 function loadGenes() {
@@ -240,18 +240,11 @@ $(document).ready(function () {
     var celery_task_channel = pusher.subscribe("celery-task-channel");
     // The realtime update may contain task or alert data (or both).
     celery_task_channel.bind("study-processed", function (data) {
-      // If it's the combined structure with task_info/alert_info
       console.log("New study processed:", data);
-      // Swal.fire({
-      //   icon: "success",
-      //   title: "Success",
-      //   text: "Successfull uploaded file",
-      // });
-
+      
       if ($.fn.DataTable.isDataTable("#tabla-de-Datos")) {
         $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
       }
-
     });
   } else {
     console.warn(
@@ -449,7 +442,7 @@ form.addEventListener("submit", function (event) {
     } else {
       $("#modal-crear-elemento").modal("hide");
       load.hidden = false;
-      showFileProcessingMessage();
+      // showFileProcessingMessage(); UNNECESARY FOR THE MOMMENT
       axios
         .post(write_url, data)
         .then((response) => {
