@@ -14,6 +14,7 @@ class PusherClient:
     # EVENTS
     SUCCESSFUL_UPLOAD_3D_EXCEL = "successful-upload-3d-excel"
     FAILED_UPLOAD_3D_EXCEL = "failed-upload-3d-excel"
+    STUDY_PROCESSED = "study-processed"
 
     SUCCESSFUL_UPLOAD_CONFORMATION_EXCEL = "successful-upload-conformation-excel"
     FAILED_UPLOAD_CONFORMATION_EXCEL = "failed-upload-conformation-excel"

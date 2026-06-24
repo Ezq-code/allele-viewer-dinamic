@@ -3,7 +3,6 @@ import os
 from celery import shared_task
 from django.core.management import call_command
 from django.core.cache import cache
-from django.db import close_old_connections
 from django.db.utils import OperationalError
 from apps.business_app.utils.graph_functions import create_graph
 
@@ -16,21 +15,21 @@ from apps.business_app.models.gene_group import GeneGroups
 from apps.business_app.models.gene_status import GeneStatus
 from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.site_configurations import SiteConfiguration
-from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy
 
+from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
+from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy  # noqa: F401
 from apps.business_app.utils.xslx_to_pdb_by_ancesters_plus_est_study import (
-    XslxToPdbByAncestersPlusEstStudy,
+    XslxToPdbByAncestersPlusEstStudy,  # noqa: F401
 )
 from apps.business_app.utils.xslx_to_pdb_by_ancesters_minus_est_study import (
-    XslxToPdbByAncestersMinusEstStudy,
+    XslxToPdbByAncestersMinusEstStudy,  # noqa: F401
 )
 from apps.business_app.utils.xslx_to_pdb_by_location_plus_est_study import (
-    XslxToPdbByLocationPlusEstStudy,
+    XslxToPdbByLocationPlusEstStudy,  # noqa: F401
 )
 from apps.business_app.utils.xslx_to_pdb_by_location_minus_est_study import (
-    XslxToPdbByLocationMinusEstStudy,
+    XslxToPdbByLocationMinusEstStudy,  # noqa: F401
 )
-from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
 from apps.business_app.utils.graph_functions import (
     extract_children_tree,
     extract_parents_tree,
@@ -74,85 +73,62 @@ def _is_db_locked_error(error):
     return False
 
 
-@shared_task(bind=True, name="process_uploaded_file_task", max_retries=4)
-def process_uploaded_file_task(self, uploaded_file_id):
-    close_old_connections()
+# @shared_task(bind=True, name="process_uploaded_file_task", max_retries=4)
+
+
+@shared_task(bind=True, name="proccess_individual_processor_class", max_retries=4)
+def proccess_individual_processor_class(self, processor_class, uploaded_file_id):
     from apps.business_app.models.uploaded_files import UploadedFiles
 
     uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
-
     original_file = uploaded_file.original_file
     file_name, _ = os.path.splitext(original_file.name)
 
     global_configuration = SiteConfiguration.get_solo()
-    # processor_classes = [XslxToPdbByAlleleStudy, XslxToPdbGraph]
-    processor_classes = [
-        XslxToPdbByAlleleStudy,
-        XslxToPdbByAncestersPlusEstStudy,
-        XslxToPdbByAncestersMinusEstStudy,
-        XslxToPdbByLocationPlusEstStudy,
-        XslxToPdbByLocationMinusEstStudy,
-    ]
+    processor_class = eval(processor_class)
 
-    successful_processors = 0
-    last_error = None
-    error_message_to_show = ""
-
-    for processor_class in processor_classes:
-        try:
-            processor_object = processor_class(
-                original_file,
-                global_configuration,
-                uploaded_file_id=uploaded_file.id,
+    processor_object = processor_class(
+        original_file,
+        global_configuration,
+        uploaded_file_id=uploaded_file_id,
+    )
+    try:
+        
+        if global_configuration.upload_to_drive or isinstance(
+            processor_object, XslxToPdbGraph
+        ):
+            processor_object.proccess_initial_file_data(uploaded_file_id)
+        processor_object.proccess_pdb_file(uploaded_file_id, file_name)
+        if hasattr(processor_object, "study"):
+            # Construir el grafo con el dataframe ya cargado en memoria
+            # para evitar releer el archivo Excel desde disco.
+            create_graph(
+                origin_file=None,
+                study=processor_object.study,
+                excel_nomenclator_class=processor_object.excel_nomenclator_class,
+                output_df=processor_object.output_df,
             )
-            if global_configuration.upload_to_drive or isinstance(
-                processor_object, XslxToPdbGraph
-            ):
-                processor_object.proccess_initial_file_data(uploaded_file.id)
-            processor_object.proccess_pdb_file(uploaded_file.id, file_name)
-            if hasattr(processor_object, "study"):
-                # Construir el grafo con el dataframe ya cargado en memoria
-                # para evitar releer el archivo Excel desde disco.
-                create_graph(
-                    origin_file=None,
-                    study=processor_object.study,
-                    excel_nomenclator_class=processor_object.excel_nomenclator_class,
-                    output_df=processor_object.output_df,
-                )
-                fill_predecessors_and_sucessors_for_all_nodes(
-                    study_id=processor_object.study.id
-                )
-            successful_processors += 1
-        except Exception as processor_error:
-            last_error = processor_error
-            error_message_to_show += f"{processor_class}: {processor_error}.\n"
-            logger.exception(
-                "Error processing uploaded file %s with processor %s: %s",
-                uploaded_file_id,
-                processor_class.__name__,
-                processor_error,
-                exc_info=True,
+            fill_predecessors_and_sucessors_for_all_nodes(
+                study_id=processor_object.study.id
             )
 
-    if successful_processors == 0 and last_error is not None:
-        send_pusher_trigger_task.delay(
-            channel=PusherClient.CELERY_TASK_CHANNEL,
-            event=PusherClient.FAILED_UPLOAD_3D_EXCEL,
-            data={"error_detail": error_message_to_show},
+    except Exception as processor_error:
+        # error_message_to_show += f"{processor_class}: {processor_error}.\n"
+        logger.exception(
+            "Error processing uploaded file %s with processor %s: %s",
+            uploaded_file_id,
+            processor_class,
+            processor_error,
+            exc_info=True,
         )
-        raise Exception(error_message_to_show)
-
-    if successful_processors > 0:
-        uploaded_file.processed = True
-        uploaded_file.save(update_fields=["processed"])
-
     send_pusher_trigger_task.delay(
         channel=PusherClient.CELERY_TASK_CHANNEL,
-        event=PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL,
-        data={"uploaded_file_id": uploaded_file_id},
+        event=PusherClient.STUDY_PROCESSED,
+        data={
+            "study_id": processor_object.study.id,
+            "status": processor_object.study.successfull_load,
+        },
     )
-    # uploaded_file.delete()
-    return {"status": "success", "uploaded_file_id": uploaded_file_id}
 
 
 def _get_graph_info(study_id, node_number, function_to_call):
