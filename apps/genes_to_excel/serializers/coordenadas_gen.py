@@ -36,5 +36,5 @@ class CaracteristicaGenCoordinatesSerializer(serializers.ModelSerializer):
             "Order1",
             "Order2",
             "Order3",
-            "NCBI_Link"
+            "NCBI_Link",
         ]

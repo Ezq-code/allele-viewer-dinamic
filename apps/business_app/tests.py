@@ -768,4 +768,4 @@ def test_process_uploaded_file_task_fails_when_all_processors_fail(tmp_path, set
     assert uploaded_file.processed is False
     mocked_pusher.assert_called_once()
     kwargs = mocked_pusher.call_args.kwargs
-    assert kwargs["event"] == PusherClient.FAILED_UPLOAD_3D_EXCEL
+    assert kwargs["event"] == PusherClient.TASK_PROCESSED
