@@ -40,19 +40,19 @@ from apps.business_app.utils.excel_nomenclator_by_location_minus_est_study impor
     ExcelNomenclatorsByLocationMinusEstStudy,
 )
 from apps.business_app.models.study_type import StudyType
-from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy
+from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy  # noqa: F401
 
 from apps.business_app.utils.xslx_to_pdb_by_ancesters_plus_est_study import (
-    XslxToPdbByAncestersPlusEstStudy,
+    XslxToPdbByAncestersPlusEstStudy,  # noqa: F401
 )
 from apps.business_app.utils.xslx_to_pdb_by_ancesters_minus_est_study import (
-    XslxToPdbByAncestersMinusEstStudy,
+    XslxToPdbByAncestersMinusEstStudy,  # noqa: F401
 )
 from apps.business_app.utils.xslx_to_pdb_by_location_plus_est_study import (
-    XslxToPdbByLocationPlusEstStudy,
+    XslxToPdbByLocationPlusEstStudy,  # noqa: F401
 )
 from apps.business_app.utils.xslx_to_pdb_by_location_minus_est_study import (
-    XslxToPdbByLocationMinusEstStudy,
+    XslxToPdbByLocationMinusEstStudy,  # noqa: F401
 )
 
 
