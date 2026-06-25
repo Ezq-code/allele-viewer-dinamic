@@ -17,19 +17,6 @@ from apps.business_app.models.gene_status_middle import GeneStatusMiddle
 from apps.business_app.models.site_configurations import SiteConfiguration
 
 from apps.business_app.utils.xslx_to_pdb_graph import XslxToPdbGraph
-from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy  # noqa: F401
-from apps.business_app.utils.xslx_to_pdb_by_ancesters_plus_est_study import (
-    XslxToPdbByAncestersPlusEstStudy,  # noqa: F401
-)
-from apps.business_app.utils.xslx_to_pdb_by_ancesters_minus_est_study import (
-    XslxToPdbByAncestersMinusEstStudy,  # noqa: F401
-)
-from apps.business_app.utils.xslx_to_pdb_by_location_plus_est_study import (
-    XslxToPdbByLocationPlusEstStudy,  # noqa: F401
-)
-from apps.business_app.utils.xslx_to_pdb_by_location_minus_est_study import (
-    XslxToPdbByLocationMinusEstStudy,  # noqa: F401
-)
 from apps.business_app.utils.graph_functions import (
     extract_children_tree,
     extract_parents_tree,
@@ -53,9 +40,54 @@ from apps.business_app.utils.excel_nomenclator_by_location_minus_est_study impor
     ExcelNomenclatorsByLocationMinusEstStudy,
 )
 from apps.business_app.models.study_type import StudyType
+from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy
+
+from apps.business_app.utils.xslx_to_pdb_by_ancesters_plus_est_study import (
+    XslxToPdbByAncestersPlusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_ancesters_minus_est_study import (
+    XslxToPdbByAncestersMinusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_location_plus_est_study import (
+    XslxToPdbByLocationPlusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_location_minus_est_study import (
+    XslxToPdbByLocationMinusEstStudy,
+)
 
 
 logger = logging.getLogger(__name__)
+
+# Registry de clases procesadoras permitidas. Usar este dict en lugar de eval()
+# evita ejecución de código arbitrario y produce errores claros ante nombres inválidos.
+# Los tests que parchean estas clases en el módulo siguen funcionando porque
+# _resolve_processor_class() lee del módulo en tiempo de ejecución.
+PROCESSOR_CLASS_REGISTRY = {
+    "XslxToPdbByAlleleStudy",
+    "XslxToPdbByAncestersPlusEstStudy",
+    "XslxToPdbByAncestersMinusEstStudy",
+    "XslxToPdbByLocationPlusEstStudy",
+    "XslxToPdbByLocationMinusEstStudy",
+}
+
+
+def _resolve_processor_class(class_name: str):
+    """Resuelve una clase procesadora por nombre usando el registry de nombres permitidos.
+
+    Lanza ValueError si el nombre no está en el registry, y NameError si la
+    clase no se encuentra en el módulo (no debería ocurrir en operación normal).
+    """
+    if class_name not in PROCESSOR_CLASS_REGISTRY:
+        raise ValueError(
+            f"Processor class '{class_name}' is not registered. "
+            f"Allowed classes: {sorted(PROCESSOR_CLASS_REGISTRY)}"
+        )
+    module_globals = globals()
+    if class_name not in module_globals:
+        raise NameError(
+            f"Processor class '{class_name}' is registered but not found in module scope."
+        )
+    return module_globals[class_name]
 
 
 def _is_db_locked_error(error):
@@ -78,6 +110,12 @@ def _is_db_locked_error(error):
 
 @shared_task(bind=True, name="proccess_individual_processor_class", max_retries=4)
 def proccess_individual_processor_class(self, processor_class, uploaded_file_id):
+    """Procesa un archivo subido usando la clase procesadora indicada.
+
+    Args:
+        processor_class: Nombre de la clase procesadora (debe estar en PROCESSOR_CLASS_REGISTRY).
+        uploaded_file_id: ID del UploadedFiles a procesar.
+    """
     from apps.business_app.models.uploaded_files import UploadedFiles
 
     uploaded_file = UploadedFiles.objects.get(id=uploaded_file_id)
@@ -85,15 +123,18 @@ def proccess_individual_processor_class(self, processor_class, uploaded_file_id)
     file_name, _ = os.path.splitext(original_file.name)
 
     global_configuration = SiteConfiguration.get_solo()
-    processor_class = eval(processor_class)
 
-    processor_object = processor_class(
-        original_file,
-        global_configuration,
-        uploaded_file_id=uploaded_file_id,
-    )
+    # Resuelve la clase por nombre usando el registry seguro en lugar de eval().
+    processor_class = _resolve_processor_class(processor_class)
+    study = None
+
     try:
-        
+        processor_object = processor_class(
+            original_file,
+            global_configuration,
+            uploaded_file_id=uploaded_file_id,
+        )
+        study = processor_object.study  # Guardar referencia al estudio para el pusher
         if global_configuration.upload_to_drive or isinstance(
             processor_object, XslxToPdbGraph
         ):
@@ -111,9 +152,9 @@ def proccess_individual_processor_class(self, processor_class, uploaded_file_id)
             fill_predecessors_and_sucessors_for_all_nodes(
                 study_id=processor_object.study.id
             )
+            
 
     except Exception as processor_error:
-        # error_message_to_show += f"{processor_class}: {processor_error}.\n"
         logger.exception(
             "Error processing uploaded file %s with processor %s: %s",
             uploaded_file_id,
@@ -121,14 +162,16 @@ def proccess_individual_processor_class(self, processor_class, uploaded_file_id)
             processor_error,
             exc_info=True,
         )
-    send_pusher_trigger_task.delay(
-        channel=PusherClient.CELERY_TASK_CHANNEL,
-        event=PusherClient.STUDY_PROCESSED,
-        data={
-            "study_id": processor_object.study.id,
-            "status": processor_object.study.successfull_load,
-        },
-    )
+    finally:
+        study.refresh_from_db()
+        send_pusher_trigger_task(
+                channel=PusherClient.CELERY_TASK_CHANNEL,
+                event=PusherClient.STUDY_PROCESSED,
+                data={
+                    "study_id": study.id,
+                    "status": study.successfull_load,
+                },
+            )
 
 
 def _get_graph_info(study_id, node_number, function_to_call):

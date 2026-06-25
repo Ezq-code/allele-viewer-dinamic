@@ -158,9 +158,7 @@ class UploadedFiles(models.Model):
             XslxToPdbByLocationMinusEstStudy,
         ]
         for processor_class in processor_classes:
-            proccess_individual_processor_class.apply_async(
-                args=[processor_class.__name__, self.id], retry=False
-            )
+            proccess_individual_processor_class.delay(processor_class.__name__, self.id)
 
         # if successful_processors == 0 and last_error is not None:
         #     send_pusher_trigger_task.delay(
