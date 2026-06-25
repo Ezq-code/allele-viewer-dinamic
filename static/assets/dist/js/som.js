@@ -546,24 +546,13 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
                         <td style="padding: 8px;">${gen}</td>
                     </tr>
                     <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Coordinate:</td>
-                        <td style="padding: 8px;">${coordinate}</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #ddd;">
                         <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Value:</td>
                         <td style="padding: 8px;">
                             <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; background-color: rgb(${colorValido}); color: ${textoColor}; font-weight: bold;">
                                 ${valor || 'N/A'}
                             </span>
                         </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Color:</td>
-                        <td style="padding: 8px;">
-                            <div style="display: inline-block; width: 40px; height: 20px; background-color: rgb(${colorValido}); border: 1px solid #ccc; vertical-align: middle;"></div>
-                            <span style="margin-left: 8px;">(${colorValido})</span>
-                        </td>
-                    </tr>
+                    </tr>                    
                     <tr style="border-bottom: 1px solid #ddd;">
                         <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Protein:</td>
                         <td style="padding: 8px;">${protein}</td>
@@ -587,24 +576,6 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
                         <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Variant:</td>
                         <td style="padding: 8px;">${variant}</td>
                     </tr>
-                    ${order1 !== 'N/A' ? `
-                    <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Order1:</td>
-                        <td style="padding: 8px;">${order1}</td>
-                    </tr>
-                    ` : ''}
-                    ${order2 !== 'N/A' ? `
-                    <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Order2:</td>
-                        <td style="padding: 8px;">${order2}</td>
-                    </tr>
-                    ` : ''}
-                    ${order3 !== 'N/A' ? `
-                    <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">Order3:</td>
-                        <td style="padding: 8px;">${order3}</td>
-                    </tr>
-                    ` : ''}
                     ${ncbi_link !== 'N/A' ? `
                     <tr style="border-bottom: 1px solid #ddd;">
                         <td style="padding: 8px; font-weight: bold; background: #f5f5f5;">NCBI_Link:</td>
