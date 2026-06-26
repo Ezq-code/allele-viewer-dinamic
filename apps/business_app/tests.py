@@ -28,7 +28,6 @@ from apps.business_app.utils.gene_list_cache import (
     GENE_LIST_VERSION_KEY,
     get_gene_list_cache_version,
 )
-from apps.business_app.tasks import process_uploaded_file_task
 from apps.business_app.utils.xslx_to_pdb_by_protein import XslxToPdbByProtein
 from apps.users_app.models.system_user import SystemUser
 
@@ -45,7 +44,7 @@ def test_uploaded_files_save_dispatches_celery_task_on_create(tmp_path, settings
     )
 
     with patch(
-        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
     ) as mocked_apply_async:
         instance = UploadedFiles.objects.create(
             custom_name="my file",
@@ -53,7 +52,12 @@ def test_uploaded_files_save_dispatches_celery_task_on_create(tmp_path, settings
             system_user=user,
         )
 
-    mocked_apply_async.assert_called_once_with(args=[instance.id], retry=False)
+        # Se llama una vez por cada clase procesadora registrada (5 en total)
+        assert mocked_apply_async.call_count == 5
+        for call in mocked_apply_async.call_args_list:
+            # delay() llama apply_async(args_list, kwargs_dict) con args posicionales,
+            # por lo que los argumentos llegan en call.args[0], no en call.kwargs.
+            assert call.args[0][1] == instance.id
 
 
 @pytest.mark.django_db
@@ -68,8 +72,8 @@ def test_uploaded_files_save_does_not_dispatch_task_on_update(tmp_path, settings
     )
 
     with patch(
-        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
-    ) as mocked_apply_async:
+            "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
+        ) as mocked_apply_async:
         instance = UploadedFiles.objects.create(
             custom_name="original",
             original_file=upload,
@@ -95,8 +99,8 @@ def test_uploaded_files_save_does_not_dispatch_task_for_pdb(tmp_path, settings):
     )
 
     with patch(
-        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
-    ) as mocked_apply_async:
+            "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
+        ) as mocked_apply_async:
         UploadedFiles.objects.create(
             custom_name="pdb file",
             original_file=upload,
@@ -181,7 +185,7 @@ def test_study_serializer_exposes_study_type_display(tmp_path, settings):
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
     with patch(
-        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
     ):
         uploaded_file = UploadedFiles.objects.create(
             custom_name="Study Upload",
@@ -220,7 +224,7 @@ def test_study_viewset_lists_studies_by_uploaded_file(tmp_path, settings):
     )
 
     with patch(
-        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
     ):
         uploaded_file_one = UploadedFiles.objects.create(
             custom_name="Upload One",
@@ -563,6 +567,8 @@ def test_protein_node_serializer_uses_cached_graph_without_enqueuing_task():
 
 
 def test_fill_predecessors_and_sucessors_updates_allele_nodes_by_study_classification():
+    """fill_predecessors_and_sucessors_for_all_nodes actualiza predecessors y
+    sucessors de los AlleleNodes según el grafo construido."""
     node = SimpleNamespace(number=10, predecessors=[], sucessors=[])
     mocked_queryset = MagicMock()
     mocked_queryset.all.return_value = [node]
@@ -581,9 +587,7 @@ def test_fill_predecessors_and_sucessors_updates_allele_nodes_by_study_classific
         "apps.business_app.tasks._get_graph_info",
         side_effect=[{1, 10}, {10, 11}],
     ):
-        from apps.business_app.tasks import (
-            fill_predecessors_and_sucessors_for_all_nodes,
-        )
+        from apps.business_app.tasks import fill_predecessors_and_sucessors_for_all_nodes
 
         fill_predecessors_and_sucessors_for_all_nodes(study_id=123)
 
@@ -635,6 +639,13 @@ def test_fill_predecessors_and_sucessors_raises_when_study_type_is_none():
             fill_predecessors_and_sucessors_for_all_nodes(study_id=789)
 
 
+@pytest.mark.skip(
+    reason=(
+        "process_uploaded_file_task fue eliminada. La orquestación de procesadores "
+        "ahora es responsabilidad de proccess_individual_processor_class (una tarea por procesador). "
+        "Este test debe reescribirse para la nueva arquitectura."
+    )
+)
 @pytest.mark.django_db
 def test_process_uploaded_file_task_sends_success_when_at_least_one_processor_succeeds(
     tmp_path, settings
@@ -651,7 +662,7 @@ def test_process_uploaded_file_task_sends_success_when_at_least_one_processor_su
     )
 
     with patch(
-        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
     ):
         uploaded_file = UploadedFiles.objects.create(
             custom_name="Task Partial Success",
@@ -712,6 +723,13 @@ def test_process_uploaded_file_task_sends_success_when_at_least_one_processor_su
     assert kwargs["data"] == {"uploaded_file_id": uploaded_file.id}
 
 
+@pytest.mark.skip(
+    reason=(
+        "process_uploaded_file_task fue eliminada. La orquestación de procesadores "
+        "ahora es responsabilidad de proccess_individual_processor_class (una tarea por procesador). "
+        "Este test debe reescribirse para la nueva arquitectura."
+    )
+)
 @pytest.mark.django_db
 def test_process_uploaded_file_task_fails_when_all_processors_fail(tmp_path, settings):
     settings.MEDIA_ROOT = tmp_path
@@ -724,7 +742,7 @@ def test_process_uploaded_file_task_fails_when_all_processors_fail(tmp_path, set
     )
 
     with patch(
-        "apps.business_app.models.uploaded_files.process_uploaded_file_task.apply_async"
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
     ):
         uploaded_file = UploadedFiles.objects.create(
             custom_name="Task All Fail",
@@ -769,3 +787,176 @@ def test_process_uploaded_file_task_fails_when_all_processors_fail(tmp_path, set
     mocked_pusher.assert_called_once()
     kwargs = mocked_pusher.call_args.kwargs
     assert kwargs["event"] == PusherClient.TASK_PROCESSED
+
+
+# ---------------------------------------------------------------------------
+# Tests para _resolve_processor_class y proccess_individual_processor_class
+# ---------------------------------------------------------------------------
+
+
+def test_resolve_processor_class_returns_class_for_registered_name():
+    """_resolve_processor_class devuelve la clase correcta para nombres registrados."""
+    from apps.business_app.tasks import _resolve_processor_class, PROCESSOR_CLASS_REGISTRY
+    from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy
+
+    for class_name in PROCESSOR_CLASS_REGISTRY:
+        resolved = _resolve_processor_class(class_name)
+        assert resolved.__name__ == class_name
+
+
+def test_resolve_processor_class_raises_value_error_for_unknown_name():
+    """_resolve_processor_class lanza ValueError para nombres no registrados,
+    previniendo ejecución de código arbitrario que eval() permitiría."""
+    from apps.business_app.tasks import _resolve_processor_class
+
+    with pytest.raises(ValueError, match="is not registered"):
+        _resolve_processor_class("SomeArbitraryClass")
+
+
+def test_resolve_processor_class_raises_value_error_for_builtin_name():
+    """_resolve_processor_class rechaza builtins de Python (seguridad)."""
+    from apps.business_app.tasks import _resolve_processor_class
+
+    with pytest.raises(ValueError, match="is not registered"):
+        _resolve_processor_class("os.system('echo injected')")
+
+
+@pytest.mark.django_db
+def test_proccess_individual_processor_class_sends_pusher_on_success(tmp_path, settings):
+    """La tarea envía el trigger de Pusher al finalizar exitosamente."""
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(username="ind_task_ok", password="secret")
+    upload = SimpleUploadedFile(
+        "ind_task_ok.xlsx",
+        b"fake excel bytes",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    with patch(
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
+    ):
+        uploaded_file = UploadedFiles.objects.create(
+            custom_name="Ind Task Ok",
+            original_file=upload,
+            system_user=user,
+        )
+
+    study_stub = SimpleNamespace(id=42, successfull_load=True)
+    processor_ok = SimpleNamespace(
+        proccess_pdb_file=lambda *_a, **_kw: None,
+        study=study_stub,
+        excel_nomenclator_class=SimpleNamespace(),
+        output_df=SimpleNamespace(),
+    )
+
+    from apps.business_app.tasks import proccess_individual_processor_class
+
+    with patch(
+        "apps.business_app.tasks.SiteConfiguration.get_solo",
+        return_value=SimpleNamespace(upload_to_drive=False),
+    ), patch(
+        "apps.business_app.tasks.XslxToPdbByAlleleStudy",
+        return_value=processor_ok,
+    ) as mocked_cls, patch(
+        "apps.business_app.tasks.create_graph"
+    ), patch(
+        "apps.business_app.tasks.fill_predecessors_and_sucessors_for_all_nodes"
+    ), patch(
+        "apps.business_app.tasks.send_pusher_trigger_task.delay"
+    ) as mocked_pusher:
+        mocked_cls.__name__ = "XslxToPdbByAlleleStudy"
+
+        proccess_individual_processor_class.run(
+            "XslxToPdbByAlleleStudy", uploaded_file.id
+        )
+
+    mocked_pusher.assert_called_once()
+    call_kwargs = mocked_pusher.call_args.kwargs
+    assert call_kwargs["event"] == PusherClient.STUDY_PROCESSED
+    assert call_kwargs["data"]["study_id"] == 42
+
+
+@pytest.mark.django_db
+def test_proccess_individual_processor_class_does_not_send_pusher_when_no_study(
+    tmp_path, settings
+):
+    """Si el processor_object no tiene atributo 'study', no se envía Pusher
+    y la tarea termina sin AttributeError."""
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(username="ind_task_no_study", password="secret")
+    upload = SimpleUploadedFile(
+        "ind_task_no_study.xlsx",
+        b"fake excel bytes",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    with patch(
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
+    ):
+        uploaded_file = UploadedFiles.objects.create(
+            custom_name="Ind Task No Study",
+            original_file=upload,
+            system_user=user,
+        )
+
+    processor_no_study = SimpleNamespace(
+        proccess_pdb_file=lambda *_a, **_kw: None,
+        # sin atributo 'study'
+    )
+
+    from apps.business_app.tasks import proccess_individual_processor_class
+
+    with patch(
+        "apps.business_app.tasks.SiteConfiguration.get_solo",
+        return_value=SimpleNamespace(upload_to_drive=False),
+    ), patch(
+        "apps.business_app.tasks.XslxToPdbByAlleleStudy",
+        return_value=processor_no_study,
+    ) as mocked_cls, patch(
+        "apps.business_app.tasks.send_pusher_trigger_task.delay"
+    ) as mocked_pusher:
+        mocked_cls.__name__ = "XslxToPdbByAlleleStudy"
+
+        # No debe lanzar AttributeError
+        proccess_individual_processor_class.run(
+            "XslxToPdbByAlleleStudy", uploaded_file.id
+        )
+
+    mocked_pusher.assert_not_called()
+
+
+@pytest.mark.django_db
+def test_proccess_individual_processor_class_raises_value_error_for_unknown_processor(
+    tmp_path, settings
+):
+    """La tarea lanza ValueError inmediatamente ante un nombre de clase desconocido."""
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(username="ind_task_bad_cls", password="secret")
+    upload = SimpleUploadedFile(
+        "ind_task_bad_cls.xlsx",
+        b"fake excel bytes",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    with patch(
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
+    ):
+        uploaded_file = UploadedFiles.objects.create(
+            custom_name="Ind Task Bad Cls",
+            original_file=upload,
+            system_user=user,
+        )
+
+    from apps.business_app.tasks import proccess_individual_processor_class
+
+    with patch(
+        "apps.business_app.tasks.SiteConfiguration.get_solo",
+        return_value=SimpleNamespace(upload_to_drive=False),
+    ):
+        with pytest.raises(ValueError, match="is not registered"):
+            proccess_individual_processor_class.run(
+                "NotARealProcessor", uploaded_file.id
+            )
