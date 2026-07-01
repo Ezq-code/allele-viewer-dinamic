@@ -66,7 +66,7 @@ class GenesToExcelFiles(models.Model):
         verbose_name = _("Genes to excel uploaded File")
         verbose_name_plural = _("Genes to excel uploaded Files")
 
-    # def __str__(self):
+    # def __str__(self): TODO verificar si el gene estará siempre en null
     #     return f"{self.gene.name} - {self.custom_name}"
 
     def save(self, *args, **kwargs):

@@ -39,7 +39,10 @@ class XslxReader:
     def _load_dataframe(self, origin_file):
         """Load and concatenate all sheets from the Excel file."""
         excel_file = pd.ExcelFile(origin_file)
-        all_dfs = [pd.read_excel(excel_file, sheet_name=sheet_name) for sheet_name in excel_file.sheet_names]
+        all_dfs = [
+            pd.read_excel(excel_file, sheet_name=sheet_name)
+            for sheet_name in excel_file.sheet_names
+        ]
 
         if not all_dfs:
             return pd.DataFrame()
@@ -48,7 +51,9 @@ class XslxReader:
 
     def _validate_required_columns(self, df):
         """Validate that the file includes all required processing columns."""
-        missing_columns = [column for column in self.required_columns if column not in df.columns]
+        missing_columns = [
+            column for column in self.required_columns if column not in df.columns
+        ]
 
         if missing_columns:
             raise ValueError(
@@ -75,16 +80,16 @@ class XslxReader:
             "updated_features": 0,
             "skipped_features": 0,
             "errors": [],
-            "total_rows": len(df)
+            "total_rows": len(df),
         }
 
         # Prepare input data.
         df = self._prepare_dataframe(df)
 
         if df.empty:
-            results["errors"].append({
-                "general_error": "There is no valid data to process"
-            })
+            results["errors"].append(
+                {"general_error": "There is no valid data to process"}
+            )
             return results
 
         try:
@@ -93,19 +98,21 @@ class XslxReader:
                 genes_by_name = self._procesar_genes_bulk(df, results)
 
                 # Process gene features.
-                self._procesar_caracteristicas_bulk(df, genes_by_name, nombre_archivo, results)
+                self._procesar_caracteristicas_bulk(
+                    df, genes_by_name, nombre_archivo, results
+                )
 
         except Exception as e:
             logger.error(f"Critical error: {e}", exc_info=True)
-            results["errors"].append({
-                "general_error": f"Transaction error: {str(e)}"
-            })
- 
-        logger.info(f"✅ Processing completed. "
-                   f"New genes: {results['processed_genes']}, "
-                   f"Created: {results['created_features']}, "
-                   f"Updated: {results['updated_features']}, "
-                   f"Errors: {len(results['errors'])}")
+            results["errors"].append({"general_error": f"Transaction error: {str(e)}"})
+
+        logger.info(
+            f"✅ Processing completed. "
+            f"New genes: {results['processed_genes']}, "
+            f"Created: {results['created_features']}, "
+            f"Updated: {results['updated_features']}, "
+            f"Errors: {len(results['errors'])}"
+        )
 
         return results
 
@@ -125,12 +132,12 @@ class XslxReader:
         self._validate_required_columns(df)
 
         # Normalize text-like columns.
-        for col in df.select_dtypes(include=['object']).columns:
+        for col in df.select_dtypes(include=["object"]).columns:
             df[col] = df[col].astype(str).str.strip()
-            df[col] = df[col].replace('nan', '')
+            df[col] = df[col].replace("nan", "")
 
         # Cord can be empty.
-        df["Cord"] = df["Cord"].fillna('').astype(str).str.strip()
+        df["Cord"] = df["Cord"].fillna("").astype(str).str.strip()
 
         logger.info(f"DataFrame prepared: {len(df)} rows ready for processing")
         return df
@@ -142,8 +149,7 @@ class XslxReader:
 
         # Fetch existing genes in a single query.
         existing_genes = {
-            gene.name: gene 
-            for gene in Gene.objects.filter(name__in=gene_names)
+            gene.name: gene for gene in Gene.objects.filter(name__in=gene_names)
         }
 
         # Find new genes to create.
@@ -159,19 +165,22 @@ class XslxReader:
             Gene.objects.bulk_create(new_genes, batch_size=self.batch_size)
 
             # Reload the full mapping including newly created genes.
-            existing_genes.update({
-                gene.name: gene 
-                for gene in Gene.objects.filter(name__in=gene_names)
-            })
+            existing_genes.update(
+                {gene.name: gene for gene in Gene.objects.filter(name__in=gene_names)}
+            )
 
         return existing_genes
 
-    def _procesar_caracteristicas_bulk(self, df, genes_dict, nombre_archivo, resultados):
+    def _procesar_caracteristicas_bulk(
+        self, df, genes_dict, nombre_archivo, resultados
+    ):
         """Process gene features using bulk_create and bulk_update."""
         logger.info("Preparing features for bulk processing...")
 
         # Map gene names to IDs.
-        df["gen_id"] = df["Gene"].map(lambda x: genes_dict[x].id if x in genes_dict else None)
+        df["gen_id"] = df["Gene"].map(
+            lambda x: genes_dict[x].id if x in genes_dict else None
+        )
         valid_df = df[df["gen_id"].notna()].copy()
 
         if valid_df.empty:
@@ -182,10 +191,10 @@ class XslxReader:
         gene_ids = valid_df["gen_id"].unique()
 
         existing_features = {
-            (c.gen_id, c.cord): c 
+            (c.gen_id, c.cord): c
             for c in CaracteristicaGen.objects.filter(
                 gen_id__in=gene_ids
-            ).select_related('gen')
+            ).select_related("gen")
         }
 
         logger.info(f"Found {len(existing_features)} existing features")
@@ -194,9 +203,18 @@ class XslxReader:
         features_to_create = []
         features_to_update = []
         fields_to_update = [
-            'archivo_origen', 'gene', 'valor', 'color', 'protein',
-            'alleleasoc', 'species', 'variant', 'order_one', 
-            'order_two', 'order_three', 'ncbi_link'
+            "archivo_origen",
+            "gene",
+            "valor",
+            "color",
+            "protein",
+            "alleleasoc",
+            "species",
+            "variant",
+            "order_one",
+            "order_two",
+            "order_three",
+            "ncbi_link",
         ]
 
         # Process each row.
@@ -223,8 +241,8 @@ class XslxReader:
 
                 # Normalize empty-like values.
                 for key, value in field_values.items():
-                    if value in ['nan', 'None', '']:
-                        field_values[key] = ''
+                    if value in ["nan", "None", ""]:
+                        field_values[key] = ""
 
                 feature_key = (gen.id, cord_value)
 
@@ -234,7 +252,7 @@ class XslxReader:
                     needs_update = False
 
                     for field in fields_to_update:
-                        new_value = field_values.get(field, '')
+                        new_value = field_values.get(field, "")
                         if getattr(feature, field) != new_value:
                             setattr(feature, field, new_value)
                             needs_update = True
@@ -253,40 +271,40 @@ class XslxReader:
                     resultados["created_features"] += 1
 
             except Exception as e:
-                resultados["errors"].append({
-                    "row": index + 2,
-                    "error": f"Row processing error: {str(e)}",
-                    "gene": row.get("Gene", "N/A"),
-                    "cord": row.get("Cord", "N/A")
-                })
+                resultados["errors"].append(
+                    {
+                        "row": index + 2,
+                        "error": f"Row processing error: {str(e)}",
+                        "gene": row.get("Gene", "N/A"),
+                        "cord": row.get("Cord", "N/A"),
+                    }
+                )
 
         # Execute bulk operations.
         if features_to_create:
             logger.info(f"Creating {len(features_to_create)} features...")
             CaracteristicaGen.objects.bulk_create(
-                features_to_create,
-                batch_size=self.batch_size,
-                ignore_conflicts=False
+                features_to_create, batch_size=self.batch_size, ignore_conflicts=False
             )
 
         if features_to_update:
             logger.info(f"Updating {len(features_to_update)} features...")
             CaracteristicaGen.objects.bulk_update(
-                features_to_update,
-                fields_to_update,
-                batch_size=self.batch_size
+                features_to_update, fields_to_update, batch_size=self.batch_size
             )
 
-        logger.info(f"✅ Features processed: "
-               f"{resultados['created_features']} created, "
-               f"{resultados['updated_features']} updated, "
-               f"{resultados['skipped_features']} unchanged")
+        logger.info(
+            f"✅ Features processed: "
+            f"{resultados['created_features']} created, "
+            f"{resultados['updated_features']} updated, "
+            f"{resultados['skipped_features']} unchanged"
+        )
 
 
 # Compatibility class for legacy static-call usage.
 class XslxReaderLegacy:
     """Keeps compatibility with the original static-style API."""
-    
+
     @staticmethod
     def proccess_file(df, nombre_archivo):
         reader = XslxReader()
