@@ -65,24 +65,24 @@ class XslxReader:
         Returns:
             dict: Processing summary
         """
-        logger.info(f"Iniciando procesamiento optimizado de {nombre_archivo}")
-        logger.info(f"Total de filas a procesar: {len(df)}")
+        logger.info(f"Starting optimized processing for {nombre_archivo}")
+        logger.info(f"Total rows to process: {len(df)}")
 
         results = {
-            "genes_procesados": 0,
-            "caracteristicas_creadas": 0,
-            "caracteristicas_actualizadas": 0,
-            "caracteristicas_omitidas": 0,
-            "errores": [],
-            "total_filas": len(df)
+            "processed_genes": 0,
+            "created_features": 0,
+            "updated_features": 0,
+            "skipped_features": 0,
+            "errors": [],
+            "total_rows": len(df)
         }
 
         # Prepare input data.
-        df = self._preparar_dataframe(df)
+        df = self._prepare_dataframe(df)
 
         if df.empty:
-            results["errores"].append({
-                "error_general": "No hay datos válidos para procesar"
+            results["errors"].append({
+                "general_error": "There is no valid data to process"
             })
             return results
 
@@ -95,20 +95,20 @@ class XslxReader:
                 self._procesar_caracteristicas_bulk(df, genes_by_name, nombre_archivo, results)
 
         except Exception as e:
-            logger.error(f"Error crítico: {e}", exc_info=True)
-            results["errores"].append({
-                "error_general": f"Error en transacción: {str(e)}"
+            logger.error(f"Critical error: {e}", exc_info=True)
+            results["errors"].append({
+                "general_error": f"Transaction error: {str(e)}"
             })
  
-        logger.info(f"✅ Procesamiento completado. "
-                   f"Genes nuevos: {results['genes_procesados']}, "
-                   f"Creadas: {results['caracteristicas_creadas']}, "
-                   f"Actualizadas: {results['caracteristicas_actualizadas']}, "
-                   f"Errores: {len(results['errores'])}")
+        logger.info(f"✅ Processing completed. "
+                   f"New genes: {results['processed_genes']}, "
+                   f"Created: {results['created_features']}, "
+                   f"Updated: {results['updated_features']}, "
+                   f"Errors: {len(results['errors'])}")
 
         return results
 
-    def _preparar_dataframe(self, df):
+    def _prepare_dataframe(self, df):
         """Prepare and clean the input DataFrame."""
         df = df.copy()
 
@@ -131,13 +131,13 @@ class XslxReader:
         # Cord can be empty.
         df["Cord"] = df["Cord"].fillna('').astype(str).str.strip()
 
-        logger.info(f"DataFrame preparado: {len(df)} filas para procesar")
+        logger.info(f"DataFrame prepared: {len(df)} rows ready for processing")
         return df
 
     def _procesar_genes_bulk(self, df, resultados):
         """Process genes using optimized bulk_create."""
         gene_names = df["Gene"].unique()
-        logger.info(f"Procesando {len(gene_names)} genes únicos...")
+        logger.info(f"Processing {len(gene_names)} unique genes...")
 
         # Fetch existing genes in a single query.
         existing_genes = {
@@ -150,11 +150,11 @@ class XslxReader:
         for gene_name in gene_names:
             if gene_name not in existing_genes:
                 new_genes.append(Gene(name=gene_name))
-                resultados["genes_procesados"] += 1
+                resultados["processed_genes"] += 1
 
         # Bulk-create missing genes.
         if new_genes:
-            logger.info(f"Creando {len(new_genes)} genes nuevos...")
+            logger.info(f"Creating {len(new_genes)} new genes...")
             Gene.objects.bulk_create(new_genes, batch_size=self.batch_size)
 
             # Reload the full mapping including newly created genes.
@@ -167,14 +167,14 @@ class XslxReader:
 
     def _procesar_caracteristicas_bulk(self, df, genes_dict, nombre_archivo, resultados):
         """Process gene features using bulk_create and bulk_update."""
-        logger.info("Preparando características para procesamiento bulk...")
+        logger.info("Preparing features for bulk processing...")
 
         # Map gene names to IDs.
         df["gen_id"] = df["Gene"].map(lambda x: genes_dict[x].id if x in genes_dict else None)
         valid_df = df[df["gen_id"].notna()].copy()
 
         if valid_df.empty:
-            logger.warning("No hay características válidas para procesar")
+            logger.warning("There are no valid features to process")
             return
 
         # Fetch existing features in a single query.
@@ -187,13 +187,13 @@ class XslxReader:
             ).select_related('gen')
         }
 
-        logger.info(f"Encontradas {len(existing_features)} características existentes")
+        logger.info(f"Found {len(existing_features)} existing features")
 
         # Prepare bulk operation containers.
         features_to_create = []
         features_to_update = []
         fields_to_update = [
-            'archivo_origen', 'gene', 'valor', 'color', 'protein',
+            'source_file', 'gene', 'value', 'color', 'protein',
             'alleleasoc', 'species', 'variant', 'order_one', 
             'order_two', 'order_three', 'ncbi_link'
         ]
@@ -206,9 +206,9 @@ class XslxReader:
 
                 # Build normalized values.
                 field_values = {
-                    "archivo_origen": nombre_archivo,
+                    "source_file": nombre_archivo,
                     "gene": str(row["Gene"]),
-                    "valor": str(row.get("Valor", "")),
+                    "value": str(row.get("Valor", "")),
                     "color": str(row.get("Color", "")),
                     "protein": str(row.get("Protein", "")),
                     "alleleasoc": str(row.get("Alleleasoc", "")),
@@ -240,28 +240,28 @@ class XslxReader:
 
                     if needs_update:
                         features_to_update.append(feature)
-                        resultados["caracteristicas_actualizadas"] += 1
+                        resultados["updated_features"] += 1
                     else:
-                        resultados["caracteristicas_omitidas"] += 1
+                        resultados["skipped_features"] += 1
 
                 else:
                     # Create a new feature.
                     features_to_create.append(
                         CaracteristicaGen(gen=gen, cord=cord_value, **field_values)
                     )
-                    resultados["caracteristicas_creadas"] += 1
+                    resultados["created_features"] += 1
 
             except Exception as e:
-                resultados["errores"].append({
-                    "fila": index + 2,
-                    "error": f"Error en fila: {str(e)}",
+                resultados["errors"].append({
+                    "row": index + 2,
+                    "error": f"Row processing error: {str(e)}",
                     "gene": row.get("Gene", "N/A"),
                     "cord": row.get("Cord", "N/A")
                 })
 
         # Execute bulk operations.
         if features_to_create:
-            logger.info(f"Creando {len(features_to_create)} características...")
+            logger.info(f"Creating {len(features_to_create)} features...")
             CaracteristicaGen.objects.bulk_create(
                 features_to_create,
                 batch_size=self.batch_size,
@@ -269,17 +269,17 @@ class XslxReader:
             )
 
         if features_to_update:
-            logger.info(f"Actualizando {len(features_to_update)} características...")
+            logger.info(f"Updating {len(features_to_update)} features...")
             CaracteristicaGen.objects.bulk_update(
                 features_to_update,
                 fields_to_update,
                 batch_size=self.batch_size
             )
 
-        logger.info(f"✅ Características procesadas: "
-                   f"{resultados['caracteristicas_creadas']} creadas, "
-                   f"{resultados['caracteristicas_actualizadas']} actualizadas, "
-                   f"{resultados['caracteristicas_omitidas']} sin cambios")
+        logger.info(f"✅ Features processed: "
+               f"{resultados['created_features']} created, "
+               f"{resultados['updated_features']} updated, "
+               f"{resultados['skipped_features']} unchanged")
 
 
 # Compatibility class for legacy static-call usage.
