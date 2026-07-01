@@ -329,23 +329,25 @@ function setProcessingState(processing) {
 
 // Subir archivo con mejor manejo de respuesta
 async function uploadFile(file, customName) {
-    const formData = new FormData();
-    formData.append('archivo', file);
     
-    const nombreArchivo = customName || file.name;
-    formData.append('nombre_archivo', nombreArchivo);
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const normalizedCustomName = customName || file.name;
+    formData.append('custom_name', normalizedCustomName);
+    formData.append("system_user", localStorage.getItem("id"));
     
     // Log para depuración
     console.log('Enviando archivo:', {
-        archivo: file.name,
-        archivo_tamaño: file.size,
-        archivo_tipo: file.type,
-        nombre_archivo: nombreArchivo
+        file_name: file.name,
+        file_size: file.size,
+        file_type: file.type,
+        custom_name: normalizedCustomName,
     });
     
     try {
         // Usar URL relativa para evitar problemas de CORS en producción
-        const info_url = '/genes_to_excel/v1/upload-excel-file/';
+        const info_url = '/genes_to_excel/genes-to-excel-files/';
         
         console.log('URL:', info_url);
 
@@ -380,7 +382,7 @@ async function uploadFile(file, customName) {
             closeLoading();
             
             // Mostrar mensaje de éxito
-            showMessage('success', 'Success!', response.data.mensaje || 'File correctly processed');
+            showMessage('success', 'Success!', response.data.custom_name || 'File uploaded successfully');
             
             // Mostrar resultados en modal
             if (response.data) {
