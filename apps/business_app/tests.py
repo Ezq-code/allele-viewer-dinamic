@@ -72,8 +72,8 @@ def test_uploaded_files_save_does_not_dispatch_task_on_update(tmp_path, settings
     )
 
     with patch(
-            "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
-        ) as mocked_apply_async:
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
+    ) as mocked_apply_async:
         instance = UploadedFiles.objects.create(
             custom_name="original",
             original_file=upload,
@@ -99,8 +99,8 @@ def test_uploaded_files_save_does_not_dispatch_task_for_pdb(tmp_path, settings):
     )
 
     with patch(
-            "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
-        ) as mocked_apply_async:
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
+    ) as mocked_apply_async:
         UploadedFiles.objects.create(
             custom_name="pdb file",
             original_file=upload,
@@ -587,7 +587,9 @@ def test_fill_predecessors_and_sucessors_updates_allele_nodes_by_study_classific
         "apps.business_app.tasks._get_graph_info",
         side_effect=[{1, 10}, {10, 11}],
     ):
-        from apps.business_app.tasks import fill_predecessors_and_sucessors_for_all_nodes
+        from apps.business_app.tasks import (
+            fill_predecessors_and_sucessors_for_all_nodes,
+        )
 
         fill_predecessors_and_sucessors_for_all_nodes(study_id=123)
 
@@ -796,8 +798,10 @@ def test_process_uploaded_file_task_fails_when_all_processors_fail(tmp_path, set
 
 def test_resolve_processor_class_returns_class_for_registered_name():
     """_resolve_processor_class devuelve la clase correcta para nombres registrados."""
-    from apps.business_app.tasks import _resolve_processor_class, PROCESSOR_CLASS_REGISTRY
-    from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy
+    from apps.business_app.tasks import (
+        _resolve_processor_class,
+        PROCESSOR_CLASS_REGISTRY,
+    )
 
     for class_name in PROCESSOR_CLASS_REGISTRY:
         resolved = _resolve_processor_class(class_name)
@@ -822,7 +826,9 @@ def test_resolve_processor_class_raises_value_error_for_builtin_name():
 
 
 @pytest.mark.django_db
-def test_proccess_individual_processor_class_sends_pusher_on_success(tmp_path, settings):
+def test_proccess_individual_processor_class_sends_pusher_on_success(
+    tmp_path, settings
+):
     """La tarea envía el trigger de Pusher al finalizar exitosamente."""
     settings.MEDIA_ROOT = tmp_path
     AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
@@ -858,13 +864,9 @@ def test_proccess_individual_processor_class_sends_pusher_on_success(tmp_path, s
     ), patch(
         "apps.business_app.tasks.XslxToPdbByAlleleStudy",
         return_value=processor_ok,
-    ) as mocked_cls, patch(
-        "apps.business_app.tasks.create_graph"
-    ), patch(
+    ) as mocked_cls, patch("apps.business_app.tasks.create_graph"), patch(
         "apps.business_app.tasks.fill_predecessors_and_sucessors_for_all_nodes"
-    ), patch(
-        "apps.business_app.tasks.send_pusher_trigger_task.delay"
-    ) as mocked_pusher:
+    ), patch("apps.business_app.tasks.send_pusher_trigger_task.delay") as mocked_pusher:
         mocked_cls.__name__ = "XslxToPdbByAlleleStudy"
 
         proccess_individual_processor_class.run(
@@ -885,7 +887,9 @@ def test_proccess_individual_processor_class_does_not_send_pusher_when_no_study(
     y la tarea termina sin AttributeError."""
     settings.MEDIA_ROOT = tmp_path
     AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
-    user = SystemUser.objects.create_user(username="ind_task_no_study", password="secret")
+    user = SystemUser.objects.create_user(
+        username="ind_task_no_study", password="secret"
+    )
     upload = SimpleUploadedFile(
         "ind_task_no_study.xlsx",
         b"fake excel bytes",
@@ -934,7 +938,9 @@ def test_proccess_individual_processor_class_raises_value_error_for_unknown_proc
     """La tarea lanza ValueError inmediatamente ante un nombre de clase desconocido."""
     settings.MEDIA_ROOT = tmp_path
     AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
-    user = SystemUser.objects.create_user(username="ind_task_bad_cls", password="secret")
+    user = SystemUser.objects.create_user(
+        username="ind_task_bad_cls", password="secret"
+    )
     upload = SimpleUploadedFile(
         "ind_task_bad_cls.xlsx",
         b"fake excel bytes",

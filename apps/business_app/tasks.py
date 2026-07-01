@@ -152,7 +152,6 @@ def proccess_individual_processor_class(self, processor_class, uploaded_file_id)
             fill_predecessors_and_sucessors_for_all_nodes(
                 study_id=processor_object.study.id
             )
-            
 
     except Exception as processor_error:
         logger.exception(
