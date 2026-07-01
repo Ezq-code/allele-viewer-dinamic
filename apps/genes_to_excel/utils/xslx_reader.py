@@ -1,4 +1,5 @@
 import logging
+import pandas as pd
 from django.db import transaction
 from apps.business_app.models.gene import Gene
 from ..models.caracteristica_gen import CaracteristicaGen
