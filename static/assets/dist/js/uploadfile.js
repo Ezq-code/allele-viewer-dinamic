@@ -15,19 +15,19 @@ const geneUrl = "/business-gestion/gene/list-for-dropdown/";
 
 var load = document.getElementById("load");
 
-function showFileProcessingMessage() {
-  Swal.fire({
-    title: "Processing",
-    text: "The file is being processed. You will be notified when the upload is finished.",
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    timer: 4500,
-    timerProgressBar: true,
-    didOpen: () => {
-      Swal.showLoading();
-    },
-  });
-}
+// function showFileProcessingMessage() {
+//   Swal.fire({
+//     title: "Processing",
+//     text: "The file is being processed. You will be notified when the upload is finished.",
+//     allowOutsideClick: false,
+//     allowEscapeKey: false,
+//     timer: 4500,
+//     timerProgressBar: true,
+//     didOpen: () => {
+//       Swal.showLoading();
+//     },
+//   });
+// }
 
 // Función para cargar la lista de genes
 function loadGenes() {
@@ -239,30 +239,12 @@ $(document).ready(function () {
 
     var celery_task_channel = pusher.subscribe("celery-task-channel");
     // The realtime update may contain task or alert data (or both).
-    celery_task_channel.bind("successful-upload-3d-excel", function (data) {
-      // If it's the combined structure with task_info/alert_info
-      console.log("Successful upload 3D Excel:", data);
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Successfull uploaded file",
-      });
-
+    celery_task_channel.bind("study-processed", function (data) {
+      console.log("New study processed:", data);
+      
       if ($.fn.DataTable.isDataTable("#tabla-de-Datos")) {
         $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
       }
-
-    });
-    celery_task_channel.bind("failed-upload-3d-excel", function (data) {
-      // If it's the combined structure with task_info/alert_info
-      console.log("Failed upload 3D Excel:", data);
-      const errorDetail = data && data.error_detail ? data.error_detail : "Unknown error";
-      Swal.close();
-      Swal.fire({
-        icon: "error",
-        title: "Upload failed",
-        text: "The file could not be processed. " + errorDetail,
-      });
     });
   } else {
     console.warn(
@@ -460,7 +442,7 @@ form.addEventListener("submit", function (event) {
     } else {
       $("#modal-crear-elemento").modal("hide");
       load.hidden = false;
-      showFileProcessingMessage();
+      // showFileProcessingMessage(); UNNECESARY FOR THE MOMMENT
       axios
         .post(write_url, data)
         .then((response) => {
@@ -468,6 +450,7 @@ form.addEventListener("submit", function (event) {
             load.hidden = true;
             // The success message and table refresh are handled by Pusher
             // event "successful-upload-3d-excel".
+            $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
           }
         })
         .catch((error) => {

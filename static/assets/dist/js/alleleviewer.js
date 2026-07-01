@@ -535,8 +535,8 @@ $(function () {
       cluster: pusherCluster,
     });
     var celery_task_channel = pusher.subscribe("celery-task-channel");
-    celery_task_channel.bind("successful-upload-3d-excel", function (data) {
-      console.log("New file uploaded, reloading genes...", data);
+    celery_task_channel.bind("study-processed", function (data) {
+      console.log("New study processed, reloading genes...", data);
       const selectGene = document.getElementById("selectGene");
       selectGene.innerHTML = "";
       cargarGenes();

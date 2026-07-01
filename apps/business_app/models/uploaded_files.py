@@ -9,9 +9,25 @@ from apps.business_app.models import AllowedExtensions
 from apps.business_app.models.gene import Gene
 from apps.business_app.models.initial_file_data import InitialFileData
 from apps.business_app.models.base_allele_node import BaseAlleleNode
-from apps.business_app.tasks import process_uploaded_file_task
+from apps.business_app.tasks import proccess_individual_processor_class
 from apps.business_app.utils.upload_to_google_drive_api import UploadToGoogleDriveApi
 from django.core.cache import cache
+from django.db import close_old_connections
+from apps.business_app.utils.xslx_to_pdb_by_allele_study import XslxToPdbByAlleleStudy
+
+from apps.business_app.utils.xslx_to_pdb_by_ancesters_plus_est_study import (
+    XslxToPdbByAncestersPlusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_ancesters_minus_est_study import (
+    XslxToPdbByAncestersMinusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_location_plus_est_study import (
+    XslxToPdbByLocationPlusEstStudy,
+)
+from apps.business_app.utils.xslx_to_pdb_by_location_minus_est_study import (
+    XslxToPdbByLocationMinusEstStudy,
+)
+
 
 logger = logging.getLogger(__name__)
 
@@ -100,8 +116,7 @@ class UploadedFiles(models.Model):
 
         elif is_new and original_file:
             try:
-                process_uploaded_file_task.apply_async(args=[self.id], retry=False)
-
+                self.process_uploaded_file()
             except Exception as e:
                 logger.exception(f"An error occurred: {e}", exc_info=True)
                 self.delete()
@@ -130,3 +145,37 @@ class UploadedFiles(models.Model):
             file_path = file_field.path
             if os.path.exists(file_path):
                 os.remove(file_path)
+
+    def process_uploaded_file(self):
+        close_old_connections()
+
+        # processor_classes = [XslxToPdbByAlleleStudy, XslxToPdbGraph]
+        processor_classes = [
+            XslxToPdbByAlleleStudy,
+            XslxToPdbByAncestersPlusEstStudy,
+            XslxToPdbByAncestersMinusEstStudy,
+            XslxToPdbByLocationPlusEstStudy,
+            XslxToPdbByLocationMinusEstStudy,
+        ]
+        for processor_class in processor_classes:
+            proccess_individual_processor_class.delay(processor_class.__name__, self.id)
+
+        # if successful_processors == 0 and last_error is not None:
+        #     send_pusher_trigger_task.delay(
+        #         channel=PusherClient.CELERY_TASK_CHANNEL,
+        #         event=PusherClient.FAILED_UPLOAD_3D_EXCEL,
+        #         data={"error_detail": error_message_to_show},
+        #     )
+        #     raise Exception(error_message_to_show)
+
+        # if successful_processors > 0:
+        #     uploaded_file.processed = True
+        #     uploaded_file.save(update_fields=["processed"])
+
+        # send_pusher_trigger_task.delay(
+        #     channel=PusherClient.CELERY_TASK_CHANNEL,
+        #     event=PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL,
+        #     data={"uploaded_file_id": uploaded_file_id},
+        # )
+        # uploaded_file.delete()
+        # return {"status": "success", "uploaded_file_id": uploaded_file_id}
