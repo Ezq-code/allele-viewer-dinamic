@@ -5,10 +5,12 @@ from celery import shared_task
 
 from apps.genes_to_excel.utils.xslx_reader import XslxReader
 
-logger = logging.getLogger(__name__)
+
 from apps.common.utils.pusher_client import PusherClient
 
 from apps.common.tasks import send_pusher_trigger_task
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task(name="process_genes_to_excel_file_task")
