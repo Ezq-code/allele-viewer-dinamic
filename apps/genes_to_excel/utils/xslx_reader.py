@@ -2,172 +2,206 @@ import logging
 from django.db import transaction
 from apps.business_app.models.gene import Gene
 from ..models.caracteristica_gen import CaracteristicaGen
+from .excel_nomenclators import ExcelNomenclators
 
 logger = logging.getLogger(__name__)
 
 
 class XslxReader:
-    """Lector optimizado de archivos Excel usando Bulk Operations"""
+    """Optimized Excel reader using bulk database operations."""
 
-    def __init__(self, origin_file=None):  # ← Parámetro opcional con valor por defecto
-        self.origin_file = origin_file  # ← Ahora sí está definido
-        self.batch_size = 5000  # Ajustable según rendimiento
+    required_columns = [
+        ExcelNomenclators.gene_column_name,
+        ExcelNomenclators.coord_column_name,
+        ExcelNomenclators.valor_column_name,
+        ExcelNomenclators.color_column_name,
+        ExcelNomenclators.protein_column_name,
+        ExcelNomenclators.alleleasoc_column_name,
+        ExcelNomenclators.species_column_name,
+        ExcelNomenclators.variant_column_name,
+        "Order1",
+        "Order2",
+        "Order3",
+        "NCBI_Link",
+    ]
+
+    def __init__(self, origin_file=None):
+        self.origin_file = origin_file
+        self.batch_size = 5000
+        self.df = None
+        self.origin_file = origin_file
+
+        if origin_file is not None:
+            self.df = self._load_dataframe(origin_file)
+            self._validate_required_columns(self.df)
+
+    def _load_dataframe(self, origin_file):
+        """Load and concatenate all sheets from the Excel file."""
+        excel_file = pd.ExcelFile(origin_file)
+        all_dfs = [
+            pd.read_excel(excel_file, sheet_name=sheet_name)
+            for sheet_name in excel_file.sheet_names
+        ]
+
+        if not all_dfs:
+            return pd.DataFrame()
+
+        return pd.concat(all_dfs, ignore_index=True)
+
+    def _validate_required_columns(self, df):
+        """Validate that the file includes all required processing columns."""
+        missing_columns = [
+            column for column in self.required_columns if column not in df.columns
+        ]
+
+        if missing_columns:
+            raise ValueError(
+                f"The file must contains the needed columns: {', '.join(missing_columns)}"
+            )
 
     def proccess_file(self, df, nombre_archivo):
         """
-        Procesa archivo Excel usando operaciones masivas.
+        Process an Excel dataset using bulk operations.
 
         Args:
-            df: DataFrame de pandas
-            nombre_archivo: Nombre del archivo origen
+            df: pandas DataFrame
+            nombre_archivo: Source file name
 
         Returns:
-            dict: Resultados del procesamiento
+            dict: Processing summary
         """
-        logger.info(f"Iniciando procesamiento optimizado de {nombre_archivo}")
-        logger.info(f"Total de filas a procesar: {len(df)}")
+        logger.info(f"Starting optimized processing for {nombre_archivo}")
+        logger.info(f"Total rows to process: {len(df)}")
 
-        resultados = {
-            "genes_procesados": 0,
-            "caracteristicas_creadas": 0,
-            "caracteristicas_actualizadas": 0,
-            "caracteristicas_omitidas": 0,
-            "errores": [],
-            "total_filas": len(df),
+        results = {
+            "processed_genes": 0,
+            "created_features": 0,
+            "updated_features": 0,
+            "skipped_features": 0,
+            "errors": [],
+            "total_rows": len(df),
         }
 
-        # Validar columna obligatoria
-        if "Gene" not in df.columns:
-            resultados["errores"].append(
-                {"error_general": "La columna 'Gene' es obligatoria"}
-            )
-            return resultados
-
-        # Preparar datos
-        df = self._preparar_dataframe(df)
+        # Prepare input data.
+        df = self._prepare_dataframe(df)
 
         if df.empty:
-            resultados["errores"].append(
-                {"error_general": "No hay datos válidos para procesar"}
+            results["errors"].append(
+                {"general_error": "There is no valid data to process"}
             )
-            return resultados
+            return results
 
         try:
             with transaction.atomic():
-                # Procesar genes
-                genes_dict = self._procesar_genes_bulk(df, resultados)
+                # Process genes.
+                genes_by_name = self._procesar_genes_bulk(df, results)
 
-                # Procesar características
+                # Process gene features.
                 self._procesar_caracteristicas_bulk(
-                    df, genes_dict, nombre_archivo, resultados
+                    df, genes_by_name, nombre_archivo, results
                 )
 
         except Exception as e:
-            logger.error(f"Error crítico: {e}", exc_info=True)
-            resultados["errores"].append(
-                {"error_general": f"Error en transacción: {str(e)}"}
-            )
+            logger.error(f"Critical error: {e}", exc_info=True)
+            results["errors"].append({"general_error": f"Transaction error: {str(e)}"})
 
         logger.info(
-            f"✅ Procesamiento completado. "
-            f"Genes nuevos: {resultados['genes_procesados']}, "
-            f"Creadas: {resultados['caracteristicas_creadas']}, "
-            f"Actualizadas: {resultados['caracteristicas_actualizadas']}, "
-            f"Errores: {len(resultados['errores'])}"
+            f"✅ Processing completed. "
+            f"New genes: {results['processed_genes']}, "
+            f"Created: {results['created_features']}, "
+            f"Updated: {results['updated_features']}, "
+            f"Errors: {len(results['errors'])}"
         )
 
-        return resultados
+        return results
 
-    def _preparar_dataframe(self, df):
-        """Prepara y limpia el DataFrame"""
+    def _prepare_dataframe(self, df):
+        """Prepare and clean the input DataFrame."""
         df = df.copy()
 
-        # Limpiar nombres de columnas
+        # Normalize column names.
         df.columns = df.columns.str.strip()
 
-        # Filtrar filas sin Gene
+        # Remove rows without Gene.
         df = df[df["Gene"].notna() & (df["Gene"].astype(str).str.strip() != "")]
 
         if df.empty:
             return df
 
-        # Limpiar datos de texto
+        self._validate_required_columns(df)
+
+        # Normalize text-like columns.
         for col in df.select_dtypes(include=["object"]).columns:
             df[col] = df[col].astype(str).str.strip()
             df[col] = df[col].replace("nan", "")
 
-        # Manejar Cord (puede ser vacío)
+        # Cord can be empty.
         df["Cord"] = df["Cord"].fillna("").astype(str).str.strip()
 
-        logger.info(f"DataFrame preparado: {len(df)} filas para procesar")
+        logger.info(f"DataFrame prepared: {len(df)} rows ready for processing")
         return df
 
     def _procesar_genes_bulk(self, df, resultados):
-        """Procesa genes usando bulk_create optimizado"""
-        genes_nombres = df["Gene"].unique()
-        logger.info(f"Procesando {len(genes_nombres)} genes únicos...")
+        """Process genes using optimized bulk_create."""
+        gene_names = df["Gene"].unique()
+        logger.info(f"Processing {len(gene_names)} unique genes...")
 
-        # Obtener genes existentes (una consulta)
-        genes_existentes = {
-            gene.name: gene for gene in Gene.objects.filter(name__in=genes_nombres)
+        # Fetch existing genes in a single query.
+        existing_genes = {
+            gene.name: gene for gene in Gene.objects.filter(name__in=gene_names)
         }
 
-        # Identificar genes nuevos
-        genes_nuevos = []
-        for gene_nombre in genes_nombres:
-            if gene_nombre not in genes_existentes:
-                genes_nuevos.append(Gene(name=gene_nombre))
-                resultados["genes_procesados"] += 1
+        # Find new genes to create.
+        new_genes = []
+        for gene_name in gene_names:
+            if gene_name not in existing_genes:
+                new_genes.append(Gene(name=gene_name))
+                resultados["processed_genes"] += 1
 
-        # Crear genes nuevos en bulk
-        if genes_nuevos:
-            logger.info(f"Creando {len(genes_nuevos)} genes nuevos...")
-            Gene.objects.bulk_create(genes_nuevos, batch_size=self.batch_size)
+        # Bulk-create missing genes.
+        if new_genes:
+            logger.info(f"Creating {len(new_genes)} new genes...")
+            Gene.objects.bulk_create(new_genes, batch_size=self.batch_size)
 
-            # Recargar incluyendo los nuevos
-            genes_existentes.update(
-                {
-                    gene.name: gene
-                    for gene in Gene.objects.filter(name__in=genes_nombres)
-                }
+            # Reload the full mapping including newly created genes.
+            existing_genes.update(
+                {gene.name: gene for gene in Gene.objects.filter(name__in=gene_names)}
             )
 
-        return genes_existentes
+        return existing_genes
 
     def _procesar_caracteristicas_bulk(
         self, df, genes_dict, nombre_archivo, resultados
     ):
-        """Procesa características usando bulk_create y bulk_update"""
-        logger.info("Preparando características para procesamiento bulk...")
+        """Process gene features using bulk_create and bulk_update."""
+        logger.info("Preparing features for bulk processing...")
 
-        # Mapear genes a IDs
+        # Map gene names to IDs.
         df["gen_id"] = df["Gene"].map(
             lambda x: genes_dict[x].id if x in genes_dict else None
         )
-        df_valid = df[df["gen_id"].notna()].copy()
+        valid_df = df[df["gen_id"].notna()].copy()
 
-        if df_valid.empty:
-            logger.warning("No hay características válidas para procesar")
+        if valid_df.empty:
+            logger.warning("There are no valid features to process")
             return
 
-        # Obtener características existentes en UNA consulta
-        gen_ids = df_valid["gen_id"].unique()
+        # Fetch existing features in a single query.
+        gene_ids = valid_df["gen_id"].unique()
 
-        caracteristicas_existentes = {
+        existing_features = {
             (c.gen_id, c.cord): c
             for c in CaracteristicaGen.objects.filter(
-                gen_id__in=gen_ids
+                gen_id__in=gene_ids
             ).select_related("gen")
         }
 
-        logger.info(
-            f"Encontradas {len(caracteristicas_existentes)} características existentes"
-        )
+        logger.info(f"Found {len(existing_features)} existing features")
 
-        # Preparar listas para bulk operations
-        caracteristicas_crear = []
-        caracteristicas_actualizar = []
-        campos_actualizar = [
+        # Prepare bulk operation containers.
+        features_to_create = []
+        features_to_update = []
+        fields_to_update = [
             "archivo_origen",
             "gene",
             "valor",
@@ -182,14 +216,14 @@ class XslxReader:
             "ncbi_link",
         ]
 
-        # Procesar cada fila
-        for index, row in df_valid.iterrows():
+        # Process each row.
+        for index, row in valid_df.iterrows():
             try:
                 gen = genes_dict[row["Gene"]]
-                cord_valor = row["Cord"]
+                cord_value = row["Cord"]
 
-                # Construir valores
-                valores = {
+                # Build normalized values.
+                field_values = {
                     "archivo_origen": nombre_archivo,
                     "gene": str(row["Gene"]),
                     "valor": str(row.get("Valor", "")),
@@ -204,77 +238,71 @@ class XslxReader:
                     "ncbi_link": str(row.get("NCBI_Link", "")),
                 }
 
-                # Limpiar valores 'nan' y 'None'
-                for key, value in valores.items():
+                # Normalize empty-like values.
+                for key, value in field_values.items():
                     if value in ["nan", "None", ""]:
-                        valores[key] = ""
+                        field_values[key] = ""
 
-                key = (gen.id, cord_valor)
+                feature_key = (gen.id, cord_value)
 
-                if key in caracteristicas_existentes:
-                    # Actualizar existente
-                    caracteristica = caracteristicas_existentes[key]
-                    necesita_actualizar = False
+                if feature_key in existing_features:
+                    # Update an existing feature when needed.
+                    feature = existing_features[feature_key]
+                    needs_update = False
 
-                    for campo in campos_actualizar:
-                        nuevo_valor = valores.get(campo, "")
-                        if getattr(caracteristica, campo) != nuevo_valor:
-                            setattr(caracteristica, campo, nuevo_valor)
-                            necesita_actualizar = True
+                    for field in fields_to_update:
+                        new_value = field_values.get(field, "")
+                        if getattr(feature, field) != new_value:
+                            setattr(feature, field, new_value)
+                            needs_update = True
 
-                    if necesita_actualizar:
-                        caracteristicas_actualizar.append(caracteristica)
-                        resultados["caracteristicas_actualizadas"] += 1
+                    if needs_update:
+                        features_to_update.append(feature)
+                        resultados["updated_features"] += 1
                     else:
-                        resultados["caracteristicas_omitidas"] += 1
+                        resultados["skipped_features"] += 1
 
                 else:
-                    # Crear nueva
-                    caracteristicas_crear.append(
-                        CaracteristicaGen(gen=gen, cord=cord_valor, **valores)
+                    # Create a new feature.
+                    features_to_create.append(
+                        CaracteristicaGen(gen=gen, cord=cord_value, **field_values)
                     )
-                    resultados["caracteristicas_creadas"] += 1
+                    resultados["created_features"] += 1
 
             except Exception as e:
-                resultados["errores"].append(
+                resultados["errors"].append(
                     {
-                        "fila": index + 2,
-                        "error": f"Error en fila: {str(e)}",
+                        "row": index + 2,
+                        "error": f"Row processing error: {str(e)}",
                         "gene": row.get("Gene", "N/A"),
                         "cord": row.get("Cord", "N/A"),
                     }
                 )
 
-        # Ejecutar bulk operations
-        if caracteristicas_crear:
-            logger.info(f"Creando {len(caracteristicas_crear)} características...")
+        # Execute bulk operations.
+        if features_to_create:
+            logger.info(f"Creating {len(features_to_create)} features...")
             CaracteristicaGen.objects.bulk_create(
-                caracteristicas_crear,
-                batch_size=self.batch_size,
-                ignore_conflicts=False,
+                features_to_create, batch_size=self.batch_size, ignore_conflicts=False
             )
 
-        if caracteristicas_actualizar:
-            logger.info(
-                f"Actualizando {len(caracteristicas_actualizar)} características..."
-            )
+        if features_to_update:
+            logger.info(f"Updating {len(features_to_update)} features...")
             CaracteristicaGen.objects.bulk_update(
-                caracteristicas_actualizar,
-                campos_actualizar,
-                batch_size=self.batch_size,
+                features_to_update, fields_to_update, batch_size=self.batch_size
             )
 
         logger.info(
-            f"✅ Características procesadas: "
-            f"{resultados['caracteristicas_creadas']} creadas, "
-            f"{resultados['caracteristicas_actualizadas']} actualizadas, "
-            f"{resultados['caracteristicas_omitidas']} sin cambios"
+            f"✅ Features processed: "
+            f"{resultados['created_features']} created, "
+            f"{resultados['updated_features']} updated, "
+            f"{resultados['skipped_features']} unchanged"
         )
 
 
-# Clase para compatibilidad con código existente (si es necesario)
+# Compatibility class for legacy static-call usage.
 class XslxReaderLegacy:
-    """Mantiene compatibilidad con el método estático original"""
+    """Keeps compatibility with the original static-style API."""
 
     @staticmethod
     def proccess_file(df, nombre_archivo):

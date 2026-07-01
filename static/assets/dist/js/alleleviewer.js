@@ -12,6 +12,17 @@ var predecessors;
 var sucessors;
 var selectActual;
 let labelOn = false;
+var familyColorBySerial = {};
+var currentFamilyData = [];
+var familyActiveHighlight = null;
+var familyVisibility = {};
+var familyToast = null;
+var familyPalette = [
+  "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231",
+  "#911eb4", "#42d4f4", "#f032e6", "#bfef45", "#fabed4",
+  "#469990", "#dcbeff", "#9A6324", "#fffac8", "#800000",
+  "#aaffc3", "#808000", "#ffd8b1", "#000075", "#a9a9a9",
+];
 // variables para el graficador
 let element = $("#container")[0];
 let load = document.getElementById("load");
@@ -23,7 +34,7 @@ var datos;
 var globalData;
 var sphereRadiusFactor = 12;
 var stickRadiusFactor = 0.003;
-var nonGeneticBaseSphereRadius = 4.2;
+var nonGeneticBaseSphereRadius = 3.2;
 var nonGeneticGroupColorBySerial = {};
 
 const nonGeneticGroupPalette = [
@@ -1343,6 +1354,330 @@ function obtenerAtomoDesdeViewer(viewer, serial) {
   const estructura = viewer.getModel().atoms;
   // 2. Buscar en la jerarquía de componentes
   return estructura.find((item) => item.serial === serial) || null;
+}
+
+// Agrupa todos los nodos por su familia global (predecesores + sucesores) sin repetir miembros.
+function printFamily() {
+  if (!Array.isArray(datos) || datos.length === 0) {
+    console.warn("printFamily: datos no disponible o vacío");
+    return [];
+  }
+
+  const familyMap = new Map();
+
+  for (const node of datos) {
+    const pred = Array.isArray(node.predecessors) ? node.predecessors : [];
+    const succ = Array.isArray(node.sucessors) ? node.sucessors : [];
+    const members = [...new Set([...pred, ...succ])].sort((a, b) => a - b);
+    const key = members.join(",");
+
+    if (!familyMap.has(key)) {
+      familyMap.set(key, {
+        family: key,
+        nodes: [],
+        members: members,
+      });
+    }
+
+    familyMap.get(key).nodes.push({
+      id: node.id,
+      number: node.number,
+    });
+  }
+
+  return Array.from(familyMap.values());
+}
+
+// Asigna un color único a cada familia del arreglo currentFamilyData.
+function assignFamilyColors() {
+  familyColorBySerial = {};
+  familyVisibility = {};
+  var isGenetic = localStorage.getItem("selectedStudyTypeDisplay") === "Genetic Allele";
+
+  currentFamilyData.forEach(function(fam, i) {
+    var color;
+    if (isGenetic) {
+      color = familyPalette[i % familyPalette.length];
+    } else {
+      var colorCounts = {};
+      var maxCount = 0;
+      var dominantColor = familyPalette[i % familyPalette.length];
+      fam.nodes.forEach(function(n) {
+        var existingColor = nonGeneticGroupColorBySerial[n.number];
+        if (existingColor) {
+          var count = (colorCounts[existingColor] || 0) + 1;
+          colorCounts[existingColor] = count;
+          if (count > maxCount) {
+            maxCount = count;
+            dominantColor = existingColor;
+          }
+        }
+      });
+      color = dominantColor;
+    }
+    fam.color = color;
+    fam.nodes.forEach(function(n) {
+      familyColorBySerial[n.number] = color;
+    });
+    familyVisibility[fam.family] = true;
+  });
+}
+
+// Colorea todos los nodos del viewer según su familia.
+function applyFamilyColors() {
+  datos.forEach(function(element) {
+    var color = familyColorBySerial[element.number];
+    viewer.setStyle(
+      { serial: element.number },
+      {
+        sphere: { color: color || "#eae8e8", radius: resolveSphereRadius(element), hidden: false },
+        stick: { color: color || "#eae8e8", radius: element.stick_radius, showNonBonded: false, hidden: false },
+      }
+    );
+  });
+  viewer.render();
+}
+
+// Genera el HTML del listado de familias para el toast.
+function buildFamilyToastBody() {
+  var isGenetic = localStorage.getItem("selectedStudyTypeDisplay") === "Genetic Allele";
+  var html = '<div class="family-toast-body">';
+  currentFamilyData.forEach(function(fam, i) {
+    var familyName;
+    if (isGenetic) {
+      familyName = "Family " + (i + 1);
+    } else {
+      var alleles = [];
+      fam.nodes.forEach(function(n) {
+        for (var d = 0; d < datos.length; d++) {
+          if (datos[d].number === n.number && datos[d].allele) {
+            if (alleles.indexOf(datos[d].allele) === -1) {
+              alleles.push(datos[d].allele);
+            }
+            break;
+          }
+        }
+      });
+      familyName = alleles.join(", ") || "Family " + (i + 1);
+    }
+    var isActive = familyActiveHighlight === fam.family;
+    var activeClass = isActive ? " family-item-active" : "";
+    var visible = familyVisibility[fam.family] !== false;
+    var eyeIcon = visible ? "fa-eye" : "fa-eye-slash";
+    var eyeClass = visible ? "family-eye-visible" : "family-eye-hidden";
+    html +=
+      '<div class="family-item' + activeClass + '" data-family="' + fam.family + '" onclick="highlightFamily(\'' + fam.family + '\')">' +
+        '<span class="family-swatch" style="background:' + fam.color + '"></span>' +
+        '<div class="family-info"><strong>' + familyName + '</strong></div>' +
+        '<button class="family-eye-btn ' + eyeClass + '" onclick="event.stopPropagation(); toggleFamilyVisibility(\'' + fam.family + '\')" title="Toggle visibility">' +
+          '<i class="fas ' + eyeIcon + '"></i>' +
+        '</button>' +
+      '</div>';
+  });
+  html +=
+    '</div>' +
+    '<div class="family-toast-actions">' +
+      '<button class="btn btn-info btn-sm" onclick="toggleAllFamilies()" title="Toggle all families"><i class="fas fa-toggle-on"></i></button>' +
+      '<button class="btn btn-success btn-sm" onclick="showAllFamilies()" title="Show all families"><i class="fas fa-eye"></i></button>' +
+      '<button class="btn btn-warning btn-sm" onclick="resetFamilyColors()" title="Reset family colors"><i class="fas fa-undo-alt"></i></button>' +
+    '</div>';
+  return html;
+}
+
+// Muestra el toast de familias: calcula familias, asigna colores, pinta el grafo y abre el toast.
+function showFamilies() {
+  if (!Array.isArray(datos) || datos.length === 0) {
+    Swal.fire({ icon: "warning", title: "No data", text: "Load a study first.", showConfirmButton: false, timer: 2000 });
+    return;
+  }
+
+  currentFamilyData = printFamily();
+  if (currentFamilyData.length === 0) {
+    Swal.fire({ icon: "info", title: "No families", text: "No family groups found.", showConfirmButton: false, timer: 2000 });
+    return;
+  }
+
+  familyActiveHighlight = null;
+  assignFamilyColors();
+  applyFamilyColors();
+
+ 
+
+
+
+ var bodyHtml = buildFamilyToastBody();
+
+  // Eliminar el toast anterior buscándolo realmente en el DOM
+  $(".family-toast").toast("hide"); // opcional, dispara el evento hidden
+  $(".family-toast").remove();      // lo sacamos del DOM directamente
+
+  $(document).Toasts("create", {
+    class: "bg-purple family-toast",
+    title: "Families",
+    position: "topRight",
+    autohide: false,
+    body: bodyHtml,
+  });
+
+  // Ahora sí, tomamos la referencia real al toast recién creado
+  familyToast = $(".family-toast").last();
+  familyToast.toast("show");
+
+
+
+
+
+}
+
+// Resalta una familia específica atenuando el resto de nodos.
+function highlightFamily(key) {
+  var isSame = familyActiveHighlight === key;
+  familyActiveHighlight = isSame ? null : key;
+
+  datos.forEach(function(element) {
+    var inFamily = false;
+    if (!isSame) {
+      for (var f = 0; f < currentFamilyData.length; f++) {
+        if (currentFamilyData[f].family === key) {
+          for (var n = 0; n < currentFamilyData[f].nodes.length; n++) {
+            if (currentFamilyData[f].nodes[n].number === element.number) {
+              inFamily = true;
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    if (inFamily) {
+      var color = familyColorBySerial[element.number];
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: { color: color, radius: resolveSphereRadius(element), hidden: false },
+          stick: { color: color, radius: element.stick_radius, showNonBonded: false, hidden: false },
+        }
+      );
+    } else {
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: { color: "#eae8e8", radius: resolveSphereRadius(element), hidden: false },
+          stick: { color: "#eae8e8", radius: element.stick_radius, showNonBonded: false, hidden: false },
+        }
+      );
+    }
+  });
+  viewer.render();
+  updateFamilyToast();
+}
+
+// Restaura la visualización de todas las familias con sus colores.
+function showAllFamilies() {
+  familyActiveHighlight = null;
+  applyFamilyColors();
+  updateFamilyToast();
+}
+
+// Restaura los colores originales de los nodos (sin color por familia).
+function resetFamilyColors() {
+  familyColorBySerial = {};
+  currentFamilyData = [];
+  familyActiveHighlight = null;
+  familyVisibility = {};
+  datos.forEach(function(element) {
+    viewer.setStyle(
+      { serial: element.number },
+      {
+        sphere: { radius: resolveSphereRadius(element), color: resolveSphereColor(element) || undefined },
+        stick: { color: resolveStickColor(element), radius: element.stick_radius, showNonBonded: false },
+      }
+    );
+  });
+  viewer.render();
+  if (familyToast) {
+    $(familyToast).toast("dispose");
+    familyToast = null;
+  }
+}
+
+function updateFamilyToast() {
+  if (familyToast) {
+    var bodyHtml = buildFamilyToastBody();
+    $(familyToast).find(".toast-body").html(bodyHtml);
+  }
+}
+
+// Alterna la visibilidad de una familia en el viewer.
+function toggleFamilyVisibility(key) {
+  familyVisibility[key] = !familyVisibility[key];
+  var visible = familyVisibility[key];
+  var fam = currentFamilyData.find(function(f) { return f.family === key; });
+  if (!fam) return;
+
+  fam.nodes.forEach(function(n) {
+    var nodeData = datos.find(function(d) { return d.number === n.number; });
+    if (!nodeData) return;
+
+    if (visible) {
+      var color = familyColorBySerial[n.number];
+      viewer.setStyle(
+        { serial: n.number },
+        {
+          sphere: { color: color, radius: resolveSphereRadius(nodeData), hidden: false },
+          stick: { color: color, radius: nodeData.stick_radius || 0.3, showNonBonded: false, hidden: false },
+        }
+      );
+    } else {
+      viewer.setStyle(
+        { serial: n.number },
+        {
+          sphere: { hidden: true },
+          stick: { hidden: true },
+        }
+      );
+    }
+  });
+  viewer.render();
+  updateFamilyToast();
+}
+
+// Alterna la visibilidad de todas las familias a la vez.
+function toggleAllFamilies() {
+  var anyHidden = currentFamilyData.some(function(f) { return familyVisibility[f.family] === false; });
+  var newVisibility = anyHidden;
+  currentFamilyData.forEach(function(fam) {
+    familyVisibility[fam.family] = newVisibility;
+  });
+  applyFamilyVisibility();
+  updateFamilyToast();
+}
+
+function applyFamilyVisibility() {
+  currentFamilyData.forEach(function(fam) {
+    var visible = familyVisibility[fam.family] !== false;
+    fam.nodes.forEach(function(n) {
+      var nodeData = datos.find(function(d) { return d.number === n.number; });
+      if (!nodeData) return;
+      if (visible) {
+        var color = familyColorBySerial[n.number];
+        viewer.setStyle(
+          { serial: n.number },
+          {
+            sphere: { color: color, radius: resolveSphereRadius(nodeData), hidden: false },
+            stick: { color: color, radius: nodeData.stick_radius || 0.3, showNonBonded: false, hidden: false },
+          }
+        );
+      } else {
+        viewer.setStyle(
+          { serial: n.number },
+          { sphere: { hidden: true }, stick: { hidden: true } }
+        );
+      }
+    });
+  });
+  viewer.render();
 }
 
 // Pinta el árbol genealógico separando nodo principal, predecesores y sucesores.

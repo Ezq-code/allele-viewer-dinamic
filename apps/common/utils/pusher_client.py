@@ -19,6 +19,9 @@ class PusherClient:
     SUCCESSFUL_UPLOAD_CONFORMATION_EXCEL = "successful-upload-conformation-excel"
     FAILED_UPLOAD_CONFORMATION_EXCEL = "failed-upload-conformation-excel"
 
+    SUCCESSFUL_UPLOAD_SOM_EXCEL = "successful-upload-som-excel"
+    FAILED_UPLOAD_SOM_EXCEL = "failed-upload-som-excel"
+
     _instance = None
 
     def __new__(cls, *args, **kwargs):

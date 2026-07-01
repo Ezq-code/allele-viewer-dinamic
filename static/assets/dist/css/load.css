@@ -418,3 +418,162 @@
     background: #ff8c00;
   }
 }
+
+/* Family modal list items */
+.family-item {
+  cursor: pointer;
+  padding: 10px 12px;
+  margin: 6px 0;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s ease;
+}
+.family-item:hover {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+}
+.family-item-active {
+  background: #e8f0fe;
+  border-color: #4363d8;
+  box-shadow: 0 0 0 2px rgba(67,99,216,0.25);
+}
+.family-swatch {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.15);
+}
+.family-info {
+  font-size: 14px;
+}
+
+.family-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.family-eye-btn {
+  background: transparent;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #6c757d;
+  transition: color 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.family-eye-btn:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+.family-eye-btn.family-eye-visible {
+  color: #28a745;
+}
+.family-eye-btn.family-eye-hidden {
+  color: #dc3545;
+}
+.family-eye-btn.family-eye-hidden:hover {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Family toast */
+.family-toast {
+  max-width: 360px;
+  min-width: 320px;
+}
+.family-toast .toast-header {
+  background: #6f42c1;
+  color: white;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+.family-toast .toast-body {
+  padding: 0;
+  max-height: 60vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.family-toast-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.family-toast .family-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05);
+  transition: background 0.15s;
+}
+.family-toast .family-item:hover {
+  background: rgba(255,255,255,0.15);
+}
+.family-toast .family-item-active {
+  background: rgba(67,99,216,0.3);
+  border-color: #4363d8;
+}
+.family-toast .family-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  margin-right: 10px;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+.family-toast .family-info {
+  font-size: 13px;
+  color: #fff;
+  flex: 1;
+}
+.family-toast .family-eye-btn {
+  background: transparent;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: rgba(255,255,255,0.7);
+  transition: color 0.15s, background 0.15s;
+}
+.family-toast .family-eye-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+.family-toast .family-eye-visible {
+  color: #4ade80;
+}
+.family-toast .family-eye-hidden {
+  color: #f87171;
+}
+.family-toast .family-eye-hidden:hover {
+  background: rgba(248,113,113,0.2);
+}
+.family-toast-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  padding: 8px 10px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  background: rgba(111,66,193,0.95);
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+.family-toast-actions .btn-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
