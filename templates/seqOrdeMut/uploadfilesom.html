@@ -20,7 +20,7 @@
     border-radius: 8px;
     margin-bottom: 20px;
     border: 1px solid #dee2e6;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   }
 
   .upload-area {
@@ -48,7 +48,9 @@
   .btn-upload {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
   }
 
   .btn-upload:hover {
@@ -152,19 +154,19 @@
     .upload-section {
       padding: 15px;
     }
-    
+
     .upload-area {
       padding: 30px 15px;
     }
-    
+
     .upload-area i {
       font-size: 48px;
     }
-    
+
     .requirements-list ul {
       padding-left: 15px;
     }
-    
+
     .requirements-list li {
       font-size: 11px;
     }
@@ -172,18 +174,22 @@
 
   /* Animación para éxito */
   @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 
   .upload-success {
     animation: pulse 0.5s ease;
   }
 </style>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <div class="content-wrapper">
   <!-- Overlay de carga -->
   <div class="overlay" id="load" hidden>
@@ -218,29 +224,38 @@
       <!-- Sección de upload -->
       <div class="upload-section">
         <h5 class="mb-3">
-          <i class="fas fa-cloud-upload-alt text-primary"></i> 
+          <i class="fas fa-cloud-upload-alt text-primary"></i>
           Upload Excel File
         </h5>
-        <hr class="mt-0">
-        
+        <hr class="mt-0" />
+
         <form id="uploadForm">
-          <input type="hidden" id="systemUserId" value="{{ user.id }}">
+          <input type="hidden" id="systemUserId" value="{{ user.id }}" />
           <div class="row">
             <!-- Columna izquierda - Área de drop -->
             <div class="col-lg-6">
-              <div class="upload-area" id="dropZone" onclick="document.getElementById('excelFile').click()">
+              <div
+                class="upload-area"
+                id="dropZone"
+                onclick="document.getElementById('excelFile').click()"
+              >
                 <i class="fas fa-cloud-upload-alt"></i>
                 <h5>Click or drag file here</h5>
                 <p class="text-muted mb-0">
                   <small>Formats: .xlsx, .xls (Max 50MB)</small>
                 </p>
-                <input type="file" id="excelFile" accept=".xlsx,.xls" style="display: none;">
+                <input
+                  type="file"
+                  id="excelFile"
+                  accept=".xlsx,.xls"
+                  style="display: none"
+                />
               </div>
-              
+
               <!-- Información del archivo seleccionado -->
-              <div id="fileInfo" style="display: none;"></div>
+              <div id="fileInfo" style="display: none"></div>
             </div>
-            
+
             <!-- Columna derecha - Formulario -->
             <div class="col-lg-6">
               <!-- Nombre personalizado -->
@@ -248,73 +263,118 @@
                 <label for="customName">
                   <i class="fas fa-tag"></i> Custom name (optional)
                 </label>
-                <input type="text" class="form-control" id="customName" 
-                       placeholder="Ej: HLA-A 2026">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="customName"
+                  placeholder="Ej: HLA-A 2026"
+                />
                 <small class="text-muted">
-                  <i class="fas fa-info-circle"></i> Leave empty to use original filename
+                  <i class="fas fa-info-circle"></i> Leave empty to use original
+                  filename
                 </small>
               </div>
-              
+
               <!-- Botones de acción -->
               <div class="row">
                 <div class="col-6">
-                  <button type="submit" class="btn btn-upload btn-primary btn-block" id="btnUpload">
+                  <button
+                    type="submit"
+                    class="btn btn-upload btn-primary btn-block"
+                    id="btnUpload"
+                  >
                     <i class="fas fa-upload"></i> Upload & Process
                   </button>
                 </div>
                 <div class="col-6">
-                  <button type="button" id="resetBtn" class="btn btn-reset btn-secondary btn-block">
+                  <button
+                    type="button"
+                    id="resetBtn"
+                    class="btn btn-reset btn-secondary btn-block"
+                  >
                     <i class="fas fa-trash-alt"></i> Clear
                   </button>
                 </div>
               </div>
-              
+
               <!-- Barra de progreso -->
               <div class="form-group mt-3">
                 <div id="uploadProgress" class="progress">
-                  <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
-                       role="progressbar" style="width: 0%">0%</div>
+                  <div
+                    id="progressBar"
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    style="width: 0%"
+                  >
+                    0%
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <!-- Requisitos del archivo -->
           <div class="requirements-list">
-            <h6><i class="fas fa-list-check"></i> Required columns in Excel file:</h6>
+            <h6>
+              <i class="fas fa-list-check"></i> Required columns in Excel file:
+            </h6>
             <div class="row">
               <div class="col-md-3 col-6">
                 <ul class="mb-0">
-                  <li><i class="fas fa-check-circle"></i> <strong>Gene</strong></li>
-                  <li><i class="fas fa-check-circle"></i> <strong>Cord</strong></li>
-                  <li><i class="fas fa-check-circle"></i> <strong>Valor</strong></li>
+                  <li>
+                    <i class="fas fa-check-circle"></i> <strong>Gene</strong>
+                  </li>
+                  <li>
+                    <i class="fas fa-check-circle"></i> <strong>Cord</strong>
+                  </li>
+                  <li>
+                    <i class="fas fa-check-circle"></i> <strong>Valor</strong>
+                  </li>
                 </ul>
               </div>
               <div class="col-md-3 col-6">
                 <ul class="mb-0">
-                  <li><i class="fas fa-check-circle"></i> <strong>Color</strong></li>
-                  <li><i class="fas fa-check-circle"></i> <strong>Protein</strong></li>
-                  <li><i class="fas fa-check-circle"></i> <strong>Alleleasoc</strong></li>
+                  <li>
+                    <i class="fas fa-check-circle"></i> <strong>Color</strong>
+                  </li>
+                  <li>
+                    <i class="fas fa-check-circle"></i> <strong>Protein</strong>
+                  </li>
+                  <li>
+                    <i class="fas fa-check-circle"></i>
+                    <strong>Alleleasoc</strong>
+                  </li>
                 </ul>
               </div>
               <div class="col-md-3 col-6">
                 <ul class="mb-0">
-                  <li><i class="fas fa-check-circle"></i> <strong>Species</strong></li>
-                  <li><i class="fas fa-check-circle"></i> <strong>Variant</strong></li>
-                  <li><i class="fas fa-check-circle"></i> <strong>Order1</strong></li>
+                  <li>
+                    <i class="fas fa-check-circle"></i> <strong>Species</strong>
+                  </li>
+                  <li>
+                    <i class="fas fa-check-circle"></i> <strong>Variant</strong>
+                  </li>
+                  <li>
+                    <i class="fas fa-check-circle"></i> <strong>Order1</strong>
+                  </li>
                 </ul>
               </div>
               <div class="col-md-3 col-6">
                 <ul class="mb-0">
-                  <li><i class="fas fa-check-circle"></i> <strong>Order2</strong></li>
-                  <li><i class="fas fa-check-circle"></i> <strong>Order3</strong></li>
+                  <li>
+                    <i class="fas fa-check-circle"></i> <strong>Order2</strong>
+                  </li>
+                  <li>
+                    <i class="fas fa-check-circle"></i> <strong>Order3</strong>
+                  </li>
                 </ul>
               </div>
             </div>
-            
+
             <div class="alert alert-info mt-3 mb-0">
               <i class="fas fa-info-circle"></i>
-              <strong>Note:</strong> The file can contain multiple sheets. All sheets will be processed and combined automatically.
+              <strong>Note:</strong> The file can contain multiple sheets. All
+              sheets will be processed and combined automatically.
             </div>
           </div>
         </form>
@@ -322,9 +382,7 @@
     </div>
   </section>
 </div>
-{% endblock %}
-
-{% block script %}
+{% endblock %} {% block script %}
 <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>

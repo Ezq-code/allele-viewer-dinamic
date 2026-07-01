@@ -30,6 +30,7 @@ class XslxReader:
         self.origin_file = origin_file
         self.batch_size = 5000
         self.df = None
+        self.origin_file = origin_file
 
         if origin_file is not None:
             self.df = self._load_dataframe(origin_file)
@@ -193,7 +194,7 @@ class XslxReader:
         features_to_create = []
         features_to_update = []
         fields_to_update = [
-            'source_file', 'gene', 'value', 'color', 'protein',
+            'archivo_origen', 'gene', 'valor', 'color', 'protein',
             'alleleasoc', 'species', 'variant', 'order_one', 
             'order_two', 'order_three', 'ncbi_link'
         ]
@@ -206,9 +207,9 @@ class XslxReader:
 
                 # Build normalized values.
                 field_values = {
-                    "source_file": nombre_archivo,
+                    "archivo_origen": nombre_archivo,
                     "gene": str(row["Gene"]),
-                    "value": str(row.get("Valor", "")),
+                    "valor": str(row.get("Valor", "")),
                     "color": str(row.get("Color", "")),
                     "protein": str(row.get("Protein", "")),
                     "alleleasoc": str(row.get("Alleleasoc", "")),
