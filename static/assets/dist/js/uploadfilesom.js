@@ -2,6 +2,15 @@
 let selectedFile = null;
 let isProcessing = false;
 const REQUEST_TIMEOUT_MS = 300000; // 5 minutos (aumentado para archivos grandes)
+const PUSHER_EVENT_TIMEOUT_MS = 300000;
+
+function normalizePusherValue(value) {
+    return typeof value === 'string' ? value.trim() : '';
+}
+
+function hasInvalidPusherPathChars(value) {
+    return value.includes('/') || value.includes('\\');
+}
 
 // CSRF Token para Django
 const csrfToken = document.cookie
@@ -327,6 +336,84 @@ function setProcessingState(processing) {
     }
 }
 
+// Espera la confirmación final del procesamiento desde Pusher
+function waitForSomUploadSignal(timeoutMs = PUSHER_EVENT_TIMEOUT_MS) {
+    return new Promise((resolve, reject) => {
+        const normalizedKey = normalizePusherValue(typeof pusherKey !== 'undefined' ? pusherKey : '');
+        const normalizedCluster = normalizePusherValue(typeof pusherCluster !== 'undefined' ? pusherCluster : '');
+
+        console.info('[uploadfilesom] Waiting for Pusher signal', {
+            channel: 'celery-task-channel',
+            successEvent: 'successful-upload-som-excel',
+            failedEvent: 'failed-upload-som-excel',
+            timeoutMs,
+            hasKey: Boolean(normalizedKey),
+            hasCluster: Boolean(normalizedCluster),
+        });
+
+        if (
+            typeof Pusher === 'undefined' ||
+            !normalizedKey ||
+            !normalizedCluster ||
+            hasInvalidPusherPathChars(normalizedKey)
+        ) {
+            console.warn('[uploadfilesom] Pusher unavailable. Falling back to HTTP result.');
+            resolve({ signal: 'unavailable', data: null });
+            return;
+        }
+
+        const pusher = new Pusher(normalizedKey, {
+            cluster: normalizedCluster,
+            forceTLS: true,
+        });
+        const channel = pusher.subscribe('celery-task-channel');
+
+        let settled = false;
+        let timer = null;
+
+        const cleanup = () => {
+            channel.unbind('successful-upload-som-excel', onSuccess);
+            channel.unbind('failed-upload-som-excel', onFailure);
+
+            if (timer) {
+                clearTimeout(timer);
+            }
+
+            pusher.unsubscribe('celery-task-channel');
+            pusher.disconnect();
+        };
+
+        const onSuccess = (data) => {
+            if (settled) return;
+            settled = true;
+            cleanup();
+            closeLoading();
+            console.info('[uploadfilesom] Pusher success signal received', data);
+            resolve({ signal: 'success', data: data || {} });
+        };
+
+        const onFailure = (data) => {
+            if (settled) return;
+            settled = true;
+            cleanup();
+            closeLoading();
+            console.error('[uploadfilesom] Pusher failed signal received', data);
+            resolve({ signal: 'failed', data: data || {} });
+        };
+
+        channel.bind('successful-upload-som-excel', onSuccess);
+        channel.bind('failed-upload-som-excel', onFailure);
+
+        timer = setTimeout(() => {
+            if (settled) return;
+            settled = true;
+            cleanup();
+            console.warn('[uploadfilesom] Pusher signal timeout. Falling back to HTTP result.');
+            resolve({ signal: 'timeout', data: null });
+        }, timeoutMs);
+    });
+}
+
 // Subir archivo con mejor manejo de respuesta
 async function uploadFile(file, customName) {
     
@@ -350,6 +437,9 @@ async function uploadFile(file, customName) {
         const info_url = '/genes_to_excel/genes-to-excel-files/';
         
         console.log('URL:', info_url);
+
+        // Escuchar Pusher antes del POST evita perder eventos rápidos del backend.
+        const uploadSignalPromise = waitForSomUploadSignal();
 
         const response = await axios.post(info_url, formData, {
             headers: {
@@ -378,17 +468,49 @@ async function uploadFile(file, customName) {
         if (progressDiv) progressDiv.style.display = 'none';
         
         if (response.status === 200 || response.status === 201) {
+            const signalResult = await uploadSignalPromise;
+            console.info('[uploadfilesom] Upload response + signal state', {
+                httpStatus: response.status,
+                signal: signalResult.signal,
+                responseData: response.data,
+                signalData: signalResult.data,
+            });
+
+            if (signalResult.signal === 'failed') {
+                const errorDetail = signalResult.data && signalResult.data.error_detail
+                    ? signalResult.data.error_detail
+                    : 'Unknown error';
+                console.error('[uploadfilesom] Upload marked as failed by signal', {
+                    errorDetail,
+                    signalData: signalResult.data,
+                });
+                closeLoading();
+                showMessage('error', 'Error', errorDetail);
+                return false;
+            }
+
+            if (signalResult.signal === 'timeout') {
+                console.warn('No Pusher signal received in time. Continuing with HTTP success response.');
+            }
+
+            if (signalResult.signal === 'unavailable') {
+                console.warn('Pusher is unavailable. Continuing with HTTP success response.');
+            }
+
+            const signalData = signalResult.data || {};
+
             // Cerrar loading si está abierto
             closeLoading();
             
             // Mostrar mensaje de éxito
-            showMessage('success', 'Success!', response.data.custom_name || 'File uploaded successfully');
+            showMessage('success', 'Success!', signalData.custom_name || response.data.custom_name || 'File uploaded successfully');
             
             // Mostrar resultados en modal
-            if (response.data) {
+            const resultData = signalData && Object.keys(signalData).length ? signalData : response.data;
+            if (resultData) {
                 // Pequeño delay para que el mensaje de éxito se vea antes del modal
                 setTimeout(() => {
-                    showResultsModal(response.data);
+                    showResultsModal(resultData);
                 }, 500);
             }
             

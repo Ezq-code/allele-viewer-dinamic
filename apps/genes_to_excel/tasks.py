@@ -6,6 +6,9 @@ from celery import shared_task
 from apps.genes_to_excel.utils.xslx_reader import XslxReader
 
 logger = logging.getLogger(__name__)
+from apps.common.utils.pusher_client import PusherClient
+
+from apps.common.tasks import send_pusher_trigger_task
 
 
 @shared_task(name="process_genes_to_excel_file_task")
@@ -25,6 +28,11 @@ def process_genes_to_excel_file_task(file_path, uploaded_file_id):
             file_path,
             uploaded_file_id,
         )
+        send_pusher_trigger_task(
+            channel=PusherClient.CELERY_TASK_CHANNEL,
+            event=PusherClient.SUCCESSFUL_UPLOAD_SOM_EXCEL,
+            data={"result": resultados},
+        )
 
         return {
             "status": "success",
@@ -34,6 +42,12 @@ def process_genes_to_excel_file_task(file_path, uploaded_file_id):
         }
     except Exception as e:
         logger.exception("Error processing genes file %s: %s", file_path, str(e))
+        send_pusher_trigger_task(
+            channel=PusherClient.CELERY_TASK_CHANNEL,
+            event=PusherClient.FAILED_UPLOAD_SOM_EXCEL,
+            data={"error_detail": str(e)},
+        )
+
         from apps.genes_to_excel.models.genes_to_excel_files import GenesToExcelFiles
 
         GenesToExcelFiles.objects.filter(id=uploaded_file_id).delete()
