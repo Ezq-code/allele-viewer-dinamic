@@ -26,7 +26,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link
       rel="stylesheet"
       href="{% static 'assets/iLanding/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}"
-     />
+    />
 
     <!-- Theme style -->
     <link
@@ -241,6 +241,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </a>
                   </li>
                   <li class="nav-item">
+                    <a href="{% url 'uploadfilesom' %}" class="nav-link">
+                      <i class="far fa-circle nav-icon text-danger"></i>
+                      <p>Load SOM Excel</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
                     <a href="{% url 'gene' %}" class="nav-link">
                       <i class="far fa-circle nav-icon text-success"></i>
                       <p>
@@ -290,6 +296,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <p>
                     Allele viewer <span class="badge badge-info right"></span>
                   </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'som' %}" class="nav-link">
+                  <i class="nav-icon fas fa-dna text-warning"></i>
+                  <p>SOM Viewer <span class="badge badge-info right"></span></p>
                 </a>
               </li>
               <li class="nav-item">
@@ -676,26 +688,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
       {% endcomment %}
       <!-- /.control-sidebar -->
 
-          <!-- Main Footer -->
-    <footer class="main-footer">
-      <!-- To the right -->
-      <div class="float-right d-none d-sm-inline">
-        <div class="copyright">&copy; Genomic Ancestry Project. Designed by <strong>PGxSoftware.com</strong> </div>
-      </div>
-      <div class="col-lg-4 col-md-6 footer-about">
-          
-          <div class="social-links d-flex ">
-         <p>   <a href="{% url 'alleleviewer' %}" class="logo d-flex ">
-              <span class="sitename">PGxSoftware </span>
-          </a> <p>&nbsp contact:</p>
-              <a href="mailto:info@pgxsoftware.com" style="margin-left: 10px;"><i class="bi bi-envelope"></i></a>
-              <a href="https://www.linkedin.com/in/oreste-ezequiel-salavaggione-ba059b22/" style="margin-left: 10px;"><i
-                      class="bi bi-linkedin"></i></a>
+      <!-- Main Footer -->
+      <footer class="main-footer">
+        <!-- To the right -->
+        <div class="float-right d-none d-sm-inline">
+          <div class="copyright">
+            &copy; Genomic Ancestry Project. Designed by
+            <strong>PGxSoftware.com</strong>
           </div>
-      </div>
-      
-      
-  </footer>
+        </div>
+        <div class="col-lg-4 col-md-6 footer-about">
+          <div class="social-links d-flex">
+            <p>
+              <a href="{% url 'alleleviewer' %}" class="logo d-flex">
+                <span class="sitename">PGxSoftware </span>
+              </a>
+            </p>
+
+            <p>&nbsp contact:</p>
+            <a href="mailto:info@pgxsoftware.com" style="margin-left: 10px"
+              ><i class="bi bi-envelope"></i
+            ></a>
+            <a
+              href="https://www.linkedin.com/in/oreste-ezequiel-salavaggione-ba059b22/"
+              style="margin-left: 10px"
+              ><i class="bi bi-linkedin"></i
+            ></a>
+          </div>
+        </div>
+      </footer>
     </div>
     <!-- ./wrapper -->
 

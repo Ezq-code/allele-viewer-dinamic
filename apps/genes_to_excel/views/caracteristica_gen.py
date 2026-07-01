@@ -47,5 +47,3 @@ class CaracteristicaGenViewSet(
         Lista todos los AlleleRegionInfo con filtros aplicados
         """
         return super().list(request, *args, **kwargs)
-
-

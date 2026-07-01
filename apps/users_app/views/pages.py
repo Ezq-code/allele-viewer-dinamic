@@ -73,7 +73,14 @@ def uploadfileconformation(request):
 
 @cache_page(60 * 15)
 def uploadfilesom(request):
-    return render(request, "seqOrdeMut/uploadfilesom.html")
+    return render(
+        request,
+        "seqOrdeMut/uploadfilesom.html",
+        {
+            "pusher_key": settings.PUSHER_KEY,
+            "pusher_cluster": settings.PUSHER_CLUSTER,
+        },
+    )
 
 
 @cache_page(60 * 15)
