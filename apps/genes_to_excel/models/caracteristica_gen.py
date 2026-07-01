@@ -15,7 +15,7 @@ class CaracteristicaGen(models.Model):
     )
     gene = models.CharField(max_length=100, blank=True)
     cord = models.CharField(max_length=50, blank=True)
-    valor = models.CharField(max_length=10, blank=True)
+    valor = models.CharField(max_length=100, blank=True)
     color = models.CharField(max_length=50, blank=True)
     protein = models.CharField(max_length=100, blank=True)
     alleleasoc = models.CharField(max_length=250, blank=True)
