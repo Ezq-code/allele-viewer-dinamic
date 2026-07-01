@@ -5,8 +5,6 @@ from rest_framework.response import Response
 from rest_framework import parsers, renderers
 from drf_spectacular.utils import extend_schema
 from rest_framework import permissions
-import time
-from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 
 from ..serializers.uploadexcelserializer import UploadExcelSerializer
 from ..utils.xslx_reader import XslxReader
@@ -58,6 +56,7 @@ def excel_upload_schema():
         },
         tags=["Excel Processing"],
     )
+
 
 class UploadExcelView(APIView):
     throttle_classes = ()
@@ -127,11 +126,11 @@ class UploadExcelView(APIView):
 
             # Descomentar esto solo para pruebas o si se necesita mostrar los resultados en la lectura
             logger.info("Procesar con XslxReader")
-            
+
             reader = XslxReader()
             resultados = reader.proccess_file(df, nombre_archivo)
 
-            #resultados = XslxReader(archivo).proccess_file(df, nombre_archivo)
+            # resultados = XslxReader(archivo).proccess_file(df, nombre_archivo)
             # resultados = XslxReader.proccess_file(df, nombre_archivo)
 
             logger.info(resultados)
