@@ -162,7 +162,9 @@ class XslxReader:
         # Bulk-create missing genes.
         if new_genes:
             logger.info(f"Creating {len(new_genes)} new genes...")
-            Gene.objects.bulk_create(new_genes, batch_size=self.batch_size, ignore_conflicts=True)
+            Gene.objects.bulk_create(
+                new_genes, batch_size=self.batch_size, ignore_conflicts=True
+            )
 
             # Reload the full mapping including newly created genes.
             existing_genes.update(
