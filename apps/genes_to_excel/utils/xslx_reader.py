@@ -162,7 +162,7 @@ class XslxReader:
         # Bulk-create missing genes.
         if new_genes:
             logger.info(f"Creating {len(new_genes)} new genes...")
-            Gene.objects.bulk_create(new_genes, batch_size=self.batch_size)
+            Gene.objects.bulk_create(new_genes, batch_size=self.batch_size, ignore_conflicts=True)
 
             # Reload the full mapping including newly created genes.
             existing_genes.update(
@@ -243,6 +243,8 @@ class XslxReader:
                 for key, value in field_values.items():
                     if value in ["nan", "None", ""]:
                         field_values[key] = ""
+                    if len(value) > 50:
+                        field_values[key] = value[:50]
 
                 feature_key = (gen.id, cord_value)
 
