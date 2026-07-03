@@ -55,6 +55,7 @@ class CaracteristicaGenAdmin(admin.ModelAdmin):
         "order_one",
         "order_two",
         "order_three",
+        "ncbi_link"
     ]
     fields = [
         "gene",
@@ -68,4 +69,5 @@ class CaracteristicaGenAdmin(admin.ModelAdmin):
         "order_one",
         "order_two",
         "order_three",
+        "ncbi_link"
     ]
