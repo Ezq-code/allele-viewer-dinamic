@@ -9,6 +9,22 @@ from .excel_structure_validator import ExcelStructureValidator
 logger = logging.getLogger(__name__)
 
 
+FEATURE_FIELDS = (
+    "archivo_origen",
+    "gene",
+    "valor",
+    "color",
+    "protein",
+    "alleleasoc",
+    "species",
+    "variant",
+    "order_one",
+    "order_two",
+    "order_three",
+    "ncbi_link",
+)
+
+
 class FirstRowProcessingError(Exception):
     """Abort processing when the first row-level error is detected."""
 
@@ -93,7 +109,7 @@ class XslxReader(ExcelStructureValidator):
 
     def _prepare_dataframe(self):
         """Prepare and clean the input DataFrame."""
-        df = self.df.copy()
+        df = self.df
 
         # Normalize column names.
         df.columns = df.columns.str.strip()
@@ -104,10 +120,24 @@ class XslxReader(ExcelStructureValidator):
         if df.empty:
             return df
 
-        # Normalize text-like columns.
-        for col in df.select_dtypes(include=["object"]).columns:
-            df[col] = df[col].astype(str).str.strip()
-            df[col] = df[col].replace("nan", "")
+        # Normalize only columns used by processing to reduce CPU/memory overhead.
+        columns_to_normalize = [
+            ExcelNomenclators.gene_column_name,
+            ExcelNomenclators.coord_column_name,
+            ExcelNomenclators.valor_column_name,
+            ExcelNomenclators.color_column_name,
+            ExcelNomenclators.protein_column_name,
+            ExcelNomenclators.alleleasoc_column_name,
+            ExcelNomenclators.species_column_name,
+            ExcelNomenclators.variant_column_name,
+            ExcelNomenclators.order_1_column_name,
+            ExcelNomenclators.order_2_column_name,
+            ExcelNomenclators.order_3_column_name,
+            ExcelNomenclators.ncbi_link_column_name,
+        ]
+        for col in columns_to_normalize:
+            if col in df.columns:
+                df[col] = df[col].astype(str).str.strip().replace("nan", "")
 
         # Cord can be empty.
         df["Cord"] = df["Cord"].fillna("").astype(str).str.strip()
@@ -173,7 +203,7 @@ class XslxReader(ExcelStructureValidator):
 
         # Map gene names to IDs.
         df["gen_id"] = df["Gene"].map(gene_ids_by_name)
-        valid_df = df[df["gen_id"].notna()].copy()
+        valid_df = df.loc[df["gen_id"].notna()]
 
         if valid_df.empty:
             logger.warning("There are no valid features to process")
@@ -184,9 +214,9 @@ class XslxReader(ExcelStructureValidator):
 
         existing_features = {
             (c.gen_id, c.cord): c
-            for c in CaracteristicaGen.objects.filter(
-                gen_id__in=gene_ids
-            ).select_related("gen")
+            for c in CaracteristicaGen.objects.filter(gen_id__in=gene_ids).only(
+                "id", "gen_id", "cord", *FEATURE_FIELDS
+            )
         }
 
         logger.info(f"Found {len(existing_features)} existing features")
@@ -194,58 +224,64 @@ class XslxReader(ExcelStructureValidator):
         # Prepare bulk operation containers.
         features_to_create = []
         features_to_update = []
-        fields_to_update = (
-            None  # This value will be set when defined the field_values below.
-        )
+        fields_to_update = FEATURE_FIELDS
+        max_lengths_by_field = {}
+        default_string_length_for_slicing = 50
+        for field_name in fields_to_update:
+            max_lengths_by_field[field_name] = getattr(
+                CaracteristicaGen._meta.get_field(field_name),
+                "max_length",
+                default_string_length_for_slicing,
+            )
+
+        row_columns = [
+            ExcelNomenclators.gene_column_name,
+            ExcelNomenclators.coord_column_name,
+            ExcelNomenclators.valor_column_name,
+            ExcelNomenclators.color_column_name,
+            ExcelNomenclators.protein_column_name,
+            ExcelNomenclators.alleleasoc_column_name,
+            ExcelNomenclators.species_column_name,
+            ExcelNomenclators.variant_column_name,
+            ExcelNomenclators.order_1_column_name,
+            ExcelNomenclators.order_2_column_name,
+            ExcelNomenclators.order_3_column_name,
+            ExcelNomenclators.ncbi_link_column_name,
+            "gen_id",
+        ]
 
         # Process each row.
-        for index, row in valid_df.iterrows():
+        for row in valid_df[row_columns].itertuples(index=True, name=None):
             try:
-                gen = genes_dict[row[ExcelNomenclators.gene_column_name]]
-                cord_value = row[ExcelNomenclators.coord_column_name]
+                index = row[0]
+                gene_value = row[1]
+                cord_value = row[2]
+                gen_id = row[13]
 
                 # Build normalized values.
                 field_values = {
                     "archivo_origen": nombre_archivo,
-                    "gene": str(row[ExcelNomenclators.gene_column_name]),
-                    "valor": str(row.get(ExcelNomenclators.valor_column_name, "")),
-                    "color": str(row.get(ExcelNomenclators.color_column_name, "")),
-                    "protein": str(row.get(ExcelNomenclators.protein_column_name, "")),
-                    "alleleasoc": str(
-                        row.get(ExcelNomenclators.alleleasoc_column_name, "")
-                    ),
-                    "species": str(row.get(ExcelNomenclators.species_column_name, "")),
-                    "variant": str(row.get(ExcelNomenclators.variant_column_name, "")),
-                    "order_one": str(
-                        row.get(ExcelNomenclators.order_1_column_name, "")
-                    ),
-                    "order_two": str(
-                        row.get(ExcelNomenclators.order_2_column_name, "")
-                    ),
-                    "order_three": str(
-                        row.get(ExcelNomenclators.order_3_column_name, "")
-                    ),
-                    "ncbi_link": str(
-                        row.get(ExcelNomenclators.ncbi_link_column_name, "")
-                    ),
+                    "gene": str(gene_value),
+                    "valor": str(row[3]),
+                    "color": str(row[4]),
+                    "protein": str(row[5]),
+                    "alleleasoc": str(row[6]),
+                    "species": str(row[7]),
+                    "variant": str(row[8]),
+                    "order_one": str(row[9]),
+                    "order_two": str(row[10]),
+                    "order_three": str(row[11]),
+                    "ncbi_link": str(row[12]),
                 }
-                fields_to_update = field_values.keys()
 
                 # Normalize empty-like values.
-                default_string_lenght_for_slicing = 50
                 for key, value in field_values.items():
                     if value in ["nan", "None", ""]:
                         field_values[key] = ""
-                    if len(value) > 50:
-                        field_values[key] = value[
-                            : getattr(
-                                CaracteristicaGen._meta.get_field(key),
-                                "max_length",
-                                default_string_lenght_for_slicing,
-                            )
-                        ]
+                    elif len(value) > default_string_length_for_slicing:
+                        field_values[key] = value[: max_lengths_by_field[key]]
 
-                feature_key = (gen.id, cord_value)
+                feature_key = (gen_id, cord_value)
 
                 if feature_key in existing_features:
                     # Update an existing feature when needed.
@@ -268,7 +304,7 @@ class XslxReader(ExcelStructureValidator):
                     # Create a new feature.
                     features_to_create.append(
                         CaracteristicaGen(
-                            gen=gen,
+                            gen_id=gen_id,
                             cord=cord_value,
                             uploaded_excel_file_id=uploaded_file_id,
                             **field_values,
@@ -280,8 +316,8 @@ class XslxReader(ExcelStructureValidator):
                 error_detail = {
                     "row": index + 2,
                     "error": f"Row processing error: {str(e)}",
-                    "gene": row.get("Gene", "N/A"),
-                    "cord": row.get("Cord", "N/A"),
+                    "gene": gene_value if str(gene_value).strip() else "N/A",
+                    "cord": cord_value if str(cord_value).strip() else "N/A",
                 }
                 raise FirstRowProcessingError(error_detail) from e
 
