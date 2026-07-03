@@ -27,6 +27,9 @@ class CaracteristicaGen(models.Model):
     ncbi_link = models.TextField(blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
+    uploaded_excel_file = models.ForeignKey(
+        to="GenesToExcelFiles", on_delete=models.CASCADE, null=True
+    )
 
     def __str__(self):
         return f"{self.gene} - {self.cord} - {self.valor}"

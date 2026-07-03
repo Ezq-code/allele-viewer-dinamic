@@ -22,7 +22,7 @@ class CaracteristicaGenViewSet(
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["gen_id", "cord", "protein", "gen__name"]
-    search_fields = ["gen__name", "gene","gen__name", "cord"]
+    search_fields = ["gen__name", "gene", "gen__name", "cord"]
 
     @action(
         detail=False,
