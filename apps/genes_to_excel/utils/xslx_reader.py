@@ -1,66 +1,67 @@
 import logging
-import pandas as pd
 from django.db import transaction
 from apps.business_app.models.gene import Gene
 from ..models.caracteristica_gen import CaracteristicaGen
 from .excel_nomenclators import ExcelNomenclators
+from .excel_structure_validator import ExcelStructureValidator
+
 
 logger = logging.getLogger(__name__)
 
 
-class XslxReader:
+class XslxReader(ExcelStructureValidator):
     """Optimized Excel reader using bulk database operations."""
 
-    required_columns = [
-        ExcelNomenclators.gene_column_name,
-        ExcelNomenclators.coord_column_name,
-        ExcelNomenclators.valor_column_name,
-        ExcelNomenclators.color_column_name,
-        ExcelNomenclators.protein_column_name,
-        ExcelNomenclators.alleleasoc_column_name,
-        ExcelNomenclators.species_column_name,
-        ExcelNomenclators.variant_column_name,
-        "Order1",
-        "Order2",
-        "Order3",
-        "NCBI_Link",
-    ]
+    # required_columns = [
+    #     ExcelNomenclators.gene_column_name,
+    #     ExcelNomenclators.coord_column_name,
+    #     ExcelNomenclators.valor_column_name,
+    #     ExcelNomenclators.color_column_name,
+    #     ExcelNomenclators.protein_column_name,
+    #     ExcelNomenclators.alleleasoc_column_name,
+    #     ExcelNomenclators.species_column_name,
+    #     ExcelNomenclators.variant_column_name,
+    #     ExcelNomenclators.order_1_column_name,
+    #     ExcelNomenclators.order_2_column_name,
+    #     ExcelNomenclators.order_3_column_name,
+    #     ExcelNomenclators.ncbi_link_column_name,
+    # ]
 
     def __init__(self, origin_file=None):
-        self.origin_file = origin_file
         self.batch_size = 5000
-        self.df = None
-        self.origin_file = origin_file
+        super().__init__(origin_file=origin_file)
+        # self.df = None
+        # self.origin_file = origin_file
 
-        if origin_file is not None:
-            self.df = self._load_dataframe(origin_file)
-            self._validate_required_columns(self.df)
+        # if origin_file is not None:
+        #     self.df = self._load_dataframe(origin_file)
+        #     self._validate_required_columns(self.df)
 
-    def _load_dataframe(self, origin_file):
-        """Load and concatenate all sheets from the Excel file."""
-        excel_file = pd.ExcelFile(origin_file)
-        all_dfs = [
-            pd.read_excel(excel_file, sheet_name=sheet_name)
-            for sheet_name in excel_file.sheet_names
-        ]
+    # def _load_dataframe(self, origin_file):
+    #     """Load and concatenate all sheets from the Excel file."""
+    #     excel_file = pd.ExcelFile(origin_file)
+    #     all_dfs = [
+    #         pd.read_excel(excel_file, sheet_name=sheet_name)
+    #         for sheet_name in excel_file.sheet_names
+    #     ]
 
-        if not all_dfs:
-            return pd.DataFrame()
+    #     if not all_dfs:
+    #         return pd.DataFrame()
 
-        return pd.concat(all_dfs, ignore_index=True)
+    #     return pd.concat(all_dfs, ignore_index=True)
 
-    def _validate_required_columns(self, df):
-        """Validate that the file includes all required processing columns."""
-        missing_columns = [
-            column for column in self.required_columns if column not in df.columns
-        ]
+    # def _validate_required_columns(self, df):
+    #     """Validate that the file includes all required processing columns."""
+    #     missing_columns = [
+    #         column for column in self.required_columns if column not in df.columns
+    #     ]
 
-        if missing_columns:
-            raise ValueError(
-                f"The file must contains the needed columns: {', '.join(missing_columns)}"
-            )
+    #     if missing_columns:
+    #         raise ValueError(
+    #             f"The file must contains the needed columns: {', '.join(missing_columns)}"
+    #         )
 
-    def proccess_file(self, df, nombre_archivo):
+    def proccess_file(self, file_name, uploaded_file_id):
         """
         Process an Excel dataset using bulk operations.
 
@@ -71,8 +72,8 @@ class XslxReader:
         Returns:
             dict: Processing summary
         """
-        logger.info(f"Starting optimized processing for {nombre_archivo}")
-        logger.info(f"Total rows to process: {len(df)}")
+        logger.info(f"Starting optimized processing for {file_name}")
+        logger.info(f"Total rows to process: {len(self.df)}")
 
         results = {
             "processed_genes": 0,
@@ -80,11 +81,11 @@ class XslxReader:
             "updated_features": 0,
             "skipped_features": 0,
             "errors": [],
-            "total_rows": len(df),
+            "total_rows": len(self.df),
         }
 
         # Prepare input data.
-        df = self._prepare_dataframe(df)
+        df = self._prepare_dataframe()
 
         if df.empty:
             results["errors"].append(
@@ -99,7 +100,7 @@ class XslxReader:
 
                 # Process gene features.
                 self._procesar_caracteristicas_bulk(
-                    df, genes_by_name, nombre_archivo, results
+                    df, genes_by_name, file_name, results, uploaded_file_id
                 )
 
         except Exception as e:
@@ -116,9 +117,9 @@ class XslxReader:
 
         return results
 
-    def _prepare_dataframe(self, df):
+    def _prepare_dataframe(self):
         """Prepare and clean the input DataFrame."""
-        df = df.copy()
+        df = self.df.copy()
 
         # Normalize column names.
         df.columns = df.columns.str.strip()
@@ -129,7 +130,7 @@ class XslxReader:
         if df.empty:
             return df
 
-        self._validate_required_columns(df)
+        # self._validate_required_columns(df)
 
         # Normalize text-like columns.
         for col in df.select_dtypes(include=["object"]).columns:
@@ -174,7 +175,7 @@ class XslxReader:
         return existing_genes
 
     def _procesar_caracteristicas_bulk(
-        self, df, genes_dict, nombre_archivo, resultados
+        self, df, genes_dict, nombre_archivo, resultados, uploaded_file_id
     ):
         """Process gene features using bulk_create and bulk_update."""
         logger.info("Preparing features for bulk processing...")
@@ -228,17 +229,27 @@ class XslxReader:
                 # Build normalized values.
                 field_values = {
                     "archivo_origen": nombre_archivo,
-                    "gene": str(row["Gene"]),
-                    "valor": str(row.get("Valor", "")),
-                    "color": str(row.get("Color", "")),
-                    "protein": str(row.get("Protein", "")),
-                    "alleleasoc": str(row.get("Alleleasoc", "")),
-                    "species": str(row.get("Species", "")),
-                    "variant": str(row.get("Variant", "")),
-                    "order_one": str(row.get("Order1", "")),
-                    "order_two": str(row.get("Order2", "")),
-                    "order_three": str(row.get("Order3", "")),
-                    "ncbi_link": str(row.get("NCBI_Link", "")),
+                    "gene": str(row[ExcelNomenclators.gene_column_name]),
+                    "valor": str(row.get(ExcelNomenclators.valor_column_name, "")),
+                    "color": str(row.get(ExcelNomenclators.color_column_name, "")),
+                    "protein": str(row.get(ExcelNomenclators.protein_column_name, "")),
+                    "alleleasoc": str(
+                        row.get(ExcelNomenclators.alleleasoc_column_name, "")
+                    ),
+                    "species": str(row.get(ExcelNomenclators.species_column_name, "")),
+                    "variant": str(row.get(ExcelNomenclators.variant_column_name, "")),
+                    "order_one": str(
+                        row.get(ExcelNomenclators.order_1_column_name, "")
+                    ),
+                    "order_two": str(
+                        row.get(ExcelNomenclators.order_2_column_name, "")
+                    ),
+                    "order_three": str(
+                        row.get(ExcelNomenclators.order_3_column_name, "")
+                    ),
+                    "ncbi_link": str(
+                        row.get(ExcelNomenclators.ncbi_link_column_name, "")
+                    ),
                 }
 
                 # Normalize empty-like values.
@@ -270,7 +281,12 @@ class XslxReader:
                 else:
                     # Create a new feature.
                     features_to_create.append(
-                        CaracteristicaGen(gen=gen, cord=cord_value, **field_values)
+                        CaracteristicaGen(
+                            gen=gen,
+                            cord=cord_value,
+                            uploaded_excel_file_id=uploaded_file_id,
+                            **field_values,
+                        )
                     )
                     resultados["created_features"] += 1
 
@@ -288,7 +304,7 @@ class XslxReader:
         if features_to_create:
             logger.info(f"Creating {len(features_to_create)} features...")
             CaracteristicaGen.objects.bulk_create(
-                features_to_create, batch_size=self.batch_size, ignore_conflicts=False
+                features_to_create, batch_size=self.batch_size
             )
 
         if features_to_update:

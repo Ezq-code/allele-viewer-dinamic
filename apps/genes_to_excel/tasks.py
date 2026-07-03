@@ -22,8 +22,8 @@ def process_genes_to_excel_file_task(file_path, uploaded_file_id):
     )
     try:
         processor_object = XslxReader(file_path)
-        nombre_archivo = os.path.basename(file_path)
-        resultados = processor_object.proccess_file(processor_object.df, nombre_archivo)
+        file_name = os.path.basename(file_path)
+        results = processor_object.proccess_file(nombre_archivo=file_name, uploaded_file_id=uploaded_file_id)
 
         logger.info(
             "Successfully processed genes file %s for upload %s",
@@ -33,14 +33,14 @@ def process_genes_to_excel_file_task(file_path, uploaded_file_id):
         send_pusher_trigger_task(
             channel=PusherClient.CELERY_TASK_CHANNEL,
             event=PusherClient.SUCCESSFUL_UPLOAD_SOM_EXCEL,
-            data={"result": resultados},
+            data={"result": results},
         )
 
         return {
             "status": "success",
             "file_path": file_path,
             "uploaded_file_id": uploaded_file_id,
-            "resultados": resultados,
+            "resultados": results,
         }
     except Exception as e:
         logger.exception("Error processing genes file %s: %s", file_path, str(e))
