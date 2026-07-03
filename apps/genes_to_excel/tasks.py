@@ -23,7 +23,9 @@ def process_genes_to_excel_file_task(file_path, uploaded_file_id):
     try:
         processor_object = XslxReader(file_path)
         file_name = os.path.basename(file_path)
-        results = processor_object.proccess_file(nombre_archivo=file_name, uploaded_file_id=uploaded_file_id)
+        results = processor_object.proccess_file(
+            file_name=file_name, uploaded_file_id=uploaded_file_id
+        )
 
         logger.info(
             "Successfully processed genes file %s for upload %s",
