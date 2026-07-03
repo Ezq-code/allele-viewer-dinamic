@@ -12,54 +12,9 @@ logger = logging.getLogger(__name__)
 class XslxReader(ExcelStructureValidator):
     """Optimized Excel reader using bulk database operations."""
 
-    # required_columns = [
-    #     ExcelNomenclators.gene_column_name,
-    #     ExcelNomenclators.coord_column_name,
-    #     ExcelNomenclators.valor_column_name,
-    #     ExcelNomenclators.color_column_name,
-    #     ExcelNomenclators.protein_column_name,
-    #     ExcelNomenclators.alleleasoc_column_name,
-    #     ExcelNomenclators.species_column_name,
-    #     ExcelNomenclators.variant_column_name,
-    #     ExcelNomenclators.order_1_column_name,
-    #     ExcelNomenclators.order_2_column_name,
-    #     ExcelNomenclators.order_3_column_name,
-    #     ExcelNomenclators.ncbi_link_column_name,
-    # ]
-
     def __init__(self, origin_file=None):
         self.batch_size = 5000
         super().__init__(origin_file=origin_file)
-        # self.df = None
-        # self.origin_file = origin_file
-
-        # if origin_file is not None:
-        #     self.df = self._load_dataframe(origin_file)
-        #     self._validate_required_columns(self.df)
-
-    # def _load_dataframe(self, origin_file):
-    #     """Load and concatenate all sheets from the Excel file."""
-    #     excel_file = pd.ExcelFile(origin_file)
-    #     all_dfs = [
-    #         pd.read_excel(excel_file, sheet_name=sheet_name)
-    #         for sheet_name in excel_file.sheet_names
-    #     ]
-
-    #     if not all_dfs:
-    #         return pd.DataFrame()
-
-    #     return pd.concat(all_dfs, ignore_index=True)
-
-    # def _validate_required_columns(self, df):
-    #     """Validate that the file includes all required processing columns."""
-    #     missing_columns = [
-    #         column for column in self.required_columns if column not in df.columns
-    #     ]
-
-    #     if missing_columns:
-    #         raise ValueError(
-    #             f"The file must contains the needed columns: {', '.join(missing_columns)}"
-    #         )
 
     def proccess_file(self, file_name, uploaded_file_id):
         """
@@ -129,8 +84,6 @@ class XslxReader(ExcelStructureValidator):
 
         if df.empty:
             return df
-
-        # self._validate_required_columns(df)
 
         # Normalize text-like columns.
         for col in df.select_dtypes(include=["object"]).columns:
@@ -205,26 +158,15 @@ class XslxReader(ExcelStructureValidator):
         # Prepare bulk operation containers.
         features_to_create = []
         features_to_update = []
-        fields_to_update = [
-            "archivo_origen",
-            "gene",
-            "valor",
-            "color",
-            "protein",
-            "alleleasoc",
-            "species",
-            "variant",
-            "order_one",
-            "order_two",
-            "order_three",
-            "ncbi_link",
-        ]
+        fields_to_update = (
+            None  # This value will be set when defined the field_values below.
+        )
 
         # Process each row.
         for index, row in valid_df.iterrows():
             try:
-                gen = genes_dict[row["Gene"]]
-                cord_value = row["Cord"]
+                gen = genes_dict[row[ExcelNomenclators.gene_column_name]]
+                cord_value = row[ExcelNomenclators.coord_column_name]
 
                 # Build normalized values.
                 field_values = {
@@ -251,13 +193,21 @@ class XslxReader(ExcelStructureValidator):
                         row.get(ExcelNomenclators.ncbi_link_column_name, "")
                     ),
                 }
+                fields_to_update = field_values.keys()
 
                 # Normalize empty-like values.
+                default_string_lenght_for_slicing = 50
                 for key, value in field_values.items():
                     if value in ["nan", "None", ""]:
                         field_values[key] = ""
                     if len(value) > 50:
-                        field_values[key] = value[:50]
+                        field_values[key] = value[
+                            : getattr(
+                                CaracteristicaGen._meta.get_field(key),
+                                "max_length",
+                                default_string_lenght_for_slicing,
+                            )
+                        ]
 
                 feature_key = (gen.id, cord_value)
 
