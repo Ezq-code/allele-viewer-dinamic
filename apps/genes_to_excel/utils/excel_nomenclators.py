@@ -18,5 +18,3 @@ class ExcelNomenclators:
     order_2_column_name = "Order2"
     order_3_column_name = "Order3"
     ncbi_link_column_name = "NCBI_Link"
-
-    # input_sheet = "HLA-A"

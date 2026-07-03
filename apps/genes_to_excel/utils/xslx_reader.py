@@ -9,6 +9,14 @@ from .excel_structure_validator import ExcelStructureValidator
 logger = logging.getLogger(__name__)
 
 
+class FirstRowProcessingError(Exception):
+    """Abort processing when the first row-level error is detected."""
+
+    def __init__(self, error_detail):
+        self.error_detail = error_detail
+        super().__init__(f"Row processing error: {error_detail}")
+
+
 class XslxReader(ExcelStructureValidator):
     """Optimized Excel reader using bulk database operations."""
 
@@ -36,6 +44,8 @@ class XslxReader(ExcelStructureValidator):
             "updated_features": 0,
             "skipped_features": 0,
             "errors": [],
+            "aborted": False,
+            "first_error": None,
             "total_rows": len(self.df),
         }
 
@@ -57,6 +67,15 @@ class XslxReader(ExcelStructureValidator):
                 self._procesar_caracteristicas_bulk(
                     df, genes_by_name, file_name, results, uploaded_file_id
                 )
+        except FirstRowProcessingError as first_error:
+            logger.error(
+                "Aborting processing for %s after first row error: %s",
+                file_name,
+                first_error.error_detail,
+            )
+            results["aborted"] = True
+            results["first_error"] = first_error.error_detail
+            results["errors"] = [first_error.error_detail]
 
         except Exception as e:
             logger.error(f"Critical error: {e}", exc_info=True)
@@ -133,10 +152,27 @@ class XslxReader(ExcelStructureValidator):
         """Process gene features using bulk_create and bulk_update."""
         logger.info("Preparing features for bulk processing...")
 
+        gene_ids_by_name = {}
+        for gene_name, gene_value in genes_dict.items():
+            if hasattr(gene_value, "id"):
+                gene_ids_by_name[gene_name] = gene_value.id
+            elif isinstance(gene_value, int):
+                gene_ids_by_name[gene_name] = gene_value
+            else:
+                raise FirstRowProcessingError(
+                    {
+                        "row": 2,
+                        "error": (
+                            "Row processing error: Invalid gene mapping value "
+                            f"for '{gene_name}': {type(gene_value).__name__}"
+                        ),
+                        "gene": gene_name,
+                        "cord": "N/A",
+                    }
+                )
+
         # Map gene names to IDs.
-        df["gen_id"] = df["Gene"].map(
-            lambda x: genes_dict[x].id if x in genes_dict else None
-        )
+        df["gen_id"] = df["Gene"].map(gene_ids_by_name)
         valid_df = df[df["gen_id"].notna()].copy()
 
         if valid_df.empty:
@@ -241,14 +277,13 @@ class XslxReader(ExcelStructureValidator):
                     resultados["created_features"] += 1
 
             except Exception as e:
-                resultados["errors"].append(
-                    {
-                        "row": index + 2,
-                        "error": f"Row processing error: {str(e)}",
-                        "gene": row.get("Gene", "N/A"),
-                        "cord": row.get("Cord", "N/A"),
-                    }
-                )
+                error_detail = {
+                    "row": index + 2,
+                    "error": f"Row processing error: {str(e)}",
+                    "gene": row.get("Gene", "N/A"),
+                    "cord": row.get("Cord", "N/A"),
+                }
+                raise FirstRowProcessingError(error_detail) from e
 
         # Execute bulk operations.
         if features_to_create:

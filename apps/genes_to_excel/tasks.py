@@ -27,6 +27,22 @@ def process_genes_to_excel_file_task(file_path, uploaded_file_id):
             file_name=file_name, uploaded_file_id=uploaded_file_id
         )
 
+        if results.get("aborted") and results.get("first_error"):
+            logger.warning(
+                "Processing aborted for genes file %s on first row error", file_path
+            )
+            send_pusher_trigger_task(
+                channel=PusherClient.CELERY_TASK_CHANNEL,
+                event=PusherClient.FAILED_UPLOAD_SOM_EXCEL,
+                data={"error_detail": results["first_error"], "result": results},
+            )
+            return {
+                "status": "failed",
+                "file_path": file_path,
+                "uploaded_file_id": uploaded_file_id,
+                "resultados": results,
+            }
+
         logger.info(
             "Successfully processed genes file %s for upload %s",
             file_path,
