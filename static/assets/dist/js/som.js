@@ -491,7 +491,7 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
             cord: `${filaNum},${colNum}`,
             gen_id: currentGen,
         });
-        const url = `/genes_to_excel/coordenadas-gen/?${params.toString()}`;
+        const url = `/genes_to_excel/caracteristica-gen/?${params.toString()}`;
         
         console.log(`🔍 Consultando detalles en: ${url}`);
         
@@ -512,22 +512,22 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         console.log(detalle)
         
         // Sanitizar todos los campos
-        const gen = sanitizarHTML(detalle.Gene);
-        const coordinate = sanitizarHTML(detalle.Coordinate);
-        const valor = sanitizarHTML(detalle.Valor);
-        const colorValido = validarColorRGB(detalle.Color);
-        const protein = sanitizarHTML(detalle.Protein);
-        const species = sanitizarHTML(detalle.Species);
-        const variant = sanitizarHTML(detalle.Variant);
-        const order1 = sanitizarHTML(detalle.Order1);
-        const order2 = sanitizarHTML(detalle.Order2);
-        const order3 = sanitizarHTML(detalle.Order3);
-        const ncbi_link = sanitizarHTML(detalle.NCBI_Link);
+        const gen = sanitizarHTML(detalle.name);
+        const coordinate = sanitizarHTML(detalle.cord);
+        const valor = sanitizarHTML(detalle.valor);
+        const colorValido = validarColorRGB(detalle.color);
+        const protein = sanitizarHTML(detalle.protein);
+        const species = sanitizarHTML(detalle.species);
+        const variant = sanitizarHTML(detalle.variant);
+        const order1 = sanitizarHTML(detalle.order_one);
+        const order2 = sanitizarHTML(detalle.order_two);
+        const order3 = sanitizarHTML(detalle.order_three);
+        const ncbi_link = sanitizarHTML(detalle.ncbi_link);
         
         // Procesar alelos asociados de forma segura
         let alelosAsociados = [];
-        if (detalle.Alleleasoc) {
-            alelosAsociados = detalle.Alleleasoc.split(',')
+        if (detalle.alleleasoc) {
+            alelosAsociados = detalle.alleleasoc.split(',')
                 .map(al => sanitizarHTML(al.trim()))
                 .filter(al => al && al !== '');
         }

@@ -12,6 +12,7 @@ from apps.genes_to_excel.models.genes_to_excel_files import GenesToExcelFiles
 from apps.genes_to_excel.serializers.genes_to_excel_files import (
     GenesToExcelFilesSerializer,
 )
+from apps.genes_to_excel.tasks import process_genes_to_excel_file_task
 from apps.genes_to_excel.utils.xslx_reader import XslxReader
 from apps.users_app.models.system_user import SystemUser
 
@@ -173,9 +174,10 @@ def test_xslx_reader_loads_dataframe_and_validates_required_columns():
     mocked_excel.sheet_names = ["Sheet1"]
 
     with patch(
-        "apps.genes_to_excel.utils.xslx_reader.pd.ExcelFile", return_value=mocked_excel
+        "apps.genes_to_excel.utils.excel_structure_validator.pd.ExcelFile",
+        return_value=mocked_excel,
     ), patch(
-        "apps.genes_to_excel.utils.xslx_reader.pd.read_excel",
+        "apps.genes_to_excel.utils.excel_structure_validator.pd.read_excel",
         return_value=frame,
     ):
         reader = XslxReader("dummy.xlsx")
@@ -189,12 +191,93 @@ def test_xslx_reader_raises_when_required_columns_are_missing():
     mocked_excel.sheet_names = ["Sheet1"]
 
     with patch(
-        "apps.genes_to_excel.utils.xslx_reader.pd.ExcelFile", return_value=mocked_excel
+        "apps.genes_to_excel.utils.excel_structure_validator.pd.ExcelFile",
+        return_value=mocked_excel,
     ), patch(
-        "apps.genes_to_excel.utils.xslx_reader.pd.read_excel",
+        "apps.genes_to_excel.utils.excel_structure_validator.pd.read_excel",
         return_value=frame,
     ):
-        with pytest.raises(
-            ValueError, match="The file must contains the needed columns"
-        ):
+        with pytest.raises(ValueError, match="Invalid file structure"):
             XslxReader("dummy.xlsx")
+
+
+@pytest.mark.django_db
+def test_xslx_reader_aborts_on_first_row_processing_error(tmp_path, settings):
+    settings.MEDIA_ROOT = tmp_path
+    frame = pd.DataFrame(
+        {
+            "Gene": ["HLA-C"],
+            "Cord": ["85,23"],
+            "Valor": ["v"],
+            "Color": ["c"],
+            "Protein": ["p"],
+            "Alleleasoc": ["a"],
+            "Species": ["s"],
+            "Variant": ["var"],
+            "Order1": ["1"],
+            "Order2": ["2"],
+            "Order3": ["3"],
+            "NCBI_Link": ["link"],
+        }
+    )
+
+    reader = XslxReader.__new__(XslxReader)
+    reader.batch_size = 5000
+    reader.df = frame
+
+    # Simulate the runtime mismatch that produced "'str' object has no attribute 'id'".
+    genes_by_name = {"HLA-C": "HLA-C"}
+    results = {
+        "processed_genes": 0,
+        "created_features": 0,
+        "updated_features": 0,
+        "skipped_features": 0,
+        "errors": [],
+        "aborted": False,
+        "first_error": None,
+        "total_rows": len(frame),
+    }
+
+    with patch.object(reader, "_procesar_genes_bulk", return_value=genes_by_name):
+        output = reader.proccess_file("dummy.xlsx", uploaded_file_id=1)
+
+    assert output["aborted"] is True
+    assert output["first_error"] is not None
+    assert output["first_error"]["row"] == 2
+    assert "Invalid gene mapping value" in output["first_error"]["error"]
+    assert output["errors"] == [output["first_error"]]
+
+
+@pytest.mark.django_db
+def test_task_sends_failed_event_with_first_error_when_aborted():
+    fake_results = {
+        "processed_genes": 0,
+        "created_features": 0,
+        "updated_features": 0,
+        "skipped_features": 0,
+        "errors": [],
+        "aborted": True,
+        "first_error": {
+            "row": 5401,
+            "error": "Row processing error: 'str' object has no attribute 'id'",
+            "gene": "HLA-C",
+            "cord": "85,23",
+        },
+        "total_rows": 5504,
+    }
+
+    with patch("apps.genes_to_excel.tasks.XslxReader") as reader_cls, patch(
+        "apps.genes_to_excel.tasks.send_pusher_trigger_task"
+    ) as mocked_pusher:
+        reader_instance = reader_cls.return_value
+        reader_instance.proccess_file.return_value = fake_results
+
+        task_result = process_genes_to_excel_file_task(
+            "tmp/sample.xlsx", uploaded_file_id=123
+        )
+
+    assert task_result["status"] == "failed"
+    mocked_pusher.assert_called_once()
+    kwargs = mocked_pusher.call_args.kwargs
+    assert kwargs["event"] == "failed-upload-som-excel"
+    assert kwargs["data"]["error_detail"] == fake_results["first_error"]

@@ -12,5 +12,9 @@ class ExcelNomenclators:
     alleleasoc_column_name = "Alleleasoc"
     species_column_name = "Species"
     variant_column_name = "Variant"
-
-    # input_sheet = "HLA-A"
+    variant_column_name = "Variant"
+    variant_column_name = "Variant"
+    order_1_column_name = "Order1"
+    order_2_column_name = "Order2"
+    order_3_column_name = "Order3"
+    ncbi_link_column_name = "NCBI_Link"

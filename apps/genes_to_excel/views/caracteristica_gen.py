@@ -17,12 +17,12 @@ from apps.common.views import GetAllMixin
 class CaracteristicaGenViewSet(
     GetAllMixin, viewsets.ReadOnlyModelViewSet, GenericAPIView
 ):
-    queryset = CaracteristicaGen.objects.all()
+    queryset = CaracteristicaGen.objects.select_related("gen")
     serializer_class = CaracteristicaGenSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ["gen_id", "cord", "protein"]
-    search_fields = ["gen__name", "gene"]
+    filterset_fields = ["gen_id", "cord", "protein", "gen__name"]
+    search_fields = ["gen__name", "gene", "gen__name", "cord"]
 
     @action(
         detail=False,

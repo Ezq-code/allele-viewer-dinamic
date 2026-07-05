@@ -1,66 +1,46 @@
 import logging
-import pandas as pd
 from django.db import transaction
 from apps.business_app.models.gene import Gene
 from ..models.caracteristica_gen import CaracteristicaGen
 from .excel_nomenclators import ExcelNomenclators
+from .excel_structure_validator import ExcelStructureValidator
+
 
 logger = logging.getLogger(__name__)
 
 
-class XslxReader:
+FEATURE_FIELDS = (
+    "archivo_origen",
+    "gene",
+    "valor",
+    "color",
+    "protein",
+    "alleleasoc",
+    "species",
+    "variant",
+    "order_one",
+    "order_two",
+    "order_three",
+    "ncbi_link",
+)
+
+
+class FirstRowProcessingError(Exception):
+    """Abort processing when the first row-level error is detected."""
+
+    def __init__(self, error_detail):
+        self.error_detail = error_detail
+        super().__init__(f"Row processing error: {error_detail}")
+
+
+class XslxReader(ExcelStructureValidator):
     """Optimized Excel reader using bulk database operations."""
 
-    required_columns = [
-        ExcelNomenclators.gene_column_name,
-        ExcelNomenclators.coord_column_name,
-        ExcelNomenclators.valor_column_name,
-        ExcelNomenclators.color_column_name,
-        ExcelNomenclators.protein_column_name,
-        ExcelNomenclators.alleleasoc_column_name,
-        ExcelNomenclators.species_column_name,
-        ExcelNomenclators.variant_column_name,
-        "Order1",
-        "Order2",
-        "Order3",
-        "NCBI_Link",
-    ]
-
     def __init__(self, origin_file=None):
-        self.origin_file = origin_file
         self.batch_size = 5000
-        self.df = None
-        self.origin_file = origin_file
+        super().__init__(origin_file=origin_file)
 
-        if origin_file is not None:
-            self.df = self._load_dataframe(origin_file)
-            self._validate_required_columns(self.df)
-
-    def _load_dataframe(self, origin_file):
-        """Load and concatenate all sheets from the Excel file."""
-        excel_file = pd.ExcelFile(origin_file)
-        all_dfs = [
-            pd.read_excel(excel_file, sheet_name=sheet_name)
-            for sheet_name in excel_file.sheet_names
-        ]
-
-        if not all_dfs:
-            return pd.DataFrame()
-
-        return pd.concat(all_dfs, ignore_index=True)
-
-    def _validate_required_columns(self, df):
-        """Validate that the file includes all required processing columns."""
-        missing_columns = [
-            column for column in self.required_columns if column not in df.columns
-        ]
-
-        if missing_columns:
-            raise ValueError(
-                f"The file must contains the needed columns: {', '.join(missing_columns)}"
-            )
-
-    def proccess_file(self, df, nombre_archivo):
+    def proccess_file(self, file_name, uploaded_file_id):
         """
         Process an Excel dataset using bulk operations.
 
@@ -71,8 +51,8 @@ class XslxReader:
         Returns:
             dict: Processing summary
         """
-        logger.info(f"Starting optimized processing for {nombre_archivo}")
-        logger.info(f"Total rows to process: {len(df)}")
+        logger.info(f"Starting optimized processing for {file_name}")
+        logger.info(f"Total rows to process: {len(self.df)}")
 
         results = {
             "processed_genes": 0,
@@ -80,11 +60,13 @@ class XslxReader:
             "updated_features": 0,
             "skipped_features": 0,
             "errors": [],
-            "total_rows": len(df),
+            "aborted": False,
+            "first_error": None,
+            "total_rows": len(self.df),
         }
 
         # Prepare input data.
-        df = self._prepare_dataframe(df)
+        df = self._prepare_dataframe()
 
         if df.empty:
             results["errors"].append(
@@ -99,8 +81,17 @@ class XslxReader:
 
                 # Process gene features.
                 self._procesar_caracteristicas_bulk(
-                    df, genes_by_name, nombre_archivo, results
+                    df, genes_by_name, file_name, results, uploaded_file_id
                 )
+        except FirstRowProcessingError as first_error:
+            logger.error(
+                "Aborting processing for %s after first row error: %s",
+                file_name,
+                first_error.error_detail,
+            )
+            results["aborted"] = True
+            results["first_error"] = first_error.error_detail
+            results["errors"] = [first_error.error_detail]
 
         except Exception as e:
             logger.error(f"Critical error: {e}", exc_info=True)
@@ -116,9 +107,9 @@ class XslxReader:
 
         return results
 
-    def _prepare_dataframe(self, df):
+    def _prepare_dataframe(self):
         """Prepare and clean the input DataFrame."""
-        df = df.copy()
+        df = self.df
 
         # Normalize column names.
         df.columns = df.columns.str.strip()
@@ -129,12 +120,24 @@ class XslxReader:
         if df.empty:
             return df
 
-        self._validate_required_columns(df)
-
-        # Normalize text-like columns.
-        for col in df.select_dtypes(include=["object"]).columns:
-            df[col] = df[col].astype(str).str.strip()
-            df[col] = df[col].replace("nan", "")
+        # Normalize only columns used by processing to reduce CPU/memory overhead.
+        columns_to_normalize = [
+            ExcelNomenclators.gene_column_name,
+            ExcelNomenclators.coord_column_name,
+            ExcelNomenclators.valor_column_name,
+            ExcelNomenclators.color_column_name,
+            ExcelNomenclators.protein_column_name,
+            ExcelNomenclators.alleleasoc_column_name,
+            ExcelNomenclators.species_column_name,
+            ExcelNomenclators.variant_column_name,
+            ExcelNomenclators.order_1_column_name,
+            ExcelNomenclators.order_2_column_name,
+            ExcelNomenclators.order_3_column_name,
+            ExcelNomenclators.ncbi_link_column_name,
+        ]
+        for col in columns_to_normalize:
+            if col in df.columns:
+                df[col] = df[col].astype(str).str.strip().replace("nan", "")
 
         # Cord can be empty.
         df["Cord"] = df["Cord"].fillna("").astype(str).str.strip()
@@ -162,7 +165,9 @@ class XslxReader:
         # Bulk-create missing genes.
         if new_genes:
             logger.info(f"Creating {len(new_genes)} new genes...")
-            Gene.objects.bulk_create(new_genes, batch_size=self.batch_size, ignore_conflicts=True)
+            Gene.objects.bulk_create(
+                new_genes, batch_size=self.batch_size, ignore_conflicts=True
+            )
 
             # Reload the full mapping including newly created genes.
             existing_genes.update(
@@ -172,16 +177,33 @@ class XslxReader:
         return existing_genes
 
     def _procesar_caracteristicas_bulk(
-        self, df, genes_dict, nombre_archivo, resultados
+        self, df, genes_dict, nombre_archivo, resultados, uploaded_file_id
     ):
         """Process gene features using bulk_create and bulk_update."""
         logger.info("Preparing features for bulk processing...")
 
+        gene_ids_by_name = {}
+        for gene_name, gene_value in genes_dict.items():
+            if hasattr(gene_value, "id"):
+                gene_ids_by_name[gene_name] = gene_value.id
+            elif isinstance(gene_value, int):
+                gene_ids_by_name[gene_name] = gene_value
+            else:
+                raise FirstRowProcessingError(
+                    {
+                        "row": 2,
+                        "error": (
+                            "Row processing error: Invalid gene mapping value "
+                            f"for '{gene_name}': {type(gene_value).__name__}"
+                        ),
+                        "gene": gene_name,
+                        "cord": "N/A",
+                    }
+                )
+
         # Map gene names to IDs.
-        df["gen_id"] = df["Gene"].map(
-            lambda x: genes_dict[x].id if x in genes_dict else None
-        )
-        valid_df = df[df["gen_id"].notna()].copy()
+        df["gen_id"] = df["Gene"].map(gene_ids_by_name)
+        valid_df = df.loc[df["gen_id"].notna()]
 
         if valid_df.empty:
             logger.warning("There are no valid features to process")
@@ -192,9 +214,9 @@ class XslxReader:
 
         existing_features = {
             (c.gen_id, c.cord): c
-            for c in CaracteristicaGen.objects.filter(
-                gen_id__in=gene_ids
-            ).select_related("gen")
+            for c in CaracteristicaGen.objects.filter(gen_id__in=gene_ids).only(
+                "id", "gen_id", "cord", *FEATURE_FIELDS
+            )
         }
 
         logger.info(f"Found {len(existing_features)} existing features")
@@ -202,51 +224,64 @@ class XslxReader:
         # Prepare bulk operation containers.
         features_to_create = []
         features_to_update = []
-        fields_to_update = [
-            "archivo_origen",
-            "gene",
-            "valor",
-            "color",
-            "protein",
-            "alleleasoc",
-            "species",
-            "variant",
-            "order_one",
-            "order_two",
-            "order_three",
-            "ncbi_link",
+        fields_to_update = FEATURE_FIELDS
+        max_lengths_by_field = {}
+        default_string_length_for_slicing = 50
+        for field_name in fields_to_update:
+            max_lengths_by_field[field_name] = getattr(
+                CaracteristicaGen._meta.get_field(field_name),
+                "max_length",
+                default_string_length_for_slicing,
+            )
+
+        row_columns = [
+            ExcelNomenclators.gene_column_name,
+            ExcelNomenclators.coord_column_name,
+            ExcelNomenclators.valor_column_name,
+            ExcelNomenclators.color_column_name,
+            ExcelNomenclators.protein_column_name,
+            ExcelNomenclators.alleleasoc_column_name,
+            ExcelNomenclators.species_column_name,
+            ExcelNomenclators.variant_column_name,
+            ExcelNomenclators.order_1_column_name,
+            ExcelNomenclators.order_2_column_name,
+            ExcelNomenclators.order_3_column_name,
+            ExcelNomenclators.ncbi_link_column_name,
+            "gen_id",
         ]
 
         # Process each row.
-        for index, row in valid_df.iterrows():
+        for row in valid_df[row_columns].itertuples(index=True, name=None):
             try:
-                gen = genes_dict[row["Gene"]]
-                cord_value = row["Cord"]
+                index = row[0]
+                gene_value = row[1]
+                cord_value = row[2]
+                gen_id = row[13]
 
                 # Build normalized values.
                 field_values = {
                     "archivo_origen": nombre_archivo,
-                    "gene": str(row["Gene"]),
-                    "valor": str(row.get("Valor", "")),
-                    "color": str(row.get("Color", "")),
-                    "protein": str(row.get("Protein", "")),
-                    "alleleasoc": str(row.get("Alleleasoc", "")),
-                    "species": str(row.get("Species", "")),
-                    "variant": str(row.get("Variant", "")),
-                    "order_one": str(row.get("Order1", "")),
-                    "order_two": str(row.get("Order2", "")),
-                    "order_three": str(row.get("Order3", "")),
-                    "ncbi_link": str(row.get("NCBI_Link", "")),
+                    "gene": str(gene_value),
+                    "valor": str(row[3]),
+                    "color": str(row[4]),
+                    "protein": str(row[5]),
+                    "alleleasoc": str(row[6]),
+                    "species": str(row[7]),
+                    "variant": str(row[8]),
+                    "order_one": str(row[9]),
+                    "order_two": str(row[10]),
+                    "order_three": str(row[11]),
+                    "ncbi_link": str(row[12]),
                 }
 
                 # Normalize empty-like values.
                 for key, value in field_values.items():
                     if value in ["nan", "None", ""]:
                         field_values[key] = ""
-                    if len(value) > 50:
-                        field_values[key] = value[:50]
+                    elif len(value) > default_string_length_for_slicing:
+                        field_values[key] = value[: max_lengths_by_field[key]]
 
-                feature_key = (gen.id, cord_value)
+                feature_key = (gen_id, cord_value)
 
                 if feature_key in existing_features:
                     # Update an existing feature when needed.
@@ -268,25 +303,29 @@ class XslxReader:
                 else:
                     # Create a new feature.
                     features_to_create.append(
-                        CaracteristicaGen(gen=gen, cord=cord_value, **field_values)
+                        CaracteristicaGen(
+                            gen_id=gen_id,
+                            cord=cord_value,
+                            uploaded_excel_file_id=uploaded_file_id,
+                            **field_values,
+                        )
                     )
                     resultados["created_features"] += 1
 
             except Exception as e:
-                resultados["errors"].append(
-                    {
-                        "row": index + 2,
-                        "error": f"Row processing error: {str(e)}",
-                        "gene": row.get("Gene", "N/A"),
-                        "cord": row.get("Cord", "N/A"),
-                    }
-                )
+                error_detail = {
+                    "row": index + 2,
+                    "error": f"Row processing error: {str(e)}",
+                    "gene": gene_value if str(gene_value).strip() else "N/A",
+                    "cord": cord_value if str(cord_value).strip() else "N/A",
+                }
+                raise FirstRowProcessingError(error_detail) from e
 
         # Execute bulk operations.
         if features_to_create:
             logger.info(f"Creating {len(features_to_create)} features...")
             CaracteristicaGen.objects.bulk_create(
-                features_to_create, batch_size=self.batch_size, ignore_conflicts=False
+                features_to_create, batch_size=self.batch_size
             )
 
         if features_to_update:
