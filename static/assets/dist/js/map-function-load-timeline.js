@@ -770,7 +770,7 @@ if (timeRange == "-15000/2025"){
         oReq.open('GET', timelinetimedimensiontimeline_130000_115000_HighTemperature);
    }
    else
-   if (timeRange == "-18000000/-6000000"){
+   if (timeRange == "-18000000/-2000"){
        oReq.open('GET', timelinetimedimensiontimeline_Alleles);
   }
 
