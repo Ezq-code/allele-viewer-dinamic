@@ -236,12 +236,12 @@
                                         <div class="d-inline-block">
                                             <select class="form-control form-control-sm" name="timeRange" id="timeRange"
                                                     disabled>
+                                                <option value="-18000000/-2000">Allele Migrations</option>
                                                 <option value="-15000/2025">From 15000 YBP to year 2026</option>
                                                 <option value="-1800000/-804400">Homo Erectus Migrations</option>
                                                 <option value="-700000/-190539">Heidelbergensis Migrations</option>
                                                 <option value="-69000/-15000" selected>Homo Sapiens Migrations</option>
                                                 <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
-                                                <option value="-18000000/-6000000">Allele Migrations</option>
                                             </select>
                                         </div>
                                         <button type="button" class="btnok btn-sm btn-toggle-panel btn-warning"
@@ -264,12 +264,12 @@
                                     <div id="timeRangeMigraions" class="time-range-container">
                                         <h5>Time Range Selection</h5>
                                         <select class="custom-multiselect" size="5">
+                                            <option value="-18000000/-2000">Allele Migrations</option>
                                             <option value="-15000/2025">From 15000 YBP to year 2026</option>
                                             <option value="-1800000/-804400">Homo Erectus Migrations</option>
                                             <option value="-700000/-190539">Heidelbergensis Migrations</option>
                                             <option value="-69000/-15000" selected>Homo Sapiens Migrations</option>
                                             <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
-                                            <option value="-18000000/-6000000">Allele Migrations</option>
                                         </select>
                                     </div>
                                 </div>
@@ -331,14 +331,14 @@
 
                                     if (!sessionStorage.getItem('inicializado')) {
                                      // Código que solo se ejecuta en la primera carga
-                                     sessionStorage.setItem('beginIntervalsesion', -69000);
-                                     sessionStorage.setItem('endIntervalsesion', -15000);
-                                     sessionStorage.setItem('durationSesion', 54000);
+                                     sessionStorage.setItem('beginIntervalsesion', -18000000);
+                                     sessionStorage.setItem('endIntervalsesion', -2000);
+                                     sessionStorage.setItem('durationSesion', -18000000);
                                      sessionStorage.setItem('lat', 5);
                                      sessionStorage.setItem('long', 155);
                                      sessionStorage.setItem('zoom', 2.1);
-                                     sessionStorage.setItem('timeRange', '-69000/-15000');
-                                     sessionStorage.setItem('timeRangeMigraions', '-69000/-15000');
+                                     sessionStorage.setItem('timeRange', '-18000000/-2000');
+                                     sessionStorage.setItem('timeRangeMigraions', '-18000000/-2000');
                                      sessionStorage.setItem('region', 'All the World');
                                      sessionStorage.setItem('inicializado', 'true');
                                      sessionStorage.setItem('timedelayice', 'PT9S');
