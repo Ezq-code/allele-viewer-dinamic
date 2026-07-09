@@ -37,7 +37,7 @@ var sphereRadiusFactor = 12;
 var stickRadiusFactor = 0.003;
 var nonGeneticBaseSphereRadius = 3.2;
 var nonGeneticGroupColorBySerial = {};
-const GENETIC_ALLELE_STUDY_TYPE = "Genetic Allele";
+const GENETIC_ALLELE_STUDY_TYPE = "Genomic Allele";
 
 const nonGeneticGroupPalette = [
   "#e63946",
