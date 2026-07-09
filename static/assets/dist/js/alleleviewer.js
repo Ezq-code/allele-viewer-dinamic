@@ -17,6 +17,7 @@ var currentFamilyData = [];
 var familyActiveHighlight = null;
 var familyVisibility = {};
 var familyToast = null;
+var finalAlleleLabelsBySerial = {};
 var familyPalette = [
   "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231",
   "#911eb4", "#42d4f4", "#f032e6", "#bfef45", "#fabed4",
@@ -36,6 +37,7 @@ var sphereRadiusFactor = 12;
 var stickRadiusFactor = 0.003;
 var nonGeneticBaseSphereRadius = 3.2;
 var nonGeneticGroupColorBySerial = {};
+const GENETIC_ALLELE_STUDY_TYPE = "Genomic Allele";
 
 const nonGeneticGroupPalette = [
   "#e63946",
@@ -833,7 +835,7 @@ async function showInfo(atom) {
    const selectedStudyTypeDisplay = localStorage.getItem("selectedStudyTypeDisplay");
 
   let specific_node_url = ""
-  if (selectedStudyTypeDisplay == 'Genetic Allele') {
+  if (selectedStudyTypeDisplay == GENETIC_ALLELE_STUDY_TYPE) {
     specific_node_url='allele-nodes'
 console.log('✌️specific_node_url --->', specific_node_url);
   }
@@ -854,7 +856,7 @@ console.log('✌️elemento --->', elemento);
       //   <img class="attachment-img" src="/static_output/assets/dist/img/adn.gif" alt="User Avatar" style="border-radius: 14px; width: -webkit-fill-available"/>
       // `;
 
-      const shouldShowMap = selectedStudyTypeDisplay === "Genetic Allele";
+      const shouldShowMap = selectedStudyTypeDisplay === GENETIC_ALLELE_STUDY_TYPE;
       const map = shouldShowMap
         ? `<div id="world-map3" style="width: 320px; height: 200px; margin: 0 auto; background-color: #fff;"></div>
         <!-- Map card -->
@@ -970,7 +972,7 @@ function callBuscar() {
 
 // Indica si el estudio actual usa el modo de tamaño uniforme para esferas.
 function isNonGeneticStudy() {
-  return localStorage.getItem("selectedStudyTypeDisplay") !== "Genetic Allele";
+  return localStorage.getItem("selectedStudyTypeDisplay") !== GENETIC_ALLELE_STUDY_TYPE;
 }
 
 // Verifica si el nodo está marcado como final para alelo.
@@ -1185,27 +1187,66 @@ function getAtomBySerial(serial) {
 
 // Agrega labels en nodos finales cuando el estudio no es tipo Genetic Allele.
 function addFinalAlleleLabelsIfNeeded() {
+  syncFinalAlleleLabelsWithFamilies();
+}
+
+// Limpia labels finales administrados por serial sin afectar otros labels del viewer.
+function clearFinalAlleleLabels() {
+  Object.keys(finalAlleleLabelsBySerial).forEach((serial) => {
+    const label = finalAlleleLabelsBySerial[serial];
+    if (label) {
+      viewer.removeLabel(label);
+    }
+  });
+  finalAlleleLabelsBySerial = {};
+}
+
+// Sincroniza labels finales con familias visibles/activas.
+function syncFinalAlleleLabelsWithFamilies() {
   const selectedStudyTypeDisplay = localStorage.getItem(
     "selectedStudyTypeDisplay"
   );
 
-  if (selectedStudyTypeDisplay === "Genetic Allele") {
+  clearFinalAlleleLabels();
+
+  if (selectedStudyTypeDisplay === GENETIC_ALLELE_STUDY_TYPE) {
     return;
+  }
+  if (!Array.isArray(datos) || datos.length === 0) {
+    return;
+  }
+
+  const hasFamilies = Array.isArray(currentFamilyData) && currentFamilyData.length > 0;
+  const allowedSerials = new Set();
+
+  if (hasFamilies) {
+    currentFamilyData.forEach((fam) => {
+      const isVisible = familyVisibility[fam.family] !== false;
+      const isActiveFamily = !familyActiveHighlight || fam.family === familyActiveHighlight;
+      if (!isVisible || !isActiveFamily) {
+        return;
+      }
+      fam.nodes.forEach((n) => allowedSerials.add(Number(n.number)));
+    });
   }
 
   datos.forEach((node) => {
     const isFinalNode = isFinalAlleleNode(node);
-
     if (!isFinalNode || !node.allele) {
       return;
     }
 
-    const atom = obtenerAtomoDesdeViewer(viewer, node.number);
+    const serial = Number(node.number);
+    if (hasFamilies && !allowedSerials.has(serial)) {
+      return;
+    }
+
+    const atom = obtenerAtomoDesdeViewer(viewer, serial);
     if (!atom) {
       return;
     }
 
-    viewer.addLabel(String(node.allele), {
+    finalAlleleLabelsBySerial[serial] = viewer.addLabel(String(node.allele), {
       position: {
         x: atom.x,
         y: atom.y,
@@ -1224,6 +1265,7 @@ function addFinalAlleleLabelsIfNeeded() {
 // Aplica estilo base a todos los nodos del estudio y centra la escena.
 function child() {
   viewer.removeAllLabels();
+  finalAlleleLabelsBySerial = {};
   const selectedStudyId = localStorage.getItem("selectedStudyId");
 
   const elemento = globalData[findPosition(globalData, selectedStudyId)];
@@ -1392,7 +1434,7 @@ function printFamily() {
 function assignFamilyColors() {
   familyColorBySerial = {};
   familyVisibility = {};
-  var isGenetic = localStorage.getItem("selectedStudyTypeDisplay") === "Genetic Allele";
+  var isGenetic = localStorage.getItem("selectedStudyTypeDisplay") === GENETIC_ALLELE_STUDY_TYPE;
 
   currentFamilyData.forEach(function(fam, i) {
     var color;
@@ -1435,12 +1477,13 @@ function applyFamilyColors() {
       }
     );
   });
+  syncFinalAlleleLabelsWithFamilies();
   viewer.render();
 }
 
 // Genera el HTML del listado de familias para el toast.
 function buildFamilyToastBody() {
-  var isGenetic = localStorage.getItem("selectedStudyTypeDisplay") === "Genetic Allele";
+  var isGenetic = localStorage.getItem("selectedStudyTypeDisplay") === GENETIC_ALLELE_STUDY_TYPE;
   var html = '<div class="family-toast-body">';
   currentFamilyData.forEach(function(fam, i) {
     var familyName;
@@ -1569,6 +1612,7 @@ function highlightFamily(key) {
       );
     }
   });
+  syncFinalAlleleLabelsWithFamilies();
   viewer.render();
   updateFamilyToast();
 }
@@ -1595,6 +1639,7 @@ function resetFamilyColors() {
       }
     );
   });
+  syncFinalAlleleLabelsWithFamilies();
   viewer.render();
   if (familyToast) {
     $(familyToast).toast("dispose");
@@ -1639,6 +1684,7 @@ function toggleFamilyVisibility(key) {
       );
     }
   });
+  syncFinalAlleleLabelsWithFamilies();
   viewer.render();
   updateFamilyToast();
 }
@@ -1677,6 +1723,7 @@ function applyFamilyVisibility() {
       }
     });
   });
+  syncFinalAlleleLabelsWithFamilies();
   viewer.render();
 }
 
@@ -1689,6 +1736,7 @@ function genealogicalTree(id) {
   
   // Eliminar TODAS las etiquetas del viewer
   viewer.removeAllLabels();
+  finalAlleleLabelsBySerial = {};
   if (labelOn) {
     mostrarLabelsAnillos();
   }
@@ -2044,6 +2092,7 @@ function sendExpantionValues() {
   // Inicializa el modo animación ocultando nodos y mostrando controles.
 function animation() {
   viewer.removeAllLabels();
+  finalAlleleLabelsBySerial = {};
   currentAnimationLabel = null;
   $(".controlpanel").toast("hide");
   load.hidden = false;
