@@ -6,6 +6,7 @@ import networkx as nx
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.cache import cache
 from django.urls import reverse
+from apps.business_app import admin as business_admin
 from rest_framework.test import APIClient
 from apps.common.utils.pusher_client import PusherClient
 
@@ -155,6 +156,24 @@ def test_allele_node_serializer_uses_cached_graph_without_enqueuing_task():
 
     assert result == {1, 2}
     mocked_delay.assert_not_called()
+
+
+def test_allele_node_serializer_exposes_order_field():
+    serializer = AlleleNodeSerializer()
+
+    assert "order" in serializer.fields
+
+
+def test_protein_node_serializer_exposes_order_field():
+    serializer = ProteinNodeSerializer()
+
+    assert "order" in serializer.fields
+
+
+def test_admin_node_list_display_and_fields_include_order():
+    assert "order" in business_admin.AlleleNodeAdmin.list_display
+    assert "order" in business_admin.AlleleNodeAdmin.fields
+    assert "order" in business_admin.ProteinNodeAdmin.list_display
 
 
 def test_uploaded_files_serializer_exposes_allele_nodes_field():

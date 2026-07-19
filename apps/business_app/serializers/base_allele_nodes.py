@@ -24,6 +24,7 @@ class BaseAlleleNodeSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "number",
+            "order",
             "unique_number",
             "element",
             "allele",
