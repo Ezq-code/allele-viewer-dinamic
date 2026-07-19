@@ -43,7 +43,6 @@ class XslxToPdbGraph(ExcelReader):
         """
         create_graph(self.G, study, ExcelNomenclatorsBase, self.output_df)
 
-
     def proccess_pdb_file(
         self, uploaded_file_id, pdb_filename_base, existing_pdb_file=None
     ):

@@ -126,10 +126,8 @@ class XslxToPdb(ExcelReader):
                 rs = row[self.excel_nomenclator_class.output_rs_column_name]
                 parents_info = row[
                     self.excel_nomenclator_class.output_parent_column_name
-                ]                
-                order = row[
-                    self.excel_nomenclator_class.output_order_column_name
                 ]
+                order = row[self.excel_nomenclator_class.output_order_column_name]
 
                 parents = []
                 if not pd.isna(parents_info):
