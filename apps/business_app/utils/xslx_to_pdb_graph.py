@@ -42,69 +42,7 @@ class XslxToPdbGraph(ExcelReader):
         como base de datos de nodos y ejes.
         """
         create_graph(self.G, study, ExcelNomenclatorsBase, self.output_df)
-        # logger.info("Proccessing initial file data for generate graph...")
 
-        # # Construyendo el grafo con una instancia de NetworkX
-        # if (
-        #     BaseAlleleNode.CACHE_KEY_GRAPH_FOR_STUDY.format(
-        #         study_id=study_id
-        #     )
-        #     in cache
-        # ):
-        #     return
-
-        # edges_list = []
-        # self.ilu_list = []
-        # try:
-        #     # Loop over each row in the Excel file
-        #     for _, row in self.output_df.iterrows():
-        #         allele_name = row[
-        #             ExcelNomenclatorsBase.output_allele_column_name
-        #         ]  # Solo modifique esta línea
-        #         allele_number = row[ExcelNomenclatorsBase.output_number_column_name]
-
-        #         if pd.isna(allele_name) or pd.isna(allele_number):
-        #             break
-        #         # if self.ilu_search_criteria in allele_name:
-        #         #     self.ilu_list.append(allele_number)
-        #         #     continue
-
-        #         self.G.add_node(
-        #             allele_number,
-        #             name=allele_name,
-        #             rs=row[ExcelNomenclatorsBase.output_rs_column_name],
-        #             parent=allele_number,  # Allways include itself as parent
-        #             region=row[ExcelNomenclatorsBase.output_region_column_name],
-        #             # SI EXISTE UN CAMPO FECHA SE ADICIONA AQUÍ, por ejemplo
-        #             # date=row[ExcelNomenclatorsBase.output_date_column_name],
-        #         )
-        #         parents_info = row[ExcelNomenclatorsBase.output_parent_column_name]
-        #         parents = []
-        #         if not pd.isna(parents_info):
-        #             parents = (
-        #                 (parent.strip()) for parent in str(parents_info).split(",")
-        #             )
-        #         for parent in parents:
-        #             if parent == allele_number:  # or allele_number in self.ilu_list:
-        #                 continue
-        #             int_parent = int(parent)
-        #             int_allele_number = int(allele_number)
-        #             if (int_parent, int_allele_number) not in edges_list:
-        #                 edges_list.append((int_parent, int_allele_number))
-
-        #     # Recorrer el diccionario de nodos
-        #     self.G.add_edges_from(edges_list)  # Add a edges list
-        #     cache.set(
-        #         BaseAlleleNode.CACHE_KEY_GRAPH_FOR_STUDY.format(
-        #             study_id=study_id
-        #         ),
-        #         self.G,
-        #         timeout=None,
-        #     )
-        #     # edges_list = []
-
-        # except Exception as e:
-        #     raise ValueError(f"An error occurred during file parsing: {e}.") from e
 
     def proccess_pdb_file(
         self, uploaded_file_id, pdb_filename_base, existing_pdb_file=None
