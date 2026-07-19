@@ -227,16 +227,6 @@ def test_xslx_reader_aborts_on_first_row_processing_error(tmp_path, settings):
 
     # Simulate the runtime mismatch that produced "'str' object has no attribute 'id'".
     genes_by_name = {"HLA-C": "HLA-C"}
-    results = {
-        "processed_genes": 0,
-        "created_features": 0,
-        "updated_features": 0,
-        "skipped_features": 0,
-        "errors": [],
-        "aborted": False,
-        "first_error": None,
-        "total_rows": len(frame),
-    }
 
     with patch.object(reader, "_procesar_genes_bulk", return_value=genes_by_name):
         output = reader.proccess_file("dummy.xlsx", uploaded_file_id=1)
