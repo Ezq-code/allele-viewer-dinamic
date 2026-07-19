@@ -12,6 +12,7 @@ class ExcelNomenclatorsBase:
     output_region_column_name = "Region"
     output_rs_column_name = "rs"
     output_parent_column_name = "Parent"
+    output_order_column_name = "Order"
     # age = "Age"
     age_1 = "Age_1"
     age_2 = "Age_2"

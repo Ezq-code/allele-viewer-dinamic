@@ -54,6 +54,7 @@ class ExcelReader:
             self.excel_nomenclator_class.output_region_column_name,
             self.excel_nomenclator_class.output_rs_column_name,
             self.excel_nomenclator_class.output_parent_column_name,
+            self.excel_nomenclator_class.output_order_column_name,
             "X0",
             "Y0",
             "Z0",

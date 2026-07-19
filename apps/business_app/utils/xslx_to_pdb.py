@@ -126,6 +126,9 @@ class XslxToPdb(ExcelReader):
                 rs = row[self.excel_nomenclator_class.output_rs_column_name]
                 parents_info = row[
                     self.excel_nomenclator_class.output_parent_column_name
+                ]                
+                order = row[
+                    self.excel_nomenclator_class.output_order_column_name
                 ]
 
                 parents = []
@@ -176,6 +179,7 @@ class XslxToPdb(ExcelReader):
                     region=region,
                     age_1=age_1,
                     age_2=age_2,
+                    order=order,
                     frec_afr_amr=frec_afr_amr,
                     frec_amr=frec_amr,
                     frec_csa=frec_csa,
@@ -193,39 +197,6 @@ class XslxToPdb(ExcelReader):
                     loss=loss,
                     increment=increment,
                 )
-
-                # # self.model.objects.create(
-                # #     element=element,
-                # #     number=row_number,
-                # #     allele=allele,
-                # #     rs=rs,
-                # #     study=self.study,
-                # #     region=region,
-                # #     #! Age is no longer coming in the excel file, for timeline we will use temporarily age_1
-                # # timeline_appearence=None if pd.isna(age) else age,
-                # #     timeline_appearence=None if pd.isna(age_1) else age_1,
-                # #     age_1=None if pd.isna(age_1) else age_1,
-                # #     age_2=None if pd.isna(age_2) else age_2,
-                # #     frec_afr_amr=None if pd.isna(frec_afr_amr) else frec_afr_amr,
-                # #     frec_amr=None if pd.isna(frec_amr) else frec_amr,
-                # #     frec_csa=None if pd.isna(frec_csa) else frec_csa,
-                # #     frec_eas=None if pd.isna(frec_eas) else frec_eas,
-                # #     frec_eur=None if pd.isna(frec_eur) else frec_eur,
-                # #     frec_lat=None if pd.isna(frec_lat) else frec_lat,
-                # #     frec_nea=None if pd.isna(frec_nea) else frec_nea,
-                # #     frec_oce=None if pd.isna(frec_oce) else frec_oce,
-                # #     frec_ssa=None if pd.isna(frec_ssa) else frec_ssa,
-                # #     frec_afr_eas=None if pd.isna(frec_afr_eas) else frec_afr_eas,
-                # #     frec_afr_swe=None if pd.isna(frec_afr_swe) else frec_afr_swe,
-                # #     frec_afr_nor=None if pd.isna(frec_afr_nor) else frec_afr_nor,
-                # #     frec_ca=None if pd.isna(frec_ca) else frec_ca,
-                # #     frec_sa=None if pd.isna(frec_sa) else frec_sa,
-                # #     loss=loss,
-                # #     increment=increment,
-                # #     unique_number=f"{self.study.id}-{row_number}",
-                # #     sphere_radius=self._get_sphere_radius(0),
-                # #     stick_radius=self._get_stick_radius(0),
-                # # )
 
             for k, v in relations_for_the_end.items():
                 current_node = nodes.get(k)
@@ -291,6 +262,7 @@ class XslxToPdb(ExcelReader):
         region,
         age_1,
         age_2,
+        order,
         frec_afr_amr,
         frec_amr,
         frec_csa,
@@ -320,6 +292,7 @@ class XslxToPdb(ExcelReader):
             timeline_appearence=None if pd.isna(age_1) else age_1,
             age_1=None if pd.isna(age_1) else age_1,
             age_2=None if pd.isna(age_2) else age_2,
+            order=order,
             frec_afr_amr=None if pd.isna(frec_afr_amr) else frec_afr_amr,
             frec_amr=None if pd.isna(frec_amr) else frec_amr,
             frec_csa=None if pd.isna(frec_csa) else frec_csa,
