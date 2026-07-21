@@ -89,6 +89,7 @@ urlpatterns = [
     path("index/", pages.index, name="index"),
     path("mapgeneral/", pages.mapgeneral, name="mapgeneral"),
     path("allelemap/", pages.allelemap, name="allelemap"),
+    path("genesmap/", pages.genesmap, name="genesmap"),
     path("event-type/list", pages.events_types, name="events-type"),
     path("events/list", pages.events, name="events-list"),
     path("features/list", pages.human_migrations, name="features"),

@@ -119,6 +119,11 @@ def allelemap(request):
     events_types = EventType.objects.all()
     return render(request, "allelemap/allelemap.html", {"events_types": events_types})
 
+@cache_page(60 * 15)
+def genesmap(request):
+    events_types = EventType.objects.all()
+    return render(request, "genesmap/genesmap.html", {"events_types": events_types})
+
 
 @cache_page(60 * 15)
 def human_migrations(request):
