@@ -1773,9 +1773,9 @@ function renderizarTablaExcelConMomento(data, momento) {
                 td.style.textOverflow = "ellipsis";
                 
                 const esActiva = celda.momentoActivo === true && celda.valor && celda.valor !== "";
-                const esFija = celda.esFija === true || celda.order1 === "2"; // ⭐ MODIFICADO
+                const esFija = celda.esFija === true || celda.order1 === "2";
                 
-                // ⭐ NUEVO: Si es fija Y tiene valor, siempre mostrar con color
+                // ⭐ CASO 1: Sección Fija - SIEMPRE clickeable si tiene valor
                 if (esFija && celda.valor && celda.valor !== "") {
                     const colorOriginal = celda.colorOriginal || celda.color || "200,200,200";
                     const colorStyle = getColorStyle(colorOriginal, true);
@@ -1784,11 +1784,19 @@ function renderizarTablaExcelConMomento(data, momento) {
                         td.style.color = colorStyle.textColor;
                         td.style.fontWeight = colorStyle.bold ? "bold" : "normal";
                     }
-                    td.title = `FIXED: ${celda.valor}`;
-                    td.style.cursor = "default";
-                    td.classList.add("celda-fija");
+                    
+                    // ⭐ HACER CLICKEABLE
+                    td.style.cursor = "pointer";
+                    td.classList.add("clickable-cell", "celda-fija");
+                    td.dataset.alelo = nombreAlelo;
+                    td.dataset.columna = String(celda.columna);
+                    td.dataset.fila = String(celda.fila);
+                    td.dataset.colNum = String(celda.columna);
+                    td.dataset.valor = celda.valor;
+                    td.dataset.seccion = "fija";
+                    td.title = `FIXED: ${celda.valor} - Click for details`;
                 }
-                // Si es activa (de un momento)
+                // ⭐ CASO 2: Sección Variable - Activa por momento
                 else if (esActiva) {
                     const colorOriginal = celda.colorOriginal || celda.color;
                     const colorStyle = getColorStyle(colorOriginal, true);
@@ -1806,8 +1814,9 @@ function renderizarTablaExcelConMomento(data, momento) {
                     td.dataset.colNum = String(celda.columna);
                     td.dataset.valor = celda.valor;
                     td.dataset.momento = momento.id;
+                    td.dataset.seccion = "variable";
                 }
-                // Celda vacía
+                // ⭐ CASO 3: Celda vacía - No clickeable
                 else {
                     td.style.backgroundColor = "#ffffff";
                     td.style.color = "#cccccc";
