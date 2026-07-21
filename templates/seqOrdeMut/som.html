@@ -14,132 +14,426 @@
 />
 <style>
   /* Estilo Excel */
-  .excel-table-container {
-    overflow-x: auto;
-    position: relative;
-    max-height: 70vh;
-    border: 1px solid #d0d0d0;
-    background: white;
-  }
+.excel-table-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  position: relative;
+  max-height: 70vh;
+  border: 1px solid #d0d0d0;
+  background: white;
+}
 
-  .excel-table {
-    border-collapse: collapse;
-    font-family: "Segoe UI", Calibri, "Helvetica Neue", sans-serif;
-    font-size: 11px;
-    min-width: 100%;
-  }
+.excel-table {
+  border-collapse: collapse;
+  font-family: "Segoe UI", Calibri, "Helvetica Neue", sans-serif;
+  min-width: 100%;
+}
 
-  .excel-table th,
-  .excel-table td {
-    border: 1px solid #d4d4d4;
-    padding: 6px 10px;
-    white-space: nowrap;
-  }
+/* Solo bordes y lo mínimo necesario */
+.excel-table th,
+.excel-table td {
+  border: 1px solid #d4d4d4;
+}
 
-  .excel-table th {
-    background-color: #f3f3f3;
-    font-weight: bold;
-    text-align: center;
+/* Solo fondo y posición sticky - sin padding, sin font-size, sin height */
+.excel-table th {
+  background-color: #f3f3f3;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.excel-table th:first-child,
+.excel-table td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: #f8f8f8;
+  z-index: 5;
+}
+
+.excel-table th:first-child {
+  z-index: 15;
+}
+
+.excel-table td {
+  text-align: center;
+}
+
+.excel-table td:first-child {
+  text-align: left;
+}
+
+/* Mantener el color de fondo original en celdas con color personalizado */
+.excel-table td[style*="background-color"]:hover {
+  opacity: 0.95;
+}
+
+/* Efecto especial para celdas clickeables */
+.excel-table td.clickable-cell:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  position: relative;
+  z-index: 20;
+  background-color: #e3f2fd !important;
+}
+
+/* Estilo para la primera columna en hover - evitar efectos no deseados */
+.excel-table td:first-child:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.gene-selector {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #dee2e6;
+}
+
+.info-gen {
+  padding: 10px;
+  background: #e3f2fd;
+  border-radius: 3px;
+  font-size: 14px;
+  height: 38px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+}
+
+/* Estilo para celdas clickeables */
+.excel-table td[style*="cursor: pointer"] {
+  transition: all 0.2s ease;
+}
+
+.excel-table td[style*="cursor: pointer"]:active {
+  transform: scale(0.95);
+}
+
+/* Estilo para el modal de SweetAlert */
+.swal2-popup {
+  font-size: 14px !important;
+}
+
+.swal2-html-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Estilos para el renderizado con momentos */
+.excel-table .data-cell {
+  transition: background-color 0.5s ease, color 0.5s ease;
+  position: relative;
+}
+
+.excel-table .data-cell.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.excel-table .data-cell.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ============================================
+   CONTROLES DE MOMENTOS - DISEÑO MEJORADO
+   ============================================ */
+
+/* Contenedor principal con gradiente y sombra */
+.moment-controls {
     position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
-  .excel-table th:first-child,
-  .excel-table td:first-child {
-    position: sticky;
-    left: 0;
-    background-color: #f8f8f8;
-    font-weight: bold;
-    z-index: 5;
-    min-width: 130px;
-  }
-
-  .excel-table th:first-child {
-    z-index: 15;
-  }
-
-  .excel-table td {
-    text-align: center;
-  }
-
-  .excel-table td:first-child {
-    text-align: left;
-  }  
-  
-  /* Mantener el color de fondo original en celdas con color personalizado */
-  .excel-table td[style*="background-color"]:hover {
-    opacity: 0.95;
-  }
-
-  /* Efecto especial para celdas clickeables */
-  .excel-table td.clickable-cell:hover {
-    transform: scale(1.02);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    position: relative;
-    z-index: 20;
-    background-color: #e3f2fd ;
-  }
-
-  .gene-selector {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border: 1px solid #dee2e6;
-  }
-
-  .info-gen {
-    padding: 10px;
-    background: #e3f2fd;
-    border-radius: 3px;
-    font-size: 14px;
-    height: 38px;
-  }
-
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
+    bottom: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 15px 20px;
+    border-top: 3px solid #ffd700;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 12px;
+    z-index: 100;
+    flex-wrap: wrap;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    backdrop-filter: blur(10px);
+}
+
+/* Botones con diseño moderno y colores vibrantes */
+.moment-controls button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.15);
     color: white;
-    font-size: 1.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 45px;
+    justify-content: center;
+}
+
+.moment-controls button i {
+    font-size: 14px;
+}
+
+/* Hover efectos con colores específicos */
+.moment-controls button:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+/* Botón Anterior (◀) - Azul */
+#btn-anterior {
+    background: rgba(52, 152, 219, 0.8);
+}
+#btn-anterior:hover:not(:disabled) {
+    background: #3498db;
+}
+
+/* Botón Siguiente (▶) - Verde */
+#btn-siguiente {
+    background: rgba(46, 204, 113, 0.8);
+}
+#btn-siguiente:hover:not(:disabled) {
+    background: #2ecc71;
+}
+
+/* Botón Play/Pause - Amarillo/Verde */
+#btn-play {
+    background: rgba(241, 196, 15, 0.9);
+    color: #2c3e50;
+    min-width: 100px;
+    font-weight: bold;
+}
+#btn-play:hover:not(:disabled) {
+    background: #f1c40f;
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 0 30px rgba(241, 196, 15, 0.5);
+}
+#btn-play.btn-danger {
+    background: rgba(231, 76, 60, 0.9);
+    color: white;
+}
+#btn-play.btn-danger:hover:not(:disabled) {
+    background: #e74c3c;
+    box-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+}
+
+/* Botón Primer Momento (⏮) - Morado */
+#btn-primer-momento {
+    background: rgba(155, 89, 182, 0.8);
+}
+#btn-primer-momento:hover:not(:disabled) {
+    background: #9b59b6;
+}
+
+/* Botón Último Momento (⏭) - Naranja */
+#btn-ultimo-momento {
+    background: rgba(230, 126, 34, 0.8);
+}
+#btn-ultimo-momento:hover:not(:disabled) {
+    background: #e67e22;
+}
+
+/* Botones deshabilitados */
+.moment-controls button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Selector de momento - Moderno */
+#select-momento {
+    background: rgba(255,255,255,0.95);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 6px 15px;
+    color: #2c3e50;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 160px;
+    outline: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+#select-momento:hover {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+#select-momento:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+}
+
+/* Contador de momento - Con estilo badge */
+#momento-contador {
+    background: rgba(255,255,255,0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    min-width: 70px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Información del momento - Tooltip mejorado */
+#info-momento {
+    background: rgba(255,255,255,0.95);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: #2c3e50;
+    min-width: 200px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border-left: 4px solid #ffd700;
+    display: none;
+}
+#info-momento .color-badge {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Separador decorativo */
+.moment-controls .separator {
+    width: 2px;
+    height: 35px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+}
+
+/* Efecto de brillo en el botón activo */
+.moment-controls button.active-moment {
+    animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .moment-controls {
+        padding: 10px 12px;
+        gap: 8px;
+        border-radius: 0;
+    }
+    
+    .moment-controls button {
+        padding: 6px 12px;
+        font-size: 12px;
+        min-width: 35px;
+    }
+    
+    #btn-play {
+        min-width: 70px;
+    }
+    
+    #select-momento {
+        min-width: 120px;
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+    
+    #info-momento {
+        font-size: 10px;
+        padding: 4px 10px;
+        min-width: 150px;
+    }
+    
+    #momento-contador {
+        font-size: 11px;
+        padding: 3px 10px;
+        min-width: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .moment-controls {
+        gap: 5px;
+        padding: 8px 6px;
+    }
+    
+    .moment-controls button {
+        padding: 4px 8px;
+        font-size: 10px;
+        min-width: 30px;
+        border-radius: 15px;
+    }
+    
+    #btn-play {
+        min-width: 55px;
+        font-size: 10px;
+    }
+    
+    #select-momento {
+        min-width: 90px;
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+    
+    #info-momento {
+        font-size: 9px;
+        padding: 3px 8px;
+        min-width: 100px;
+    }
+    
+    #momento-contador {
+        font-size: 10px;
+        padding: 2px 8px;
+        min-width: 40px;
+    }
+    
+    .moment-controls .separator {
+        height: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+  .excel-table-container {
+    max-height: 50vh;
   }
   
-  /* Estilo para celdas clickeables */
-  .excel-table td[style*="cursor: pointer"] {
-    transition: all 0.2s ease;
+  .excel-table td,
+  .excel-table th {
+    padding: 1px 1px !important;
   }
-
-  .excel-table td[style*="cursor: pointer"]:active {
-    transform: scale(0.98);
-  }
-
-  /* Estilo para el modal de SweetAlert */
-  .swal2-popup {
-    font-size: 14px !important;
-  }
-
-  .swal2-html-container {
-    max-height: 500px;
-    overflow-y: auto;
-  }
-
-  @media (max-width: 768px) {
-    .excel-table-container {
-      max-height: 50vh;
-    }
-    .excel-table td, .excel-table th {
-      padding: 4px 6px;
-      font-size: 9px;
-    }
-  }
+}
 
 </style>
 {% endblock %} {% block content %}
