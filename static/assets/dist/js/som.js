@@ -1,4 +1,3 @@
-
 // ============================================
 // VARIABLES GLOBALES
 // ============================================
@@ -13,15 +12,171 @@ const RENDER_ROWS_PER_FRAME = 30;
 // CONFIGURACIÓN DE TAMAÑOS (VARIABLES GLOBALES)
 // ============================================
 const CELL_CONFIG = {
-    FONT_SIZE: '5px',              // Tamaño del texto 9
-    HEADER_FONT_SIZE: '6px',       // Tamaño del texto en cabeceras 9
-    CELL_PADDING_VERTICAL: '1px',   // Padding arriba/abajo
-    CELL_PADDING_HORIZONTAL: '1px', // Padding izquierda/derecha 5
-    MIN_CELL_WIDTH: '30px',         // Ancho mínimo de celda 50
-    MIN_FIRST_COL_WIDTH: '50px',    // Ancho de la primera columna 80
+    FONT_SIZE: '5px',
+    HEADER_FONT_SIZE: '8px',
+    ALLELE_FONT_SIZE: '8px',
+    CORNER_FONT_SIZE: '8px',
+    CELL_PADDING_VERTICAL: '1px',
+    CELL_PADDING_HORIZONTAL: '1px',
+    MIN_CELL_WIDTH: '18px',
+    MAX_CELL_WIDTH: '30px',
+    MIN_HEADER_WIDTH: '15px',
+    MAX_HEADER_WIDTH: '35px',
+    MIN_FIRST_COL_WIDTH: '50px',
+    MAX_FIRST_COL_WIDTH: '80px',
+    HEADER_HEIGHT: '90px',
+    CELL_HEIGHT: '18px',
+    VERTICAL_TEXT_MAX_WIDTH: '70px',
 };
 
-// Cache de estilos por color para evitar parseos repetidos en tablas grandes
+// ============================================
+// CONFIGURACIÓN DE MOMENTOS (GLOBAL)
+// ============================================
+const MOMENTOS = [
+    {
+        id: 1,
+        nombre: "Moment 1",
+        combinaciones: [
+            { order_one: 1, order_two: 3, order_three: 1 },
+            { order_one: 1, order_two: 4, order_three: 1 }
+        ],
+        color: '50,100,255',
+        descripcion: "Early activation (blue)"
+    },
+    {
+        id: 2,
+        nombre: "Moment 2",
+        combinaciones: [
+            { order_one: 1, order_two: 5, order_three: 2 }
+        ],
+        color: '50,100,255',
+        descripcion: "Middle activation (blue)"
+    },
+    {
+        id: 3,
+        nombre: "Moment 3",
+        combinaciones: [
+            { order_one: 1, order_two: 6, order_three: 3 },
+            { order_one: 1, order_two: 7, order_three: 3 },
+            { order_one: 1, order_two: 8, order_three: 3 },
+            { order_one: 1, order_two: 9, order_three: 3 }
+        ],
+        color: '50,100,255',
+        descripcion: "Late activation (blue)"
+    },
+    {
+        id: 4,
+        nombre: "Moment 4",
+        combinaciones: [
+            { order_one: 1, order_two: 10, order_three: 4 },
+            { order_one: 1, order_two: 11, order_three: 4 }
+        ],
+        color: '50,100,255',
+        descripcion: "Maximum peak (blue)"
+    },
+    {
+        id: 5,
+        nombre: "Moment 5",
+        combinaciones: [
+            { order_one: 1, order_two: 12, order_three: 5 },
+            { order_one: 1, order_two: 13, order_three: 5 },
+            { order_one: 1, order_two: 14, order_three: 5 }
+        ],
+        color: '50,100,255',
+        descripcion: "Plateau (blue)"
+    },
+    {
+        id: 6,
+        nombre: "Moment 7",
+        combinaciones: [
+            { order_one: 1, order_two: 3, order_three: 1 },
+            { order_one: 1, order_two: 4, order_three: 1 },
+            { order_one: 1, order_two: 5, order_three: 2 },
+            { order_one: 1, order_two: 6, order_three: 3 },
+            { order_one: 1, order_two: 7, order_three: 3 },
+            { order_one: 1, order_two: 8, order_three: 3 },
+            { order_one: 1, order_two: 9, order_three: 3 },
+            { order_one: 1, order_two: 10, order_three: 4 },
+            { order_one: 1, order_two: 11, order_three: 4 },
+            { order_one: 1, order_two: 12, order_three: 5 },
+            { order_one: 1, order_two: 13, order_three: 5 },
+            { order_one: 1, order_two: 14, order_three: 5 }
+        ],
+        color: '255,0,0',
+        descripcion: "Decline (red)"
+    },
+    {
+        id: 7,
+        nombre: "Moment 8",
+        combinaciones: [
+            { order_one: 1, order_two: 3, order_three: 1 },
+            { order_one: 1, order_two: 4, order_three: 1 },
+            { order_one: 1, order_two: 5, order_three: 2 },
+            { order_one: 1, order_two: 6, order_three: 3 },
+            { order_one: 1, order_two: 7, order_three: 3 },
+            { order_one: 1, order_two: 8, order_three: 3 },
+            { order_one: 1, order_two: 9, order_three: 3 },
+            { order_one: 1, order_two: 10, order_three: 4 },
+            { order_one: 1, order_two: 11, order_three: 4 },
+            { order_one: 1, order_two: 12, order_three: 5 },
+            { order_one: 1, order_two: 13, order_three: 5 },
+            { order_one: 1, order_two: 14, order_three: 5 }
+        ],
+        color: '255,255,0',
+        descripcion: "Recovery (yellow)"
+    },
+    {
+        id: 8,
+        nombre: "Moment 9",
+        combinaciones: [
+            { order_one: 1, order_two: 3, order_three: 1 },
+            { order_one: 1, order_two: 4, order_three: 1 },
+            { order_one: 1, order_two: 5, order_three: 2 },
+            { order_one: 1, order_two: 6, order_three: 3 },
+            { order_one: 1, order_two: 7, order_three: 3 },
+            { order_one: 1, order_two: 8, order_three: 3 },
+            { order_one: 1, order_two: 9, order_three: 3 },
+            { order_one: 1, order_two: 10, order_three: 4 },
+            { order_one: 1, order_two: 11, order_three: 4 },
+            { order_one: 1, order_two: 12, order_three: 5 },
+            { order_one: 1, order_two: 13, order_three: 5 },
+            { order_one: 1, order_two: 14, order_three: 5 }
+        ],
+        color: '255,0,255',
+        descripcion: "Stabilization (magenta)"
+    },
+    {
+        id: 9,
+        nombre: "Moment 10",
+        combinaciones: [
+            { order_one: 1, order_two: 3, order_three: 1 },
+            { order_one: 1, order_two: 4, order_three: 1 },
+            { order_one: 1, order_two: 5, order_three: 2 },
+            { order_one: 1, order_two: 6, order_three: 3 },
+            { order_one: 1, order_two: 7, order_three: 3 },
+            { order_one: 1, order_two: 8, order_three: 3 },
+            { order_one: 1, order_two: 9, order_three: 3 },
+            { order_one: 1, order_two: 10, order_three: 4 },
+            { order_one: 1, order_two: 11, order_three: 4 },
+            { order_one: 1, order_two: 12, order_three: 5 },
+            { order_one: 1, order_two: 13, order_three: 5 },
+            { order_one: 1, order_two: 14, order_three: 5 }
+        ],
+        color: '0,180,0',
+        descripcion: "Reinforcement  (green)"
+    }    
+];
+
+// ============================================
+// VARIABLES DE CONTROL DE MOMENTOS
+// ============================================
+let momentoActual = 0;
+let datosOriginales = null;
+let intervaloReproduccion = null;
+let reproduciendo = false;
+let celdasAcumuladas = new Map(); // NUEVO: Para acumulación de celdas
+
+// Cache de estilos por color
 const colorStyleCache = new Map();
 
 // CSRF Token para Django
@@ -41,14 +196,13 @@ async function obtenerTodosLosRegistros(genName) {
     let info_url = `/genes_to_excel/caracteristica-gen/get-all/?gen_id=${genName}`;
     if (DEBUG) console.log(`Obteniendo todos los registros para ${genName}...`);
     
-    // Mostrar progreso inicial
     const statsSpan = document.getElementById("info-stats");
     if (statsSpan) {
         statsSpan.innerHTML = `Loading data for ${genName}...`;
     }
     const response = await axios.get(info_url, {
-                                            timeout: REQUEST_TIMEOUT_MS
-                                        });
+        timeout: REQUEST_TIMEOUT_MS
+    });
     const data = response.data;
     const result = data.results || [];
     if (DEBUG) console.log(`Total registros obtenidos: ${result.length}`);
@@ -89,41 +243,26 @@ function getColorStyle(color, hasValue) {
 }
 
 // ============================================
-// 1. CARGAR LISTA DE GENES DESDE NUEVO ENDPOINT
+// 1. CARGAR LISTA DE GENES
 // ============================================
 async function cargarListaGenes() {
     try {
-        // Mostrar loading
         if (load) load.hidden = false;
         
         if (DEBUG) console.log("🔍 Haciendo petición a: /genes_to_excel/caracteristica-gen/get-related-genes/");
         
-        // Usar el nuevo endpoint específico para lista de genes
         const response = await axios.get("/genes_to_excel/caracteristica-gen/get-related-genes/", {
-                                            timeout: REQUEST_TIMEOUT_MS
-                                        });
-        
-        if (DEBUG) {
-            console.log("✅ Respuesta recibida:", response);
-            console.log("📦 Datos de respuesta:", response.data);
-            console.log("📊 Tipo de datos:", typeof response.data);
-            console.log("📊 ¿Es array?", Array.isArray(response.data));
-        }
+            timeout: REQUEST_TIMEOUT_MS
+        });
         
         const genesData = response.data;
-        
-        // Verificar que genesData es un array
         let genesList = [];
         
         if (Array.isArray(genesData)) {
-            if (DEBUG) console.log("✅ genesData es un array, longitud:", genesData.length);
-            // Extraer id y name de cada objeto
             genesList = genesData
                 .map((gene) => ({ id: gene.id, name: gene.name }))
                 .filter((gene) => gene.id && gene.name);
         } else if (genesData.results && Array.isArray(genesData.results)) {
-            if (DEBUG) console.log("✅ genesData tiene resultados paginados, longitud:", genesData.results.length);
-            // Por si acaso el endpoint devuelve paginado en el futuro
             genesList = genesData.results
                 .map((gene) => ({ id: gene.id, name: gene.name }))
                 .filter((gene) => gene.id && gene.name);
@@ -132,9 +271,6 @@ async function cargarListaGenes() {
             throw new Error("Formato de datos de genes inválido");
         }
         
-        if (DEBUG) console.log("📋 Lista de genes extraída:", genesList);
-        if (DEBUG) console.log(`📊 Total de genes encontrados: ${genesList.length}`);
-        
         const selectGene = document.getElementById("selectGene");
         if (!selectGene) {
             console.error("❌ selectGene element not found");
@@ -142,55 +278,39 @@ async function cargarListaGenes() {
         }
         
         if (genesList.length === 0) {
-            console.warn("⚠️ No genes found in response");
             selectGene.innerHTML = '<option value="">No genes available</option>';
             if (load) load.hidden = true;
             return;
         }
         
-        // Llenar el select con los genes
         selectGene.innerHTML = '<option value="">Select a gene</option>';
         
         const optionFragment = document.createDocumentFragment();
         genesList.forEach(gene => {
             const option = document.createElement("option");
-            option.value = gene.id;  // Usar ID como value
-            option.textContent = gene.name;  // Mostrar nombre
+            option.value = gene.id;
+            option.textContent = gene.name;
             optionFragment.appendChild(option);
-            if (DEBUG) console.log(`✅ Opción agregada: ${gene.name} (ID: ${gene.id})`);
         });
         selectGene.appendChild(optionFragment);
         
-        // Recuperar último gen seleccionado del localStorage
         const lastGenId = localStorage.getItem("lastSelectedGenId");
-        if (DEBUG) console.log(`📌 Último gen seleccionado: ${lastGenId}`);
-        
         if (lastGenId && genesList.some(g => g.id === lastGenId)) {
             selectGene.value = lastGenId;
-            if (DEBUG) console.log(`🔄 Cargando último gen: ${lastGenId}`);
-            // Cargar datos automáticamente si hay un gen guardado
-            //cargarDatosPorGen(lastGenId);
         }
         
-        // Ocultar loading
         if (load) load.hidden = true;
         
         if (DEBUG) console.log(`✅ Genes cargados exitosamente: ${genesList.length} genes encontrados`);
         
     } catch (error) {
         console.error("❌ Error loading gene list:", error);
-        console.error("Error details:", {
-            message: error.message,
-            response: error.response,
-            config: error.config
-        });
         
         const selectGene = document.getElementById("selectGene");
         if (selectGene) {
             selectGene.innerHTML = '<option value="">Error loading genes</option>';
         }
         
-        // Mostrar mensaje de error detallado
         let errorMsg = `Could not load gene list: ${error.message}`;
         
         if (error.response) {
@@ -205,13 +325,6 @@ async function cargarListaGenes() {
                 text: errorMsg,
                 confirmButtonText: "Accept"
             });
-        } else {
-            console.error("Error:", errorMsg);
-            const infoGen = document.getElementById("infoGenActual");
-            if (infoGen) {
-                infoGen.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error: ${error.message}`;
-                infoGen.style.background = "#f8d7da";
-            }
         }
         
         if (load) load.hidden = true;
@@ -219,7 +332,7 @@ async function cargarListaGenes() {
 }
 
 // ============================================
-// 2. PROCESAR DATOS - CREAR MATRIZ COMPLETA DESDE COORDENADAS
+// 2. PROCESAR DATOS
 // ============================================
 function procesarDatos(registros) {
     if (DEBUG) console.log("Procesando registros:", registros.length);
@@ -232,49 +345,72 @@ function procesarDatos(registros) {
             minFila: 0,
             maxFila: 0,
             minCol: 0,
-            maxCol: 0
+            maxCol: 0,
+            seccionVariable: [],
+            seccionFija: [],
+            filasVariable: [],
+            filasFija: []
         };
     }
     
-    // Encontrar el rango mínimo y máximo de filas y columnas
     let minFila = Infinity;
     let maxFila = -Infinity;
     let minCol = Infinity;
     let maxCol = -Infinity;
     
-    // Mapa para almacenar valores por coordenada
-    const celdasMap = new Map(); // Key: "fila,columna" -> {valor, color}
+    const celdasMap = new Map();
+    const order1Map = new Map();
+    const order2Map = new Map();
+    const order3Map = new Map();
+    const ncbiLinkMap = new Map();
     
-    // Primera pasada: encontrar rangos y almacenar valores
     for (let i = 0; i < registros.length; i++) {
         const reg = registros[i];
         const cord = reg.cord;
         const valor = reg.valor || "";
         const color = reg.color || DEFAULT_COLOR;
+        const order1 = String(reg.order_one || "").trim();
+        const order2 = String(reg.order_two || "").trim();
+        const order3 = String(reg.order_three || "").trim();
+        const ncbiLink = reg.ncbi_link || "";
         
         if (cord && cord.includes(',')) {
             const [fila, columna] = cord.split(',').map(Number);
             
             if (!isNaN(fila) && !isNaN(columna)) {
-                // Actualizar rangos
                 minFila = Math.min(minFila, fila);
                 maxFila = Math.max(maxFila, fila);
                 minCol = Math.min(minCol, columna);
                 maxCol = Math.max(maxCol, columna);
                 
-                // Guardar el valor si no está vacío
+                if (!order1Map.has(fila)) {
+                    order1Map.set(fila, order1);
+                }
+                if (!order2Map.has(fila) && order2 !== "") {
+                    order2Map.set(fila, order2);
+                }
+                if (!order3Map.has(fila) && order3 !== "") {
+                    order3Map.set(fila, order3);
+                }
+                if (!ncbiLinkMap.has(fila) && ncbiLink !== "") {
+                    ncbiLinkMap.set(fila, ncbiLink);
+                }
+                
                 const key = `${fila},${columna}`;
                 if (valor && valor.trim() !== "") {
                     celdasMap.set(key, {
                         valor: valor,
-                        color: color
+                        color: color,
+                        order1: order1,
+                        order2: order2,
+                        order3: order3,
+                        ncbi_link: ncbiLink
                     });
                 }
             }
         }
     }
     
-    // Si no se encontraron coordenadas válidas
     if (minFila === Infinity) {
         console.error("No se encontraron coordenadas válidas");
         return {
@@ -284,11 +420,14 @@ function procesarDatos(registros) {
             minFila: 0,
             maxFila: 0,
             minCol: 0,
-            maxCol: 0
+            maxCol: 0,
+            seccionVariable: [],
+            seccionFija: [],
+            filasVariable: [],
+            filasFija: []
         };
     }
     
-    // Crear array de filas y columnas (desde min hasta max)
     const filas = [];
     for (let i = minFila; i <= maxFila; i++) {
         filas.push(i);
@@ -299,56 +438,139 @@ function procesarDatos(registros) {
         columnas.push(j);
     }
     
-    if (DEBUG) {
-        console.log(`Rango de filas: ${minFila} a ${maxFila} (total: ${filas.length})`);
-        console.log(`Rango de columnas: ${minCol} a ${maxCol} (total: ${columnas.length})`);
-        console.log(`Celdas con datos: ${celdasMap.size}`);
-    }
-    
-    // Crear la matriz completa (todas las celdas, incluso vacías)
-    const matriz = [];
+    const filasVariable = [];
+    const filasFija = [];
+    let hasOrder1 = false;
     
     for (let i = 0; i < filas.length; i++) {
         const filaNum = filas[i];
+        const order1 = String(order1Map.get(filaNum) || "").trim();
+        if (order1 !== "") hasOrder1 = true;
+        if (order1 === "1") {
+            filasVariable.push(filaNum);
+        } else if (order1 === "2") {
+            filasFija.push(filaNum);
+        } else {
+            filasVariable.push(filaNum);
+        }
+    }
+    
+    function crearCelda(filaNum, colNum, celda) {
+        if (celda) {
+            return {
+                valor: celda.valor,
+                color: celda.color,
+                fila: filaNum,
+                columna: colNum,
+                order1: celda.order1 || order1Map.get(filaNum) || "",
+                order2: celda.order2 || order2Map.get(filaNum) || "",
+                order3: celda.order3 || order3Map.get(filaNum) || "",
+                ncbi_link: celda.ncbi_link || ncbiLinkMap.get(filaNum) || ""
+            };
+        } else {
+            return {
+                valor: "",
+                color: "255,255,255",
+                fila: filaNum,
+                columna: colNum,
+                order1: order1Map.get(filaNum) || "",
+                order2: order2Map.get(filaNum) || "",
+                order3: order3Map.get(filaNum) || "",
+                ncbi_link: ncbiLinkMap.get(filaNum) || ""
+            };
+        }
+    }
+    
+    const matriz = [];
+    for (let i = 0; i < filas.length; i++) {
+        const filaNum = filas[i];
         const filaData = [];
-        
         for (let j = 0; j < columnas.length; j++) {
             const colNum = columnas[j];
             const key = `${filaNum},${colNum}`;
             const celda = celdasMap.get(key);
-            
-            if (celda) {
-                filaData.push({
-                    valor: celda.valor,
-                    color: celda.color,
-                    fila: filaNum,
-                    columna: colNum
-                });
-            } else {
-                filaData.push({
-                    valor: "",
-                    color: "255,255,255",
-                    fila: filaNum,
-                    columna: colNum
-                });
-            }
+            filaData.push(crearCelda(filaNum, colNum, celda));
         }
         matriz.push(filaData);
     }
     
-    // Contar estadísticas
+    const seccionVariable = [];
+    for (let i = 0; i < filas.length; i++) {
+        const filaNum = filas[i];
+        const order1 = String(order1Map.get(filaNum) || "").trim();
+        if (order1 === "1" || order1 === "") {
+            const filaData = [];
+            for (let j = 0; j < columnas.length; j++) {
+                const colNum = columnas[j];
+                const key = `${filaNum},${colNum}`;
+                const celda = celdasMap.get(key);
+                if (celda) {
+                    filaData.push({
+                        valor: celda.valor,
+                        color: celda.color,
+                        fila: filaNum,
+                        columna: colNum,
+                        order1: order1 || "1",
+                        order2: celda.order2 || order2Map.get(filaNum) || "",
+                        order3: celda.order3 || order3Map.get(filaNum) || "",
+                        ncbi_link: celda.ncbi_link || ncbiLinkMap.get(filaNum) || ""
+                    });
+                } else {
+                    filaData.push({
+                        valor: "",
+                        color: "255,255,255",
+                        fila: filaNum,
+                        columna: colNum,
+                        order1: order1 || "1",
+                        order2: order2Map.get(filaNum) || "",
+                        order3: order3Map.get(filaNum) || "",
+                        ncbi_link: ncbiLinkMap.get(filaNum) || ""
+                    });
+                }
+            }
+            seccionVariable.push(filaData);
+        }
+    }
+    
+    const seccionFija = [];
+    for (let i = 0; i < filas.length; i++) {
+        const filaNum = filas[i];
+        const order1 = String(order1Map.get(filaNum) || "").trim();
+        if (order1 === "2") {
+            const filaData = [];
+            for (let j = 0; j < columnas.length; j++) {
+                const colNum = columnas[j];
+                const key = `${filaNum},${colNum}`;
+                const celda = celdasMap.get(key);
+                if (celda) {
+                    filaData.push({
+                        valor: celda.valor,
+                        color: celda.color,
+                        fila: filaNum,
+                        columna: colNum,
+                        order1: "2",
+                        order2: celda.order2 || order2Map.get(filaNum) || "",
+                        order3: celda.order3 || order3Map.get(filaNum) || "",
+                        ncbi_link: celda.ncbi_link || ncbiLinkMap.get(filaNum) || ""
+                    });
+                } else {
+                    filaData.push({
+                        valor: "",
+                        color: "255,255,255",
+                        fila: filaNum,
+                        columna: colNum,
+                        order1: "2",
+                        order2: order2Map.get(filaNum) || "",
+                        order3: order3Map.get(filaNum) || "",
+                        ncbi_link: ncbiLinkMap.get(filaNum) || ""
+                    });
+                }
+            }
+            seccionFija.push(filaData);
+        }
+    }
+    
     const celdasConValor = celdasMap.size;
-    
-    if (DEBUG) {
-        console.log(`Matriz creada: ${filas.length} filas x ${columnas.length} columnas`);
-        console.log(`Celdas con valor: ${celdasConValor} de ${filas.length * columnas.length} total`);
-    }
-    
-    // Mostrar ejemplo de las primeras celdas no vacías
-    if (DEBUG && celdasMap.size > 0) {
-        const primerasCeldas = Array.from(celdasMap.entries()).slice(0, 5);
-        console.log("Ejemplo de celdas con datos:", primerasCeldas);
-    }
     
     return {
         matriz: matriz,
@@ -358,14 +580,21 @@ function procesarDatos(registros) {
         maxFila: maxFila,
         minCol: minCol,
         maxCol: maxCol,
-        totalCeldas: filas.length * columnas.length,
-        celdasConDatos: celdasMap.size
+        totalCeldas: matriz.length * columnas.length,
+        celdasConDatos: celdasMap.size,
+        seccionVariable: seccionVariable,
+        seccionFija: seccionFija,
+        filasVariable: filasVariable,
+        filasFija: filasFija,
+        order1Map: order1Map,
+        order2Map: order2Map,
+        order3Map: order3Map,
+        ncbiLinkMap: ncbiLinkMap
     };
 }
 
-
 // ============================================
-// FUNCIÓN PARA SANITIZAR HTML (Prevenir XSS)
+// FUNCIÓN PARA SANITIZAR HTML
 // ============================================
 function sanitizarHTML(str) {
     if (!str) return 'N/A';
@@ -387,58 +616,47 @@ function validarColorRGB(color) {
 }
 
 // ============================================
-// FUNCIÓN PARA OBTENER Y MOSTRAR DETALLES DE LA CELDA (MEJORADA)
+// FUNCIÓN PARA OBTENER Y MOSTRAR DETALLES DE LA CELDA
 // ============================================
 async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual) {
-    // ========== VALIDACIONES DE SEGURIDAD ==========
-    
-    // 1. Verificar que no sea la primera columna (índice de fila)
     if (!filaNum || !colNum) {
         console.warn("Intento de click en celda sin coordenadas válidas");
         return;
     }
     
-    // 2. Verificar que el valor no esté vacío
     if (!valorActual || valorActual.trim() === "") {
         console.warn("Intento de click en celda vacía");
         return;
     }
     
-    // 3. Verificar que las coordenadas sean números válidos
     if (isNaN(filaNum) || isNaN(colNum) || filaNum < 0 || colNum < 0) {
         console.error("Coordenadas inválidas:", { filaNum, colNum });
         return;
     }
 
-    // 4. 🚫 EXCLUIR PRIMERA COLUMNA (columna 0 - números/índices)
     if (colNum === 0) {
         console.log("🚫 Primera columna (índice) - Sin acción", { filaNum, colNum });
         return;
     }
     
-    // 5. 🚫 EXCLUIR PRIMERA FILA (fila 0 o 1 - headers adicionales)
-    //    Ajusta según tu estructura: puede ser fila 0 o fila 1
-    const PRIMERA_FILA_HEADER = 0;  // o 1, según tu matriz
+    const PRIMERA_FILA_HEADER = 0;
     if (filaNum === PRIMERA_FILA_HEADER) {
         console.log("🚫 Primera fila (header) - Sin acción", { filaNum, colNum });
         return;
     }
     
-    // 6. 🚫 EXCLUIR SEGUNDA COLUMNA (columna 1 - metadata)
     const SEGUNDA_COLUMNA_METADATA = 1;
     if (colNum === SEGUNDA_COLUMNA_METADATA) {
         console.log("🚫 Segunda columna (metadata) - Sin acción", { filaNum, colNum });
         return;
     }
     
-    // 7. 🚫 EXCLUIR SEGUNDA FILA (fila 1 - metadata adicional)
     const SEGUNDA_FILA_METADATA = 1;
     if (filaNum === SEGUNDA_FILA_METADATA) {
         console.log("🚫 Segunda fila (metadata) - Sin acción", { filaNum, colNum });
         return;
     }
 
-    // 8. Validar parámetros obligatorios
     if (!currentGen) {
         if (typeof Swal !== 'undefined') {
             Swal.fire({
@@ -451,7 +669,6 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         return;
     }
     
-    // Validar que las coordenadas sean números válidos
     const filaValida = Number.isInteger(filaNum) && filaNum >= 0;
     const colValida = Number.isInteger(colNum) && colNum >= 0;
     
@@ -471,14 +688,13 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
     let swalInstance = null;
     
     try {
-        // Mostrar modal de carga con timeout
         if (typeof Swal !== 'undefined') {
             swalInstance = Swal.fire({
                 title: 'Loading information...',
                 html: '<i class="fas fa-spinner fa-pulse"></i> Fetching coordinate data...',
-                allowOutsideClick: true, // Permitir cerrar mientras carga
+                allowOutsideClick: true,
                 showConfirmButton: false,
-                timer: 10000, // Timeout de 10 segundos
+                timer: 10000,
                 timerProgressBar: true,
                 didOpen: () => {
                     Swal.showLoading();
@@ -486,7 +702,6 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
             });
         }
         
-        // Construir URL con parámetros codificados correctamente
         const params = new URLSearchParams({
             cord: `${filaNum},${colNum}`,
             gen_id: currentGen,
@@ -495,36 +710,26 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
         
         console.log(`🔍 Consultando detalles en: ${url}`);
         
-        // Agregar timeout a la petición axios
         const response = await axios.get(url, {
             timeout: REQUEST_TIMEOUT_MS
         });
         
         const data = response.data;
         
-        // Validar respuesta
         if (!data.results || data.results.length === 0) {
             throw new Error('No details found for this cell');
         }
         
         const detalle = data.results[0];
-
-        console.log(detalle)
         
-        // Sanitizar todos los campos
         const gen = sanitizarHTML(detalle.name);
-        const coordinate = sanitizarHTML(detalle.cord);
         const valor = sanitizarHTML(detalle.valor);
         const colorValido = validarColorRGB(detalle.color);
         const protein = sanitizarHTML(detalle.protein);
         const species = sanitizarHTML(detalle.species);
         const variant = sanitizarHTML(detalle.variant);
-        const order1 = sanitizarHTML(detalle.order_one);
-        const order2 = sanitizarHTML(detalle.order_two);
-        const order3 = sanitizarHTML(detalle.order_three);
         const ncbi_link = sanitizarHTML(detalle.ncbi_link);
         
-        // Procesar alelos asociados de forma segura
         let alelosAsociados = [];
         if (detalle.alleleasoc) {
             alelosAsociados = detalle.alleleasoc.split(',')
@@ -532,12 +737,10 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
                 .filter(al => al && al !== '');
         }
         
-        // Calcular color de texto para contraste
         const rgbParts = colorValido.split(',').map(Number);
         const luminancia = (rgbParts[0] * 0.299 + rgbParts[1] * 0.587 + rgbParts[2] * 0.114);
         const textoColor = luminancia > 128 ? '#000000' : '#ffffff';
         
-        // Crear contenido HTML de forma segura (usando textContent internamente)
         const contenidoHTML = `
             <div style="text-align: left; font-family: monospace; max-height: 70vh; overflow-y: auto;">
                 <table style="width: 100%; border-collapse: collapse;">
@@ -588,12 +791,10 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
             </div>
         `;
         
-        // Cerrar modal de carga si existe
         if (swalInstance) {
             swalInstance.close();
         }
         
-        // Mostrar modal con información
         if (typeof Swal !== 'undefined') {
             await Swal.fire({
                 title: `📊 Information - ${gen}`,
@@ -607,18 +808,11 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
                     popup: 'detalle-celda-modal'
                 }
             });
-        } else {
-            // Fallback seguro sin alert()
-            console.log('Detalle celda:', {
-                gen, coordinate, valor, protein, species, variant
-            });
-            mostrarMensaje(`Information: ${gen} - ${valor}`, 'info');
         }
         
     } catch (error) {
         console.error("Error obteniendo detalles de la celda:", error);
         
-        // Cerrar modal de carga si existe
         if (swalInstance) {
             swalInstance.close();
         }
@@ -650,14 +844,12 @@ async function mostrarDetalleCelda(alelo, columna, filaNum, colNum, valorActual)
                 text: mensajeError,
                 confirmButtonText: 'Accept'
             });
-        } else {
-            mostrarMensaje(mensajeError, 'error');
         }
     }
 }
 
 // ============================================
-// Convertir número a letras estilo Excel (1=A, 2=B, 27=AA)
+// Convertir número a letras estilo Excel
 // ============================================
 function numeroALetra(numero) {
     let resultado = '';
@@ -672,113 +864,203 @@ function numeroALetra(numero) {
 // ============================================
 // 3. RENDERIZAR TABLA ESTILO EXCEL
 // ============================================
+function calcularDimensionesTextoRotado(texto, fontSize) {
+    if (!texto || texto === "") {
+        return { width: 20, height: 20 };
+    }
+    
+    const fontSizeNum = parseInt(fontSize) || 7;
+    const charWidth = fontSizeNum * 0.6;
+    const textLength = texto.length;
+    const textWidth = textLength * charWidth;
+    const textHeight = fontSizeNum * 1.2;
+    const padding = 2;
+    
+    return {
+        width: Math.ceil(textHeight + padding * 2),
+        height: Math.ceil(textWidth + padding * 2),
+        minWidth: Math.max(20, Math.ceil(textHeight + padding * 2)),
+        minHeight: Math.max(20, Math.ceil(textWidth + padding * 2))
+    };
+}
+
 function renderizarTablaExcel(data) {
     const container = document.getElementById("excel-container");
     if (!container) return;
     
-    const { matriz, filas, columnas, minFila, minCol } = data;
+    const { matriz, columnas, seccionVariable, seccionFija } = data;
     
     if (!matriz || matriz.length === 0 || columnas.length === 0) {
         mostrarMensaje("No data found to display", "warning");
         return;
     }
     
-    if (DEBUG) {
-        console.log(`Renderizando tabla: ${matriz.length} filas x ${matriz[0]?.length} columnas`);
-    }
-    
-    // ========== EXTRAER NOMBRES DE PROTEÍNAS (Primera fila, desde columna 1) ==========
     const proteinNames = [];
     if (matriz.length > 0 && matriz[0]) {
-        // Comenzar desde índice 1 para saltar la primera columna (alelos)
         for (let idxCol = 1; idxCol < matriz[0].length; idxCol++) {
             const celdaProteina = matriz[0][idxCol];
-            // Para proteínas, si está vacío mostrar "Protein_X" (opcional)
-            const proteinValue = celdaProteina.valor || "";
-            proteinNames.push(proteinValue);
-        }
-        console.log("Nombres de proteínas extraídos:", proteinNames);
-    } else {
-        for (let i = 1; i < columnas.length; i++) {
-            proteinNames.push("");
+            proteinNames.push(celdaProteina.valor || "");
         }
     }
     
-    // ========== EXTRAER NOMBRES DE ALELOS (Primera columna, desde fila 1) ==========
     const alleleNames = [];
     if (matriz.length > 0) {
-        // Comenzar desde índice 1 para saltar la primera fila (proteínas)
         for (let idxRow = 1; idxRow < matriz.length; idxRow++) {
             if (matriz[idxRow] && matriz[idxRow][0]) {
                 const celdaAlelo = matriz[idxRow][0];
-                // SI EL VALOR ESTÁ VACÍO O ES SOLO ESPACIOS, MANTENER COMO STRING VACÍO
-                const alleleValue = (celdaAlelo.valor && celdaAlelo.valor.trim() !== "") 
-                    ? celdaAlelo.valor 
-                    : "";  // ← Cambiado: antes era `Row${idxRow}`, ahora es string vacío
-                alleleNames.push(alleleValue);
+                alleleNames.push((celdaAlelo.valor && celdaAlelo.valor.trim() !== "") ? celdaAlelo.valor : "");
             } else {
-                alleleNames.push("");  // Si no existe la celda, string vacío
+                alleleNames.push("");
             }
         }
-        console.log("Nombres de alelos extraídos:", alleleNames);
     }
     
-    // Mostrar indicador de carga
-    container.innerHTML = '<div style="padding: 20px; text-align: center;"><i class="fas fa-spinner fa-pulse"></i> Rendering table...</div>';
+    let seccionVariableFiltrada = [];
+    let seccionFijaFiltrada = [];
+    let fila1Eliminada = false;
+    
+    for (let i = 0; i < seccionVariable.length; i++) {
+        const filaData = seccionVariable[i];
+        if (filaData && filaData[0]) {
+            const filaNum = filaData[0].fila;
+            if (filaNum !== 1) {
+                seccionVariableFiltrada.push(filaData);
+            } else {
+                fila1Eliminada = true;
+            }
+        }
+    }
+    
+    for (let i = 0; i < seccionFija.length; i++) {
+        const filaData = seccionFija[i];
+        if (filaData && filaData[0]) {
+            const filaNum = filaData[0].fila;
+            if (filaNum !== 1) {
+                seccionFijaFiltrada.push(filaData);
+            }
+        }
+    }
+    
+    if (fila1Eliminada && seccionVariableFiltrada.length > 0) {
+        const filaBlanco = [];
+        const numColumnas = seccionVariableFiltrada[0] ? seccionVariableFiltrada[0].length : 0;
+        
+        for (let j = 0; j < numColumnas; j++) {
+            filaBlanco.push({
+                valor: "",
+                color: "255,255,255",
+                fila: 1,
+                columna: j,
+                order1: "1"
+            });
+        }
+        seccionVariableFiltrada.unshift(filaBlanco);
+    }
+    
+    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #6c757d;"><i class="fas fa-spinner fa-pulse fa-2x"></i><br><br>Rendering table...</div>';
     
     setTimeout(() => {
         const table = document.createElement("table");
         table.className = "excel-table";
         table.style.fontSize = CELL_CONFIG.FONT_SIZE;
+        table.style.width = "100%";
+        table.style.borderCollapse = "collapse";
         
-        // ========== CABECERA ==========
         const thead = document.createElement("thead");
         const headerRow = document.createElement("tr");
         
-        // Esquina superior izquierda
         const thCorner = document.createElement("th");
-        thCorner.textContent = "Alleles \\ Proteins";
-        thCorner.style.minWidth = CELL_CONFIG.MIN_FIRST_COL_WIDTH;
+        thCorner.textContent = "A\\P";
+        thCorner.style.minWidth = "35px";
+        thCorner.style.maxWidth = "50px";
+        thCorner.style.width = "auto";
         thCorner.style.position = "sticky";
         thCorner.style.left = "0";
         thCorner.style.backgroundColor = "#f3f3f3";
         thCorner.style.zIndex = "20";
-        thCorner.style.fontSize = CELL_CONFIG.HEADER_FONT_SIZE;
-        thCorner.style.padding = `${CELL_CONFIG.CELL_PADDING_VERTICAL} ${CELL_CONFIG.CELL_PADDING_HORIZONTAL}`;
+        thCorner.style.fontSize = CELL_CONFIG.CORNER_FONT_SIZE || '7px';
+        thCorner.style.padding = "2px 4px";
+        thCorner.style.border = "1px solid #d4d4d4";
+        thCorner.style.fontWeight = "bold";
+        thCorner.style.textAlign = "center";
+        thCorner.style.height = "auto";
+        thCorner.style.verticalAlign = "middle";
         headerRow.appendChild(thCorner);
         
-        // Columnas con nombres reales de proteínas
-        const headerFragment = document.createDocumentFragment();
-        proteinNames.forEach((proteinName, idx) => {
+        const headerFontSize = CELL_CONFIG.HEADER_FONT_SIZE || '7px';
+        
+        proteinNames.forEach((proteinName) => {
             const th = document.createElement("th");
-            // Si el nombre de proteína está vacío, mostrar string vacío
-            th.textContent = proteinName || "";
-            th.style.minWidth = CELL_CONFIG.MIN_CELL_WIDTH;
+            const dims = calcularDimensionesTextoRotado(proteinName, headerFontSize);
+            const cellWidth = dims.width;
+            const cellHeight = dims.height;
+            
+            th.style.minWidth = cellWidth + "px";
+            th.style.maxWidth = cellWidth + "px";
+            th.style.width = cellWidth + "px";
+            th.style.minHeight = cellHeight + "px";
+            th.style.height = cellHeight + "px";
             th.style.backgroundColor = "#f3f3f3";
             th.style.position = "sticky";
             th.style.top = "0";
             th.style.zIndex = "10";
-            th.style.fontSize = CELL_CONFIG.HEADER_FONT_SIZE;
-            th.style.padding = `${CELL_CONFIG.CELL_PADDING_VERTICAL} ${CELL_CONFIG.CELL_PADDING_HORIZONTAL}`;
-            th.style.fontWeight = "bold";
+            th.style.fontSize = headerFontSize;
+            th.style.padding = "0px";
+            th.style.border = "1px solid #d4d4d4";
+            th.style.textAlign = "center";
+            th.style.verticalAlign = "middle";
+            th.style.overflow = "hidden";
             th.style.whiteSpace = "nowrap";
-            headerFragment.appendChild(th);
+            
+            const div = document.createElement("div");
+            div.textContent = proteinName || "";
+            div.className = "vertical-text";
+            div.style.display = "flex";
+            div.style.alignItems = "center";
+            div.style.justifyContent = "center";
+            div.style.width = "100%";
+            div.style.height = "100%";
+            div.style.transform = "rotate(-90deg)";
+            div.style.whiteSpace = "nowrap";
+            div.style.fontWeight = "bold";
+            div.style.fontSize = headerFontSize;
+            div.style.padding = "0px";
+            div.style.margin = "0px";
+            div.style.lineHeight = "1.1";
+            div.style.maxWidth = "none";
+            div.style.overflow = "visible";
+            div.style.textOverflow = "clip";
+            div.style.color = "#000000";
+            div.style.letterSpacing = "0px";
+            
+            const textSpan = document.createElement("span");
+            textSpan.textContent = proteinName || "";
+            textSpan.style.display = "inline-block";
+            div.appendChild(textSpan);
+            
+            if (proteinName && proteinName.length > 6) {
+                div.title = proteinName;
+            }
+            
+            th.appendChild(div);
+            headerRow.appendChild(th);
         });
-        headerRow.appendChild(headerFragment);
         
         thead.appendChild(headerRow);
         table.appendChild(thead);
         
-        // ========== CUERPO ==========
         const tbody = document.createElement("tbody");
         table.appendChild(tbody);
+        
         container.innerHTML = "";
         container.appendChild(table);
         
-        // Eventos (delegación)
         tbody.addEventListener("click", (event) => {
             const td = event.target.closest("td.clickable-cell");
             if (!td) return;
+            if (td.classList.contains("header-cell") || td.classList.contains("protein-header")) {
+                return;
+            }
             event.stopPropagation();
             mostrarDetalleCelda(
                 td.dataset.alelo,
@@ -792,6 +1074,9 @@ function renderizarTablaExcel(data) {
         tbody.addEventListener("mouseover", (event) => {
             const td = event.target.closest("td.clickable-cell");
             if (!td || td.contains(event.relatedTarget)) return;
+            if (td.classList.contains("header-cell") || td.classList.contains("protein-header")) {
+                return;
+            }
             td.style.transform = "scale(1.02)";
             td.style.transition = "all 0.2s ease";
             td.style.outline = "1px solid #0078d4";
@@ -802,115 +1087,1077 @@ function renderizarTablaExcel(data) {
         tbody.addEventListener("mouseout", (event) => {
             const td = event.target.closest("td.clickable-cell");
             if (!td || td.contains(event.relatedTarget)) return;
+            if (td.classList.contains("header-cell") || td.classList.contains("protein-header")) {
+                return;
+            }
             td.style.transform = "scale(1)";
             td.style.outline = "none";
             td.style.zIndex = "auto";
         });
         
-        // ========== RENDER INCREMENTAL ==========
-        let idxFila = 1;  // Comenzar desde fila 1 (saltando la fila de proteínas)
-        const totalFilas = matriz.length;
+        let idxFilaVariable = 0;
+        const totalFilasVariable = seccionVariableFiltrada.length;
+        let idxFilaFija = 0;
+        const totalFilasFija = seccionFijaFiltrada.length;
+        let seccionActual = 'variable';
+        let filasRenderizadas = 0;
+        const totalFilasTotales = totalFilasVariable + totalFilasFija;
+        
+        if (totalFilasTotales === 0) {
+            mostrarMensaje("No data rows found", "warning");
+            return;
+        }
         
         const renderChunk = () => {
             const bodyFragment = document.createDocumentFragment();
-            const end = Math.min(idxFila + RENDER_ROWS_PER_FRAME, totalFilas);
+            let filasEnEsteChunk = 0;
             
-            for (; idxFila < end; idxFila++) {
-                const fila = matriz[idxFila];
-                if (!fila) continue;
+            if (seccionActual === 'variable' && idxFilaVariable < totalFilasVariable) {
+                const end = Math.min(idxFilaVariable + RENDER_ROWS_PER_FRAME, totalFilasVariable);
                 
-                const tr = document.createElement("tr");
-                
-                // ========== PRIMERA COLUMNA - Nombre del alelo ==========
-                const idxAlelo = idxFila - 1;  // Ajustar índice porque alleleNames comienza desde 0
-                const nombreAlelo = alleleNames[idxAlelo] || "";  // Si no existe, string vacío
-                
-                const tdAlelo = document.createElement("td");
-                tdAlelo.textContent = nombreAlelo;  // Mostrar el valor (puede ser string vacío)
-                tdAlelo.style.fontWeight = "bold";
-                tdAlelo.style.backgroundColor = "#f8f8f8";
-                tdAlelo.style.position = "sticky";
-                tdAlelo.style.left = "0";
-                tdAlelo.style.minWidth = CELL_CONFIG.MIN_FIRST_COL_WIDTH;
-                tdAlelo.style.textAlign = "left";
-                tdAlelo.style.zIndex = "5";
-                tdAlelo.style.fontSize = CELL_CONFIG.FONT_SIZE;
-                tdAlelo.style.padding = `${CELL_CONFIG.CELL_PADDING_VERTICAL} ${CELL_CONFIG.CELL_PADDING_HORIZONTAL}`;
-                tdAlelo.style.whiteSpace = "nowrap";
-                
-                // Si el nombre está vacío, mantener la celda pero sin contenido visible
-                if (nombreAlelo === "") {
-                    tdAlelo.style.backgroundColor = "#f8f8f8";  // Mantener color de fondo
-                    tdAlelo.style.fontStyle = "normal";
+                for (; idxFilaVariable < end; idxFilaVariable++) {
+                    const filaData = seccionVariableFiltrada[idxFilaVariable];
+                    if (!filaData) continue;
+                    
+                    const filaReal = filaData[0]?.fila || 0;
+                    let idxAlelo;
+                    if (filaReal === 1) {
+                        idxAlelo = -1;
+                    } else {
+                        idxAlelo = filaReal - 2;
+                    }
+                    
+                    const tr = crearFilaHTML(filaData, filaReal, alleleNames, idxAlelo, 'variable');
+                    bodyFragment.appendChild(tr);
+                    filasRenderizadas++;
+                    filasEnEsteChunk++;
                 }
                 
-                tr.appendChild(tdAlelo);
+                if (idxFilaVariable >= totalFilasVariable && totalFilasFija > 0) {
+                    seccionActual = 'fija';
+                }
+            }
+            
+            if (seccionActual === 'fija' && idxFilaFija < totalFilasFija) {
+                const end = Math.min(idxFilaFija + RENDER_ROWS_PER_FRAME, totalFilasFija);
                 
-                // ========== CELDAS DE DATOS (comenzar desde columna 1) ==========
-                // Comenzar desde índice 1 para saltar la primera columna (alelos)
-                for (let idxCol = 1; idxCol < fila.length; idxCol++) {
-                    const celda = fila[idxCol];
-                    const td = document.createElement("td");
-                    td.textContent = celda.valor || "";
-                    td.style.textAlign = "center";
-                    td.style.padding = `${CELL_CONFIG.CELL_PADDING_VERTICAL} ${CELL_CONFIG.CELL_PADDING_HORIZONTAL}`;
-                    td.style.border = "1px solid #ddd";
-                    td.style.fontSize = CELL_CONFIG.FONT_SIZE;
-                    td.style.whiteSpace = "nowrap";
+                for (; idxFilaFija < end; idxFilaFija++) {
+                    const filaData = seccionFijaFiltrada[idxFilaFija];
+                    if (!filaData) continue;
                     
-                    // Aplicar colores
-                    const colorStyle = getColorStyle(celda.color, Boolean(celda.valor));
+                    const filaReal = filaData[0]?.fila || 0;
+                    let idxAlelo;
+                    if (filaReal === 1) {
+                        idxAlelo = -1;
+                    } else {
+                        idxAlelo = filaReal - 2;
+                    }
+                    
+                    const tr = crearFilaHTML(filaData, filaReal, alleleNames, idxAlelo, 'fija');
+                    bodyFragment.appendChild(tr);
+                    filasRenderizadas++;
+                    filasEnEsteChunk++;
+                }
+            }
+            
+            tbody.appendChild(bodyFragment);
+            
+            if (idxFilaVariable < totalFilasVariable || idxFilaFija < totalFilasFija) {
+                requestAnimationFrame(renderChunk);
+                return;
+            }
+            
+            const statsSpan = document.getElementById("info-stats");
+            if (statsSpan) {
+                const totalDataRows = totalFilasVariable + totalFilasFija;
+                statsSpan.innerHTML = `${totalDataRows} rows × ${proteinNames.length} columns | ` +
+                                     `${data.celdasConDatos} cells with data | ` +
+                                     `Variable: ${totalFilasVariable}, Fija: ${totalFilasFija}`;
+            }
+        };
+        
+        function crearFilaHTML(filaData, filaReal, alleleNames, idxAlelo, seccion) {
+            const tr = document.createElement("tr");
+            tr.classList.add(`seccion-${seccion}`);
+            
+            let nombreAlelo = "";
+            if (filaReal === 1 || idxAlelo < 0) {
+                nombreAlelo = "";
+            } else if (idxAlelo >= 0 && idxAlelo < alleleNames.length) {
+                nombreAlelo = alleleNames[idxAlelo];
+            }
+            
+            const tdAlelo = document.createElement("td");
+            tdAlelo.textContent = nombreAlelo;
+            tdAlelo.style.fontWeight = "bold";
+            tdAlelo.style.backgroundColor = seccion === 'variable' ? "#f0f7ff" : "#f8f0ff";
+            tdAlelo.style.position = "sticky";
+            tdAlelo.style.left = "0";
+            tdAlelo.style.minWidth = CELL_CONFIG.MIN_FIRST_COL_WIDTH;
+            tdAlelo.style.maxWidth = CELL_CONFIG.MAX_FIRST_COL_WIDTH;
+            tdAlelo.style.textAlign = "left";
+            tdAlelo.style.zIndex = "5";
+            tdAlelo.style.fontSize = CELL_CONFIG.ALLELE_FONT_SIZE;
+            tdAlelo.style.padding = "2px 4px";
+            tdAlelo.style.whiteSpace = "nowrap";
+            tdAlelo.style.border = "1px solid #d4d4d4";
+            tdAlelo.classList.add("header-cell", "allele-header");
+            
+            if (nombreAlelo === "") {
+                tdAlelo.style.backgroundColor = seccion === 'variable' ? "#e8f0fe" : "#f0e8fe";
+            }
+            tr.appendChild(tdAlelo);
+            
+            for (let idxCol = 1; idxCol < filaData.length; idxCol++) {
+                const celda = filaData[idxCol];
+                const td = document.createElement("td");
+                td.textContent = celda.valor || "";
+                td.style.textAlign = "center";
+                td.style.padding = "1px 1px";
+                td.style.border = "1px solid #d4d4d4";
+                td.style.fontSize = CELL_CONFIG.FONT_SIZE;
+                td.style.whiteSpace = "nowrap";
+                td.style.minWidth = CELL_CONFIG.MIN_CELL_WIDTH;
+                td.style.maxWidth = CELL_CONFIG.MAX_CELL_WIDTH;
+                td.style.width = "auto";
+                td.style.height = CELL_CONFIG.CELL_HEIGHT;
+                td.style.lineHeight = "1";
+                td.style.overflow = "hidden";
+                td.style.textOverflow = "ellipsis";
+                
+                const colorStyle = getColorStyle(celda.color, Boolean(celda.valor));
+                if (colorStyle.bg) {
+                    td.style.backgroundColor = colorStyle.bg;
+                    td.style.color = colorStyle.textColor;
+                    td.style.fontWeight = colorStyle.bold ? "bold" : "normal";
+                }
+                
+                if (celda.valor && celda.valor !== "" && filaReal !== 1) {
+                    td.style.cursor = "pointer";
+                    td.classList.add("clickable-cell");
+                    td.dataset.alelo = nombreAlelo;
+                    td.dataset.columna = String(celda.columna);
+                    td.dataset.fila = String(celda.fila);
+                    td.dataset.colNum = String(celda.columna);
+                    td.dataset.valor = celda.valor;
+                    td.dataset.baseBg = colorStyle.bg || '';
+                    td.dataset.seccion = seccion;
+                    td.title = `Click: ${celda.valor}`;
+                }
+                
+                tr.appendChild(td);
+            }
+            
+            return tr;
+        }
+        
+        requestAnimationFrame(renderChunk);
+        
+    }, 50);
+}
+
+// ============================================
+// FUNCIONES DE GESTIÓN DE MOMENTOS
+// ============================================
+
+function filtrarCeldasPorMomento(seccionVariable, momento) {
+    if (!seccionVariable || !momento) {
+        return seccionVariable;
+    }
+    
+    const { combinaciones, color } = momento;
+    
+    const combinacionesSet = new Set();
+    combinaciones.forEach(combo => {
+        const key = `${combo.order_one}|${combo.order_two}|${combo.order_three}`;
+        combinacionesSet.add(key);
+    });
+    
+    const seccionFiltrada = [];
+    
+    for (let i = 0; i < seccionVariable.length; i++) {
+        const filaData = seccionVariable[i];
+        const filaFiltrada = [];
+        
+        for (let j = 0; j < filaData.length; j++) {
+            const celda = filaData[j];
+            const orderKey = `${celda.order1}|${celda.order2}|${celda.order3}`;
+            const cumpleCombinacion = combinacionesSet.has(orderKey);
+            const cumpleColor = celda.color === color;
+            const esFija = celda.order1 === "2";
+            
+            if ((cumpleCombinacion && cumpleColor) || esFija) {
+                filaFiltrada.push({
+                    ...celda,
+                    momentoActivo: true,
+                    colorOriginal: celda.color,
+                    esFija: esFija
+                });
+            } else {
+                filaFiltrada.push({
+                    ...celda,
+                    valor: "",
+                    color: "255,255,255",
+                    momentoActivo: false,
+                    colorOriginal: celda.color,
+                    esFija: false
+                });
+            }
+        }
+        
+        seccionFiltrada.push(filaFiltrada);
+    }
+    
+    return seccionFiltrada;
+}
+
+function reconstruirAcumulacionHastaMomento(indiceMomento) {
+    // Reiniciar acumulación
+    const nuevaAcumulacion = new Map();
+    
+    // Recorrer todos los momentos desde el 0 hasta el índice actual
+    for (let m = 0; m <= indiceMomento; m++) {
+        const momento = MOMENTOS[m];
+        const seccionFiltrada = filtrarCeldasPorMomento(
+            datosOriginales.seccionVariable,
+            momento
+        );
+        
+        // Acumular celdas activas de este momento
+        for (let i = 0; i < seccionFiltrada.length; i++) {
+            for (let j = 0; j < seccionFiltrada[i].length; j++) {
+                const celda = seccionFiltrada[i][j];
+                if (celda.momentoActivo && celda.valor && celda.valor !== "") {
+                    const key = `${celda.fila},${celda.columna}`;
+                    nuevaAcumulacion.set(key, celda);
+                }
+            }
+        }
+    }
+    
+    return nuevaAcumulacion;
+}
+
+function construirSeccionConAcumuladas(seccionOriginal, celdasAcumuladas) {
+    const nuevaSeccion = [];
+    
+    for (let i = 0; i < seccionOriginal.length; i++) {
+        const filaData = seccionOriginal[i];
+        const nuevaFila = [];
+        
+        for (let j = 0; j < filaData.length; j++) {
+            const celda = filaData[j];
+            const key = `${celda.fila},${celda.columna}`;
+            const esFija = celda.order1 === "2";
+            
+            // PRIORIDAD: Si es fija Y tiene valor, mantenerla siempre
+            if (esFija && celda.valor && celda.valor !== "") {
+                nuevaFila.push({
+                    ...celda,
+                    momentoActivo: true,
+                    esFija: true,
+                    colorOriginal: celda.color
+                });
+            }
+            // Si está acumulada
+            else if (celdasAcumuladas.has(key)) {
+                const celdaAcumulada = celdasAcumuladas.get(key);
+                nuevaFila.push({
+                    ...celdaAcumulada,
+                    momentoActivo: true,
+                    esFija: esFija
+                });
+            }
+            // Vacía
+            else {
+                nuevaFila.push({
+                    ...celda,
+                    valor: "",
+                    color: "255,255,255",
+                    momentoActivo: false,
+                    esFija: false,
+                    colorOriginal: celda.color
+                });
+            }
+        }
+        
+        nuevaSeccion.push(nuevaFila);
+    }
+    
+    return nuevaSeccion;
+}
+
+function repintarConMomento(momentoIndex) {
+    if (!datosOriginales) {
+        console.warn("there is no original data to drawing");
+        return;
+    }
+    
+    if (momentoIndex < 0 || momentoIndex >= MOMENTOS.length) {
+        console.warn(`Moment ${momentoIndex} out of range`);
+        return;
+    }
+    
+    const momento = MOMENTOS[momentoIndex];
+    momentoActual = momentoIndex;
+    
+    actualizarInfoMomento(momento);
+    
+    celdasAcumuladas = reconstruirAcumulacionHastaMomento(momentoIndex);
+    console.log(`🔄 Acumulación reconstruida hasta momento ${momentoIndex + 1} (${celdasAcumuladas.size} celdas)`);
+    
+    // Construir datos con celdas acumuladas
+    const datosAcumulados = {
+        ...datosOriginales,
+        seccionVariable: construirSeccionConAcumuladas(
+            datosOriginales.seccionVariable,
+            celdasAcumuladas
+        )
+    };
+    
+    renderizarTablaExcelConMomento(datosAcumulados, momento);
+    actualizarContadorMomento();
+    
+    // Actualizar el selector para reflejar el momento actual
+    const selectMomento = document.getElementById("select-momento");
+    if (selectMomento) {
+        selectMomento.value = String(momentoIndex);
+    }
+    
+    // Actualizar estado de botones
+    actualizarEstadoBotones();
+}
+
+function renderizarTablaExcelConMomento(data, momento) {
+    const container = document.getElementById("excel-container");
+    if (!container) return;
+    
+    const { matriz, columnas, seccionVariable, seccionFija } = data;
+    
+    if (!matriz || matriz.length === 0 || columnas.length === 0) {
+        mostrarMensaje("No data found to display", "warning");
+        return;
+    }
+    
+    const proteinNames = [];
+    if (matriz.length > 0 && matriz[0]) {
+        for (let idxCol = 1; idxCol < matriz[0].length; idxCol++) {
+            const celdaProteina = matriz[0][idxCol];
+            proteinNames.push(celdaProteina.valor || "");
+        }
+    }
+    
+    const alleleNames = [];
+    if (matriz.length > 0) {
+        for (let idxRow = 1; idxRow < matriz.length; idxRow++) {
+            if (matriz[idxRow] && matriz[idxRow][0]) {
+                const celdaAlelo = matriz[idxRow][0];
+                alleleNames.push((celdaAlelo.valor && celdaAlelo.valor.trim() !== "") ? celdaAlelo.valor : "");
+            } else {
+                alleleNames.push("");
+            }
+        }
+    }
+    
+    let seccionVariableFiltrada = [];
+    let seccionFijaFiltrada = [];
+    let fila1Eliminada = false;
+    
+    for (let i = 0; i < seccionVariable.length; i++) {
+        const filaData = seccionVariable[i];
+        if (filaData && filaData[0]) {
+            const filaNum = filaData[0].fila;
+            if (filaNum !== 1) {
+                seccionVariableFiltrada.push(filaData);
+            } else {
+                fila1Eliminada = true;
+            }
+        }
+    }
+    
+    for (let i = 0; i < seccionFija.length; i++) {
+        const filaData = seccionFija[i];
+        if (filaData && filaData[0]) {
+            const filaNum = filaData[0].fila;
+            if (filaNum !== 1) {
+                seccionFijaFiltrada.push(filaData);
+            }
+        }
+    }
+    
+    if (fila1Eliminada && seccionVariableFiltrada.length > 0) {
+        const filaBlanco = [];
+        const numColumnas = seccionVariableFiltrada[0] ? seccionVariableFiltrada[0].length : 0;
+        
+        for (let j = 0; j < numColumnas; j++) {
+            filaBlanco.push({
+                valor: "",
+                color: "255,255,255",
+                fila: 1,
+                columna: j,
+                order1: "1",
+                momentoActivo: false
+            });
+        }
+        seccionVariableFiltrada.unshift(filaBlanco);
+    }
+    
+    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #6c757d;"><i class="fas fa-spinner fa-pulse fa-2x"></i><br><br>Rendering filtered table...</div>';
+    
+    setTimeout(() => {
+        const table = document.createElement("table");
+        table.className = "excel-table";
+        table.style.fontSize = CELL_CONFIG.FONT_SIZE;
+        table.style.width = "100%";
+        table.style.borderCollapse = "collapse";
+        
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        
+        const thCorner = document.createElement("th");
+        thCorner.textContent = "A\\P";
+        thCorner.style.minWidth = "35px";
+        thCorner.style.maxWidth = "50px";
+        thCorner.style.width = "auto";
+        thCorner.style.position = "sticky";
+        thCorner.style.left = "0";
+        thCorner.style.backgroundColor = "#f3f3f3";
+        thCorner.style.zIndex = "20";
+        thCorner.style.fontSize = CELL_CONFIG.CORNER_FONT_SIZE || '7px';
+        thCorner.style.padding = "2px 4px";
+        thCorner.style.border = "1px solid #d4d4d4";
+        thCorner.style.fontWeight = "bold";
+        thCorner.style.textAlign = "center";
+        thCorner.style.height = "auto";
+        thCorner.style.verticalAlign = "middle";
+        headerRow.appendChild(thCorner);
+        
+        const headerFontSize = CELL_CONFIG.HEADER_FONT_SIZE || '7px';
+        
+        proteinNames.forEach((proteinName) => {
+            const th = document.createElement("th");
+            const dims = calcularDimensionesTextoRotado(proteinName, headerFontSize);
+            const cellWidth = dims.width;
+            const cellHeight = dims.height;
+            
+            th.style.minWidth = cellWidth + "px";
+            th.style.maxWidth = cellWidth + "px";
+            th.style.width = cellWidth + "px";
+            th.style.minHeight = cellHeight + "px";
+            th.style.height = cellHeight + "px";
+            th.style.backgroundColor = "#f3f3f3";
+            th.style.position = "sticky";
+            th.style.top = "0";
+            th.style.zIndex = "10";
+            th.style.fontSize = headerFontSize;
+            th.style.padding = "0px";
+            th.style.border = "1px solid #d4d4d4";
+            th.style.textAlign = "center";
+            th.style.verticalAlign = "middle";
+            th.style.overflow = "hidden";
+            th.style.whiteSpace = "nowrap";
+            
+            const div = document.createElement("div");
+            div.textContent = proteinName || "";
+            div.className = "vertical-text";
+            div.style.display = "flex";
+            div.style.alignItems = "center";
+            div.style.justifyContent = "center";
+            div.style.width = "100%";
+            div.style.height = "100%";
+            div.style.transform = "rotate(-90deg)";
+            div.style.whiteSpace = "nowrap";
+            div.style.fontWeight = "bold";
+            div.style.fontSize = headerFontSize;
+            div.style.padding = "0px";
+            div.style.margin = "0px";
+            div.style.lineHeight = "1.1";
+            div.style.maxWidth = "none";
+            div.style.overflow = "visible";
+            div.style.textOverflow = "clip";
+            div.style.color = "#000000";
+            div.style.letterSpacing = "0px";
+            
+            const textSpan = document.createElement("span");
+            textSpan.textContent = proteinName || "";
+            textSpan.style.display = "inline-block";
+            div.appendChild(textSpan);
+            
+            if (proteinName && proteinName.length > 6) {
+                div.title = proteinName;
+            }
+            
+            th.appendChild(div);
+            headerRow.appendChild(th);
+        });
+        
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        
+        const tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+        
+        container.innerHTML = "";
+        container.appendChild(table);
+        
+        tbody.addEventListener("click", (event) => {
+            const td = event.target.closest("td.clickable-cell");
+            if (!td) return;
+            if (td.classList.contains("header-cell") || td.classList.contains("protein-header")) {
+                return;
+            }
+            event.stopPropagation();
+            mostrarDetalleCelda(
+                td.dataset.alelo,
+                Number(td.dataset.columna),
+                Number(td.dataset.fila),
+                Number(td.dataset.colNum),
+                td.dataset.valor
+            );
+        });
+        
+        tbody.addEventListener("mouseover", (event) => {
+            const td = event.target.closest("td.clickable-cell");
+            if (!td || td.contains(event.relatedTarget)) return;
+            if (td.classList.contains("header-cell") || td.classList.contains("protein-header")) {
+                return;
+            }
+            td.style.transform = "scale(1.02)";
+            td.style.transition = "all 0.2s ease";
+            td.style.outline = "1px solid #0078d4";
+            td.style.zIndex = "20";
+            td.style.position = "relative";
+        });
+        
+        tbody.addEventListener("mouseout", (event) => {
+            const td = event.target.closest("td.clickable-cell");
+            if (!td || td.contains(event.relatedTarget)) return;
+            if (td.classList.contains("header-cell") || td.classList.contains("protein-header")) {
+                return;
+            }
+            td.style.transform = "scale(1)";
+            td.style.outline = "none";
+            td.style.zIndex = "auto";
+        });
+        
+        let idxFilaVariable = 0;
+        const totalFilasVariable = seccionVariableFiltrada.length;
+        let idxFilaFija = 0;
+        const totalFilasFija = seccionFijaFiltrada.length;
+        let seccionActual = 'variable';
+        let filasRenderizadas = 0;
+        const totalFilasTotales = totalFilasVariable + totalFilasFija;
+        
+        if (totalFilasTotales === 0) {
+            mostrarMensaje("No data rows found", "warning");
+            return;
+        }
+        
+        const renderChunk = () => {
+            const bodyFragment = document.createDocumentFragment();
+            
+            if (seccionActual === 'variable' && idxFilaVariable < totalFilasVariable) {
+                const end = Math.min(idxFilaVariable + RENDER_ROWS_PER_FRAME, totalFilasVariable);
+                
+                for (; idxFilaVariable < end; idxFilaVariable++) {
+                    const filaData = seccionVariableFiltrada[idxFilaVariable];
+                    if (!filaData) continue;
+                    
+                    const filaReal = filaData[0]?.fila || 0;
+                    let idxAlelo;
+                    if (filaReal === 1) {
+                        idxAlelo = -1;
+                    } else {
+                        idxAlelo = filaReal - 2;
+                    }
+                    
+                    const tr = crearFilaHTMLConMomento(filaData, filaReal, alleleNames, idxAlelo, 'variable', momento);
+                    bodyFragment.appendChild(tr);
+                    filasRenderizadas++;
+                }
+                
+                if (idxFilaVariable >= totalFilasVariable && totalFilasFija > 0) {
+                    seccionActual = 'fija';
+                }
+            }
+            
+            if (seccionActual === 'fija' && idxFilaFija < totalFilasFija) {
+                const end = Math.min(idxFilaFija + RENDER_ROWS_PER_FRAME, totalFilasFija);
+                
+                for (; idxFilaFija < end; idxFilaFija++) {
+                    const filaData = seccionFijaFiltrada[idxFilaFija];
+                    if (!filaData) continue;
+                    
+                    const filaReal = filaData[0]?.fila || 0;
+                    let idxAlelo;
+                    if (filaReal === 1) {
+                        idxAlelo = -1;
+                    } else {
+                        idxAlelo = filaReal - 2;
+                    }
+                    
+                    const tr = crearFilaHTMLConMomento(filaData, filaReal, alleleNames, idxAlelo, 'fija', momento);
+                    bodyFragment.appendChild(tr);
+                    filasRenderizadas++;
+                }
+            }
+            
+            tbody.appendChild(bodyFragment);
+            
+            if (idxFilaVariable < totalFilasVariable || idxFilaFija < totalFilasFija) {
+                requestAnimationFrame(renderChunk);
+                return;
+            }
+            
+            const statsSpan = document.getElementById("info-stats");
+            if (statsSpan) {
+                const celdasActivas = contarCeldasActivas(seccionVariableFiltrada);
+                const totalCeldas = seccionVariableFiltrada.reduce((sum, fila) => sum + fila.length, 0);
+                
+                statsSpan.innerHTML = `${totalFilasVariable + totalFilasFija} rows × ${proteinNames.length} columns | ` +
+                                     `${celdasActivas} cells active (${Math.round(celdasActivas/totalCeldas*100)}%) | ` +
+                                     `Moment ${momento.id}: ${momento.nombre}`;
+            }
+        };
+        
+        // ============================================
+        // FUNCIONES PARA FILA DE MOMENTOS
+        // ============================================
+        function crearFilaHTMLConMomento(filaData, filaReal, alleleNames, idxAlelo, seccion, momento) {
+            const tr = document.createElement("tr");
+            tr.classList.add(`seccion-${seccion}`);
+            
+            let nombreAlelo = "";
+            if (filaReal === 1 || idxAlelo < 0) {
+                nombreAlelo = "";
+            } else if (idxAlelo >= 0 && idxAlelo < alleleNames.length) {
+                nombreAlelo = alleleNames[idxAlelo];
+            }
+            
+            const tdAlelo = document.createElement("td");
+            tdAlelo.textContent = nombreAlelo;
+            tdAlelo.style.fontWeight = "bold";
+            tdAlelo.style.backgroundColor = seccion === 'variable' ? "#f0f7ff" : "#f8f0ff";
+            tdAlelo.style.position = "sticky";
+            tdAlelo.style.left = "0";
+            tdAlelo.style.minWidth = CELL_CONFIG.MIN_FIRST_COL_WIDTH;
+            tdAlelo.style.maxWidth = CELL_CONFIG.MAX_FIRST_COL_WIDTH;
+            tdAlelo.style.textAlign = "left";
+            tdAlelo.style.zIndex = "5";
+            tdAlelo.style.fontSize = CELL_CONFIG.ALLELE_FONT_SIZE;
+            tdAlelo.style.padding = "2px 4px";
+            tdAlelo.style.whiteSpace = "nowrap";
+            tdAlelo.style.border = "1px solid #d4d4d4";
+            tdAlelo.classList.add("header-cell", "allele-header");
+            
+            if (nombreAlelo === "") {
+                tdAlelo.style.backgroundColor = seccion === 'variable' ? "#e8f0fe" : "#f0e8fe";
+            }
+            tr.appendChild(tdAlelo);
+            
+            for (let idxCol = 1; idxCol < filaData.length; idxCol++) {
+                const celda = filaData[idxCol];
+                const td = document.createElement("td");
+                td.textContent = celda.valor || "";
+                td.style.textAlign = "center";
+                td.style.padding = "1px 1px";
+                td.style.border = "1px solid #d4d4d4";
+                td.style.fontSize = CELL_CONFIG.FONT_SIZE;
+                td.style.whiteSpace = "nowrap";
+                td.style.minWidth = CELL_CONFIG.MIN_CELL_WIDTH;
+                td.style.maxWidth = CELL_CONFIG.MAX_CELL_WIDTH;
+                td.style.width = "auto";
+                td.style.height = CELL_CONFIG.CELL_HEIGHT;
+                td.style.lineHeight = "1";
+                td.style.overflow = "hidden";
+                td.style.textOverflow = "ellipsis";
+                
+                const esActiva = celda.momentoActivo === true && celda.valor && celda.valor !== "";
+                const esFija = celda.esFija === true || celda.order1 === "2";
+                
+                // ⭐ CASO 1: Sección Fija - SIEMPRE clickeable si tiene valor
+                if (esFija && celda.valor && celda.valor !== "") {
+                    const colorOriginal = celda.colorOriginal || celda.color || "200,200,200";
+                    const colorStyle = getColorStyle(colorOriginal, true);
                     if (colorStyle.bg) {
                         td.style.backgroundColor = colorStyle.bg;
                         td.style.color = colorStyle.textColor;
                         td.style.fontWeight = colorStyle.bold ? "bold" : "normal";
                     }
                     
-                    // Hacer clickeable solo si tiene valor
-                    if (celda.valor && celda.valor !== "") {
-                        td.style.cursor = "pointer";
-                        td.classList.add("clickable-cell");
-                        td.dataset.alelo = nombreAlelo;
-                        td.dataset.columna = String(columnas[idxCol]);
-                        td.dataset.fila = String(celda.fila);
-                        td.dataset.colNum = String(celda.columna);
-                        td.dataset.valor = celda.valor;
-                        td.dataset.baseBg = colorStyle.bg || '';
-                        td.title = `Click to view details: ${celda.valor}`;
+                    // ⭐ HACER CLICKEABLE
+                    td.style.cursor = "pointer";
+                    td.classList.add("clickable-cell", "celda-fija");
+                    td.dataset.alelo = nombreAlelo;
+                    td.dataset.columna = String(celda.columna);
+                    td.dataset.fila = String(celda.fila);
+                    td.dataset.colNum = String(celda.columna);
+                    td.dataset.valor = celda.valor;
+                    td.dataset.seccion = "fija";
+                    td.title = `FIXED: ${celda.valor} - Click for details`;
+                }
+                // ⭐ CASO 2: Sección Variable - Activa por momento
+                else if (esActiva) {
+                    const colorOriginal = celda.colorOriginal || celda.color;
+                    const colorStyle = getColorStyle(colorOriginal, true);
+                    if (colorStyle.bg) {
+                        td.style.backgroundColor = colorStyle.bg;
+                        td.style.color = colorStyle.textColor;
+                        td.style.fontWeight = colorStyle.bold ? "bold" : "normal";
                     }
-                    
-                    tr.appendChild(td);
+                    td.title = `ACTIVE: ${celda.valor} | Moment ${momento.id}: ${momento.nombre}`;
+                    td.style.cursor = "pointer";
+                    td.classList.add("clickable-cell", "celda-activa");
+                    td.dataset.alelo = nombreAlelo;
+                    td.dataset.columna = String(celda.columna);
+                    td.dataset.fila = String(celda.fila);
+                    td.dataset.colNum = String(celda.columna);
+                    td.dataset.valor = celda.valor;
+                    td.dataset.momento = momento.id;
+                    td.dataset.seccion = "variable";
+                }
+                // ⭐ CASO 3: Celda vacía - No clickeable
+                else {
+                    td.style.backgroundColor = "#ffffff";
+                    td.style.color = "#cccccc";
+                    td.style.fontWeight = "normal";
+                    td.style.cursor = "default";
+                    td.title = "";
                 }
                 
-                bodyFragment.appendChild(tr);
+                tr.appendChild(td);
             }
             
-            tbody.appendChild(bodyFragment);
-            
-            if (idxFila < totalFilas) {
-                requestAnimationFrame(renderChunk);
-                return;
+            return tr;
+        }
+        
+        function contarCeldasActivas(seccion) {
+            let count = 0;
+            for (let i = 0; i < seccion.length; i++) {
+                for (let j = 0; j < seccion[i].length; j++) {
+                    if (seccion[i][j].momentoActivo === true && seccion[i][j].valor && seccion[i][j].valor !== "") {
+                        count++;
+                    }
+                }
             }
-            
-            // Actualizar estadísticas
-            const statsSpan = document.getElementById("info-stats");
-            if (statsSpan) {
-                const totalDataRows = totalFilas - 1;
-                statsSpan.innerHTML = `${totalDataRows} rows × ${proteinNames.length} columns | ${data.celdasConDatos} cells with data`;
-            }
-            
-            if (DEBUG) console.log("✅ Tabla renderizada correctamente");
-        };
+            return count;
+        }
         
         requestAnimationFrame(renderChunk);
         
-    }, 100);
+    }, 50);
 }
+
+function actualizarEstadoBotones() {
+    const btnAnterior = document.getElementById("btn-anterior");
+    const btnSiguiente = document.getElementById("btn-siguiente");
+    const btnPrimero = document.getElementById("btn-primer-momento");
+    const btnUltimo = document.getElementById("btn-ultimo-momento");
+    
+    if (btnAnterior) {
+        btnAnterior.disabled = (momentoActual === 0);
+    }
+    if (btnPrimero) {
+        btnPrimero.disabled = (momentoActual === 0);
+    }
+    
+    if (btnSiguiente) {
+        btnSiguiente.disabled = (momentoActual >= MOMENTOS.length - 1);
+    }
+    if (btnUltimo) {
+        btnUltimo.disabled = (momentoActual >= MOMENTOS.length - 1);
+    }
+}
+
+function actualizarInfoMomento(momento) {
+    const infoMomento = document.getElementById("info-momento");
+    if (infoMomento) {
+        const combinacionesStr = momento.combinaciones
+            .map(c => `(${c.order_one}, ${c.order_two}, ${c.order_three})`)
+            .join(' ');
+        
+        infoMomento.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <span style="font-weight: bold; color: #0078d4;">
+                    <i class="fas fa-play"></i> Moment ${momento.id}: ${momento.nombre}
+                </span>
+                <span style="background: rgb(${momento.color}); padding: 2px 8px; border-radius: 4px; color: white; font-size: 11px;">
+                    ${momento.color}
+                </span>
+                <span style="font-size: 12px; color: #666;">
+                    ${momento.descripcion || ''}
+                </span>
+                <span style="font-size: 11px; color: #999;">
+                    ${combinacionesStr}
+                </span>
+            </div>
+        `;
+        infoMomento.style.display = 'block';
+    }
+}
+
+function actualizarContadorMomento() {
+    const contador = document.getElementById("momento-contador");
+    if (contador) {
+        contador.textContent = `${momentoActual + 1} / ${MOMENTOS.length}`;
+    }
+}
+
+function siguienteMomento() {
+    if (!datosOriginales) {
+        console.warn("No hay datos cargados");
+        return;
+    }
+    if (momentoActual >= MOMENTOS.length - 1) {
+        console.log("Ya estás en el último momento");
+        return;
+    }
+    const siguiente = momentoActual + 1;
+    repintarConMomento(siguiente);
+}
+
+function anteriorMomento() {
+    if (!datosOriginales) {
+        console.warn("No hay datos cargados");
+        return;
+    }
+    if (momentoActual <= 0) {
+        console.log("Ya estás en el primer momento");
+        return;
+    }
+    const anterior = momentoActual - 1;
+    repintarConMomento(anterior);
+}
+
+function irAMomento(indice) {
+    if (indice < 0 || indice >= MOMENTOS.length) {
+        console.warn(`Índice ${indice} fuera de rango`);
+        return;
+    }
+    
+    // Si vamos al primer momento, el reset se hace automáticamente en repintarConMomento
+    repintarConMomento(indice);
+}
+
+function resetearMomentos() {
+    if (!datosOriginales) {
+        console.warn("No hay datos cargados para resetear");
+        return;
+    }
+    
+    console.log("🔄 Reset completo - reiniciando todo");
+    
+    // Reiniciar acumulación y volver al primer momento
+    momentoActual = 0;
+    repintarConMomento(0);
+    
+    // Actualizar selector
+    const selectMomento = document.getElementById("select-momento");
+    if (selectMomento) {
+        selectMomento.value = "0";
+    }
+}
+
+function toggleReproduccion() {
+    if (reproduciendo) {
+        detenerReproduccion();
+    } else {
+        iniciarReproduccion();
+    }
+}
+
+function iniciarReproduccion() {
+    if (!datosOriginales) {
+        console.warn("No hay datos cargados para reproducir");
+        return;
+    }
+    
+    // Si estamos en el último momento, empezar desde el principio
+    if (momentoActual >= MOMENTOS.length - 1) {
+        resetearMomentos();
+    }
+    
+    if (intervaloReproduccion) {
+        clearInterval(intervaloReproduccion);
+        intervaloReproduccion = null;
+    }
+    
+    reproduciendo = true;
+    actualizarBotonReproduccion(true);
+    
+    intervaloReproduccion = setInterval(() => {
+        if (momentoActual >= MOMENTOS.length - 1) {
+            // Llegamos al final, detener reproducción
+            detenerReproduccion();
+            return;
+        }
+        const siguiente = momentoActual + 1;
+        repintarConMomento(siguiente);
+    }, 1500);
+}
+
+function detenerReproduccion() {
+    if (intervaloReproduccion) {
+        clearInterval(intervaloReproduccion);
+        intervaloReproduccion = null;
+    }
+    reproduciendo = false;
+    actualizarBotonReproduccion(false);
+}
+
+function actualizarBotonReproduccion(activo) {
+    const btnPlay = document.getElementById("btn-play");
+    if (btnPlay) {
+        if (activo) {
+            btnPlay.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            btnPlay.classList.add('btn-danger');
+            btnPlay.classList.remove('btn-success');
+        } else {
+            btnPlay.innerHTML = '<i class="fas fa-play"></i> Play';
+            btnPlay.classList.add('btn-success');
+            btnPlay.classList.remove('btn-danger');
+        }
+    }
+}
+
+function inicializarControlesMomentos() {
+    let controlesContainer = document.getElementById("controles-momentos");
+    
+    if (!controlesContainer) {
+        controlesContainer = document.createElement("div");
+        controlesContainer.id = "controles-momentos";
+        controlesContainer.className = "controles-momentos";
+        controlesContainer.style.cssText = `
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        `;
+        
+        const container = document.getElementById("excel-container");
+        if (container && container.parentNode) {
+            container.parentNode.insertBefore(controlesContainer, container);
+        } else {
+            document.querySelector(".container-fluid")?.appendChild(controlesContainer);
+        }
+    }
+    
+    controlesContainer.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <button id="btn-reset" class="btn btn-sm btn-danger" title="Start all">
+                <i class="fas fa-undo"></i> Reset
+            </button>
+            
+            <span style="border-left: 1px solid #ccc; padding-left: 5px;"></span>
+            
+            <button id="btn-primer-momento" class="btn btn-sm btn-outline-secondary" title="First moment" ${momentoActual === 0 ? 'disabled' : ''}>
+                <i class="fas fa-fast-backward"></i>
+            </button>
+            <button id="btn-anterior" class="btn btn-sm btn-outline-secondary" title="Back moment" ${momentoActual === 0 ? 'disabled' : ''}>
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button id="btn-play" class="btn btn-sm btn-success" title="Play">
+                <i class="fas fa-play"></i> Play
+            </button>
+            <button id="btn-siguiente" class="btn btn-sm btn-outline-secondary" title="Next moment" ${momentoActual >= MOMENTOS.length - 1 ? 'disabled' : ''}>
+                <i class="fas fa-step-forward"></i>
+            </button>
+            <button id="btn-ultimo-momento" class="btn btn-sm btn-outline-secondary" title="Last moment" ${momentoActual >= MOMENTOS.length - 1 ? 'disabled' : ''}>
+                <i class="fas fa-fast-forward"></i>
+            </button>
+            
+            <span style="border-left: 1px solid #ccc; padding-left: 10px; margin-left: 5px;"></span>
+            
+            <span id="momento-contador" class="badge bg-dark" style="font-size: 14px; padding: 5px 12px;">
+                ${momentoActual + 1} / ${MOMENTOS.length}
+            </span>
+            
+            <select id="select-momento" class="form-select form-select-sm" style="width: auto; min-width: 150px;">
+                ${MOMENTOS.map((m, idx) => `
+                    <option value="${idx}" ${idx === momentoActual ? 'selected' : ''}>${m.id}. ${m.nombre}</option>
+                `).join('')}
+            </select>
+            
+            <span id="info-momento" style="display: none; font-size: 12px; padding: 4px 10px; background: #e9ecef; border-radius: 4px;">
+            </span>
+        </div>
+    `;
+    
+    // ⭐ NUEVO: Botón RESET
+    document.getElementById("btn-reset")?.addEventListener("click", resetearMomentos);
+    
+    document.getElementById("btn-primer-momento")?.addEventListener("click", () => {
+        // Al ir al primer momento, reiniciamos la acumulación
+        celdasAcumuladas = new Map();
+        irAMomento(0);
+    });
+    
+    document.getElementById("btn-anterior")?.addEventListener("click", anteriorMomento);
+    document.getElementById("btn-play")?.addEventListener("click", toggleReproduccion);
+    document.getElementById("btn-siguiente")?.addEventListener("click", siguienteMomento);
+    
+    document.getElementById("btn-ultimo-momento")?.addEventListener("click", () => {
+        irAMomento(MOMENTOS.length - 1);
+    });
+    
+    // ⭐ FIX: Selector de momentos - mejorado
+    document.getElementById("select-momento")?.addEventListener("change", function() {
+        const idx = parseInt(this.value);
+        if (!isNaN(idx) && idx >= 0 && idx < MOMENTOS.length) {
+            detenerReproduccion();
+            
+            // Si vamos al primer momento, reiniciamos acumulación
+            if (idx === 0) {
+                celdasAcumuladas = new Map();
+            }
+            
+            irAMomento(idx);
+        }
+    });
+    
+    actualizarContadorMomento();
+    actualizarEstadoBotones();
+}
+
+function actualizarMomentos(nuevosMomentos) {
+    if (!nuevosMomentos || !Array.isArray(nuevosMomentos) || nuevosMomentos.length === 0) {
+        console.warn("No se proporcionaron momentos válidos");
+        return;
+    }
+    
+    MOMENTOS.length = 0;
+    nuevosMomentos.forEach((m, idx) => {
+        MOMENTOS.push({
+            id: m.id || idx + 1,
+            nombre: m.nombre || `Momento ${idx + 1}`,
+            combinaciones: m.combinaciones || [],
+            color: m.color || '255,255,255',
+            descripcion: m.descripcion || ''
+        });
+    });
+    
+    if (document.getElementById("controles-momentos")) {
+        inicializarControlesMomentos();
+    }
+    
+    if (datosOriginales) {
+        repintarConMomento(0);
+    }
+    
+    console.log(`✅ Momentos actualizados: ${MOMENTOS.length} momentos`);
+}
+
+
 
 // ============================================
 // FUNCION DE DEPURACION
 // ============================================
-// Función para depurar y mostrar información de las coordenadas
 function depurarCoordenadas(registros, genName) {
     console.log(`=== DEPURACIÓN DE COORDENADAS PARA ${genName} ===`);
     
@@ -919,7 +2166,6 @@ function depurarCoordenadas(registros, genName) {
         return;
     }
     
-    // Extraer todas las coordenadas
     const coordenadas = [];
     registros.forEach(reg => {
         if (reg.cord && reg.cord.includes(',')) {
@@ -936,7 +2182,6 @@ function depurarCoordenadas(registros, genName) {
         return;
     }
     
-    // Encontrar mínimos y máximos
     const minFila = Math.min(...coordenadas.map(c => c.fila));
     const maxFila = Math.max(...coordenadas.map(c => c.fila));
     const minCol = Math.min(...coordenadas.map(c => c.col));
@@ -945,14 +2190,11 @@ function depurarCoordenadas(registros, genName) {
     console.log(`Rango de filas: ${minFila} a ${maxFila} (${maxFila - minFila + 1} filas)`);
     console.log(`Rango de columnas: ${minCol} a ${maxCol} (${maxCol - minCol + 1} columnas)`);
     console.log(`Total de coordenadas únicas: ${coordenadas.length}`);
-    
-    // Mostrar algunas coordenadas de ejemplo
     console.log("Ejemplo de coordenadas (primeras 10):");
     coordenadas.slice(0, 10).forEach(coord => {
         console.log(`  (${coord.fila}, ${coord.col}) -> valor: "${coord.valor}", color: ${coord.color}`);
     });
     
-    // Verificar si hay coordenadas fuera de rango esperado
     const coordenadasNegativas = coordenadas.filter(c => c.fila < 0 || c.col < 0);
     if (coordenadasNegativas.length > 0) {
         console.warn(`⚠️ Se encontraron ${coordenadasNegativas.length} coordenadas con valores negativos`);
@@ -996,7 +2238,7 @@ function mostrarMensaje(mensaje, tipo = "info") {
 }
 
 // ============================================
-// 5. CARGAR DATOS POR GEN
+// 5. CARGAR DATOS POR GEN (MODIFICADA)
 // ============================================
 async function cargarDatosPorGen(genId, genNombre) {
     if (!genId) {
@@ -1015,7 +2257,6 @@ async function cargarDatosPorGen(genId, genNombre) {
     }
     
     try {
-        // Obtener TODOS los registros del endpoint
         const registros = await obtenerTodosLosRegistros(genId);
         
         if (!registros || registros.length === 0) {
@@ -1030,12 +2271,22 @@ async function cargarDatosPorGen(genId, genNombre) {
         
         console.log(`Processing ${registros.length} records for ${genNombre} (ID: ${genId})...`);
         
-        // Procesar y renderizar
         const resultado = procesarDatos(registros);
-        renderizarTablaExcel(resultado);
+        
+        // REINICIAR ACUMULACIÓN
+        celdasAcumuladas = new Map();
+        
+        // GUARDAR DATOS ORIGINALES
+        datosOriginales = resultado;
+        
+        // Inicializar controles de momentos
+        inicializarControlesMomentos();
+        
+        // Renderizar con el primer momento
+        repintarConMomento(0);
         
         if (infoGen) {
-            infoGen.innerHTML = `<i class="fas fa-check-circle"></i> Current Gene: <strong>${genNombre}</strong>`;
+            infoGen.innerHTML = `<i class="fas fa-check-circle"></i> Current Gene: <strong>${genNombre}</strong> (Moments mode)`;
             infoGen.style.background = "#d4edda";
         }
               
@@ -1071,10 +2322,8 @@ async function cargarDatosPorGen(genId, genNombre) {
 document.addEventListener("DOMContentLoaded", function() {
     console.log("Initializing SOM table...");
     
-    // Cargar lista de genes desde el nuevo endpoint
     cargarListaGenes();
     
-    // Evento del botón cargar
     const btnCargar = document.getElementById("btnCargar");
     if (btnCargar) {
         btnCargar.addEventListener("click", function() {
@@ -1097,14 +2346,4 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
-    
-    // Evento de cambio en select (carga automática)
-    //const selectGene = document.getElementById("selectGene");
-    //if (selectGene) {
-    //    selectGene.addEventListener("change", function() {
-    //        if (this.value) {
-    //            cargarDatosPorGen(this.value);
-    //        }
-    //    });
-    //}
 });
