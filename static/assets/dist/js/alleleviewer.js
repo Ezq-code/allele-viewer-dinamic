@@ -46,6 +46,7 @@ var heatmapEnabled = false;
 var heatmapShapes = [];
 var heatmapsigma = 75;
 var heatmapRes = 35;
+var heatmapLegendShapes = [];
 
 const nonGeneticGroupPalette = [
   "#e63946",
@@ -2642,6 +2643,7 @@ function centerGrafig() {
 // Limpia el viewer completo eliminando modelos y estilos activos.
 function selectClear() {
   removeHeatmap();
+  removeHeatmapLegend();
   viewer.clear();
   viewer.render();
 }
@@ -2682,6 +2684,63 @@ function hslToHex(h, s, l) {
 function heatmapColor(value) {
   var h = (1 - value) * 240 / 360;
   return hslToHex(h, 1, 0.5);
+}
+
+function drawHeatmapLegend() {
+  var barWidth = 20;
+  var barHeight = 500;
+  var steps = 24;
+  var originX = 1070;
+  var startY = -barHeight / 2;
+  var endY = barHeight / 2;
+  var segH = barHeight / steps;
+
+  removeHeatmapLegend();
+
+  var frameSpec = {
+    start: { x: originX - 40, y: startY, z: 0 },
+    end: { x: originX - 40, y: endY, z: 0 },
+    color: "rgba(255,255,255,0.6)",
+    lineWidth: 2,
+  };
+
+  for (var i = 0; i < steps; i++) {
+    var t = i / (steps - 1);
+    var color = heatmapColor(t);
+    var cy = startY + segH * i + segH / 2;
+    var cz = (i % 2 === 0) ? 0.5 : 0;
+    heatmapLegendShapes.push(viewer.addSphere({
+      center: { x: originX, y: cy, z: cz },
+      radius: segH * 0.52,
+      color: color,
+    }));
+  }
+
+  heatmapLegendShapes.push(viewer.addLabel("High", {
+    position: { x: originX, y: startY - 40, z: 0 },
+    fontSize: 13,
+    fontColor: "#ff2222",
+    backgroundColor: "#ffffff",
+    opacity: 0.85,
+    borderThickness: 1,
+    borderColor: "#ff2222",
+  }));
+  heatmapLegendShapes.push(viewer.addLabel("Low", {
+    position: { x: originX, y: endY + 40, z: 0 },
+    fontSize: 13,
+    fontColor: "#2266ff",
+    backgroundColor: "#ffffff",
+    opacity: 0.85,
+    borderThickness: 1,
+    borderColor: "#2266ff",
+  }));
+}
+
+function removeHeatmapLegend() {
+  heatmapLegendShapes.forEach(function(shape) {
+    viewer.removeShape(shape);
+  });
+  heatmapLegendShapes = [];
 }
 
 // Dibuja el heatmap de densidad basado en coordenadas XY de los nodos.
@@ -2736,6 +2795,7 @@ function drawHeatmap() {
   if (maxDensity === 0) return;
 
   removeHeatmap();
+  removeHeatmapLegend();
   var radius = Math.max(cellW, cellH) * 0.45;
 
   for (var gy2 = 0; gy2 < gridSize; gy2++) {
@@ -2753,6 +2813,8 @@ function drawHeatmap() {
       }));
     }
   }
+
+  drawHeatmapLegend();
 }
 
 // Elimina las formas del heatmap del viewer.
@@ -2761,6 +2823,7 @@ function removeHeatmap() {
     viewer.removeShape(shape);
   });
   heatmapShapes = [];
+  removeHeatmapLegend();
   heatmapEnabled = false;
   var cb = document.getElementById("show_heatmap");
   if (cb) cb.checked = false;
