@@ -3,7 +3,6 @@
 from django.db import migrations
 
 
-
 def update_study_types(apps, schema_editor):
     StudyType = apps.get_model("business_app", "StudyType")
     StudyType.objects.filter(sheet_name="For3DAllele").update(name="Genomic Allele")

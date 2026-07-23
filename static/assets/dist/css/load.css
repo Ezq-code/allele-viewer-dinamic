@@ -485,8 +485,39 @@
   color: #721c24;
 }
 
+/* Family tabs navigation */
+.family-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  background: rgba(111,66,193,0.85);
+}
+.family-tab {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  text-align: center;
+}
+.family-tab:hover {
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.1);
+}
+.family-tab-active {
+  color: #fff;
+  background: rgba(255,255,255,0.15);
+  border-bottom: 2px solid #fff;
+}
+.family-tab-active:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.2);
+}
+
 /* Family toast */
-.family-toast {
   max-width: 360px;
   min-width: 320px;
 }

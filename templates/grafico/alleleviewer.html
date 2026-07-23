@@ -334,6 +334,19 @@
       >
     </div>
     <br class="mb-3" />
+    <h6>Density Heatmap (XY Plane)</h6>
+    <div class="mb-1">
+      <input type="checkbox" value="0" id="show_heatmap" class="mr-1" disabled /><span>Heatmap</span>
+    </div>
+    <div class="mb-2">
+      <label class="small">Bandwidth (sigma): <span id="heatmapSigmaVal">75</span></label>
+      <input type="range" class="custom-range" id="heatmapSigma" min="10" max="250" value="75" disabled />
+    </div>
+    <div class="mb-2">
+      <label class="small">Resolution: <span id="heatmapResVal">35</span></label>
+      <input type="range" class="custom-range" id="heatmapResolution" min="15" max="60" value="35" disabled />
+    </div>
+    <br class="mb-3" />
     <h6>View Family Options</h6>
     <div class="mb-1">
       <input type="checkbox" value="0" id="sphere_hidden" class="mr-1" /><span

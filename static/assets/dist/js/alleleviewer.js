@@ -18,6 +18,10 @@ var familyActiveHighlight = null;
 var familyVisibility = {};
 var familyToast = null;
 var finalAlleleLabelsBySerial = {};
+var currentOrderData = [];
+var orderVisibility = {};
+var orderActiveHighlight = null;
+var familyActiveTab = "families";
 var familyPalette = [
   "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231",
   "#911eb4", "#42d4f4", "#f032e6", "#bfef45", "#fabed4",
@@ -38,6 +42,11 @@ var stickRadiusFactor = 0.003;
 var nonGeneticBaseSphereRadius = 3.2;
 var nonGeneticGroupColorBySerial = {};
 const GENETIC_ALLELE_STUDY_TYPE = "Genomic Allele";
+var heatmapEnabled = false;
+var heatmapShapes = [];
+var heatmapsigma = 75;
+var heatmapRes = 35;
+var heatmapLegendShapes = [];
 
 const nonGeneticGroupPalette = [
   "#e63946",
@@ -517,6 +526,43 @@ checkboxMultiGraph.addEventListener("change", function () {
   }
 });
 
+var checkboxHeatmap = document.getElementById("show_heatmap");
+checkboxHeatmap.addEventListener("change", function () {
+  heatmapEnabled = checkboxHeatmap.checked;
+  if (heatmapEnabled) {
+    drawHeatmap();
+  } else {
+    removeHeatmap();
+  }
+  viewer.render();
+});
+
+var heatmapSigmaSlider = document.getElementById("heatmapSigma");
+heatmapSigmaSlider.addEventListener("input", function () {
+  heatmapsigma = parseInt(heatmapSigmaSlider.value, 10);
+  document.getElementById("heatmapSigmaVal").textContent = heatmapsigma;
+});
+heatmapSigmaSlider.addEventListener("change", function () {
+  if (heatmapEnabled) {
+    removeHeatmap();
+    drawHeatmap();
+    viewer.render();
+  }
+});
+
+var heatmapResSlider = document.getElementById("heatmapResolution");
+heatmapResSlider.addEventListener("input", function () {
+  heatmapRes = parseInt(heatmapResSlider.value, 10);
+  document.getElementById("heatmapResVal").textContent = heatmapRes;
+});
+heatmapResSlider.addEventListener("change", function () {
+  if (heatmapEnabled) {
+    removeHeatmap();
+    drawHeatmap();
+    viewer.render();
+  }
+});
+
 // fin del menú de configuracion
 
 // =========================
@@ -758,6 +804,9 @@ function selectUrl() {
     
     document.getElementById("animation").disabled = false;
     document.getElementById("filter_region").disabled = false;
+    document.getElementById("show_heatmap").disabled = false;
+    document.getElementById("heatmapSigma").disabled = false;
+    document.getElementById("heatmapResolution").disabled = false;
 
     const elemento = globalData[findPosition(globalData, $selectfile.value)];
 console.log('✌️elemento --->', elemento);
@@ -1481,49 +1530,118 @@ function applyFamilyColors() {
   viewer.render();
 }
 
+// Agrupa todos los nodos por su valor de orden.
+function printOrderGroups() {
+  if (!Array.isArray(datos) || datos.length === 0) {
+    return [];
+  }
+  var orderMap = new Map();
+  for (var i = 0; i < datos.length; i++) {
+    var node = datos[i];
+    var orderVal = node.order != null ? node.order : "unknown";
+    var key = String(orderVal);
+    if (!orderMap.has(key)) {
+      orderMap.set(key, { order: key, nodes: [] });
+    }
+    orderMap.get(key).nodes.push({ id: node.id, number: node.number });
+  }
+  var groups = Array.from(orderMap.values());
+  groups.sort(function(a, b) {
+    var na = parseFloat(a.order);
+    var nb = parseFloat(b.order);
+    if (isNaN(na) && isNaN(nb)) return 0;
+    if (isNaN(na)) return 1;
+    if (isNaN(nb)) return -1;
+    return na - nb;
+  });
+  return groups;
+}
+
+// Inicializa el estado de visibilidad de los grupos por orden.
+function initOrderVisibility() {
+  orderVisibility = {};
+  currentOrderData.forEach(function(g) {
+    orderVisibility[g.order] = true;
+  });
+}
+
 // Genera el HTML del listado de familias para el toast.
 function buildFamilyToastBody() {
   var isGenetic = localStorage.getItem("selectedStudyTypeDisplay") === GENETIC_ALLELE_STUDY_TYPE;
-  var html = '<div class="family-toast-body">';
-  currentFamilyData.forEach(function(fam, i) {
-    var familyName;
-    if (isGenetic) {
-      familyName = "Family " + (i + 1);
-    } else {
-      var alleles = [];
-      fam.nodes.forEach(function(n) {
-        for (var d = 0; d < datos.length; d++) {
-          if (datos[d].number === n.number && datos[d].allele) {
-            if (alleles.indexOf(datos[d].allele) === -1) {
-              alleles.push(datos[d].allele);
-            }
-            break;
-          }
-        }
-      });
-      familyName = alleles.join(", ") || "Family " + (i + 1);
-    }
-    var isActive = familyActiveHighlight === fam.family;
-    var activeClass = isActive ? " family-item-active" : "";
-    var visible = familyVisibility[fam.family] !== false;
-    var eyeIcon = visible ? "fa-eye" : "fa-eye-slash";
-    var eyeClass = visible ? "family-eye-visible" : "family-eye-hidden";
-    html +=
-      '<div class="family-item' + activeClass + '" data-family="' + fam.family + '" onclick="highlightFamily(\'' + fam.family + '\')">' +
-        '<span class="family-swatch" style="background:' + fam.color + '"></span>' +
-        '<div class="family-info"><strong>' + familyName + '</strong></div>' +
-        '<button class="family-eye-btn ' + eyeClass + '" onclick="event.stopPropagation(); toggleFamilyVisibility(\'' + fam.family + '\')" title="Toggle visibility">' +
-          '<i class="fas ' + eyeIcon + '"></i>' +
-        '</button>' +
-      '</div>';
-  });
+  var html = '';
   html +=
-    '</div>' +
-    '<div class="family-toast-actions">' +
-      '<button class="btn btn-info btn-sm" onclick="toggleAllFamilies()" title="Toggle all families"><i class="fas fa-toggle-on"></i></button>' +
-      '<button class="btn btn-success btn-sm" onclick="showAllFamilies()" title="Show all families"><i class="fas fa-eye"></i></button>' +
-      '<button class="btn btn-warning btn-sm" onclick="resetFamilyColors()" title="Reset family colors"><i class="fas fa-undo-alt"></i></button>' +
+    '<div class="family-tabs">' +
+      '<button class="family-tab' + (familyActiveTab === "families" ? " family-tab-active" : "") + '" onclick="switchFamilyTab(\'families\')">Families</button>' +
+      '<button class="family-tab' + (familyActiveTab === "order" ? " family-tab-active" : "") + '" onclick="switchFamilyTab(\'order\')">Order</button>' +
     '</div>';
+
+  if (familyActiveTab === "families") {
+    html += '<div class="family-toast-body">';
+    currentFamilyData.forEach(function(fam, i) {
+      var familyName;
+      if (isGenetic) {
+        familyName = "Family " + (i + 1);
+      } else {
+        var alleles = [];
+        fam.nodes.forEach(function(n) {
+          for (var d = 0; d < datos.length; d++) {
+            if (datos[d].number === n.number && datos[d].allele) {
+              if (alleles.indexOf(datos[d].allele) === -1) {
+                alleles.push(datos[d].allele);
+              }
+              break;
+            }
+          }
+        });
+        familyName = alleles.join(", ") || "Family " + (i + 1);
+      }
+      var isActive = familyActiveHighlight === fam.family;
+      var activeClass = isActive ? " family-item-active" : "";
+      var visible = familyVisibility[fam.family] !== false;
+      var eyeIcon = visible ? "fa-eye" : "fa-eye-slash";
+      var eyeClass = visible ? "family-eye-visible" : "family-eye-hidden";
+      html +=
+        '<div class="family-item' + activeClass + '" data-family="' + fam.family + '" onclick="highlightFamily(\'' + fam.family + '\')">' +
+          '<span class="family-swatch" style="background:' + fam.color + '"></span>' +
+          '<div class="family-info"><strong>' + familyName + '</strong></div>' +
+          '<button class="family-eye-btn ' + eyeClass + '" onclick="event.stopPropagation(); toggleFamilyVisibility(\'' + fam.family + '\')" title="Toggle visibility">' +
+            '<i class="fas ' + eyeIcon + '"></i>' +
+          '</button>' +
+        '</div>';
+    });
+    html +=
+      '</div>' +
+      '<div class="family-toast-actions">' +
+        '<button class="btn btn-info btn-sm" onclick="toggleAllFamilies()" title="Toggle all families"><i class="fas fa-toggle-on"></i></button>' +
+        '<button class="btn btn-success btn-sm" onclick="showAllFamilies()" title="Show all families"><i class="fas fa-eye"></i></button>' +
+        '<button class="btn btn-warning btn-sm" onclick="resetFamilyColors()" title="Reset family colors"><i class="fas fa-undo-alt"></i></button>' +
+      '</div>';
+  } else {
+    html += '<div class="family-toast-body">';
+    currentOrderData.forEach(function(g) {
+      var orderName = "Order " + g.order;
+      var isActive = orderActiveHighlight === g.order;
+      var activeClass = isActive ? " family-item-active" : "";
+      var visible = orderVisibility[g.order] !== false;
+      var eyeIcon = visible ? "fa-eye" : "fa-eye-slash";
+      var eyeClass = visible ? "family-eye-visible" : "family-eye-hidden";
+      html +=
+        '<div class="family-item' + activeClass + '" data-order="' + g.order + '" onclick="highlightOrder(\'' + g.order + '\')">' +
+          '<div class="family-info"><strong>' + orderName + '</strong> <span class="order-count">(' + g.nodes.length + ')</span></div>' +
+          '<button class="family-eye-btn ' + eyeClass + '" onclick="event.stopPropagation(); toggleOrderVisibility(\'' + g.order + '\')" title="Toggle visibility">' +
+            '<i class="fas ' + eyeIcon + '"></i>' +
+          '</button>' +
+        '</div>';
+    });
+    html +=
+      '</div>' +
+      '<div class="family-toast-actions">' +
+        '<button class="btn btn-secondary btn-sm" onclick="hidePreviousOrderGroup()" title="Previous order group"><i class="fas fa-backward"></i></button>' +
+        '<button class="btn btn-primary btn-sm" onclick="showNextOrderGroup()" title="Next order group"><i class="fas fa-forward"></i></button>' +
+        '<button class="btn btn-info btn-sm" onclick="toggleAllOrders()" title="Toggle all orders"><i class="fas fa-toggle-on"></i></button>' +
+        '<button class="btn btn-success btn-sm" onclick="showAllOrders()" title="Show all orders"><i class="fas fa-eye"></i></button>' +
+      '</div>';
+  }
   return html;
 }
 
@@ -1541,8 +1659,12 @@ function showFamilies() {
   }
 
   familyActiveHighlight = null;
+  orderActiveHighlight = null;
+  familyActiveTab = "families";
   assignFamilyColors();
   applyFamilyColors();
+  currentOrderData = printOrderGroups();
+  initOrderVisibility();
 
  
 
@@ -1630,6 +1752,9 @@ function resetFamilyColors() {
   currentFamilyData = [];
   familyActiveHighlight = null;
   familyVisibility = {};
+  currentOrderData = [];
+  orderVisibility = {};
+  orderActiveHighlight = null;
   datos.forEach(function(element) {
     viewer.setStyle(
       { serial: element.number },
@@ -1725,6 +1850,183 @@ function applyFamilyVisibility() {
   });
   syncFinalAlleleLabelsWithFamilies();
   viewer.render();
+}
+
+// Cambia la pestaña activa del toast de familias.
+function switchFamilyTab(tab) {
+  familyActiveTab = tab;
+  if (tab === "order" && currentOrderData.length === 0) {
+    currentOrderData = printOrderGroups();
+    initOrderVisibility();
+  }
+  updateFamilyToast();
+}
+
+// Alterna la visibilidad de un grupo por orden sin cambiar colores ni estilos.
+function toggleOrderVisibility(key) {
+  orderVisibility[key] = !orderVisibility[key];
+  var visible = orderVisibility[key];
+  var group = currentOrderData.find(function(g) { return g.order === key; });
+  if (!group) return;
+
+  group.nodes.forEach(function(n) {
+    var nodeData = datos.find(function(d) { return d.number === n.number; });
+    if (!nodeData) return;
+    if (visible) {
+      var color = getOrderNodeColor(n.number);
+      viewer.setStyle(
+        { serial: n.number },
+        {
+          sphere: { color: color, radius: resolveSphereRadius(nodeData), hidden: false },
+          stick: { color: color, radius: nodeData.stick_radius || 0.3, showNonBonded: false, hidden: false },
+        }
+      );
+    } else {
+      viewer.setStyle(
+        { serial: n.number },
+        { sphere: { hidden: true }, stick: { hidden: true } }
+      );
+    }
+  });
+  viewer.render();
+  updateFamilyToast();
+}
+
+// Alterna la visibilidad de todos los grupos por orden.
+function toggleAllOrders() {
+  var anyHidden = currentOrderData.some(function(g) { return orderVisibility[g.order] === false; });
+  var newVisibility = anyHidden;
+  currentOrderData.forEach(function(g) {
+    orderVisibility[g.order] = newVisibility;
+  });
+  applyOrderVisibility();
+  updateFamilyToast();
+}
+
+function applyOrderVisibility() {
+  currentOrderData.forEach(function(group) {
+    var visible = orderVisibility[group.order] !== false;
+    group.nodes.forEach(function(n) {
+      var nodeData = datos.find(function(d) { return d.number === n.number; });
+      if (!nodeData) return;
+      if (visible) {
+        var color = getOrderNodeColor(n.number);
+        viewer.setStyle(
+          { serial: n.number },
+          {
+            sphere: { color: color, radius: resolveSphereRadius(nodeData), hidden: false },
+            stick: { color: color, radius: nodeData.stick_radius || 0.3, showNonBonded: false, hidden: false },
+          }
+        );
+      } else {
+        viewer.setStyle(
+          { serial: n.number },
+          { sphere: { hidden: true }, stick: { hidden: true } }
+        );
+      }
+    });
+  });
+  viewer.render();
+}
+
+// Muestra de forma acumulativa el siguiente grupo oculto por orden.
+function showNextOrderGroup() {
+  for (var i = 0; i < currentOrderData.length; i++) {
+    var key = currentOrderData[i].order;
+    if (orderVisibility[key] === false) {
+      orderVisibility[key] = true;
+      applyOrderVisibility();
+      updateFamilyToast();
+      return;
+    }
+  }
+}
+
+// Oculta el ultimo grupo visible por orden (retroceso acumulativo).
+function hidePreviousOrderGroup() {
+  for (var i = currentOrderData.length - 1; i >= 0; i--) {
+    var key = currentOrderData[i].order;
+    if (orderVisibility[key] !== false) {
+      orderVisibility[key] = false;
+      applyOrderVisibility();
+      updateFamilyToast();
+      return;
+    }
+  }
+}
+
+// Restaura la visibilidad de todos los grupos por orden.
+function showAllOrders() {
+  currentOrderData.forEach(function(g) {
+    orderVisibility[g.order] = true;
+  });
+  applyOrderVisibility();
+  updateFamilyToast();
+}
+
+// Resalta un grupo por orden manteniendo el color de sus nodos y atenuando el resto.
+function highlightOrder(key) {
+  var isSame = orderActiveHighlight === key;
+  orderActiveHighlight = isSame ? null : key;
+
+  datos.forEach(function(element) {
+    var inOrder = false;
+    if (!isSame) {
+      for (var g = 0; g < currentOrderData.length; g++) {
+        if (currentOrderData[g].order === key) {
+          for (var n = 0; n < currentOrderData[g].nodes.length; n++) {
+            if (currentOrderData[g].nodes[n].number === element.number) {
+              inOrder = true;
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    if (inOrder) {
+      var color = getOrderNodeColor(element.number);
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: { color: color, radius: resolveSphereRadius(element), hidden: false },
+          stick: { color: color, radius: element.stick_radius, showNonBonded: false, hidden: false },
+        }
+      );
+    } else if (orderVisibility[getNodeOrder(element.number)] !== false) {
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: { color: "#eae8e8", radius: resolveSphereRadius(element), hidden: false },
+          stick: { color: "#eae8e8", radius: element.stick_radius, showNonBonded: false, hidden: false },
+        }
+      );
+    }
+  });
+  viewer.render();
+  updateFamilyToast();
+}
+
+function getOrderNodeColor(number) {
+  if (familyColorBySerial[number]) return familyColorBySerial[number];
+  var node = datos.find(function(d) { return d.number === number; });
+  if (node) {
+    var sphereColor = resolveSphereColor(node);
+    if (sphereColor) return sphereColor;
+  }
+  return undefined;
+}
+
+function getNodeOrder(number) {
+  for (var i = 0; i < currentOrderData.length; i++) {
+    for (var j = 0; j < currentOrderData[i].nodes.length; j++) {
+      if (currentOrderData[i].nodes[j].number === number) {
+        return currentOrderData[i].order;
+      }
+    }
+  }
+  return null;
 }
 
 // Pinta el árbol genealógico separando nodo principal, predecesores y sucesores.
@@ -2340,6 +2642,189 @@ function centerGrafig() {
 
 // Limpia el viewer completo eliminando modelos y estilos activos.
 function selectClear() {
+  removeHeatmap();
+  removeHeatmapLegend();
   viewer.clear();
   viewer.render();
+}
+
+// ==========================
+// DENSITY HEATMAP (KDE sobre plano XY con campanas de Gauss)
+// ==========================
+
+// Convierte un color HSL a hex RGB.
+function hslToHex(h, s, l) {
+  var r, g, b;
+  if (s === 0) {
+    r = g = b = l;
+  } else {
+    var hue2rgb = function(p, q, t) {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+  var toHex = function(c) {
+    var hex = Math.round(c * 255).toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+  };
+  return "#" + toHex(r) + toHex(g) + toHex(b);
+}
+
+// Calcula el color del heatmap por valor de densidad normalizado (0..1).
+// Mapeo: azul=0 baja densidad → cian → verde → amarillo → rojo=1 alta densidad.
+function heatmapColor(value) {
+  var h = (1 - value) * 240 / 360;
+  return hslToHex(h, 1, 0.5);
+}
+
+function drawHeatmapLegend() {
+  var barWidth = 20;
+  var barHeight = 500;
+  var steps = 24;
+  var originX = 1070;
+  var startY = -barHeight / 2;
+  var endY = barHeight / 2;
+  var segH = barHeight / steps;
+
+  removeHeatmapLegend();
+
+  var frameSpec = {
+    start: { x: originX - 40, y: startY, z: 0 },
+    end: { x: originX - 40, y: endY, z: 0 },
+    color: "rgba(255,255,255,0.6)",
+    lineWidth: 2,
+  };
+
+  for (var i = 0; i < steps; i++) {
+    var t = i / (steps - 1);
+    var color = heatmapColor(t);
+    var cy = startY + segH * i + segH / 2;
+    var cz = (i % 2 === 0) ? 0.5 : 0;
+    heatmapLegendShapes.push(viewer.addSphere({
+      center: { x: originX, y: cy, z: cz },
+      radius: segH * 0.52,
+      color: color,
+    }));
+  }
+
+  heatmapLegendShapes.push(viewer.addLabel("High", {
+    position: { x: originX, y: startY - 40, z: 0 },
+    fontSize: 13,
+    fontColor: "#ff2222",
+    backgroundColor: "#ffffff",
+    opacity: 0.85,
+    borderThickness: 1,
+    borderColor: "#ff2222",
+  }));
+  heatmapLegendShapes.push(viewer.addLabel("Low", {
+    position: { x: originX, y: endY + 40, z: 0 },
+    fontSize: 13,
+    fontColor: "#2266ff",
+    backgroundColor: "#ffffff",
+    opacity: 0.85,
+    borderThickness: 1,
+    borderColor: "#2266ff",
+  }));
+}
+
+function removeHeatmapLegend() {
+  heatmapLegendShapes.forEach(function(shape) {
+    viewer.removeShape(shape);
+  });
+  heatmapLegendShapes = [];
+}
+
+// Dibuja el heatmap de densidad basado en coordenadas XY de los nodos.
+function drawHeatmap() {
+  if (!Array.isArray(datos) || datos.length === 0) {
+    return;
+  }
+
+  var gridSize = heatmapRes;
+  var sigma = heatmapsigma;
+  var rangeX = 1000;
+  var rangeY = 1000;
+  var cellW = (2 * rangeX) / gridSize;
+  var cellH = (2 * rangeY) / gridSize;
+  var halfCellW = cellW / 2;
+  var halfCellH = cellH / 2;
+  var twoSigma2 = 2 * sigma * sigma;
+
+  var nodePositions = [];
+  datos.forEach(function(element) {
+    var serial = element.number;
+    var model = viewer.getModel();
+    if (!model || !Array.isArray(model.atoms)) return;
+    for (var a = 0; a < model.atoms.length; a++) {
+      if (model.atoms[a].serial === serial) {
+        nodePositions.push({ x: model.atoms[a].x, y: model.atoms[a].y });
+        break;
+      }
+    }
+  });
+
+  if (nodePositions.length === 0) return;
+
+  var densities = [];
+  var maxDensity = 0;
+  for (var gy = 0; gy < gridSize; gy++) {
+    for (var gx = 0; gx < gridSize; gx++) {
+      var cx = -rangeX + cellW * gx + halfCellW;
+      var cy = -rangeY + cellH * gy + halfCellH;
+      var density = 0;
+      for (var n = 0; n < nodePositions.length; n++) {
+        var dx = cx - nodePositions[n].x;
+        var dy = cy - nodePositions[n].y;
+        density += Math.exp(-(dx * dx + dy * dy) / twoSigma2);
+      }
+      var idx = gy * gridSize + gx;
+      densities[idx] = density;
+      if (density > maxDensity) maxDensity = density;
+    }
+  }
+
+  if (maxDensity === 0) return;
+
+  removeHeatmap();
+  removeHeatmapLegend();
+  var radius = Math.max(cellW, cellH) * 0.45;
+
+  for (var gy2 = 0; gy2 < gridSize; gy2++) {
+    for (var gx2 = 0; gx2 < gridSize; gx2++) {
+      var idx2 = gy2 * gridSize + gx2;
+      var normalized = densities[idx2] / maxDensity;
+      if (normalized < 0.02) continue;
+      var color = heatmapColor(normalized);
+      var cx2 = -rangeX + cellW * gx2 + halfCellW;
+      var cy2 = -rangeY + cellH * gy2 + halfCellH;
+      heatmapShapes.push(viewer.addSphere({
+        center: { x: cx2, y: cy2, z: 0 },
+        radius: radius,
+        color: color,
+      }));
+    }
+  }
+
+  drawHeatmapLegend();
+}
+
+// Elimina las formas del heatmap del viewer.
+function removeHeatmap() {
+  heatmapShapes.forEach(function(shape) {
+    viewer.removeShape(shape);
+  });
+  heatmapShapes = [];
+  removeHeatmapLegend();
+  heatmapEnabled = false;
+  var cb = document.getElementById("show_heatmap");
+  if (cb) cb.checked = false;
 }
