@@ -159,23 +159,3 @@ class UploadedFiles(models.Model):
         ]
         for processor_class in processor_classes:
             proccess_individual_processor_class.delay(processor_class.__name__, self.id)
-
-        # if successful_processors == 0 and last_error is not None:
-        #     send_pusher_trigger_task.delay(
-        #         channel=PusherClient.CELERY_TASK_CHANNEL,
-        #         event=PusherClient.FAILED_UPLOAD_3D_EXCEL,
-        #         data={"error_detail": error_message_to_show},
-        #     )
-        #     raise Exception(error_message_to_show)
-
-        # if successful_processors > 0:
-        #     uploaded_file.processed = True
-        #     uploaded_file.save(update_fields=["processed"])
-
-        # send_pusher_trigger_task.delay(
-        #     channel=PusherClient.CELERY_TASK_CHANNEL,
-        #     event=PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL,
-        #     data={"uploaded_file_id": uploaded_file_id},
-        # )
-        # uploaded_file.delete()
-        # return {"status": "success", "uploaded_file_id": uploaded_file_id}
