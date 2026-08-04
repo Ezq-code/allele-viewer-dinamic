@@ -17,7 +17,7 @@ class UploadedFileToCompareVsStudiesSerializer(serializers.Serializer):
     file = serializers.FileField(required=True)
 
     def validate_file(self, value):
-        sheets_to_omit = set(["Constants"])
+        
         study_types_sheet = StudyType.objects.only("sheet_name").values_list(
             "sheet_name", flat=True
         )
@@ -26,7 +26,7 @@ class UploadedFileToCompareVsStudiesSerializer(serializers.Serializer):
             file_sheets = set(excel_file.sheet_names)
             study_types_set = set(study_types_sheet)
 
-            unmatched_sheets_on_excel = file_sheets - study_types_set - sheets_to_omit
+            unmatched_sheets_on_excel = file_sheets - study_types_set - UploadedFiles.SHEETS_TO_OMMIT_IN_PROCESSING
             unmatched_sheets_on_studies = study_types_set - file_sheets
 
             if unmatched_sheets_on_excel or unmatched_sheets_on_studies:
@@ -88,12 +88,3 @@ class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
             "pdb_files",
             "allele_nodes",
         ]
-
-    # def get_allele_nodes(self, obj) -> List[Dict[str, Any]]:
-    #     allele_nodes_key = UploadedFiles.CACHE_KEY_RELATED_ALLELE_NODES.format(
-    #         uploaded_file_id=obj.id
-    #     )
-    #     if not cache.has_key(allele_nodes_key):
-    #         info = AlleleNodeSerializer(obj.allele_nodes, many=True).data
-    #         cache.set(allele_nodes_key, info)
-    #     return cache.get(allele_nodes_key)

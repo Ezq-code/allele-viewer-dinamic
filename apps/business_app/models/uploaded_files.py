@@ -53,6 +53,7 @@ class FileExtensionValidator:
 
 class UploadedFiles(models.Model):
     CACHE_KEY_RELATED_ALLELE_NODES = "allele_nodes_for_{uploaded_file_id}"
+    SHEETS_TO_OMMIT_IN_PROCESSING = set(["Constants"])
     custom_name = models.CharField(
         verbose_name=_("custom name"),
         max_length=150,
