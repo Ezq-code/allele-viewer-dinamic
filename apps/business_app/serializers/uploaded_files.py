@@ -1,14 +1,47 @@
 from rest_framework import serializers
 
 from apps.business_app.models import UploadedFiles
+from apps.business_app.models import StudyType
 import logging
 
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from apps.business_app.serializers.pdb_files import PdbFilesSerializer
 from apps.business_app.serializers.study import StudySerializerShort
+import pandas as pd
 
 
 logger = logging.getLogger(__name__)
+
+
+class UploadedFileToCompareVsStudiesSerializer(serializers.Serializer):
+    file = serializers.FileField(required=True)
+
+    def validate_file(self, value):
+        sheets_to_omit = set(["Constants"])
+        study_types_sheet = StudyType.objects.only("sheet_name").values_list(
+            "sheet_name", flat=True
+        )
+        try:
+            excel_file = pd.ExcelFile(value)
+            file_sheets = set(excel_file.sheet_names)
+            study_types_set = set(study_types_sheet)
+
+            unmatched_sheets_on_excel = file_sheets - study_types_set - sheets_to_omit
+            unmatched_sheets_on_studies = study_types_set - file_sheets
+
+            if unmatched_sheets_on_excel or unmatched_sheets_on_studies:
+                raise serializers.ValidationError(
+                    {
+                        "unmatched_sheets_on_excel": list(unmatched_sheets_on_excel),
+                        "unmatched_sheets_on_studies": list(unmatched_sheets_on_studies),
+                    }
+                )
+
+            return value
+        except Exception as e: 
+            if isinstance(e, serializers.ValidationError):
+                raise
+            raise serializers.ValidationError(f"Error al validar el archivo: {str(e)}")
 
 
 class SimpleListUploadedFilesSerializer(serializers.ModelSerializer):
