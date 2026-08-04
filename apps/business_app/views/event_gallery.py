@@ -10,7 +10,9 @@ from apps.common.pagination import AllResultsSetPagination
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+
 # Create your views here.
+from http import HTTPMethod
 
 
 class EventGalleryViewSet(viewsets.ModelViewSet, GenericAPIView):
@@ -28,7 +30,11 @@ class EventGalleryViewSet(viewsets.ModelViewSet, GenericAPIView):
     ]
     permission_classes = [permissions.AllowAny]
 
-    @action(detail=False, methods=["post"], url_path="bulk-upload/(?P<event_id>[^/.]+)")
+    @action(
+        detail=False,
+        methods=[HTTPMethod.POST],
+        url_path="bulk-upload/(?P<event_id>[^/.]+)",
+    )
     def bulk_upload(self, request, event_id=None):
         """
         Bulk upload multiple images for a specific event.

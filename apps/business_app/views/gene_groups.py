@@ -7,6 +7,7 @@ from apps.business_app.serializers.gene_group import GeneGroupsSerializer
 from apps.common.pagination import AllResultsSetPagination
 from apps.business_app.serializers.minimal_serializers import GeneGroupMinimalSerializer
 from rest_framework.decorators import action
+from http import HTTPMethod
 
 from apps.common.views import CommonOrderingFilter
 
@@ -40,7 +41,7 @@ class GeneGroupsViewSet(
 
     @action(
         detail=False,
-        methods=["GET"],
+        methods=[HTTPMethod.GET],
         url_path="minimal-list",
         url_name="minimal-list",
     )

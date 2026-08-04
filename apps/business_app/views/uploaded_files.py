@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.generics import GenericAPIView
 from rest_framework.decorators import action
-
+from http import HTTPMethod
 
 from apps.common.views import CommonOrderingFilter
 from apps.business_app.models.uploaded_files import UploadedFiles
@@ -44,10 +44,20 @@ class UploadedFilesViewSet(viewsets.ModelViewSet, GenericAPIView):
 
     @action(
         detail=False,
-        methods=["GET"],
+        methods=[HTTPMethod.GET],
         url_path="simple-list",
         url_name="simple-list",
         serializer_class=SimpleListUploadedFilesSerializer,
     )
     def simple_list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @action(
+        detail=False,
+        methods=[HTTPMethod.GET],
+        url_path="match-file-sheets-vs-studies",
+        url_name="match-file-sheets-vs-studies",
+        serializer_class=SimpleListUploadedFilesSerializer,
+    )
+    def match_file_sheets_vs_studies(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)

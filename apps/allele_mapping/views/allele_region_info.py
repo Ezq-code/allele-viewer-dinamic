@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_region_info import AlleleRegionInfo
+from http import HTTPMethod
 from apps.allele_mapping.serializers.allele_region_info import (
     AlleleRegionInfoWithRegionSerializer,
 )
@@ -68,7 +69,7 @@ class AlleleRegionInfoViewSet(viewsets.ReadOnlyModelViewSet):
         return super().list(request, *args, **kwargs)
 
     @method_decorator(cache_page(60 * 15))  # Cache por 15 minutos
-    @action(detail=False, methods=["get"], url_path="by-region")
+    @action(detail=False, methods=[HTTPMethod.GET], url_path="by-region")
     def by_region(self, request):
         """
         Endpoint para obtener alelos de una región específica

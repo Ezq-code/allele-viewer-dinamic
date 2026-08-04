@@ -103,7 +103,7 @@ class UploadedFiles(models.Model):
     def __str__(self):
         return f"{self.custom_name}"
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):  # TODO REVISAR ESTE FLUJO
         original_file = self.original_file
         is_new = self.pk is None
         _, extension = os.path.splitext(original_file.name)
