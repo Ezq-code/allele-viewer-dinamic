@@ -12,22 +12,271 @@ const read_url = write_url + "simple-list/";
 
 // url para obtener genes
 const geneUrl = "/business-gestion/gene/list-for-dropdown/";
+const studyUrl = "/business-gestion/study/";
 
 var load = document.getElementById("load");
+let availableStudies = [];
+let detectedExcelSheets = [];
+let currentSheetAssignments = {};
 
-// function showFileProcessingMessage() {
-//   Swal.fire({
-//     title: "Processing",
-//     text: "The file is being processed. You will be notified when the upload is finished.",
-//     allowOutsideClick: false,
-//     allowEscapeKey: false,
-//     timer: 4500,
-//     timerProgressBar: true,
-//     didOpen: () => {
-//       Swal.showLoading();
-//     },
-//   });
-// }
+function getExcelSheetsContainer() {
+  return document.getElementById("excel-sheets-container");
+}
+
+function getExcelSheetsList() {
+  return document.getElementById("excel-sheets-list");
+}
+
+function clearExcelSheetsList() {
+  const container = getExcelSheetsContainer();
+  const list = getExcelSheetsList();
+
+  if (list) {
+    list.innerHTML = "";
+  }
+
+  if (container) {
+    container.classList.add("d-none");
+  }
+}
+
+function renderExcelSheetsList(sheetNames) {
+  const container = getExcelSheetsContainer();
+  const list = getExcelSheetsList();
+
+  if (!container || !list) {
+    return;
+  }
+
+  detectedExcelSheets = Array.isArray(sheetNames) ? sheetNames : [];
+  list.innerHTML = "";
+
+  if (!detectedExcelSheets || detectedExcelSheets.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 2;
+    cell.className = "text-warning";
+    cell.textContent = "No se han encontrado hojas en este fichero.";
+    row.appendChild(cell);
+    list.appendChild(row);
+    container.classList.remove("d-none");
+    return;
+  }
+
+  detectedExcelSheets.forEach((sheetName) => {
+    const row = document.createElement("tr");
+
+    const sheetCell = document.createElement("td");
+    sheetCell.textContent = sheetName;
+
+    const studyCell = document.createElement("td");
+    const select = document.createElement("select");
+    select.className = "form-control form-control-sm excel-sheet-study-select";
+    select.dataset.sheetName = sheetName;
+
+    populateStudySelect(select, currentSheetAssignments[sheetName] || "");
+    select.addEventListener("change", function () {
+      if (this.value) {
+        currentSheetAssignments[sheetName] = this.value;
+      } else {
+        delete currentSheetAssignments[sheetName];
+      }
+    });
+
+    studyCell.appendChild(select);
+    row.appendChild(sheetCell);
+    row.appendChild(studyCell);
+    list.appendChild(row);
+  });
+
+  container.classList.remove("d-none");
+}
+
+function extractStudyList(payload) {
+  if (Array.isArray(payload)) {
+    return payload;
+  }
+
+  if (payload && Array.isArray(payload.results)) {
+    return payload.results;
+  }
+
+  return [];
+}
+
+function getSelectedGeneId() {
+  return $("#gene").val();
+}
+
+function hasSelect2() {
+  return typeof $.fn.select2 === "function";
+}
+
+function initGeneSelect2() {
+  if (!hasSelect2()) {
+    return;
+  }
+
+  $('#gene').select2({
+    theme: 'bootstrap4',
+    placeholder: 'Select a gene',
+    allowClear: true,
+    width: '100%',
+    dropdownParent: $('#modal-crear-elemento'),
+    language: 'es'
+  });
+}
+
+function populateStudySelect(selectElement, selectedStudyId) {
+  const noneOption = document.createElement("option");
+  noneOption.value = "";
+  noneOption.textContent = "Ninguno";
+  selectElement.appendChild(noneOption);
+  selectElement.disabled = false;
+
+  if (!availableStudies.length) {
+    const loadingOption = document.createElement("option");
+    loadingOption.value = "";
+    loadingOption.textContent = "No hay estudios disponibles";
+    loadingOption.disabled = true;
+    selectElement.appendChild(loadingOption);
+    selectElement.value = "";
+    return;
+  }
+
+  availableStudies.forEach((study) => {
+    const option = document.createElement("option");
+    option.value = String(study.id);
+    option.textContent = study.study_type_display
+      ? `${study.study_type_display} (${study.id})`
+      : `Estudio ${study.id}`;
+    selectElement.appendChild(option);
+  });
+
+  selectElement.value = selectedStudyId ? String(selectedStudyId) : "";
+}
+
+function refreshExcelSheetsStudyControls() {
+  if (!detectedExcelSheets.length) {
+    return;
+  }
+
+  renderExcelSheetsList(detectedExcelSheets);
+}
+
+function serializeSheetStudyAssignments() {
+  const assignments = {};
+
+  detectedExcelSheets.forEach((sheetName) => {
+    const studyId = currentSheetAssignments[sheetName] || "";
+    assignments[sheetName] = {
+      sheet_name: sheetName,
+      study_id: studyId ? Number(studyId) : null,
+    };
+  });
+
+  return assignments;
+}
+
+function loadAllStudies() {
+  return axios
+    .get(studyUrl, {
+      params: {},
+    })
+    .then((response) => {
+      availableStudies = extractStudyList(response.data);
+      refreshExcelSheetsStudyControls();
+      return availableStudies;
+    })
+    .catch((error) => {
+      console.error("Error cargando estudios:", error);
+      availableStudies = [];
+      refreshExcelSheetsStudyControls();
+      return [];
+    });
+}
+
+function readFileAsArrayBuffer(file) {
+  if (typeof file.arrayBuffer === "function") {
+    return file.arrayBuffer();
+  }
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function extractSheetNamesFromExcel(file) {
+  const fileName = (file && file.name) || "";
+  const extension = fileName.split(".").pop().toLowerCase();
+
+  if (extension === "xls") {
+    renderExcelSheetsList([
+      "No se pueden listar hojas de archivos XLS antiguos con este navegador.",
+    ]);
+    return;
+  }
+
+  const buffer = await readFileAsArrayBuffer(file);
+  const zip = await JSZip.loadAsync(buffer);
+  const workbookFile = zip.file("xl/workbook.xml");
+
+  if (!workbookFile) {
+    throw new Error("No se encontró la estructura workbook.xml dentro del archivo.");
+  }
+
+  const workbookXml = await workbookFile.async("string");
+  const parser = new DOMParser();
+  const xmlDocument = parser.parseFromString(workbookXml, "application/xml");
+  const parseError = xmlDocument.querySelector("parsererror");
+
+  if (parseError) {
+    throw new Error("No se pudo leer el XML del libro de Excel.");
+  }
+
+  const sheetNames = Array.from(xmlDocument.querySelectorAll("sheets sheet"))
+    .map((sheet) => sheet.getAttribute("name"))
+    .filter(Boolean);
+
+  renderExcelSheetsList(sheetNames);
+}
+
+function handleExcelFileChange(event) {
+  const file = event.target.files && event.target.files[0];
+
+  if (!file) {
+    clearExcelSheetsList();
+    detectedExcelSheets = [];
+    return;
+  }
+
+  currentSheetAssignments = {};
+  extractSheetNamesFromExcel(file).catch((error) => {
+    console.error("Error leyendo las hojas del Excel:", error);
+    renderExcelSheetsList([
+      "No se pudieron leer las hojas de este archivo.",
+    ]);
+  });
+
+  loadAllStudies();
+}
+
+function showFileProcessingMessage() {
+  Swal.fire({
+    title: "Processing",
+    text: "The file is being processed. You will be notified when the upload is finished.",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    timer: 4500,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+}
 
 // Función para cargar la lista de genes
 function loadGenes() {
@@ -37,7 +286,7 @@ function loadGenes() {
       const geneSelect = document.getElementById("gene");
       
       // Destruir Select2 antes de actualizar el DOM
-      if ($(geneSelect).hasClass('select2-hidden-accessible')) {
+      if (hasSelect2() && $(geneSelect).hasClass('select2-hidden-accessible')) {
         $(geneSelect).select2('destroy');
       }
       
@@ -51,14 +300,7 @@ function loadGenes() {
       });
 
       // Reinicializar Select2 después de cargar los genes
-      $(geneSelect).select2({
-        theme: 'bootstrap4',
-        placeholder: 'Select a gene',
-        allowClear: true,
-        width: '100%',
-        dropdownParent: $('#modal-crear-elemento'),
-        language: 'es'
-      });
+      initGeneSelect2();
     })
     .catch((error) => {
       console.error("Error cargando genes:", error);
@@ -67,19 +309,17 @@ function loadGenes() {
 
 $(document).ready(function () {
   // Inicializar Select2 antes de cargar genes
-  $('#gene').select2({
-    theme: 'bootstrap4',
-    placeholder: 'Select a gene',
-    allowClear: true,
-    width: '100%',
-    dropdownParent: $('#modal-crear-elemento'),
-    language: 'es'
-  });
+  initGeneSelect2();
   
   // Cargar la lista de genes
   loadGenes();
+  $("#gene").on("change", function () {
+    loadAllStudies();
+  });
 
-  $("table")
+  loadAllStudies();
+
+  $("#tabla-de-Datos")
     .addClass("table table-hover")
     .DataTable({
       dom: '<"top"l>Bfrtip',
@@ -142,52 +382,6 @@ $(document).ready(function () {
         { data: "gene_name", title: "Gen" },
         { data: "predefined", title: "Predefinido" },
         {
-          data: "studies",
-          title: "Estudios Cargados",
-          render: (data, type, row) => {
-            if (!data || data.length === 0) {
-              return '<span class="badge badge-secondary">Sin estudios</span>';
-            }
-
-            const total = data.length;
-            const ok = data.filter((s) => s.successfull_load).length;
-            const btnClass = ok === total ? 'btn-success' : ok === 0 ? 'btn-danger' : 'btn-warning';
-            const uniqueId = 'studies-detail-' + row.id;
-
-            const detailHtml = data.map((study) => {
-              const icon = study.successfull_load
-                ? '<i class="fas fa-check-circle" style="color: green;"></i>'
-                : '<i class="fas fa-times-circle" style="color: red;"></i>';
-              const statusClass = study.successfull_load ? 'badge-success' : 'badge-danger';
-              const status = study.successfull_load ? 'Exitoso' : 'Error';
-              const date = new Date(study.created_at).toLocaleDateString('es-ES', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-              });
-
-              let html = `<div style="margin-bottom: 8px;">
-                <div>${icon} <strong>${study.study_type_display}</strong></div>
-                <span class="badge ${statusClass}">${status}</span>
-                <span class="badge badge-info" style="margin-left: 5px;">${date}</span>`;
-
-              if (study.extra_info) {
-                html += `<div style="font-size: 0.85em; margin-top: 4px; color: #666;">${study.extra_info}</div>`;
-              }
-
-              html += '</div>';
-              return html;
-            }).join('');
-
-            return `<button type="button" class="btn btn-sm ${btnClass}" onclick="toggleStudies('${uniqueId}', this)" style="white-space: nowrap;">
-                      <i class="fas fa-flask"></i> ${total} estudio(s) <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div id="${uniqueId}" style="display:none; margin-top: 8px;">${detailHtml}</div>`;
-          },
-        },
-        {
           data: "",
           title: "Acciones",
           render: (data, type, row) => {
@@ -239,12 +433,30 @@ $(document).ready(function () {
 
     var celery_task_channel = pusher.subscribe("celery-task-channel");
     // The realtime update may contain task or alert data (or both).
-    celery_task_channel.bind("study-processed", function (data) {
-      console.log("New study processed:", data);
-      
+    celery_task_channel.bind("successful-upload-3d-excel", function (data) {
+      // If it's the combined structure with task_info/alert_info
+      console.log("Successful upload 3D Excel:", data);
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Successfull uploaded file",
+      });
+
       if ($.fn.DataTable.isDataTable("#tabla-de-Datos")) {
         $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
       }
+
+    });
+    celery_task_channel.bind("failed-upload-3d-excel", function (data) {
+      // If it's the combined structure with task_info/alert_info
+      console.log("Failed upload 3D Excel:", data);
+      const errorDetail = data && data.error_detail ? data.error_detail : "Unknown error";
+      Swal.close();
+      Swal.fire({
+        icon: "error",
+        title: "Upload failed",
+        text: "The file could not be processed. " + errorDetail,
+      });
     });
   } else {
     console.warn(
@@ -296,6 +508,10 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
   // Resetear Select2 sin destruir la instancia
   $('#gene').val(null).trigger('change');
   document.getElementById("predefined").checked = false;
+  clearExcelSheetsList();
+  detectedExcelSheets = [];
+  availableStudies = [];
+  currentSheetAssignments = {};
 });
 
 let edit_elemento = false;
@@ -330,6 +546,11 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
 
 $(function () {
   bsCustomFileInput.init();
+  const customFileInput = document.getElementById("customFile");
+
+  if (customFileInput) {
+    customFileInput.addEventListener("change", handleExcelFileChange);
+  }
 });
 
 // form validator
@@ -396,6 +617,10 @@ form.addEventListener("submit", function (event) {
     data.append("gene", $('#gene').val());
         // ...dentro del submit del formulario...
     data.append("predefined", document.getElementById("predefined").checked);
+    data.append(
+      "sheet_study_assignments",
+      JSON.stringify(serializeSheetStudyAssignments())
+    );
     // ...resto del código...
     if (document.getElementById("customFile").files[0] != null) {
       data.append(
@@ -442,7 +667,7 @@ form.addEventListener("submit", function (event) {
     } else {
       $("#modal-crear-elemento").modal("hide");
       load.hidden = false;
-      // showFileProcessingMessage(); UNNECESARY FOR THE MOMMENT
+      showFileProcessingMessage();
       axios
         .post(write_url, data)
         .then((response) => {
@@ -450,7 +675,6 @@ form.addEventListener("submit", function (event) {
             load.hidden = true;
             // The success message and table refresh are handled by Pusher
             // event "successful-upload-3d-excel".
-            $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
           }
         })
         .catch((error) => {
@@ -477,18 +701,6 @@ form.addEventListener("submit", function (event) {
     }
   }
 });
-
-function toggleStudies(uniqueId, btn) {
-  const div = document.getElementById(uniqueId);
-  const icon = btn.querySelector('i.fa-chevron-down, i.fa-chevron-up');
-  if (div.style.display === 'none') {
-    div.style.display = 'block';
-    if (icon) { icon.classList.replace('fa-chevron-down', 'fa-chevron-up'); }
-  } else {
-    div.style.display = 'none';
-    if (icon) { icon.classList.replace('fa-chevron-up', 'fa-chevron-down'); }
-  }
-}
 
 function ia_algorithms_recalculate(id, name) {
   Swal.fire({
