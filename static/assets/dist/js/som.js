@@ -13,15 +13,15 @@ const RENDER_ROWS_PER_FRAME = 30;
 // ============================================
 const CELL_CONFIG = {
     FONT_SIZE: '5px',
-    HEADER_FONT_SIZE: '8px',
-    ALLELE_FONT_SIZE: '8px',
-    CORNER_FONT_SIZE: '8px',
+    HEADER_FONT_SIZE: '5px',
+    ALLELE_FONT_SIZE: '5px',
+    CORNER_FONT_SIZE: '5px',
     CELL_PADDING_VERTICAL: '1px',
     CELL_PADDING_HORIZONTAL: '1px',
-    MIN_CELL_WIDTH: '18px',
-    MAX_CELL_WIDTH: '30px',
-    MIN_HEADER_WIDTH: '15px',
-    MAX_HEADER_WIDTH: '35px',
+    MIN_CELL_WIDTH: '15px',
+    MAX_CELL_WIDTH: '27px',
+    MIN_HEADER_WIDTH: '13px',
+    MAX_HEADER_WIDTH: '33px',
     MIN_FIRST_COL_WIDTH: '50px',
     MAX_FIRST_COL_WIDTH: '80px',
     HEADER_HEIGHT: '90px',
@@ -888,6 +888,10 @@ function renderizarTablaExcel(data) {
     const container = document.getElementById("excel-container");
     if (!container) return;
     
+    const savedScrollY = window.scrollY;
+    const savedScrollX = window.scrollX;
+    
+
     const { matriz, columnas, seccionVariable, seccionFija } = data;
     
     if (!matriz || matriz.length === 0 || columnas.length === 0) {
@@ -1163,7 +1167,12 @@ function renderizarTablaExcel(data) {
             tbody.appendChild(bodyFragment);
             
             if (idxFilaVariable < totalFilasVariable || idxFilaFija < totalFilasFija) {
-                requestAnimationFrame(renderChunk);
+                //requestAnimationFrame(renderChunk);
+
+                requestAnimationFrame(() => {
+                    window.scrollTo(savedScrollX, savedScrollY);
+                });
+
                 return;
             }
             
@@ -1212,6 +1221,22 @@ function renderizarTablaExcel(data) {
                 const celda = filaData[idxCol];
                 const td = document.createElement("td");
                 td.textContent = celda.valor || "";
+
+                //Código para la lupa
+                td.className = "cell-zoomable"; // Aplica cursor de lupa
+        
+                // Guardar el texto completo para el tooltip
+                if (celda.valor && celda.valor !== "") {
+                    td.setAttribute("data-fulltext", celda.valor);
+                    td.setAttribute("title", `🔍 ${celda.valor}`);
+                    
+                    // Si el texto es muy largo, truncarlo visualmente
+                    if (celda.valor.length > 10) {
+                        td.textContent = celda.valor.substring(0, 10) + '...';
+                    }
+                }
+                //Fin código para la lupa
+
                 td.style.textAlign = "center";
                 td.style.padding = "1px 1px";
                 td.style.border = "1px solid #d4d4d4";
@@ -1431,7 +1456,10 @@ function repintarConMomento(momentoIndex) {
 function renderizarTablaExcelConMomento(data, momento) {
     const container = document.getElementById("excel-container");
     if (!container) return;
-    
+        
+    const savedScrollY = window.scrollY;
+    const savedScrollX = window.scrollX;
+
     const { matriz, columnas, seccionVariable, seccionFija } = data;
     
     if (!matriz || matriz.length === 0 || columnas.length === 0) {
@@ -1705,7 +1733,12 @@ function renderizarTablaExcelConMomento(data, momento) {
             tbody.appendChild(bodyFragment);
             
             if (idxFilaVariable < totalFilasVariable || idxFilaFija < totalFilasFija) {
-                requestAnimationFrame(renderChunk);
+                //requestAnimationFrame(renderChunk);
+
+                requestAnimationFrame(() => {
+                    window.scrollTo(savedScrollX, savedScrollY);
+                });
+
                 return;
             }
             
@@ -1759,6 +1792,21 @@ function renderizarTablaExcelConMomento(data, momento) {
                 const celda = filaData[idxCol];
                 const td = document.createElement("td");
                 td.textContent = celda.valor || "";
+
+                //Código para la lupa
+                td.className = "cell-zoomable"; 
+                // Guardar el texto completo para el tooltip
+                if (celda.valor && celda.valor !== "") {
+                    td.setAttribute("data-fulltext", celda.valor);
+                    td.setAttribute("title", `🔍 ${celda.valor}`);
+                    
+                    // Si el texto es muy largo, truncarlo visualmente
+                    if (celda.valor.length > 10) {
+                        td.textContent = celda.valor.substring(0, 10) + '...';
+                    }
+                }
+                //Fin código para la lupa
+
                 td.style.textAlign = "center";
                 td.style.padding = "1px 1px";
                 td.style.border = "1px solid #d4d4d4";
@@ -1844,6 +1892,7 @@ function renderizarTablaExcelConMomento(data, momento) {
         }
         
         requestAnimationFrame(renderChunk);
+        
         
     }, 50);
 }
@@ -2152,8 +2201,6 @@ function actualizarMomentos(nuevosMomentos) {
     
     console.log(`✅ Momentos actualizados: ${MOMENTOS.length} momentos`);
 }
-
-
 
 // ============================================
 // FUNCION DE DEPURACION
