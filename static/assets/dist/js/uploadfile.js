@@ -12,10 +12,10 @@ const read_url = write_url + "simple-list/";
 
 // url para obtener genes
 const geneUrl = "/business-gestion/gene/list-for-dropdown/";
-const studyUrl = "/business-gestion/study/";
+const studyTypeUrl = "/business-gestion/study-types/";
 
 var load = document.getElementById("load");
-let availableStudies = [];
+let availableStudyTypes = [];
 let detectedExcelSheets = [];
 let currentSheetAssignments = {};
 
@@ -77,6 +77,7 @@ function renderExcelSheetsList(sheetNames) {
     populateStudySelect(select, currentSheetAssignments[sheetName] || "");
     select.addEventListener("change", function () {
       if (this.value) {
+        console.log(`Selected study for sheet ${sheetName}: ${this.value}`);
         currentSheetAssignments[sheetName] = this.value;
       } else {
         delete currentSheetAssignments[sheetName];
@@ -92,11 +93,8 @@ function renderExcelSheetsList(sheetNames) {
   container.classList.remove("d-none");
 }
 
-function extractStudyList(payload) {
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-
+function extractStudyTypeList(payload) {
+  console.log("Extracting study list from payload:", payload);
   if (payload && Array.isArray(payload.results)) {
     return payload.results;
   }
@@ -134,22 +132,22 @@ function populateStudySelect(selectElement, selectedStudyId) {
   selectElement.appendChild(noneOption);
   selectElement.disabled = false;
 
-  if (!availableStudies.length) {
+  if (!availableStudyTypes.length) {
     const loadingOption = document.createElement("option");
     loadingOption.value = "";
-    loadingOption.textContent = "No hay estudios disponibles";
+    loadingOption.textContent = "No hay tipos de estudios disponibles";
     loadingOption.disabled = true;
     selectElement.appendChild(loadingOption);
     selectElement.value = "";
     return;
   }
 
-  availableStudies.forEach((study) => {
+  availableStudyTypes.forEach((studyType) => {
     const option = document.createElement("option");
-    option.value = String(study.id);
-    option.textContent = study.study_type_display
-      ? `${study.study_type_display} (${study.id})`
-      : `Estudio ${study.id}`;
+    option.value = String(studyType.id);
+    option.textContent = studyType.name
+      ? `${studyType.name} (${studyType.sheet_name})`
+      : `Tipo de estudio ${studyType.name}`;
     selectElement.appendChild(option);
   });
 
@@ -165,32 +163,35 @@ function refreshExcelSheetsStudyControls() {
 }
 
 function serializeSheetStudyAssignments() {
-  const assignments = {};
+  const assignments = [];
 
   detectedExcelSheets.forEach((sheetName) => {
-    const studyId = currentSheetAssignments[sheetName] || "";
-    assignments[sheetName] = {
+    const studyType = currentSheetAssignments[sheetName] || "";
+    const extractedValue = studyType ? parseInt(studyType, 10) : null;
+    console.log(`------------------------studyType: ${studyType}`);
+    assignments.push({
       sheet_name: sheetName,
-      study_id: studyId ? Number(studyId) : null,
-    };
+      study_type: extractedValue,
+    });
   });
+  console.log(`------------------------assignments: ${assignments}`);
 
   return assignments;
 }
 
 function loadAllStudies() {
   return axios
-    .get(studyUrl, {
+    .get(studyTypeUrl, {
       params: {},
     })
     .then((response) => {
-      availableStudies = extractStudyList(response.data);
+      availableStudyTypes = extractStudyTypeList(response.data);
       refreshExcelSheetsStudyControls();
-      return availableStudies;
+      return availableStudyTypes;
     })
     .catch((error) => {
       console.error("Error cargando estudios:", error);
-      availableStudies = [];
+      availableStudyTypes = [];
       refreshExcelSheetsStudyControls();
       return [];
     });
@@ -510,7 +511,7 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
   document.getElementById("predefined").checked = false;
   clearExcelSheetsList();
   detectedExcelSheets = [];
-  availableStudies = [];
+  availableStudyTypes = [];
   currentSheetAssignments = {};
 });
 
