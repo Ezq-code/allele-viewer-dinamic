@@ -1,13 +1,18 @@
+import os
+from io import BytesIO
+import logging
+
+import pandas as pd
+from django.core.files.base import ContentFile
+from openpyxl import load_workbook
 from rest_framework import serializers
 
 from apps.business_app.models import UploadedFiles
 from apps.business_app.models import StudyType
-import logging
 
 from apps.business_app.serializers.allele_nodes import AlleleNodeSerializer
 from apps.business_app.serializers.pdb_files import PdbFilesSerializer
 from apps.business_app.serializers.study import StudySerializerShort
-import pandas as pd
 
 
 logger = logging.getLogger(__name__)
@@ -79,7 +84,7 @@ class SheetStudyAssignmentSerializer(serializers.Serializer):
 class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
     pdb_files = PdbFilesSerializer(many=True, read_only=True)
     allele_nodes = AlleleNodeSerializer(many=True, read_only=True)
-    sheet_study_assignments = SheetStudyAssignmentSerializer(many=True, required=False)
+    sheet_study_assignments = SheetStudyAssignmentSerializer(many=True, required=True)
 
 
     class Meta(SimpleListUploadedFilesSerializer.Meta):
@@ -95,3 +100,84 @@ class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
             "allele_nodes",
         ]
 
+    def _rename_excel_sheets(self, original_file, rename_pairs):
+        """Return a new in-memory Excel file with renamed worksheets."""
+        original_file.seek(0)
+        workbook = load_workbook(filename=BytesIO(original_file.read()))
+
+        for source_name, target_name in rename_pairs:
+            if source_name not in workbook.sheetnames:
+                raise serializers.ValidationError(
+                    {
+                        "sheet_study_assignments": [
+                            f"La pesta\u00f1a '{source_name}' no existe en el archivo cargado."
+                        ]
+                    }
+                )
+
+            if target_name in workbook.sheetnames and target_name != source_name:
+                raise serializers.ValidationError(
+                    {
+                        "sheet_study_assignments": [
+                            f"No se puede renombrar '{source_name}' a '{target_name}' porque ya existe una pesta\u00f1a con ese nombre."
+                        ]
+                    }
+                )
+
+            workbook[source_name].title = target_name
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+
+        return ContentFile(
+            output.getvalue(),
+            name=os.path.basename("fixed"+original_file.name),
+        )
+
+    def _build_sheet_rename_pairs(self, sheet_study_assignments):
+        """Create rename pairs from assignments where study_type is provided."""
+        rename_pairs = []
+        for assignment in sheet_study_assignments:
+            study_type = assignment.get("study_type")
+            source_name = assignment.get("sheet_name")
+            if not study_type:
+                continue
+
+            target_name = study_type.sheet_name
+            if source_name != target_name:
+                rename_pairs.append((source_name, target_name))
+
+        return rename_pairs
+
+    def validate(self, attrs):
+        """Rename worksheet names in original_file according to sheet_study_assignments."""
+        attrs = super().validate(attrs)
+        sheet_study_assignments = attrs.pop("sheet_study_assignments", [])
+        if not sheet_study_assignments:
+            return attrs
+
+        original_file = attrs.get("original_file")
+        if not original_file:
+            raise serializers.ValidationError(
+                {
+                    "original_file": "Debe enviar original_file cuando usa sheet_study_assignments."
+                }
+            )
+
+        rename_pairs = self._build_sheet_rename_pairs(sheet_study_assignments)
+        if not rename_pairs:
+            return attrs
+
+        try:
+            attrs["original_file"] = self._rename_excel_sheets(original_file, rename_pairs)
+        except serializers.ValidationError:
+            raise
+        except Exception as exc:
+            raise serializers.ValidationError(
+                {
+                    "original_file": f"Error al renombrar pesta\u00f1as del Excel: {exc}"
+                }
+            )
+
+        return attrs

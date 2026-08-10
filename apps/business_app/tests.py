@@ -1,8 +1,10 @@
 from unittest.mock import patch, MagicMock
 from types import SimpleNamespace
+from io import BytesIO
 
 import pytest
 import networkx as nx
+from openpyxl import Workbook, load_workbook
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.cache import cache
 from django.urls import reverse
@@ -31,6 +33,24 @@ from apps.business_app.utils.gene_list_cache import (
 )
 from apps.business_app.utils.xslx_to_pdb_by_protein import XslxToPdbByProtein
 from apps.users_app.models.system_user import SystemUser
+
+
+def _build_excel_upload(filename, sheet_names):
+    """Build a valid XLSX upload in memory with the provided sheet names."""
+    workbook = Workbook()
+    workbook.active.title = sheet_names[0]
+    for sheet_name in sheet_names[1:]:
+        workbook.create_sheet(title=sheet_name)
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+
+    return SimpleUploadedFile(
+        filename,
+        output.getvalue(),
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
 
 
 @pytest.mark.django_db
@@ -188,6 +208,95 @@ def test_uploaded_files_serializer_does_not_implement_get_allele_nodes_method():
         context={"view": SimpleNamespace(action="create")}
     )
     assert not hasattr(serializer, "get_allele_nodes")
+
+
+@pytest.mark.django_db
+def test_uploaded_files_serializer_renames_sheet_using_study_type_sheet_name(
+    tmp_path, settings
+):
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(username="rename_sheet", password="secret")
+    study_type = StudyType.objects.create(
+        name="Location",
+        sheet_name="Location Sheet",
+    )
+    upload = _build_excel_upload("rename_test.xlsx", ["Old Sheet", "Constants"])
+
+    serializer = UploadedFilesSerializer(
+        data={
+            "custom_name": "Renamed upload",
+            "original_file": upload,
+            "system_user": user.id,
+            "sheet_study_assignments": [
+                {"sheet_name": "Old Sheet", "study_type": study_type.id}
+            ],
+        }
+    )
+
+    assert serializer.is_valid(), serializer.errors
+
+    with patch(
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
+    ):
+        instance = serializer.save()
+
+    workbook = load_workbook(instance.original_file.path)
+    assert "Location Sheet" in workbook.sheetnames
+    assert "Old Sheet" not in workbook.sheetnames
+
+
+@pytest.mark.django_db
+def test_uploaded_files_serializer_keeps_sheet_name_when_study_type_is_null(
+    tmp_path, settings
+):
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(username="null_study_type", password="secret")
+    upload = _build_excel_upload("null_study_type.xlsx", ["No Change"])
+
+    serializer = UploadedFilesSerializer(
+        data={
+            "custom_name": "No rename",
+            "original_file": upload,
+            "system_user": user.id,
+            "sheet_study_assignments": [
+                {"sheet_name": "No Change", "study_type": None}
+            ],
+        }
+    )
+
+    assert serializer.is_valid(), serializer.errors
+
+    with patch(
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
+    ):
+        instance = serializer.save()
+
+    workbook = load_workbook(instance.original_file.path)
+    assert "No Change" in workbook.sheetnames
+
+
+@pytest.mark.django_db
+def test_uploaded_files_serializer_fails_when_sheet_to_rename_does_not_exist():
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(username="missing_sheet", password="secret")
+    study_type = StudyType.objects.create(name="Ancestors", sheet_name="Ancestors Sheet")
+    upload = _build_excel_upload("missing_sheet.xlsx", ["Existing"])
+
+    serializer = UploadedFilesSerializer(
+        data={
+            "custom_name": "Missing sheet",
+            "original_file": upload,
+            "system_user": user.id,
+            "sheet_study_assignments": [
+                {"sheet_name": "Not Existing", "study_type": study_type.id}
+            ],
+        }
+    )
+
+    assert not serializer.is_valid()
+    assert "sheet_study_assignments" in serializer.errors
 
 
 @pytest.mark.django_db
