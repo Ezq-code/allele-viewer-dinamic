@@ -72,15 +72,21 @@ class SimpleListUploadedFilesSerializer(serializers.ModelSerializer):
             logger.exception(f"{str(e)}")
             raise serializers.ValidationError(e) from e
 
+class SheetStudyAssignmentSerializer(serializers.Serializer):
+    sheet_name = serializers.CharField()
+    study_type = serializers.PrimaryKeyRelatedField(queryset=StudyType.objects.all(), allow_null=True, required=False)
 
 class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
     pdb_files = PdbFilesSerializer(many=True, read_only=True)
     allele_nodes = AlleleNodeSerializer(many=True, read_only=True)
+    sheet_study_assignments = SheetStudyAssignmentSerializer(many=True, required=False)
+
 
     class Meta(SimpleListUploadedFilesSerializer.Meta):
         fields = SimpleListUploadedFilesSerializer.Meta.fields + [
             "pdb_files",
             "allele_nodes",
+            "sheet_study_assignments",
         ]
         read_only_fields = SimpleListUploadedFilesSerializer.Meta.read_only_fields + [
             "gene_name",
@@ -88,3 +94,4 @@ class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
             "pdb_files",
             "allele_nodes",
         ]
+
