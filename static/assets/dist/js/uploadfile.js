@@ -179,6 +179,117 @@ function serializeSheetStudyAssignments() {
   return assignments;
 }
 
+function getStudyTypeByIdMap() {
+  const map = new Map();
+  availableStudyTypes.forEach((studyType) => {
+    map.set(String(studyType.id), studyType);
+  });
+  return map;
+}
+
+function validateSheetAssignmentsBeforeSubmit() {
+  if (!detectedExcelSheets.length) {
+    return { isValid: true };
+  }
+
+  const assignments = serializeSheetStudyAssignments();
+  const studyTypeById = getStudyTypeByIdMap();
+  const renamePairs = [];
+  const missingStudyTypes = [];
+
+  assignments.forEach((assignment) => {
+    if (!assignment.study_type) {
+      return;
+    }
+
+    const source = assignment.sheet_name;
+    const studyType = studyTypeById.get(String(assignment.study_type));
+
+    if (!studyType) {
+      missingStudyTypes.push(source);
+      return;
+    }
+
+    const target = studyType.sheet_name;
+    if (source !== target) {
+      renamePairs.push({ source, target });
+    }
+  });
+
+  if (missingStudyTypes.length) {
+    return {
+      isValid: false,
+      message:
+        "Hay estudios seleccionados que ya no existen o no se pudieron cargar. " +
+        "Vuelve a seleccionar los estudios antes de subir el archivo.",
+    };
+  }
+
+  const targetToSources = new Map();
+  renamePairs.forEach(({ source, target }) => {
+    if (!targetToSources.has(target)) {
+      targetToSources.set(target, []);
+    }
+    targetToSources.get(target).push(source);
+  });
+
+  const duplicatedTargets = [];
+  targetToSources.forEach((sources, target) => {
+    if (sources.length > 1) {
+      duplicatedTargets.push(`'${target}' <- ${sources.join(", ")}`);
+    }
+  });
+
+  if (duplicatedTargets.length) {
+    return {
+      isValid: false,
+      message:
+        "Conflicto de renombrado: varias hojas intentan usar el mismo nombre destino. " +
+        duplicatedTargets.join(" | "),
+    };
+  }
+
+  const existingSheetNames = new Set(detectedExcelSheets);
+  const renamedSources = new Set(renamePairs.map((pair) => pair.source));
+
+  const hardCollisions = renamePairs.filter(({ source, target }) => {
+    return (
+      existingSheetNames.has(target) &&
+      target !== source &&
+      !renamedSources.has(target)
+    );
+  });
+
+  if (hardCollisions.length) {
+    return {
+      isValid: false,
+      message:
+        "Conflicto de renombrado: ya existe una hoja con el nombre destino y no se va a mover. " +
+        hardCollisions
+          .map(({ source, target }) => `'${source}' -> '${target}'`)
+          .join(" | "),
+    };
+  }
+
+  const chainedRenames = renamePairs.filter(({ source, target }) => {
+    return target !== source && renamedSources.has(target);
+  });
+
+  if (chainedRenames.length) {
+    return {
+      isValid: false,
+      message:
+        "Conflicto de renombrado encadenado detectado. " +
+        "Evita destinos que coincidan con nombres origen de otras hojas en el mismo envío: " +
+        chainedRenames
+          .map(({ source, target }) => `'${source}' -> '${target}'`)
+          .join(" | "),
+    };
+  }
+
+  return { isValid: true };
+}
+
 function loadAllStudies() {
   return axios
     .get(studyTypeUrl, {
@@ -611,18 +722,40 @@ form.addEventListener("submit", function (event) {
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
 
   if (form.checkValidity()) {
+    const sheetAssignmentValidation = validateSheetAssignmentsBeforeSubmit();
+    if (!sheetAssignmentValidation.isValid) {
+      Swal.fire({
+        icon: "error",
+        title: "Error en asignaciones de hojas",
+        text: sheetAssignmentValidation.message,
+        showConfirmButton: true,
+      });
+      return;
+    }
+
     let data = new FormData();
+    const serializedAssignments = serializeSheetStudyAssignments();
+
+    if (!edit_elemento && serializedAssignments.length === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "No se detectaron hojas",
+        text: "Selecciona un archivo Excel valido para cargar sus hojas antes de enviar.",
+        showConfirmButton: true,
+      });
+      return;
+    }
+
     data.append("system_user", localStorage.getItem("id"));
     data.append("custom_name", document.getElementById("name").value);
     data.append("description", document.getElementById("description").value);
     data.append("gene", $('#gene').val());
-        // ...dentro del submit del formulario...
     data.append("predefined", document.getElementById("predefined").checked);
-    data.append(
+    data.set(
       "sheet_study_assignments",
-      JSON.stringify(serializeSheetStudyAssignments())
+      JSON.stringify(serializedAssignments)
     );
-    // ...resto del código...
+
     if (document.getElementById("customFile").files[0] != null) {
       data.append(
         "original_file",
@@ -680,7 +813,7 @@ form.addEventListener("submit", function (event) {
         })
         .catch((error) => {
           load.hidden = true;
-          let dict = error.response.data;
+          let dict = (error.response && error.response.data) || {};
 
           let textError = "An error occurred while saving the file: ";
           for (const key in dict) {

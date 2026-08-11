@@ -1,6 +1,7 @@
 from unittest.mock import patch, MagicMock
 from types import SimpleNamespace
 from io import BytesIO
+import json
 
 import pytest
 import networkx as nx
@@ -211,6 +212,31 @@ def test_uploaded_files_serializer_does_not_implement_get_allele_nodes_method():
 
 
 @pytest.mark.django_db
+def test_uploaded_files_serializer_representation_omits_sheet_study_assignments(
+    tmp_path, settings
+):
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(
+        username="uploaded_repr", password="secret"
+    )
+    upload = _build_excel_upload("repr_test.xlsx", ["Constants"])
+
+    with patch(
+        "apps.business_app.models.uploaded_files.proccess_individual_processor_class.apply_async"
+    ):
+        instance = UploadedFiles.objects.create(
+            custom_name="repr file",
+            original_file=upload,
+            system_user=user,
+        )
+
+    data = UploadedFilesSerializer(instance).data
+
+    assert "sheet_study_assignments" not in data
+
+
+@pytest.mark.django_db
 def test_uploaded_files_serializer_renames_sheet_using_study_type_sheet_name(
     tmp_path, settings
 ):
@@ -297,6 +323,101 @@ def test_uploaded_files_serializer_fails_when_sheet_to_rename_does_not_exist():
 
     assert not serializer.is_valid()
     assert "sheet_study_assignments" in serializer.errors
+
+
+@pytest.mark.django_db
+def test_uploaded_files_serializer_accepts_sheet_assignments_as_json_string(
+    tmp_path, settings
+):
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(
+        username="json_assignments", password="secret"
+    )
+    study_type = StudyType.objects.create(name="Ancestors", sheet_name="Ancestors")
+    upload = _build_excel_upload("json_assignments.xlsx", ["Old Ancestors"])
+
+    assignments = json.dumps(
+        [{"sheet_name": "Old Ancestors", "study_type": study_type.id}]
+    )
+
+    serializer = UploadedFilesSerializer(
+        data={
+            "custom_name": "JSON assignments",
+            "original_file": upload,
+            "system_user": user.id,
+            "sheet_study_assignments": assignments,
+        }
+    )
+
+    assert serializer.is_valid(), serializer.errors
+
+
+@pytest.mark.django_db
+def test_uploaded_files_serializer_accepts_concatenated_sheet_assignments_json(
+    tmp_path, settings
+):
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(
+        username="json_concat_assignments", password="secret"
+    )
+    upload = _build_excel_upload("json_concat_assignments.xlsx", ["Old Location"])
+
+    one_chunk = json.dumps(
+        [{"sheet_name": "Old Location", "study_type": None}]
+    )
+    concatenated = one_chunk + one_chunk
+
+    serializer = UploadedFilesSerializer(
+        data={
+            "custom_name": "JSON concat assignments",
+            "original_file": upload,
+            "system_user": user.id,
+            "sheet_study_assignments": concatenated,
+        }
+    )
+
+    assert serializer.is_valid(), serializer.errors
+
+
+@pytest.mark.django_db
+def test_uploaded_files_endpoint_accepts_multipart_json_sheet_assignments(
+    tmp_path, settings
+):
+    settings.MEDIA_ROOT = tmp_path
+    AllowedExtensions.objects.create(extension=".xlsx", typical_app_name="Excel")
+    user = SystemUser.objects.create_user(
+        username="upload_endpoint_json", password="secret"
+    )
+    gene = Gene.objects.create(name="HLA-C")
+
+    study_type = StudyType.objects.create(name="Genetic Allele", sheet_name="Genetic")
+    upload = _build_excel_upload(
+        "endpoint_json.xlsx",
+        ["Constants", "Genetic Allele"],
+    )
+
+    payload = {
+        "system_user": str(user.id),
+        "custom_name": "HLA-C",
+        "description": "",
+        "gene": str(gene.id),
+        "predefined": "false",
+        "sheet_study_assignments": json.dumps(
+            [
+                {"sheet_name": "Constants", "study_type": None},
+                {"sheet_name": "Genetic Allele", "study_type": study_type.id},
+            ]
+        ),
+        "original_file": upload,
+    }
+
+    client = APIClient()
+    client.force_authenticate(user=user)
+    response = client.post(reverse("uploaded-files-list"), payload, format="multipart")
+
+    assert response.status_code == 201, response.data
 
 
 @pytest.mark.django_db
