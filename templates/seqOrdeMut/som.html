@@ -13,7 +13,59 @@
   href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}"
 />
 <style>
-  /* Estilo Excel */
+/* Estilo base de la celda */
+
+/* Estilo para el cursor de lupa */
+.cell-zoomable {
+    cursor: zoom-in !important;
+}
+
+/* Tooltip mejorado para mostrar el contenido completo */
+.cell-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.cell-tooltip:hover::after {
+    content: attr(data-fulltext);
+    position: fixed;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: monospace;
+    max-width: 400px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    z-index: 10000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    border: 2px solid #4a90d9;
+    pointer-events: none;
+    animation: tooltipFade 0.2s ease-in;
+}
+
+/* Efecto de zoom en la celda */
+.cell-zoomable:hover {
+    transform: scale(1.1);
+    z-index: 100;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: all 0.15s ease;
+}
+
+@keyframes tooltipFade {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+
+/* Fin lupa */
+
+/* Estilo Excel */
 .excel-table-container {
   overflow-x: auto;
   overflow-y: auto;
