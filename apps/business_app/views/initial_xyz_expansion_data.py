@@ -3,6 +3,7 @@ from rest_framework import permissions, viewsets, status, mixins
 from drf_spectacular.utils import extend_schema
 import logging
 
+from http import HTTPMethod
 
 from apps.business_app.models.initial_xyz_expansion_data import InitialXyzExpansionData
 from apps.business_app.serializers.custom_generated_pdb_files import (
@@ -42,7 +43,7 @@ class InitialXyzExpansionDataViewSet(
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @extend_schema(
-        methods=["POST"],
+        methods=[HTTPMethod.POST],
         description="Proccess incoming xyz expansion factors and generate a new set of coordinates",
         responses={200: CustomGeneratedPdbFilesSerializer},
     )

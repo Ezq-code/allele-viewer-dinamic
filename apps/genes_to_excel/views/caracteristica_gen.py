@@ -12,7 +12,7 @@ from django.views.decorators.cache import cache_page
 from ..serializers.caracteristica_gen import CaracteristicaGenSerializer
 from ..models.caracteristica_gen import CaracteristicaGen
 from apps.common.views import GetAllMixin
-
+from http import HTTPMethod
 
 class CaracteristicaGenViewSet(
     GetAllMixin, viewsets.ReadOnlyModelViewSet, GenericAPIView
@@ -26,7 +26,7 @@ class CaracteristicaGenViewSet(
 
     @action(
         detail=False,
-        methods=["get"],
+        methods=[HTTPMethod.GET],
         url_path="get-related-genes",
         url_name="get-related-genes",
         serializer_class=GeneSimpleSerializer,
