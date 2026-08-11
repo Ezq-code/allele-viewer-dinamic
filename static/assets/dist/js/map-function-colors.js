@@ -39,7 +39,8 @@ function GetColorByPopulation(poblation) {
 }
 
 const populationRangesAfrica = [
-    { start: -700000, end: -315444, mag: -1 },   
+    { start: -700000, end: -315444, mag: -1 },  
+    { start: -315000, end: -100000, mag: -1 },   
     { start: -314687, end: -169343, mag: 800 },   
     { start: -130000, end: -115000, mag: 199212 },    
     { start: -68950, end: -65002, mag: 14914 },

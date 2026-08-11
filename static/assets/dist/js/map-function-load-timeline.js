@@ -528,7 +528,7 @@ const allTimes = data.features
                                                 sessionStorage.setItem('timedelayland', 'PT5S');
                                             }
                                             else
-                                            if (selectedValue == "-69000/-15000"){
+                                            if (selectedValue == "-315000/-15000"){ //-69000/-15000
                                                 sessionStorage.setItem('timedelayice', 'PT9S');
                                                 sessionStorage.setItem('timedelayland', 'PT9S');
                                             } 
@@ -762,7 +762,7 @@ if (timeRange == "-15000/2025"){
         oReq.open('GET', timelinetimedimensionHomoHeidelBergensis);
     }
     else
-    if (timeRange == "-69000/-15000"){
+    if (timeRange == "-315000/-15000"){
         oReq.open('GET', timelinetimedimensionHomoSapiens);
     }
     else
