@@ -114,32 +114,13 @@
             <label for="name">Name</label>
             <input type="text" class="form-control" id="name" name="name" placeholder="Enter the name" required>
           </div>
-              <div class="form-group col-md-12">
-            <label for="gene">Gene</label>
-            <select class="form-control select2bs4" id="gene" name="gene" required style="width: 100%;">
-              <option value="">Select a gene</option>
-            </select>
-          </div>
+         
           <div class="form-group col-md-12">
             <label for="customFile">Upload Files</label>
             <div class="input-group">
               <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFile" name="original_file" accept=" application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel.sheet.macroEnabled.12">
+                <input type="file" class="custom-file-input" id="customFile" accept=" application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel.sheet.macroEnabled.12">
                 <label class=" custom-file-label" for="customFile"></label>
-              </div>
-            </div>
-            <div class="mt-2 d-none" id="excel-sheets-container">
-              <label class="mb-1">Hojas detectadas</label>
-              <div class="table-responsive">
-                <table class="table table-sm table-bordered mb-0">
-                  <thead class="thead-light">
-                    <tr>
-                      <th>Hoja</th>
-                      <th>Estudio asociado</th>
-                    </tr>
-                  </thead>
-                  <tbody id="excel-sheets-list"></tbody>
-                </table>
               </div>
             </div>
           </div>
@@ -148,7 +129,12 @@
             <textarea type="text" class="form-control" id="description" placeholder="Enter the description "></textarea>
           </div>
           
-     
+          <div class="form-group col-md-12">
+            <label for="gene">Gene</label>
+            <select class="form-control select2bs4" id="gene" name="gene" required style="width: 100%;">
+              <option value="">Select a gene</option>
+            </select>
+          </div>
                     <!-- filepath: d:\desarrollo\Proyects-Git\Github\allele-viewer-dinamic\templates\grafico\uploadfile.html -->
           <!-- ...dentro del form id="form-create-elemento", antes del cierre de .card-body... -->
           <div class="form-group col-md-12">
@@ -197,8 +183,8 @@
 <script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
 <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
 <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
-<script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
 <script src="{% static 'assets/dist/js/uploadfile.js' %}"></script>
+<script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
 
 <!-- Page specific script -->
 

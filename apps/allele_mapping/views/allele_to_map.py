@@ -6,7 +6,6 @@ from rest_framework.decorators import action
 from apps.common.views import CommonOrderingFilter
 from apps.allele_mapping.models.allele_to_map import AlleleToMap
 from apps.allele_mapping.serializers.allele_to_map import AlleleToMapSerializer
-from http import HTTPMethod
 
 
 class AlleleToMapViewSet(viewsets.ModelViewSet):
@@ -31,7 +30,7 @@ class AlleleToMapViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=False,
-        methods=[HTTPMethod.GET],
+        methods=["GET"],
         url_path="allelic-groups",
         url_name="allelic-groups",
     )

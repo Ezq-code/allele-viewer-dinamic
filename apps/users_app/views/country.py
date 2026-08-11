@@ -8,7 +8,6 @@ from apps.common.views import GetAllMixin
 from apps.users_app.models.country import Country
 from apps.users_app.serializers import CountrySerializer
 from rest_framework.decorators import action
-from http import HTTPMethod
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -46,7 +45,7 @@ class CountryViewSet(
 
     @method_decorator(cache_page(timeout=3600, key_prefix="get_codes"))
     @action(
-        methods=[HTTPMethod.GET],
+        methods=["get"],
         detail=False,
         url_name="get-codes",
         url_path="get-codes",

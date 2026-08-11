@@ -9,7 +9,6 @@ from apps.business_app.serializers.site_configurations import (
 )
 
 # Create your views here.
-from http import HTTPMethod
 
 
 class SiteConfigurationViewSet(
@@ -27,7 +26,7 @@ class SiteConfigurationViewSet(
         return SiteConfiguration.get_solo()
 
     @action(
-        methods=[HTTPMethod.GET],
+        methods=["get"],
         detail=False,
         url_name="get-configurations",
         url_path="get-configurations",
@@ -41,7 +40,7 @@ class SiteConfigurationViewSet(
         return Response(serializer.data)
 
     @action(
-        methods=[HTTPMethod.PATCH],
+        methods=["patch"],
         detail=False,
         url_name="update-configurations",
         url_path="update-configurations",

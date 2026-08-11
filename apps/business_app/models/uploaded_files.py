@@ -53,7 +53,6 @@ class FileExtensionValidator:
 
 class UploadedFiles(models.Model):
     CACHE_KEY_RELATED_ALLELE_NODES = "allele_nodes_for_{uploaded_file_id}"
-    SHEETS_TO_OMMIT_IN_PROCESSING = set(["Constants"])
     custom_name = models.CharField(
         verbose_name=_("custom name"),
         max_length=150,
@@ -104,7 +103,7 @@ class UploadedFiles(models.Model):
     def __str__(self):
         return f"{self.custom_name}"
 
-    def save(self, *args, **kwargs):  # TODO REVISAR ESTE FLUJO
+    def save(self, *args, **kwargs):
         original_file = self.original_file
         is_new = self.pk is None
         _, extension = os.path.splitext(original_file.name)
@@ -160,3 +159,23 @@ class UploadedFiles(models.Model):
         ]
         for processor_class in processor_classes:
             proccess_individual_processor_class.delay(processor_class.__name__, self.id)
+
+        # if successful_processors == 0 and last_error is not None:
+        #     send_pusher_trigger_task.delay(
+        #         channel=PusherClient.CELERY_TASK_CHANNEL,
+        #         event=PusherClient.FAILED_UPLOAD_3D_EXCEL,
+        #         data={"error_detail": error_message_to_show},
+        #     )
+        #     raise Exception(error_message_to_show)
+
+        # if successful_processors > 0:
+        #     uploaded_file.processed = True
+        #     uploaded_file.save(update_fields=["processed"])
+
+        # send_pusher_trigger_task.delay(
+        #     channel=PusherClient.CELERY_TASK_CHANNEL,
+        #     event=PusherClient.SUCCESSFUL_UPLOAD_3D_EXCEL,
+        #     data={"uploaded_file_id": uploaded_file_id},
+        # )
+        # uploaded_file.delete()
+        # return {"status": "success", "uploaded_file_id": uploaded_file_id}

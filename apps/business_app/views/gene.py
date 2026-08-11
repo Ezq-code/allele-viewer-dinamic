@@ -21,7 +21,6 @@ from django.core.cache import cache
 
 from apps.common.views import CommonOrderingFilter
 from apps.business_app.utils.gene_list_cache import build_gene_list_cache_key
-from http import HTTPMethod
 
 
 # Create your views here.
@@ -82,7 +81,7 @@ class GeneViewSet(
 
     @action(
         detail=False,
-        methods=[HTTPMethod.GET],
+        methods=["GET"],
         url_path="get-all-info",
         url_name="get-all-info",
         serializer_class=GeneGetAllInfoSerializer,
@@ -115,7 +114,7 @@ class GeneViewSet(
 
     @action(
         detail=False,
-        methods=[HTTPMethod.GET],
+        methods=["GET"],
         url_path="list-for-graph",
         url_name="list-for-graph",
         serializer_class=GeneSimpleSerializer,
@@ -135,7 +134,7 @@ class GeneViewSet(
 
     @action(
         detail=False,
-        methods=[HTTPMethod.GET],
+        methods=["GET"],
         url_path="list-for-dropdown",
         url_name="list-for-dropdown",
         serializer_class=GeneSimpleSerializer,
@@ -149,7 +148,7 @@ class GeneViewSet(
 
     @action(
         detail=False,
-        methods=[HTTPMethod.GET],
+        methods=["GET"],
         url_path="with-alleles-to-map",
         url_name="with-alleles-to-map",
     )
@@ -174,7 +173,7 @@ class GeneViewSet(
 
     @action(
         detail=False,
-        methods=[HTTPMethod.GET],
+        methods=["GET"],
         url_path="alleles-by-gene",
         url_name="alleles-by-gene",
     )

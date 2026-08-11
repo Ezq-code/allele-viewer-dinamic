@@ -3,7 +3,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins
 from rest_framework.decorators import action
 from rest_framework.generics import GenericAPIView
-from http import HTTPMethod
 
 from apps.common.filters import CommonFilter
 from apps.common.pagination import AllResultsSetPagination
@@ -119,7 +118,7 @@ class GetAllMixin(mixins.ListModelMixin):
 
     @action(
         detail=False,
-        methods=[HTTPMethod.GET],
+        methods=["GET"],
         url_path="get-all",
         url_name="get-all",
     )

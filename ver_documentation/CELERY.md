@@ -70,7 +70,7 @@ python manage.py migrate
 **Manualmente:**
 ```powershell
 # Windows - Terminal 1 - Worker
-celery.exe -A project_site worker --loglevel=info --pool=solo
+celery -A project_site worker --loglevel=info --pool=solo
 
 # Windows - Terminal 2 - Beat
 celery -A project_site beat --loglevel=info

@@ -13,7 +13,6 @@ from apps.business_app.serializers.minimal_serializers import (
 
 from apps.common.pagination import AllResultsSetPagination
 
-from http import HTTPMethod
 
 from apps.common.views import CommonOrderingFilter
 
@@ -48,7 +47,7 @@ class DiseaseSubGroupViewSet(
 
     @action(
         detail=False,
-        methods=[HTTPMethod.GET],
+        methods=["GET"],
         url_path="minimal-list",
         url_name="minimal-list",
     )

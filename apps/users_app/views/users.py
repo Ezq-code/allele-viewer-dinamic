@@ -18,7 +18,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from http import HTTPMethod
 
 # Create your views here.
 
@@ -63,7 +62,7 @@ class UserViewSet(viewsets.ModelViewSet, GenericAPIView):
 
     @extend_schema(
         request=UserSerializer,
-        methods=[HTTPMethod.POST],
+        methods=["POST"],
         description=_("Creates an user"),
         responses={201: UserSerializer},
     )
@@ -105,11 +104,11 @@ class UserViewSet(viewsets.ModelViewSet, GenericAPIView):
 
     @extend_schema(
         request=LoginSerializer,
-        methods=[HTTPMethod.POST],
+        methods=["POST"],
         description=_("Provides authentication using user and password combination"),
         responses={202: UserSerializer},
     )
-    @action(detail=False, methods=[HTTPMethod.POST])
+    @action(detail=False, methods=["POST"])
     def login(self, request):
         serializer = LoginSerializer(
             data=self.request.data, context={"request": request}
@@ -122,11 +121,11 @@ class UserViewSet(viewsets.ModelViewSet, GenericAPIView):
 
     @extend_schema(
         request=None,
-        methods=[HTTPMethod.GET],
+        methods=["GET"],
         description=_("Logout user"),
         responses={202: None},
     )
-    @action(detail=False, methods=[HTTPMethod.GET])
+    @action(detail=False, methods=["GET"])
     def logout(self, request):
         logout(request)
         return Response(

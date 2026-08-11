@@ -22,7 +22,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from http import HTTPMethod
 
 # Create your views here.
 class NewCoordinatesProcessorViewSet(NestedViewSetMixin, viewsets.ViewSet):
@@ -30,7 +29,7 @@ class NewCoordinatesProcessorViewSet(NestedViewSetMixin, viewsets.ViewSet):
 
     @extend_schema(
         request=SnpCoordinateProcessorInputSerializer,
-        methods=[HTTPMethod.POST],
+        methods=["POST"],
         description="Proccess incoming numbers and generate a new set of coordinates",
         responses={200: CustomGeneratedPdbFilesSerializer},
     )
@@ -66,12 +65,12 @@ class NewCoordinatesProcessorViewSet(NestedViewSetMixin, viewsets.ViewSet):
 
     @extend_schema(
         request=XyzCoordinateProcessorInputSerializer,
-        methods=[HTTPMethod.POST],
+        methods=["POST"],
         description="Proccess incoming expansions coeficients and output new pdb file",
         responses={200: CustomGeneratedPdbFilesSerializer},
     )
     @action(
-        methods=[HTTPMethod.POST],
+        methods=["post"],
         detail=False,
         url_name="expansion-processor",
         url_path="expansion-processor",
