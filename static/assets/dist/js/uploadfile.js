@@ -807,6 +807,7 @@ form.addEventListener("submit", function (event) {
         .post(write_url, data)
         .then((response) => {
           if (response.status === 201) {
+             table.ajax.reload();
             load.hidden = true;
             // The success message and table refresh are handled by Pusher
             // event "successful-upload-3d-excel".
