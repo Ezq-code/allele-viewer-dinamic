@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class XslxToPdbByAncestersPlusEstStudy(XslxToPdbByProtein):
     def __init__(self, origin_file, global_configuration, uploaded_file_id) -> None:
         self.gen_allele_study_type, _ = StudyType.objects.get_or_create(
-            name=StudyType.STUDY_NAME_ANCESTERS_PLUS_EST,
+            name=StudyType.STUDY_NAME_ANCESTRAL_PLUS_EST,
             defaults={"sheet_name": StudyType.SHEET_NAME_ANCESTERS_PLUS_EST},
         )
         self.study, _ = Study.objects.get_or_create(
