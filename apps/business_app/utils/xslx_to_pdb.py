@@ -99,19 +99,47 @@ class XslxToPdb(ExcelReader):
                 increment = row.get(self.excel_nomenclator_class.increment)
 
                 frec_afr_amr = row.get(self.excel_nomenclator_class.frec_afr_amr)
+                frec_afr_amr = frec_afr_amr if isinstance(frec_afr_amr, float) else None
+
                 frec_amr = row.get(self.excel_nomenclator_class.frec_amr)
+                frec_amr = frec_amr if isinstance(frec_amr, float) else None
+
                 frec_csa = row.get(self.excel_nomenclator_class.frec_csa)
+                frec_csa = frec_csa if isinstance(frec_csa, float) else None
+
+
                 frec_eas = row.get(self.excel_nomenclator_class.frec_eas)
+                frec_eas = frec_eas if isinstance(frec_eas, float) else None
+
                 frec_eur = row.get(self.excel_nomenclator_class.frec_eur)
+                frec_eur = frec_eur if isinstance(frec_eur, float) else None
+
                 frec_lat = row.get(self.excel_nomenclator_class.frec_lat)
+                frec_lat = frec_lat if isinstance(frec_lat, float) else None
+
                 frec_nea = row.get(self.excel_nomenclator_class.frec_nea)
+                frec_nea = frec_nea if isinstance(frec_nea, float) else None
+
                 frec_oce = row.get(self.excel_nomenclator_class.frec_oce)
+                frec_oce = frec_oce if isinstance(frec_oce, float) else None
+
                 frec_ssa = row.get(self.excel_nomenclator_class.frec_ssa)
+                frec_ssa = frec_ssa if isinstance(frec_ssa, float) else None
+
                 frec_afr_eas = row.get(self.excel_nomenclator_class.frec_afr_eas)
+                frec_afr_eas = frec_afr_eas if isinstance(frec_afr_eas, float) else None
+
                 frec_afr_swe = row.get(self.excel_nomenclator_class.frec_afr_swe)
+                frec_afr_swe = frec_afr_swe if isinstance(frec_afr_swe, float) else None
+
                 frec_afr_nor = row.get(self.excel_nomenclator_class.frec_afr_nor)
+                frec_afr_nor = frec_afr_nor if isinstance(frec_afr_nor, float) else None
+
                 frec_ca = row.get(self.excel_nomenclator_class.frec_ca)
+                frec_ca = frec_ca if isinstance(frec_ca, float) else None
+
                 frec_sa = row.get(self.excel_nomenclator_class.frec_sa)
+                frec_sa = frec_sa if isinstance(frec_sa, float) else None
 
                 if pd.isna(allele) or pd.isna(
                     row[self.excel_nomenclator_class.output_number_column_name]
@@ -128,6 +156,7 @@ class XslxToPdb(ExcelReader):
                     self.excel_nomenclator_class.output_parent_column_name
                 ]
                 order = row[self.excel_nomenclator_class.output_order_column_name]
+                order = None if pd.isna(order) else order
 
                 parents = []
                 if not pd.isna(parents_info):
