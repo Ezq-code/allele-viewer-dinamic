@@ -23,11 +23,11 @@ class StudyType(models.Model):
     STUDY_NAME_LOCATION_MINUS_EST = "Location-Est"
     SHEET_NAME_LOCATION_MINUS_EST = "For3DProt_L-Est"
 
-    STUDY_NAME_ANCESTERS_PLUS_EST = "Ancesters+Est"
-    SHEET_NAME_ANCESTERS_PLUS_EST = "For3DProt_A+Est"
+    STUDY_NAME_ANCESTRAL_PLUS_EST = "Ancestral+Est"
+    SHEET_NAME_ANCESTRAL_PLUS_EST = "For3DProt_A+Est"
 
-    STUDY_NAME_ANCESTERS_MINUS_EST = "Ancesters-Est"
-    SHEET_NAME_ANCESTERS_MINUS_EST = "For3DProt_A-Est"
+    STUDY_NAME_ANCESTRAL_MINUS_EST = "Ancestral-Est"
+    SHEET_NAME_ANCESTRAL_MINUS_EST = "For3DProt_A-Est"
 
     class CLASSIFICATION(models.TextChoices):
         ALLELE = "A", _("Allele")

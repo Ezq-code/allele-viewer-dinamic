@@ -231,7 +231,7 @@ def build_uploaded_file_graph_cache_task(study_id):
         uploaded_file = study.uploaded_file
         excel_nomenclator_class = ExcelNomenclatorsBase
         study_type_name = study.study_type.name if study.study_type else ""
-        if study_type_name == StudyType.STUDY_NAME_ANCESTERS_PLUS_EST:
+        if study_type_name == StudyType.STUDY_NAME_ANCESTRAL_PLUS_EST:
             excel_nomenclator_class = ExcelNomenclatorsByAncestersPlusEstStudy
         elif study_type_name == StudyType.STUDY_NAME_ANCESTERS_MINUS_EST:
             excel_nomenclator_class = ExcelNomenclatorsByAncestersMinusEstStudy
