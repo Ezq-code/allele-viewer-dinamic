@@ -14,7 +14,7 @@ class StudyType(models.Model):
     allowing dynamic management of study types from the database.
     """
 
-    STUDY_NAME_GENETIC_ALLELE = "Genetic Allele"
+    STUDY_NAME_GENETIC_ALLELE = "Genomic Allele"
     SHEET_NAME_GENETIC_ALLELE = "For3DAllele"
 
     STUDY_NAME_LOCATION_PLUS_EST = "Location+Est"
