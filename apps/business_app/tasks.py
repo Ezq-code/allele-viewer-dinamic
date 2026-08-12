@@ -166,7 +166,6 @@ def proccess_individual_processor_class(self, processor_class, uploaded_file_id)
         # o ser un SimpleNamespace en tests que no expone refresh_from_db.
         if study is not None and hasattr(study, "refresh_from_db"):
             study.refresh_from_db()
-        if study is not None:
             send_pusher_trigger_task.delay(
                 channel=PusherClient.CELERY_TASK_CHANNEL,
                 event=PusherClient.STUDY_PROCESSED,

@@ -1,15 +1,26 @@
-{% extends "index.html" %}
-{% load static %}
-{% block head-extra %}
-<link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/plugins/select2/css/select2.min.css' %}">
-<link rel="stylesheet" href="{% static 'assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
-{% endblock %}
-
-{% block content %}
+{% extends "index.html" %} {% load static %} {% block head-extra %}
+<link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}" />
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/select2/css/select2.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}"
+/>
+{% endblock %} {% block content %}
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -18,7 +29,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1> Subir archivo </h1>
+          <h1>Subir archivo</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -27,7 +38,8 @@
           </ol>
         </div>
       </div>
-    </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.container-fluid -->
   </section>
 
   <!-- Main content -->
@@ -35,25 +47,28 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-
-
-
           <div class="card">
-            <div class="overlay"  id="load" hidden>
+            <div class="overlay" id="load" hidden>
               <i class="fas fa-2x fa-sync fa-spin"></i>
             </div>
             <div class="card-header">
-
-              <h3 class="card-title">Gestionar ficheros </h3>
-              <button class="btn btn-secondary float-right" id="ia_recalculate" onclick="showGraphChangesForm()"><i class="fas fa-brain"></i></button>
+              <h3 class="card-title">Gestionar ficheros</h3>
+              <button
+                class="btn btn-secondary float-right"
+                id="ia_recalculate"
+                onclick="showGraphChangesForm()"
+              >
+                <i class="fas fa-brain"></i>
+              </button>
             </div>
             <!-- /.card-header -->
             <div class="modal-body">
-
               <!-- </div>style="overflow: hidden;"> -->
-              <table id="tabla-de-Datos" class="table table-bordered table-striped" style="width: 100%;">
-
-              </table>
+              <table
+                id="tabla-de-Datos"
+                class="table table-bordered table-striped"
+                style="width: 100%"
+              ></table>
             </div>
             <!-- /.card-body -->
           </div>
@@ -75,7 +90,12 @@
     <div class="modal-content bg-danger">
       <div class="modal-header">
         <h4 class="modal-title">Delete Files</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -83,9 +103,21 @@
         <p>One fine body&hellip;</p>
       </div>
       <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-outline-light" data-dismiss="modal"
-          onclick="function_delete(selected_id)">Delete</button>
+        <button
+          type="button"
+          class="btn btn-outline-light"
+          data-dismiss="modal"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-light"
+          data-dismiss="modal"
+          onclick="function_delete(selected_id)"
+        >
+          Delete
+        </button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -96,13 +128,25 @@
 
 <!-- ------------------------------------------------------------------------------------------------------------------------- -->
 <!-- modal para crear Ficheros -->
-<div class="modal fade" id="modal-crear-elemento" data-backdrop="static" tabindex="-1" role="dialog"
-  aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<div
+  class="modal fade"
+  id="modal-crear-elemento"
+  data-backdrop="static"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Create Files</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -110,52 +154,84 @@
       <form id="form-create-elemento">
         <div class="card-body">
 
-          <div class="form-group col-md-12">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Enter the name" required>
-          </div>
-         
-          <div class="form-group col-md-12">
-            <label for="customFile">Upload Files</label>
-            <div class="input-group">
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFile" accept=" application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel.sheet.macroEnabled.12">
-                <label class=" custom-file-label" for="customFile"></label>
+          <!-- Fila 1: Name | Gene | Upload -->
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter the name" required>
               </div>
             </div>
-          </div>
-          <div class="form-group col-md-12">
-            <label for="description">Description</label>
-            <textarea type="text" class="form-control" id="description" placeholder="Enter the description "></textarea>
-          </div>
-          
-          <div class="form-group col-md-12">
-            <label for="gene">Gene</label>
-            <select class="form-control select2bs4" id="gene" name="gene" required style="width: 100%;">
-              <option value="">Select a gene</option>
-            </select>
-          </div>
-                    <!-- filepath: d:\desarrollo\Proyects-Git\Github\allele-viewer-dinamic\templates\grafico\uploadfile.html -->
-          <!-- ...dentro del form id="form-create-elemento", antes del cierre de .card-body... -->
-          <div class="form-group col-md-12">
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="predefined" name="predefined">
-              <label class="custom-control-label" for="predefined">Predefined</label>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="gene">Gene</label>
+                <select class="form-control select2bs4" id="gene" name="gene" required style="width: 100%;">
+                  <option value="">Select a gene</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <!-- ...resto del código... -->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="customFile">Upload Files</label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile" name="original_file"
+                      accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12">
+                    <label class="custom-file-label" for="customFile"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /Fila 1 -->
+
+          <!-- Fila 2: Tabla de hojas detectadas (ancho completo, oculta por defecto) -->
+          <div class="row d-none" id="excel-sheets-container">
+            <div class="col-12">
+              <div class="form-group">
+                <label class="mb-1">Hojas detectadas</label>
+                <div class="table-responsive">
+                  <table class="table table-sm table-bordered mb-0">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>Hoja</th>
+                        <th>Estudio asociado</th>
+                      </tr>
+                    </thead>
+                    <tbody id="excel-sheets-list"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div><!-- /Fila 2 -->
+
+          <!-- Fila 3: Description | Predefined -->
+          <div class="row">
+            <div class="col-md-10">
+              <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" placeholder="Enter the description" rows="3"></textarea>
+              </div>
+            </div>
+            <div class="col-md-2 d-flex align-items-center">
+              <div class="form-group mb-0">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="predefined" name="predefined">
+                  <label class="custom-control-label" for="predefined">Predefined</label>
+                </div>
+              </div>
+            </div>
+          </div><!-- /Fila 3 -->
+
         </div>
 
         <!-- /.card-body -->
         <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
           <button type="submit" class="btn btn-primary">Submit</button>
         </div>
-
       </form>
-
-
-
     </div>
 
     <!-- /.modal-content -->
@@ -164,8 +240,8 @@
 </div>
 <!-- /.modal -->
 <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
-{% endblock %}
-{% block script %} <!-- DataTables & Plugins -->
+{% endblock %} {% block script %}
+<!-- DataTables & Plugins -->
 <script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
 <script src="{% static 'assets/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
@@ -183,10 +259,9 @@
 <script src="{% static 'assets/plugins/jquery-validation/additional-methods.min.js' %}"></script>
 <script src="{% static 'assets/plugins/jquery-validation/localization/messages_es.js' %}"></script>
 <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
-<script src="{% static 'assets/dist/js/uploadfile.js' %}"></script>
 <script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/uploadfile.js' %}"></script>
 
 <!-- Page specific script -->
-
 
 {% endblock %}

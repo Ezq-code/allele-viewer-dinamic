@@ -12,22 +12,348 @@ const read_url = write_url + "simple-list/";
 
 // url para obtener genes
 const geneUrl = "/business-gestion/gene/list-for-dropdown/";
+const studyTypeUrl = "/business-gestion/study-types/";
 
 var load = document.getElementById("load");
+let availableStudyTypes = [];
+let detectedExcelSheets = [];
+let currentSheetAssignments = {};
 
-// function showFileProcessingMessage() {
-//   Swal.fire({
-//     title: "Processing",
-//     text: "The file is being processed. You will be notified when the upload is finished.",
-//     allowOutsideClick: false,
-//     allowEscapeKey: false,
-//     timer: 4500,
-//     timerProgressBar: true,
-//     didOpen: () => {
-//       Swal.showLoading();
-//     },
-//   });
-// }
+function getExcelSheetsContainer() {
+  return document.getElementById("excel-sheets-container");
+}
+
+function getExcelSheetsList() {
+  return document.getElementById("excel-sheets-list");
+}
+
+function clearExcelSheetsList() {
+  const container = getExcelSheetsContainer();
+  const list = getExcelSheetsList();
+  if (list) list.innerHTML = "";
+  if (container) container.classList.add("d-none");
+}
+
+function renderExcelSheetsList(sheetNames) {
+  const container = getExcelSheetsContainer();
+  const list = getExcelSheetsList();
+  if (!container || !list) return;
+
+  detectedExcelSheets = Array.isArray(sheetNames) ? sheetNames : [];
+  list.innerHTML = "";
+
+  if (!detectedExcelSheets.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 2;
+    cell.className = "text-warning";
+    cell.textContent = "No se han encontrado hojas en este fichero.";
+    row.appendChild(cell);
+    list.appendChild(row);
+    container.classList.remove("d-none");
+    return;
+  }
+
+  detectedExcelSheets.forEach((sheetName) => {
+    const row = document.createElement("tr");
+    const sheetCell = document.createElement("td");
+    sheetCell.textContent = sheetName;
+    const studyCell = document.createElement("td");
+    const select = document.createElement("select");
+    select.className = "form-control form-control-sm excel-sheet-study-select";
+    select.dataset.sheetName = sheetName;
+    if (!currentSheetAssignments[sheetName]) {
+      const bestMatch = findBestStudyTypeForSheet(sheetName);
+      if (bestMatch) currentSheetAssignments[sheetName] = bestMatch;
+    }
+    populateStudySelect(select, currentSheetAssignments[sheetName] || "");
+    select.addEventListener("change", function () {
+      if (this.value) {
+        currentSheetAssignments[sheetName] = this.value;
+      } else {
+        delete currentSheetAssignments[sheetName];
+      }
+    });
+    studyCell.appendChild(select);
+    row.appendChild(sheetCell);
+    row.appendChild(studyCell);
+    list.appendChild(row);
+  });
+
+  container.classList.remove("d-none");
+}
+
+function extractStudyTypeList(payload) {
+  if (payload && Array.isArray(payload.results)) return payload.results;
+  return [];
+}
+
+function hasSelect2() {
+  return typeof $.fn.select2 === "function";
+}
+
+function initGeneSelect2() {
+  if (!hasSelect2()) return;
+  $('#gene').select2({
+    theme: 'bootstrap4',
+    placeholder: 'Select a gene',
+    allowClear: true,
+    width: '100%',
+    dropdownParent: $('#modal-crear-elemento'),
+    language: 'es'
+  });
+}
+
+function populateStudySelect(selectElement, selectedStudyId) {
+  const noneOption = document.createElement("option");
+  noneOption.value = "";
+  noneOption.textContent = "Ninguno";
+  selectElement.appendChild(noneOption);
+  selectElement.disabled = false;
+
+  if (!availableStudyTypes.length) {
+    const loadingOption = document.createElement("option");
+    loadingOption.value = "";
+    loadingOption.textContent = "No hay tipos de estudios disponibles";
+    loadingOption.disabled = true;
+    selectElement.appendChild(loadingOption);
+    selectElement.value = "";
+    return;
+  }
+
+  availableStudyTypes.forEach((studyType) => {
+    const option = document.createElement("option");
+    option.value = String(studyType.id);
+    option.textContent = studyType.name
+      ? `${studyType.name} (${studyType.sheet_name})`
+      : `Tipo de estudio ${studyType.id}`;
+    selectElement.appendChild(option);
+  });
+
+  selectElement.value = selectedStudyId ? String(selectedStudyId) : "";
+}
+
+function refreshExcelSheetsStudyControls() {
+  if (!detectedExcelSheets.length) return;
+  renderExcelSheetsList(detectedExcelSheets);
+}
+
+function serializeSheetStudyAssignments() {
+  return detectedExcelSheets.map((sheetName) => {
+    const studyType = currentSheetAssignments[sheetName] || "";
+    return {
+      sheet_name: sheetName,
+      study_type: studyType ? parseInt(studyType, 10) : null,
+    };
+  });
+}
+
+function getStudyTypeByIdMap() {
+  const map = new Map();
+  availableStudyTypes.forEach((st) => map.set(String(st.id), st));
+  return map;
+}
+
+function normalizeForComparison(str) {
+  return String(str)
+    .toLowerCase()
+    .replace(/[+\-_]/g, " ")
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Similitud por bigramas sobre la cadena solo en minúsculas (preserva +, -, _)
+// para distinguir valores que difieren únicamente en esos caracteres.
+function computeBigramSimilarity(a, b) {
+  const na = String(a).toLowerCase().replace(/\s+/g, " ").trim();
+  const nb = String(b).toLowerCase().replace(/\s+/g, " ").trim();
+  if (na === nb) return 1.0;
+  if (na.length < 2 || nb.length < 2) return 0;
+  const toBigrams = (s) => {
+    const bg = [];
+    for (let i = 0; i < s.length - 1; i++) bg.push(s.slice(i, i + 2));
+    return bg;
+  };
+  const biA = toBigrams(na);
+  const biB = toBigrams(nb);
+  const countA = new Map();
+  biA.forEach((bi) => countA.set(bi, (countA.get(bi) || 0) + 1));
+  let intersection = 0;
+  biB.forEach((bi) => {
+    if (countA.get(bi) > 0) {
+      intersection++;
+      countA.set(bi, countA.get(bi) - 1);
+    }
+  });
+  return (2 * intersection) / (biA.length + biB.length);
+}
+
+function computeSimilarity(a, b) {
+  // Coincidencia exacta (sin distinción de mayúsculas/minúsculas)
+  if (String(a).toLowerCase().trim() === String(b).toLowerCase().trim()) return 1.0;
+  const na = normalizeForComparison(a);
+  const nb = normalizeForComparison(b);
+  const wordsA = new Set(na.split(" ").filter(Boolean));
+  const wordsB = new Set(nb.split(" ").filter(Boolean));
+  let jaccard = 0;
+  if (wordsA.size && wordsB.size) {
+    let intersection = 0;
+    wordsA.forEach((w) => { if (wordsB.has(w)) intersection++; });
+    jaccard = intersection / (wordsA.size + wordsB.size - intersection);
+  }
+  // Combinar Jaccard (nivel de palabras) + bigramas (nivel de caracteres)
+  // El componente de bigramas diferencia cadenas como "STUDY-1" vs "STUDY+1"
+  // que serían idénticas con solo Jaccard tras normalización.
+  const bigram = computeBigramSimilarity(a, b);
+  return 0.6 * jaccard + 0.4 * bigram;
+}
+
+function findBestStudyTypeForSheet(sheetName) {
+  if (!availableStudyTypes.length) return null;
+  const THRESHOLD = 0.25;
+  let bestId = null;
+  let bestScore = 0;
+  availableStudyTypes.forEach((studyType) => {
+    const score = Math.max(
+      computeSimilarity(sheetName, studyType.name || ""),
+      computeSimilarity(sheetName, studyType.sheet_name || "")
+    );
+    if (score > bestScore) {
+      bestScore = score;
+      bestId = String(studyType.id);
+    }
+  });
+  return bestScore >= THRESHOLD ? bestId : null;
+}
+
+function validateSheetAssignmentsBeforeSubmit() {
+  if (!detectedExcelSheets.length) return { isValid: true };
+
+  const assignments = serializeSheetStudyAssignments();
+  const studyTypeById = getStudyTypeByIdMap();
+  const renamePairs = [];
+  const missingStudyTypes = [];
+
+  assignments.forEach(({ sheet_name: source, study_type }) => {
+    if (!study_type) return;
+    const studyType = studyTypeById.get(String(study_type));
+    if (!studyType) { missingStudyTypes.push(source); return; }
+    const target = studyType.sheet_name;
+    if (source !== target) renamePairs.push({ source, target });
+  });
+
+  if (missingStudyTypes.length) {
+    return {
+      isValid: false,
+      message: "Hay estudios seleccionados que ya no existen o no se pudieron cargar. Vuelve a seleccionarlos antes de subir el archivo.",
+    };
+  }
+
+  const targetToSources = new Map();
+  renamePairs.forEach(({ source, target }) => {
+    if (!targetToSources.has(target)) targetToSources.set(target, []);
+    targetToSources.get(target).push(source);
+  });
+
+  const duplicatedTargets = [];
+  targetToSources.forEach((sources, target) => {
+    if (sources.length > 1) duplicatedTargets.push(`'${target}' <- ${sources.join(", ")}`);
+  });
+
+  if (duplicatedTargets.length) {
+    return {
+      isValid: false,
+      message: "Conflicto: varias hojas intentan usar el mismo nombre destino. " + duplicatedTargets.join(" | "),
+    };
+  }
+
+  const existingSheetNames = new Set(detectedExcelSheets);
+  const renamedSources = new Set(renamePairs.map((p) => p.source));
+  const hardCollisions = renamePairs.filter(
+    ({ source, target }) => existingSheetNames.has(target) && target !== source && !renamedSources.has(target)
+  );
+
+  if (hardCollisions.length) {
+    return {
+      isValid: false,
+      message: "Conflicto: ya existe una hoja con el nombre destino. " + hardCollisions.map(({ source, target }) => `'${source}' -> '${target}'`).join(" | "),
+    };
+  }
+
+  return { isValid: true };
+}
+
+function loadAllStudies() {
+  return axios.get(studyTypeUrl)
+    .then((response) => {
+      availableStudyTypes = extractStudyTypeList(response.data);
+      refreshExcelSheetsStudyControls();
+      return availableStudyTypes;
+    })
+    .catch((error) => {
+      console.error("Error cargando estudios:", error);
+      availableStudyTypes = [];
+      return [];
+    });
+}
+
+function readFileAsArrayBuffer(file) {
+  if (typeof file.arrayBuffer === "function") return file.arrayBuffer();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function extractSheetNamesFromExcel(file) {
+  const extension = ((file && file.name) || "").split(".").pop().toLowerCase();
+  if (extension === "xls") {
+    renderExcelSheetsList(["No se pueden listar hojas de archivos XLS antiguos."]);
+    return;
+  }
+  const buffer = await readFileAsArrayBuffer(file);
+  const zip = await JSZip.loadAsync(buffer);
+  const workbookFile = zip.file("xl/workbook.xml");
+  if (!workbookFile) throw new Error("No se encontró workbook.xml.");
+  const workbookXml = await workbookFile.async("string");
+  const xmlDocument = new DOMParser().parseFromString(workbookXml, "application/xml");
+  if (xmlDocument.querySelector("parsererror")) throw new Error("No se pudo leer el XML del Excel.");
+  const sheetNames = Array.from(xmlDocument.querySelectorAll("sheets sheet"))
+    .map((s) => s.getAttribute("name")).filter(Boolean);
+  renderExcelSheetsList(sheetNames);
+}
+
+function handleExcelFileChange(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) {
+    clearExcelSheetsList();
+    detectedExcelSheets = [];
+    return;
+  }
+  currentSheetAssignments = {};
+  extractSheetNamesFromExcel(file).catch((error) => {
+    console.error("Error leyendo las hojas del Excel:", error);
+    renderExcelSheetsList(["No se pudieron leer las hojas de este archivo."]);
+  });
+  loadAllStudies();
+}
+
+function showFileProcessingMessage() {
+  Swal.fire({
+    title: "Processing",
+    text: "The file is being processed. You will be notified when the upload is finished.",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    timer: 4500,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+}
 
 // Función para cargar la lista de genes
 function loadGenes() {
@@ -37,7 +363,7 @@ function loadGenes() {
       const geneSelect = document.getElementById("gene");
       
       // Destruir Select2 antes de actualizar el DOM
-      if ($(geneSelect).hasClass('select2-hidden-accessible')) {
+      if (hasSelect2() && $(geneSelect).hasClass('select2-hidden-accessible')) {
         $(geneSelect).select2('destroy');
       }
       
@@ -51,14 +377,7 @@ function loadGenes() {
       });
 
       // Reinicializar Select2 después de cargar los genes
-      $(geneSelect).select2({
-        theme: 'bootstrap4',
-        placeholder: 'Select a gene',
-        allowClear: true,
-        width: '100%',
-        dropdownParent: $('#modal-crear-elemento'),
-        language: 'es'
-      });
+      initGeneSelect2();
     })
     .catch((error) => {
       console.error("Error cargando genes:", error);
@@ -67,19 +386,17 @@ function loadGenes() {
 
 $(document).ready(function () {
   // Inicializar Select2 antes de cargar genes
-  $('#gene').select2({
-    theme: 'bootstrap4',
-    placeholder: 'Select a gene',
-    allowClear: true,
-    width: '100%',
-    dropdownParent: $('#modal-crear-elemento'),
-    language: 'es'
-  });
+  initGeneSelect2();
   
   // Cargar la lista de genes
   loadGenes();
+  $("#gene").on("change", function () {
+    loadAllStudies();
+  });
 
-  $("table")
+  loadAllStudies();
+
+  $("#tabla-de-Datos")
     .addClass("table table-hover")
     .DataTable({
       dom: '<"top"l>Bfrtip',
@@ -241,10 +558,22 @@ $(document).ready(function () {
     // The realtime update may contain task or alert data (or both).
     celery_task_channel.bind("study-processed", function (data) {
       console.log("New study processed:", data);
-      
       if ($.fn.DataTable.isDataTable("#tabla-de-Datos")) {
         $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
       }
+    });
+    celery_task_channel.bind("successful-upload-3d-excel", function (data) {
+      console.log("Successful upload 3D Excel:", data);
+      Swal.fire({ icon: "success", title: "Success", text: "File uploaded successfully." });
+      if ($.fn.DataTable.isDataTable("#tabla-de-Datos")) {
+        $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
+      }
+    });
+    celery_task_channel.bind("failed-upload-3d-excel", function (data) {
+      console.log("Failed upload 3D Excel:", data);
+      const errorDetail = data && data.error_detail ? data.error_detail : "Unknown error";
+      Swal.close();
+      Swal.fire({ icon: "error", title: "Upload failed", text: "The file could not be processed. " + errorDetail });
     });
   } else {
     console.warn(
@@ -296,6 +625,10 @@ $("#modal-crear-elemento").on("hide.bs.modal", (event) => {
   // Resetear Select2 sin destruir la instancia
   $('#gene').val(null).trigger('change');
   document.getElementById("predefined").checked = false;
+  clearExcelSheetsList();
+  detectedExcelSheets = [];
+  availableStudyTypes = [];
+  currentSheetAssignments = {};
 });
 
 let edit_elemento = false;
@@ -330,6 +663,10 @@ $("#modal-crear-elemento").on("show.bs.modal", function (event) {
 
 $(function () {
   bsCustomFileInput.init();
+  const customFileInput = document.getElementById("customFile");
+  if (customFileInput) {
+    customFileInput.addEventListener("change", handleExcelFileChange);
+  }
 });
 
 // form validator
@@ -389,14 +726,37 @@ form.addEventListener("submit", function (event) {
   axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
 
   if (form.checkValidity()) {
+    const sheetAssignmentValidation = validateSheetAssignmentsBeforeSubmit();
+    if (!sheetAssignmentValidation.isValid) {
+      Swal.fire({
+        icon: "error",
+        title: "Error en asignaciones de hojas",
+        text: sheetAssignmentValidation.message,
+        showConfirmButton: true,
+      });
+      return;
+    }
+
+    const serializedAssignments = serializeSheetStudyAssignments();
+
+    if (!edit_elemento && serializedAssignments.length === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "No se detectaron hojas",
+        text: "Selecciona un archivo Excel válido para cargar sus hojas antes de enviar.",
+        showConfirmButton: true,
+      });
+      return;
+    }
+
     let data = new FormData();
     data.append("system_user", localStorage.getItem("id"));
     data.append("custom_name", document.getElementById("name").value);
     data.append("description", document.getElementById("description").value);
     data.append("gene", $('#gene').val());
-        // ...dentro del submit del formulario...
     data.append("predefined", document.getElementById("predefined").checked);
-    // ...resto del código...
+    data.set("sheet_study_assignments", JSON.stringify(serializedAssignments));
+
     if (document.getElementById("customFile").files[0] != null) {
       data.append(
         "original_file",
@@ -447,15 +807,15 @@ form.addEventListener("submit", function (event) {
         .post(write_url, data)
         .then((response) => {
           if (response.status === 201) {
+             table.ajax.reload();
             load.hidden = true;
             // The success message and table refresh are handled by Pusher
             // event "successful-upload-3d-excel".
-            $("#tabla-de-Datos").DataTable().ajax.reload(null, false);
           }
         })
         .catch((error) => {
           load.hidden = true;
-          let dict = error.response.data;
+          let dict = (error.response && error.response.data) || {};
 
           let textError = "An error occurred while saving the file: ";
           for (const key in dict) {
