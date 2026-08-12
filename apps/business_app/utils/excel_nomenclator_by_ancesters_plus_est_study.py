@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class ExcelNomenclatorsByAncestersPlusEstStudy(ExcelNomenclatorsBase):
     output_sheet = (
-        StudyType.SHEET_NAME_ANCESTERS_PLUS_EST
+        StudyType.SHEET_NAME_ANCESTRAL_PLUS_EST
     )  # default value if none provided
 
     def __init__(self, output_sheet=None):
