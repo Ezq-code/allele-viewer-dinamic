@@ -85,11 +85,7 @@ class SheetStudyAssignmentSerializer(serializers.Serializer):
 class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
     pdb_files = PdbFilesSerializer(many=True, read_only=True)
     allele_nodes = AlleleNodeSerializer(many=True, read_only=True)
-    sheet_study_assignments = SheetStudyAssignmentSerializer(
-        many=True,
-        required=True,
-        write_only=True,
-    )
+    sheet_study_assignments = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
 
     class Meta(SimpleListUploadedFilesSerializer.Meta):
@@ -105,70 +101,70 @@ class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
             "allele_nodes",
         ]
 
-    @staticmethod
-    def _decode_sheet_assignments_json(raw_value):
-        """Decode one or many concatenated JSON arrays with sheet assignments."""
-        if not isinstance(raw_value, str):
-            return raw_value
+    # @staticmethod
+    # def _decode_sheet_assignments_json(raw_value):
+    #     """Decode one or many concatenated JSON arrays with sheet assignments."""
+    #     if not isinstance(raw_value, str):
+    #         return raw_value
 
-        text = raw_value.strip()
-        if not text:
-            return []
+    #     text = raw_value.strip()
+    #     if not text:
+    #         return []
 
-        decoder = json.JSONDecoder()
-        cursor = 0
-        decoded = []
+    #     decoder = json.JSONDecoder()
+    #     cursor = 0
+    #     decoded = []
 
-        while cursor < len(text):
-            while cursor < len(text) and text[cursor].isspace():
-                cursor += 1
+    #     while cursor < len(text):
+    #         while cursor < len(text) and text[cursor].isspace():
+    #             cursor += 1
 
-            if cursor >= len(text):
-                break
+    #         if cursor >= len(text):
+    #             break
 
-            chunk, next_cursor = decoder.raw_decode(text, cursor)
-            if not isinstance(chunk, list):
-                raise serializers.ValidationError(
-                    {
-                        "sheet_study_assignments": [
-                            "El formato de sheet_study_assignments debe ser una lista JSON."
-                        ]
-                    }
-                )
+    #         chunk, next_cursor = decoder.raw_decode(text, cursor)
+    #         if not isinstance(chunk, list):
+    #             raise serializers.ValidationError(
+    #                 {
+    #                     "sheet_study_assignments": [
+    #                         "El formato de sheet_study_assignments debe ser una lista JSON."
+    #                     ]
+    #                 }
+    #             )
 
-            decoded.extend(chunk)
-            cursor = next_cursor
+    #         decoded.extend(chunk)
+    #         cursor = next_cursor
 
-        return decoded
+    #     return decoded
 
-    def to_internal_value(self, data):
-        """Normalize multipart values for nested sheet_study_assignments."""
-        mutable_data = data.copy() if hasattr(data, "copy") else dict(data)
+    # def to_internal_value(self, data):
+    #     """Normalize multipart values for nested sheet_study_assignments."""
+    #     mutable_data = data.copy() if hasattr(data, "copy") else dict(data)
 
-        if hasattr(data, "getlist"):
-            # Convert multipart QueryDict into a plain dict so DRF does not
-            # re-run HTML list parsing for nested serializer fields.
-            mutable_data = {
-                key: (values if len(values) > 1 else values[0])
-                for key, values in data.lists()
-            }
+    #     if hasattr(data, "getlist"):
+    #         # Convert multipart QueryDict into a plain dict so DRF does not
+    #         # re-run HTML list parsing for nested serializer fields.
+    #         mutable_data = {
+    #             key: (values if len(values) > 1 else values[0])
+    #             for key, values in data.lists()
+    #         }
 
-            raw_list = data.getlist("sheet_study_assignments")
-            if raw_list:
-                parsed = []
-                for raw_value in raw_list:
-                    parsed_chunk = self._decode_sheet_assignments_json(raw_value)
-                    if isinstance(parsed_chunk, list):
-                        parsed.extend(parsed_chunk)
-                mutable_data["sheet_study_assignments"] = parsed
-        else:
-            raw_value = mutable_data.get("sheet_study_assignments")
-            if isinstance(raw_value, str):
-                mutable_data["sheet_study_assignments"] = (
-                    self._decode_sheet_assignments_json(raw_value)
-                )
+    #         raw_list = data.getlist("sheet_study_assignments")
+    #         if raw_list:
+    #             parsed = []
+    #             for raw_value in raw_list:
+    #                 parsed_chunk = self._decode_sheet_assignments_json(raw_value)
+    #                 if isinstance(parsed_chunk, list):
+    #                     parsed.extend(parsed_chunk)
+    #             mutable_data["sheet_study_assignments"] = parsed
+    #     else:
+    #         raw_value = mutable_data.get("sheet_study_assignments")
+    #         if isinstance(raw_value, str):
+    #             mutable_data["sheet_study_assignments"] = (
+    #                 self._decode_sheet_assignments_json(raw_value)
+    #             )
 
-        return super().to_internal_value(mutable_data)
+    #     return super().to_internal_value(mutable_data)
 
     def _rename_excel_sheets(self, original_file, rename_pairs):
         """Return a new in-memory Excel file with renamed worksheets."""
@@ -208,6 +204,13 @@ class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
     def _build_sheet_rename_pairs(self, sheet_study_assignments):
         """Create rename pairs from assignments where study_type is provided."""
         rename_pairs = []
+        sheet_study_assignments = sheet_study_assignments.replace("null", "None")
+        sheet_study_assignments = SheetStudyAssignmentSerializer(
+            data=eval(sheet_study_assignments),
+            many=True,
+        )
+        sheet_study_assignments.is_valid(raise_exception=True)
+        sheet_study_assignments = sheet_study_assignments.validated_data
         for assignment in sheet_study_assignments:
             study_type = assignment.get("study_type")
             source_name = assignment.get("sheet_name")
