@@ -1279,6 +1279,16 @@ function syncFinalAlleleLabelsWithFamilies() {
     });
   }
 
+  // Seriales excluidos por grupos de orden ocultos
+  const excludedByOrder = new Set();
+  if (Array.isArray(currentOrderData) && currentOrderData.length > 0) {
+    currentOrderData.forEach((g) => {
+      if (orderVisibility[g.order] === false) {
+        g.nodes.forEach((n) => excludedByOrder.add(Number(n.number)));
+      }
+    });
+  }
+
   datos.forEach((node) => {
     const isFinalNode = isFinalAlleleNode(node);
     if (!isFinalNode || !node.allele) {
@@ -1287,6 +1297,9 @@ function syncFinalAlleleLabelsWithFamilies() {
 
     const serial = Number(node.number);
     if (hasFamilies && !allowedSerials.has(serial)) {
+      return;
+    }
+    if (excludedByOrder.has(serial)) {
       return;
     }
 
@@ -1888,6 +1901,7 @@ function toggleOrderVisibility(key) {
       );
     }
   });
+  syncFinalAlleleLabelsWithFamilies();
   viewer.render();
   updateFamilyToast();
 }
@@ -1926,6 +1940,7 @@ function applyOrderVisibility() {
       }
     });
   });
+  syncFinalAlleleLabelsWithFamilies();
   viewer.render();
 }
 
