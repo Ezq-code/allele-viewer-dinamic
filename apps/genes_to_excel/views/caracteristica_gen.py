@@ -8,6 +8,9 @@ from apps.business_app.models.gene import Gene
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+
 
 from ..serializers.caracteristica_gen import CaracteristicaGenSerializer
 from ..models.caracteristica_gen import CaracteristicaGen
@@ -47,3 +50,46 @@ class CaracteristicaGenViewSet(
         Lista todos los AlleleRegionInfo con filtros aplicados
         """
         return super().list(request, *args, **kwargs)
+
+    @action(
+        detail=True,
+        methods=["delete"],
+        url_path="delete-gene-characteristics",
+        url_name="delete-gene-characteristics",
+    )
+    def delete_gene_characteristics(self, request, pk=None):
+        """
+        Elimina todas las características asociadas a un gen específico.
+        El gen no se elimina, solo sus características en CaracteristicaGen.
+        """
+        try:
+            # Obtener el gen (verificar que existe)
+            gene = get_object_or_404(Gene, id=pk)
+            
+            # Obtener conteo de características a eliminar
+            caracteristicas_count = CaracteristicaGen.objects.filter(gen=gene).count()
+            
+            if caracteristicas_count == 0:
+                return Response(
+                    {"message": f"There is not characteristics related to this gen '{gene.name}'"},
+                    status=status.HTTP_200_OK
+                )
+            
+            # Eliminar todas las características del gen
+            deleted_count, _ = CaracteristicaGen.objects.filter(gen=gene).delete()
+            
+            return Response({
+                "message": f"Were eliminated {deleted_count} characteristics from the gen '{gene.name}'",
+                "gen_id": gene.id,
+                "gen_name": gene.name,
+                "deleted_count": deleted_count
+            }, status=status.HTTP_200_OK)
+            
+        except Gene.DoesNotExist:
+            return Response({
+                "error": f"Gen ID {pk} not found"
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                "error": f"Error trying to delete: {str(e)}"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
