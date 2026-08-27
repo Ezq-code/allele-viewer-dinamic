@@ -176,6 +176,16 @@ class XslxReader(ExcelStructureValidator):
 
         return existing_genes
 
+    def _delete_existing_features_for_genes(self, gene_ids):
+        """Delete all existing features for the given gene IDs."""
+        if not gene_ids:
+            return 0
+        
+        logger.info(f"Deleting existing features for {len(gene_ids)} genes...")
+        deleted_count, _ = CaracteristicaGen.objects.filter(gen_id__in=gene_ids).delete()
+        logger.info(f"Deleted {deleted_count} existing features")
+        return deleted_count
+
     def _procesar_caracteristicas_bulk(
         self, df, genes_dict, nombre_archivo, resultados, uploaded_file_id
     ):
@@ -211,6 +221,13 @@ class XslxReader(ExcelStructureValidator):
 
         # Fetch existing features in a single query.
         gene_ids = valid_df["gen_id"].unique()
+
+
+        # Revmove the characteristics for the genes
+        # that this way all features are new
+        # --------------------------------------
+        self._delete_existing_features_for_genes(gene_ids)
+
 
         existing_features = {
             (c.gen_id, c.cord): c
