@@ -38,7 +38,8 @@ const MOMENTOS = [
         nombre: "Moment 1",
         combinaciones: [
             { order_one: 1, order_two: 3, order_three: 1 },
-            { order_one: 1, order_two: 4, order_three: 1 }
+            { order_one: 1, order_two: 4, order_three: 1 },
+            { order_one: 1, order_two: 5, order_three: 1 }, // new add
         ],
         color: '50,100,255',
         descripcion: "Early activation (blue)"
@@ -47,7 +48,10 @@ const MOMENTOS = [
         id: 2,
         nombre: "Moment 2",
         combinaciones: [
-            { order_one: 1, order_two: 5, order_three: 2 }
+            { order_one: 1, order_two: 5, order_three: 2 },
+            { order_one: 1, order_two: 6, order_three: 2 }, // add new
+            { order_one: 1, order_two: 7, order_three: 2 }, // add new
+            { order_one: 1, order_two: 8, order_three: 2 }, // add new
         ],
         color: '50,100,255',
         descripcion: "Middle activation (blue)"
@@ -55,11 +59,13 @@ const MOMENTOS = [
     {
         id: 3,
         nombre: "Moment 3",
-        combinaciones: [
+        combinaciones: [            
             { order_one: 1, order_two: 6, order_three: 3 },
             { order_one: 1, order_two: 7, order_three: 3 },
             { order_one: 1, order_two: 8, order_three: 3 },
-            { order_one: 1, order_two: 9, order_three: 3 }
+            { order_one: 1, order_two: 9, order_three: 3 },
+            { order_one: 1, order_two: 10, order_three: 3 }, // new add
+            { order_one: 1, order_two: 11, order_three: 3 }  // new add
         ],
         color: '50,100,255',
         descripcion: "Late activation (blue)"
@@ -69,7 +75,10 @@ const MOMENTOS = [
         nombre: "Moment 4",
         combinaciones: [
             { order_one: 1, order_two: 10, order_three: 4 },
-            { order_one: 1, order_two: 11, order_three: 4 }
+            { order_one: 1, order_two: 11, order_three: 4 }, 
+            { order_one: 1, order_two: 12, order_three: 4 }, // new add
+            { order_one: 1, order_two: 13, order_three: 4 }, // new add
+            { order_one: 1, order_two: 14, order_three: 4 }, // new add
         ],
         color: '50,100,255',
         descripcion: "Maximum peak (blue)"
@@ -80,7 +89,18 @@ const MOMENTOS = [
         combinaciones: [
             { order_one: 1, order_two: 12, order_three: 5 },
             { order_one: 1, order_two: 13, order_three: 5 },
-            { order_one: 1, order_two: 14, order_three: 5 }
+            { order_one: 1, order_two: 14, order_three: 5 },
+            { order_one: 1, order_two: 15, order_three: 5 }, // new add
+            { order_one: 1, order_two: 16, order_three: 5 }, // new add
+            { order_one: 1, order_two: 17, order_three: 5 }, // new add
+            { order_one: 1, order_two: 18, order_three: 5 }, // new add
+            // Review if it not needed another moment
+            { order_one: 1, order_two: 19, order_three: 6 }, // new add
+            { order_one: 1, order_two: 20, order_three: 6 }, // new add
+            { order_one: 1, order_two: 21, order_three: 6 }, // new add
+            { order_one: 1, order_two: 22, order_three: 6 }, // new add
+            { order_one: 1, order_two: 23, order_three: 6 }, // new add
+            { order_one: 1, order_two: 23, order_three: 6 }, // new add
         ],
         color: '50,100,255',
         descripcion: "Plateau (blue)"
@@ -91,16 +111,34 @@ const MOMENTOS = [
         combinaciones: [
             { order_one: 1, order_two: 3, order_three: 1 },
             { order_one: 1, order_two: 4, order_three: 1 },
+            { order_one: 1, order_two: 5, order_three: 1 }, // new add
             { order_one: 1, order_two: 5, order_three: 2 },
+            { order_one: 1, order_two: 6, order_three: 2 }, // new add
+            { order_one: 1, order_two: 7, order_three: 2 }, // add new
+            { order_one: 1, order_two: 8, order_three: 2 }, // add new
             { order_one: 1, order_two: 6, order_three: 3 },
             { order_one: 1, order_two: 7, order_three: 3 },
             { order_one: 1, order_two: 8, order_three: 3 },
             { order_one: 1, order_two: 9, order_three: 3 },
+            { order_one: 1, order_two: 10, order_three: 3 },  // new add
+            { order_one: 1, order_two: 11, order_three: 3 },  // new add
             { order_one: 1, order_two: 10, order_three: 4 },
             { order_one: 1, order_two: 11, order_three: 4 },
+            { order_one: 1, order_two: 12, order_three: 4 }, // new add
+            { order_one: 1, order_two: 13, order_three: 4 }, // new add
+            { order_one: 1, order_two: 14, order_three: 4 }, // new add
             { order_one: 1, order_two: 12, order_three: 5 },
             { order_one: 1, order_two: 13, order_three: 5 },
-            { order_one: 1, order_two: 14, order_three: 5 }
+            { order_one: 1, order_two: 14, order_three: 5 },
+            { order_one: 1, order_two: 15, order_three: 5 }, // new add
+            { order_one: 1, order_two: 16, order_three: 5 }, // new add
+            { order_one: 1, order_two: 17, order_three: 5 }, // new add
+            { order_one: 1, order_two: 18, order_three: 5 }, // new add
+            { order_one: 1, order_two: 19, order_three: 6 }, // new add
+            { order_one: 1, order_two: 20, order_three: 6 }, // new add
+            { order_one: 1, order_two: 21, order_three: 6 }, // new add
+            { order_one: 1, order_two: 22, order_three: 6 }, // new add
+            { order_one: 1, order_two: 23, order_three: 6 }, // new add
         ],
         color: '255,0,0',
         descripcion: "Decline (red)"
@@ -111,16 +149,34 @@ const MOMENTOS = [
         combinaciones: [
             { order_one: 1, order_two: 3, order_three: 1 },
             { order_one: 1, order_two: 4, order_three: 1 },
+            { order_one: 1, order_two: 5, order_three: 1 }, // new add
             { order_one: 1, order_two: 5, order_three: 2 },
+            { order_one: 1, order_two: 6, order_three: 2 }, // new add
+            { order_one: 1, order_two: 7, order_three: 2 }, // add new
+            { order_one: 1, order_two: 8, order_three: 2 }, // add new
             { order_one: 1, order_two: 6, order_three: 3 },
             { order_one: 1, order_two: 7, order_three: 3 },
             { order_one: 1, order_two: 8, order_three: 3 },
             { order_one: 1, order_two: 9, order_three: 3 },
+            { order_one: 1, order_two: 10, order_three: 3 },  // new add
+            { order_one: 1, order_two: 11, order_three: 3 },  // new add
             { order_one: 1, order_two: 10, order_three: 4 },
             { order_one: 1, order_two: 11, order_three: 4 },
+            { order_one: 1, order_two: 12, order_three: 4 }, // new add
+            { order_one: 1, order_two: 13, order_three: 4 }, // new add
+            { order_one: 1, order_two: 14, order_three: 4 }, // new add
             { order_one: 1, order_two: 12, order_three: 5 },
             { order_one: 1, order_two: 13, order_three: 5 },
-            { order_one: 1, order_two: 14, order_three: 5 }
+            { order_one: 1, order_two: 14, order_three: 5 },
+            { order_one: 1, order_two: 15, order_three: 5 }, // new add
+            { order_one: 1, order_two: 16, order_three: 5 }, // new add
+            { order_one: 1, order_two: 17, order_three: 5 }, // new add
+            { order_one: 1, order_two: 18, order_three: 5 }, // new add
+            { order_one: 1, order_two: 19, order_three: 6 }, // new add
+            { order_one: 1, order_two: 20, order_three: 6 }, // new add
+            { order_one: 1, order_two: 21, order_three: 6 }, // new add
+            { order_one: 1, order_two: 22, order_three: 6 }, // new add
+            { order_one: 1, order_two: 23, order_three: 6 }, // new add
         ],
         color: '255,255,0',
         descripcion: "Recovery (yellow)"
@@ -131,16 +187,34 @@ const MOMENTOS = [
         combinaciones: [
             { order_one: 1, order_two: 3, order_three: 1 },
             { order_one: 1, order_two: 4, order_three: 1 },
+            { order_one: 1, order_two: 5, order_three: 1 }, // new add
             { order_one: 1, order_two: 5, order_three: 2 },
+            { order_one: 1, order_two: 6, order_three: 2 }, // new add
+            { order_one: 1, order_two: 7, order_three: 2 }, // add new
+            { order_one: 1, order_two: 8, order_three: 2 }, // add new
             { order_one: 1, order_two: 6, order_three: 3 },
             { order_one: 1, order_two: 7, order_three: 3 },
             { order_one: 1, order_two: 8, order_three: 3 },
             { order_one: 1, order_two: 9, order_three: 3 },
+            { order_one: 1, order_two: 10, order_three: 3 },  // new add
+            { order_one: 1, order_two: 11, order_three: 3 },  // new add
             { order_one: 1, order_two: 10, order_three: 4 },
             { order_one: 1, order_two: 11, order_three: 4 },
+            { order_one: 1, order_two: 12, order_three: 4 }, // new add
+            { order_one: 1, order_two: 13, order_three: 4 }, // new add
+            { order_one: 1, order_two: 14, order_three: 4 }, // new add
             { order_one: 1, order_two: 12, order_three: 5 },
             { order_one: 1, order_two: 13, order_three: 5 },
-            { order_one: 1, order_two: 14, order_three: 5 }
+            { order_one: 1, order_two: 14, order_three: 5 },
+            { order_one: 1, order_two: 15, order_three: 5 }, // new add
+            { order_one: 1, order_two: 16, order_three: 5 }, // new add
+            { order_one: 1, order_two: 17, order_three: 5 }, // new add
+            { order_one: 1, order_two: 18, order_three: 5 }, // new add
+            { order_one: 1, order_two: 19, order_three: 6 }, // new add
+            { order_one: 1, order_two: 20, order_three: 6 }, // new add
+            { order_one: 1, order_two: 21, order_three: 6 }, // new add
+            { order_one: 1, order_two: 22, order_three: 6 }, // new add
+            { order_one: 1, order_two: 23, order_three: 6 }, // new add
         ],
         color: '255,0,255',
         descripcion: "Stabilization (magenta)"
@@ -151,16 +225,34 @@ const MOMENTOS = [
         combinaciones: [
             { order_one: 1, order_two: 3, order_three: 1 },
             { order_one: 1, order_two: 4, order_three: 1 },
+            { order_one: 1, order_two: 5, order_three: 1 }, // new add
             { order_one: 1, order_two: 5, order_three: 2 },
+            { order_one: 1, order_two: 6, order_three: 2 }, // new add
+            { order_one: 1, order_two: 7, order_three: 2 }, // add new
+            { order_one: 1, order_two: 8, order_three: 2 }, // add new
             { order_one: 1, order_two: 6, order_three: 3 },
             { order_one: 1, order_two: 7, order_three: 3 },
             { order_one: 1, order_two: 8, order_three: 3 },
             { order_one: 1, order_two: 9, order_three: 3 },
+            { order_one: 1, order_two: 10, order_three: 3 },  // new add
+            { order_one: 1, order_two: 11, order_three: 3 },  // new add
             { order_one: 1, order_two: 10, order_three: 4 },
             { order_one: 1, order_two: 11, order_three: 4 },
+            { order_one: 1, order_two: 12, order_three: 4 }, // new add
+            { order_one: 1, order_two: 13, order_three: 4 }, // new add
+            { order_one: 1, order_two: 14, order_three: 4 }, // new add
             { order_one: 1, order_two: 12, order_three: 5 },
             { order_one: 1, order_two: 13, order_three: 5 },
-            { order_one: 1, order_two: 14, order_three: 5 }
+            { order_one: 1, order_two: 14, order_three: 5 },
+            { order_one: 1, order_two: 15, order_three: 5 }, // new add
+            { order_one: 1, order_two: 16, order_three: 5 }, // new add
+            { order_one: 1, order_two: 17, order_three: 5 }, // new add
+            { order_one: 1, order_two: 18, order_three: 5 }, // new add
+            { order_one: 1, order_two: 19, order_three: 6 }, // new add
+            { order_one: 1, order_two: 20, order_three: 6 }, // new add
+            { order_one: 1, order_two: 21, order_three: 6 }, // new add
+            { order_one: 1, order_two: 22, order_three: 6 }, // new add
+            { order_one: 1, order_two: 23, order_three: 6 }, // new add
         ],
         color: '0,180,0',
         descripcion: "Reinforcement  (green)"
