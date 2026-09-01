@@ -758,7 +758,7 @@ if (timeRange == "-15000/2025"){
         oReq.open('GET', timelinetimedimensionHomoHerectus);
     }
     else
-    if (timeRange == "-700000/-190539"){
+    if (timeRange == "-700000/-100456"){
         oReq.open('GET', timelinetimedimensionHomoHeidelBergensis);
     }
     else

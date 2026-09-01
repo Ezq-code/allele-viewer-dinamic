@@ -40,8 +40,8 @@ function GetColorByPopulation(poblation) {
 
 const populationRangesAfrica = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: 800 },   
-    { start: -130000, end: -115000, mag: 199212 },    
+    { start: -314687, end: -130001, mag: 800 },   
+    { start: -130000, end: -68951, mag: 199212 },    
     { start: -68950, end: -65002, mag: 14914 },
     { start: -65001, end: -40023, mag: 56201 },
     { start: -40022, end: -26049, mag: 245807 },
@@ -60,7 +60,7 @@ const populationRangesAfrica = [
 
 const populationRangesWesternAsia = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 }, 
+    { start: -314687, end: -130001, mag: -1 }, 
     { start: -130000, end: -115000, mag: 5535 },    
     { start: -68950, end: -65002, mag: 870 },
     { start: -65001, end: -40023, mag: 229454 },
@@ -80,7 +80,7 @@ const populationRangesWesternAsia = [
 
 const populationRangesEurope = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 },
+    { start: -314687, end: -130001, mag: -1 },
     { start: -130000, end: -115000, mag: -1 },   
     { start: -68950, end: -65002, mag: 115 },
     { start: -65001, end: -40023, mag: 14277 },
@@ -100,7 +100,7 @@ const populationRangesEurope = [
 
 const populationRangesEasternAsia = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 },
+    { start: -314687, end: -130001, mag: -1 },
     { start: -130000, end: -115000, mag: 3186 },   
     { start: -68950, end: -65002, mag: 531 },
     { start: -65001, end: -40023, mag: 245303 },
@@ -120,7 +120,7 @@ const populationRangesEasternAsia = [
 
 const populationRangesOceania = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 },
+    { start: -314687, end: -130001, mag: -1 },
     { start: -130000, end: -115000, mag: -1 },  
     { start: -68950, end: -65002, mag: 5143 },
     { start: -65001, end: -40023, mag: 5143 },
@@ -140,7 +140,7 @@ const populationRangesOceania = [
 
 const populationRangesNorthAmerica = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 },
+    { start: -314687, end: -130001, mag: -1 },
     { start: -130000, end: -115000, mag: -1 },  
     { start: -68950, end: -65002, mag: -1 },
     { start: -65001, end: -40023, mag: -1 },
@@ -160,7 +160,7 @@ const populationRangesNorthAmerica = [
 
 const populationRangesLatinAmericaCarib = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 },
+    { start: -314687, end: -130001, mag: -1 },
     { start: -130000, end: -115000, mag: -1 },  
     { start: -68950, end: -65002, mag: -1 },
     { start: -65001, end: -40023, mag: -1 },
