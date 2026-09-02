@@ -528,7 +528,7 @@ const allTimes = data.features
                                                 sessionStorage.setItem('timedelayland', 'PT5S');
                                             }
                                             else
-                                            if (selectedValue == "-315000/-15000"){ //-69000/-15000
+                                            if (selectedValue == "-315000/-13044"){ //-69000/-15000
                                                 sessionStorage.setItem('timedelayice', 'PT9S');
                                                 sessionStorage.setItem('timedelayland', 'PT9S');
                                             } 
@@ -754,15 +754,15 @@ if (timeRange == "-15000/2025"){
     oReq.open('GET', timelinetimedimensiontimeline_15000_2025);
     }
     else
-    if (timeRange == "-1800000/-804400"){
+    if (timeRange == "-2100000/-804400"){
         oReq.open('GET', timelinetimedimensionHomoHerectus);
     }
     else
-    if (timeRange == "-700000/-190539"){
+    if (timeRange == "-700000/-100456"){
         oReq.open('GET', timelinetimedimensionHomoHeidelBergensis);
     }
     else
-    if (timeRange == "-315000/-15000"){
+    if (timeRange == "-315000/-13044"){
         oReq.open('GET', timelinetimedimensionHomoSapiens);
     }
     else

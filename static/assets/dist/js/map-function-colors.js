@@ -39,14 +39,13 @@ function GetColorByPopulation(poblation) {
 }
 
 const populationRangesAfrica = [
-    { start: -700000, end: -315444, mag: -1 },  
-    { start: -315000, end: -100000, mag: -1 },   
-    { start: -314687, end: -169343, mag: 800 },   
-    { start: -130000, end: -115000, mag: 199212 },    
+    { start: -700000, end: -315444, mag: -1 },   
+    { start: -314687, end: -130001, mag: 800 },   
+    { start: -130000, end: -68951, mag: 199212 },    
     { start: -68950, end: -65002, mag: 14914 },
     { start: -65001, end: -40023, mag: 56201 },
     { start: -40022, end: -26049, mag: 245807 },
-    { start: -26048, end: -16206, mag: 830806 },
+    { start: -26048, end: -13044, mag: 830806 },
     { start: -15000, end: -3257, mag: 830806 },
     { start: -3206, end: 0, mag: 4391963 },
     { start: 1, end: 450, mag: 26282329 },
@@ -61,12 +60,12 @@ const populationRangesAfrica = [
 
 const populationRangesWesternAsia = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 }, 
+    { start: -314687, end: -130001, mag: -1 }, 
     { start: -130000, end: -115000, mag: 5535 },    
     { start: -68950, end: -65002, mag: 870 },
     { start: -65001, end: -40023, mag: 229454 },
     { start: -40022, end: -26049, mag: 730679 },
-    { start: -26048, end: -16206, mag: 1240438 },
+    { start: -26048, end: -13044, mag: 1240438 },
     { start: -15000, end: -3257, mag: 1240438 },
     { start: -3206, end: 0, mag: 8145485 },
     { start: 1, end: 450, mag: 38564545 },
@@ -81,12 +80,12 @@ const populationRangesWesternAsia = [
 
 const populationRangesEurope = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 },
+    { start: -314687, end: -130001, mag: -1 },
     { start: -130000, end: -115000, mag: -1 },   
     { start: -68950, end: -65002, mag: 115 },
     { start: -65001, end: -40023, mag: 14277 },
     { start: -40022, end: -26049, mag: 151 },
-    { start: -26048, end: -16206, mag: 83576 },
+    { start: -26048, end: -13044, mag: 83576 },
     { start: -15000, end: -3257, mag: 355592 },
     { start: -3206, end: 0, mag: 6656257 },
     { start: 1, end: 450, mag: 24148711 },
@@ -101,12 +100,12 @@ const populationRangesEurope = [
 
 const populationRangesEasternAsia = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 },
+    { start: -314687, end: -130001, mag: -1 },
     { start: -130000, end: -115000, mag: 3186 },   
     { start: -68950, end: -65002, mag: 531 },
     { start: -65001, end: -40023, mag: 245303 },
     { start: -40022, end: -26049, mag: 846728 },
-    { start: -26048, end: -16206, mag: 1757287 },
+    { start: -26048, end: -13044, mag: 1757287 },
     { start: -15000, end: -3257, mag: 1757287 },
     { start: -3206, end: 0, mag: 20651085 },
     { start: 1, end: 450, mag: 81842877 },
@@ -121,12 +120,12 @@ const populationRangesEasternAsia = [
 
 const populationRangesOceania = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 },
+    { start: -314687, end: -130001, mag: -1 },
     { start: -130000, end: -115000, mag: -1 },  
     { start: -68950, end: -65002, mag: 5143 },
     { start: -65001, end: -40023, mag: 5143 },
     { start: -40022, end: -26049, mag: 30747 },
-    { start: -26048, end: -16206, mag: 50884 },
+    { start: -26048, end: -13044, mag: 50884 },
     { start: -15000, end: -3257, mag: 50884 },
     { start: -3206, end: 0, mag: 230292 },
     { start: 1, end: 450, mag: 1055309 },
@@ -141,12 +140,12 @@ const populationRangesOceania = [
 
 const populationRangesNorthAmerica = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 },
+    { start: -314687, end: -130001, mag: -1 },
     { start: -130000, end: -115000, mag: -1 },  
     { start: -68950, end: -65002, mag: -1 },
     { start: -65001, end: -40023, mag: -1 },
     { start: -40022, end: -26049, mag: -1 },
-    { start: -26048, end: -16206, mag: -1 },
+    { start: -26048, end: -13044, mag: -1 },
     { start: -15000, end: -3257, mag: 39280 },
     { start: -3206, end: 0, mag: 309071 },
     { start: 1, end: 450, mag: 2170657 },
@@ -161,12 +160,12 @@ const populationRangesNorthAmerica = [
 
 const populationRangesLatinAmericaCarib = [
     { start: -700000, end: -315444, mag: -1 },   
-    { start: -314687, end: -169343, mag: -1 },
+    { start: -314687, end: -130001, mag: -1 },
     { start: -130000, end: -115000, mag: -1 },  
     { start: -68950, end: -65002, mag: -1 },
     { start: -65001, end: -40023, mag: -1 },
     { start: -40022, end: -26049, mag: -1 },
-    { start: -26048, end: -16206, mag: -1 },
+    { start: -26048, end: -13044, mag: -1 },
     { start: -15000, end: -3257, mag: 33905 },
     { start: -3206, end: 0, mag: 785691 },
     { start: 1, end: 450, mag: 7396896 },
