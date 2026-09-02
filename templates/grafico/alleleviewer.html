@@ -347,6 +347,27 @@
       <input type="range" class="custom-range" id="heatmapResolution" min="15" max="60" value="35" disabled />
     </div>
     <br class="mb-3" />
+    <h6>Scene State</h6>
+    <div class="mb-2 d-flex flex-column">
+      <button
+        type="button"
+        class="btn btn-info btn-sm mb-2"
+        title="Export current state"
+        onclick="exportViewerState()"
+      >
+        <i class="nav-icon fas fa-file-export"></i> Export state
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary btn-sm"
+        title="Import state from JSON"
+        onclick="importViewerState()"
+      >
+        <i class="nav-icon fas fa-file-import"></i> Import state
+      </button>
+      <input type="file" id="importStateFile" accept="application/json,.json" hidden />
+    </div>
+    <br class="mb-3" />
     <h6>View Family Options</h6>
     <div class="mb-1">
       <input type="checkbox" value="0" id="sphere_hidden" class="mr-1" /><span
@@ -770,6 +791,7 @@
 <!-- /JQVMap -->
 <script src="{% static 'assets/dist/js/axios.min.js' %}"></script>
 <script src="{% static 'assets/dist/js/alleleviewer.js' %}"></script>
+<script src="{% static 'assets/dist/js/export.js' %}"></script>
 <script src="{% static 'assets/dist/js/tools.js' %}"></script>
 <script src="{% static 'assets/dist/js/time_line_formation.js' %}"></script>
 {% comment %} <script src="{% static 'assets/dist/js/mapa.js' %}"></script> {% endcomment %}
