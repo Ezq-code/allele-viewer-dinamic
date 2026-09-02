@@ -47,6 +47,10 @@ var heatmapShapes = [];
 var heatmapsigma = 75;
 var heatmapRes = 35;
 var heatmapLegendShapes = [];
+var currentRegionFilter = null;
+var currentSearchTerm = "";
+var isRestoringViewerState = false;
+var latestStudiesRequestToken = 0;
 
 const nonGeneticGroupPalette = [
   "#e63946",
@@ -570,10 +574,31 @@ heatmapResSlider.addEventListener("change", function () {
 // =========================
 // Inicializar las funciones
 $(function () {
-  checkInternalStatus();
-  coordenadas();
-  crearMatriz();
-  cargarGenes();
+  try {
+    checkInternalStatus();
+  } catch (error) {
+    console.error("checkInternalStatus failed:", error);
+  }
+
+  try {
+    coordenadas();
+  } catch (error) {
+    console.error("coordenadas failed:", error);
+  }
+
+  try {
+    crearMatriz();
+  } catch (error) {
+    console.error("crearMatriz failed:", error);
+  }
+
+  // Genes/studies loading must always run even if auxiliary UI init fails.
+  try {
+    cargarGenes();
+  } catch (error) {
+    console.error("cargarGenes failed:", error);
+    load.hidden = true;
+  }
   // poblarListasAllele();
   viewer.removeAllLabels();
 
@@ -613,13 +638,23 @@ function cargarGenes() {
 
       // Si existe selectedGenId en localStorage, selecciona ese gen y llama a poblarArchivosPorGen
       const selectedGenId = localStorage.getItem("selectedGenId");
-      if (selectedGenId) {
+      const hasSelectedGene = response.data.results.some(function (gene) {
+        return String(gene.id) === String(selectedGenId);
+      });
+
+      if (selectedGenId && hasSelectedGene) {
         selectGene.value = selectedGenId;
         poblarArchivosPorGen(selectedGenId);
       } else {
+        if (selectedGenId && !hasSelectedGene) {
+          localStorage.removeItem("selectedGenId");
+        }
         // Si hay genes, poblar los archivos del primero
         if (response.data.results.length > 0) {
-          poblarArchivosPorGen(response.data.results[0].id);
+          var firstGeneId = response.data.results[0].id;
+          selectGene.value = String(firstGeneId);
+          localStorage.setItem("selectedGenId", String(firstGeneId));
+          poblarArchivosPorGen(firstGeneId);
         }
       }
     })
@@ -638,6 +673,7 @@ function cargarGenes() {
 // Evento: al cambiar el gen, filtra los archivos asociados
 document.getElementById("selectGene").addEventListener("change", function () {
   const geneId = this.value;
+  localStorage.setItem("selectedGenId", String(geneId || ""));
   poblarArchivosPorGen(geneId);
 });
 
@@ -706,6 +742,7 @@ function actualizarSelectPdbPorStudyId(studyId) {
 
 // Función para poblar archivos según el gen seleccionado
 function poblarArchivosPorGen(geneId) {
+  var requestToken = ++latestStudiesRequestToken;
   load.hidden = false;
   const selectfile = document.getElementById("selectfile");
   selectfile.innerHTML = "";
@@ -717,6 +754,11 @@ function poblarArchivosPorGen(geneId) {
   axios
     .get("/business-gestion/study/?uploaded_file__gene=" + geneId)
     .then(function (response) {
+      // Ignore stale responses from older concurrent requests (common on cold start).
+      if (requestToken !== latestStudiesRequestToken) {
+        return;
+      }
+
       globalData = response.data.results;
       localStorage.setItem("globalData", JSON.stringify(globalData));
         response.data.results.forEach(function (study) {
@@ -742,6 +784,9 @@ function poblarArchivosPorGen(geneId) {
       }
     })
     .catch(function (error) {
+      if (requestToken !== latestStudiesRequestToken) {
+        return;
+      }
       load.hidden = true;
       console.error("Error loading files:", error);
       Swal.fire({
@@ -1016,6 +1061,7 @@ function seleccionarEstiloAleatorio() {
 // Dispara la búsqueda usando el valor actual del input de texto.
 function callBuscar() {
   const inputValue = document.getElementById("buscar").value;
+  currentSearchTerm = inputValue || "";
   buscar(inputValue);
 }
 
@@ -1123,19 +1169,40 @@ function assignNonGeneticGroupColors() {
 
 // Filtra y resalta nodos en el viewer según un término de búsqueda.
 function buscar(params) {
+  var searchTerm = (params || "").trim();
+
+  if (searchTerm === "") {
+    currentSearchTerm = "";
+    child();
+    return Promise.resolve({ applied: false, reason: "empty-search" });
+  }
+
   load.hidden = false;
   var searchurl =
     "/business-gestion/uploaded-files/" +
     localStorage.getItem("uploadFileId") +
     "/allele-node-by-uploaded-file/?search=" +
-    params;
+    searchTerm;
 
-  axios
+  return axios
     .get(searchurl)
     .then(function (response) {
       const elemento = response.data;
       let atomData = elemento.results;
-      const highlightColor = "#ffaa02";
+      if (!Array.isArray(atomData) || atomData.length === 0) {
+        child();
+        load.hidden = true;
+        Swal.fire({
+          icon: "info",
+          title: "No matches",
+          text: "No nodes matched the search term. The default view was restored.",
+          showConfirmButton: false,
+          timer: 1700,
+        });
+        return { applied: false, reason: "no-results" };
+      }
+
+      currentSearchTerm = searchTerm;
       datos.forEach((element) => {
         const stickRadius = element.stick_radius;
         const sphereRadius = resolveSphereRadius(element);
@@ -1167,12 +1234,15 @@ function buscar(params) {
       });
       viewer.render();
       load.hidden = true;
+      return { applied: true, matches: atomData.length };
     })
     .catch(function (error) {
+      load.hidden = true;
       Toast.fire({
         icon: "error",
         title: `${error.response.data.detail}`,
       });
+      return { applied: false, reason: "request-error" };
     });
 }
 
@@ -1359,8 +1429,11 @@ function child() {
 
   addFinalAlleleLabelsIfNeeded();
 
-  viewer.zoomTo();
-  viewer.zoom(5, 1000);
+  // Keep default framing for normal loads, but do not override imported camera state.
+  if (!isRestoringViewerState) {
+    viewer.zoomTo();
+    viewer.zoom(5, 1000);
+  }
   viewer.render();
   load.hidden = true;
 }
@@ -2234,8 +2307,31 @@ function filter_Region() {
 }
 
 // Aplica el filtro de región ocultando nodos fuera de la selección.
-function applyRegionFilter(region) {
+function applyRegionFilter(region, suppressMessage = false) {
+  if (!Array.isArray(datos) || datos.length === 0) {
+    return false;
+  }
+
+  var regionMatches = datos.some(function (element) {
+    return element.region === region;
+  });
+
+  if (!regionMatches) {
+    resetGraficView();
+    if (!suppressMessage) {
+      Swal.fire({
+        icon: "info",
+        title: "No region matches",
+        text: "The selected region has no nodes in this study.",
+        showConfirmButton: false,
+        timer: 1700,
+      });
+    }
+    return false;
+  }
+
   resetGraficView();
+  currentRegionFilter = region;
   datos.forEach((element) => {
     const isVisible = element.region === region;
 
@@ -2254,10 +2350,12 @@ function applyRegionFilter(region) {
     }
   });
   viewer.render();
+  return true;
 }
 
 // Restablece la visibilidad completa de nodos y conexiones.
 function resetGraficView() {
+  currentRegionFilter = null;
   datos.forEach((element) => {
     const sphereColor = resolveSphereColor(element);
     const stickColor = resolveStickColor(element);
@@ -2280,6 +2378,7 @@ function resetGraficView() {
 
 // Variante directa del filtro por región para reutilización interna.
 function filterByRegion(region) {
+  currentRegionFilter = region;
   datos.forEach((element) => {
     const isVisible = element.region === region;
 
