@@ -23,7 +23,6 @@ class UploadedFileToCompareVsStudiesSerializer(serializers.Serializer):
     file = serializers.FileField(required=True)
 
     def validate_file(self, value):
-        
         study_types_sheet = StudyType.objects.only("sheet_name").values_list(
             "sheet_name", flat=True
         )
@@ -32,19 +31,25 @@ class UploadedFileToCompareVsStudiesSerializer(serializers.Serializer):
             file_sheets = set(excel_file.sheet_names)
             study_types_set = set(study_types_sheet)
 
-            unmatched_sheets_on_excel = file_sheets - study_types_set - UploadedFiles.SHEETS_TO_OMMIT_IN_PROCESSING
+            unmatched_sheets_on_excel = (
+                file_sheets
+                - study_types_set
+                - UploadedFiles.SHEETS_TO_OMMIT_IN_PROCESSING
+            )
             unmatched_sheets_on_studies = study_types_set - file_sheets
 
             if unmatched_sheets_on_excel or unmatched_sheets_on_studies:
                 raise serializers.ValidationError(
                     {
                         "unmatched_sheets_on_excel": list(unmatched_sheets_on_excel),
-                        "unmatched_sheets_on_studies": list(unmatched_sheets_on_studies),
+                        "unmatched_sheets_on_studies": list(
+                            unmatched_sheets_on_studies
+                        ),
                     }
                 )
 
             return value
-        except Exception as e: 
+        except Exception as e:
             if isinstance(e, serializers.ValidationError):
                 raise
             raise serializers.ValidationError(f"Error al validar el archivo: {str(e)}")
@@ -78,15 +83,20 @@ class SimpleListUploadedFilesSerializer(serializers.ModelSerializer):
             logger.exception(f"{str(e)}")
             raise serializers.ValidationError(e) from e
 
+
 class SheetStudyAssignmentSerializer(serializers.Serializer):
     sheet_name = serializers.CharField()
-    study_type = serializers.PrimaryKeyRelatedField(queryset=StudyType.objects.all(), allow_null=True, required=False)
+    study_type = serializers.PrimaryKeyRelatedField(
+        queryset=StudyType.objects.all(), allow_null=True, required=False
+    )
+
 
 class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
     pdb_files = PdbFilesSerializer(many=True, read_only=True)
     allele_nodes = AlleleNodeSerializer(many=True, read_only=True)
-    sheet_study_assignments = serializers.CharField(write_only=True, required=False, allow_blank=True)
-
+    sheet_study_assignments = serializers.CharField(
+        write_only=True, required=False, allow_blank=True
+    )
 
     class Meta(SimpleListUploadedFilesSerializer.Meta):
         fields = SimpleListUploadedFilesSerializer.Meta.fields + [
@@ -133,7 +143,7 @@ class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
 
         return ContentFile(
             output.getvalue(),
-            name=os.path.basename("fixed"+original_file.name),
+            name=os.path.basename("fixed" + original_file.name),
         )
 
     def _build_sheet_rename_pairs(self, sheet_study_assignments):
@@ -178,14 +188,14 @@ class UploadedFilesSerializer(SimpleListUploadedFilesSerializer):
             return attrs
 
         try:
-            attrs["original_file"] = self._rename_excel_sheets(original_file, rename_pairs)
+            attrs["original_file"] = self._rename_excel_sheets(
+                original_file, rename_pairs
+            )
         except serializers.ValidationError:
             raise
         except Exception as exc:
             raise serializers.ValidationError(
-                {
-                    "original_file": f"Error al renombrar pesta\u00f1as del Excel: {exc}"
-                }
+                {"original_file": f"Error al renombrar pesta\u00f1as del Excel: {exc}"}
             )
 
         return attrs
