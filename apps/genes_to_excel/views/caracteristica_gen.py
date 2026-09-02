@@ -8,6 +8,9 @@ from apps.business_app.models.gene import Gene
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+
 
 from ..serializers.caracteristica_gen import CaracteristicaGenSerializer
 from ..models.caracteristica_gen import CaracteristicaGen
@@ -41,7 +44,7 @@ class CaracteristicaGenViewSet(
 
         return Response({"results": serializer.data})
 
-    @method_decorator(cache_page(timeout=None))  # Cache por 15 minutos
+    @method_decorator(cache_page(timeout=None))  # Cache indefinido (None)
     def list(self, request, *args, **kwargs):
         """
         Lista todos los AlleleRegionInfo con filtros aplicados

@@ -107,7 +107,6 @@ class XslxToPdb(ExcelReader):
                 frec_csa = row.get(self.excel_nomenclator_class.frec_csa)
                 frec_csa = frec_csa if isinstance(frec_csa, float) else None
 
-
                 frec_eas = row.get(self.excel_nomenclator_class.frec_eas)
                 frec_eas = frec_eas if isinstance(frec_eas, float) else None
 
