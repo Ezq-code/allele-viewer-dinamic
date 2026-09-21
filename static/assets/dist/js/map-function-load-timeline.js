@@ -205,9 +205,9 @@ var pointLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
         let iconUrl = iconUrlpathDestinationMigrationHomoHeidel; // Icono por defecto
         
         if (f.properties.mag === 21) {
-            iconUrl = iconUrlpathDestinationMigration;
+            iconUrl = iconUrlpathDestinationMigrationneandertales;
         } else if (f.properties.mag === 22) {
-            iconUrl = iconUrlpathDestinationMigrationHomoHerectus;
+            iconUrl = iconUrlpathDestinationMigrationdenisovans;
         }
         
         var marker = L.marker(latlng, {
