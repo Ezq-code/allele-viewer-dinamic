@@ -166,7 +166,7 @@ const allTimes = data.features
     
 
     // 2. Capa de destinos de las migraciones
-    var pointLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
+/*    var pointLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
         filter: f => f.geometry.type === 'Point' && f.properties.id >= 10  && f.properties.id <= 14,
         pointToLayer: (f, latlng) => {
             var marker = L.marker(latlng, {
@@ -177,9 +177,6 @@ const allTimes = data.features
                     shadowAnchor: [17, 23]
                 })
             });
-            // Bind a popup for click (if you still want it)
-            //marker.bindPopup(f.properties.title);
-            // Bind a tooltip to show the title permanently
             marker.bindTooltip(f.properties.title, {
                 permanent: true,
                 direction: 'left',
@@ -188,17 +185,6 @@ const allTimes = data.features
             });
             return marker;
         }
-        /*
-        pointToLayer: (f, latlng) => L.marker(latlng, {
-            icon:
-                L.icon({
-                    iconUrl: iconUrlpathDestinationMigrationHomoHeidel,
-                    iconSize: [45, 45],
-                    shadowSize: [45, 45],
-                    shadowAnchor: [17, 23]
-                })
-        }).bindPopup(f.properties.title)
-        */
     }), {
       updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
       duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
@@ -209,6 +195,46 @@ const allTimes = data.features
         return feature.properties.times.map(t => t * 1000);
       }
     });
+*/
+
+// 2. Capa de destinos de las migraciones
+var pointLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
+    filter: f => f.geometry.type === 'Point' && f.properties.id >= 10  && f.properties.id <= 14,
+    pointToLayer: (f, latlng) => {
+        // Seleccionar el icono según el valor de 'mag'
+        let iconUrl = iconUrlpathDestinationMigrationHomoHeidel; // Icono por defecto
+        
+        if (f.properties.mag === 21) {
+            iconUrl = iconUrlpathDestinationMigration;
+        } else if (f.properties.mag === 22) {
+            iconUrl = iconUrlpathDestinationMigrationHomoHerectus;
+        }
+        
+        var marker = L.marker(latlng, {
+            icon: L.icon({
+                iconUrl: iconUrl,
+                iconSize: [45, 45],
+                shadowSize: [45, 45],
+                shadowAnchor: [17, 23]
+            })
+        });
+        marker.bindTooltip(f.properties.title, {
+            permanent: true,
+            direction: 'left',
+            offset: [-6, -5],
+            className: 'marker-tooltip'
+        });
+        return marker;
+    }
+}), {
+  updateTimeDimensionMode: 'intersect',
+  duration: "PT16M",
+  timeInterval: "PT11S",
+  addlastPoint: false,
+  timeField: function(feature) {
+    return feature.properties.times.map(t => t * 1000);
+  }
+});
 
 
         // 2. Capa de destinos de las migraciones
