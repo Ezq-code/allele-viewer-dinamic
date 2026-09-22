@@ -88,39 +88,7 @@ let eventa = {};
 let eventb = {};
 let eventc = {};
 
- function  createGeoJsonData4(events) 
-   {
-       if (events.length > 0) {
-             
-            events.forEach(event => {
-                    eventb = { 
-                        type: 'Feature',
-                        properties: {
-                            name: event.event_name,
-                            //times: this.parseEventTimeRange(event),
-                            times: this.parseEventTimeRange(event),
-                            //times: [-452,-401,-350,-299,-248, -197,-146],
-                            eventData: event,
-                            // popupContent: this.createPopupContent(event)
-                        },
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [
-                                parseFloat(event.markers[0].longitude),
-                                parseFloat(event.markers[0].latitude)
-                            ]
-                        }
-                    }  
-                    listEventsJoin.push(eventb);     
-                })
-        } 
-            return {
-                type: 'FeatureCollection',
-                features: listEventsJoin 
-                } 
-   }
-
-   // Función modificada para sincronización
+// Función modificada para sincronización
 function addGeoJSONLayer(map, data) {
 
 var geoJsonData;
@@ -157,60 +125,16 @@ const allTimes = data.features
     }), {
         updateTimeDimensionMode: 'intersect',
         addlastPoint: false,
-        duration: "PT30M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+        duration: "PT30M",//"PT1S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
         //duration: "PT406S",//"PT76M", 
-        timeInterval: "PT1S",//"PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z", // Rango exacto//timeInterval: "PT1S",
+        timeInterval: "PT11S",//"PT1S", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z", // Rango exacto//timeInterval: "PT1S",
+        timeField: function(feature) {
+            return feature.properties.times.map(t => yearToDate(t));
+        },        
         getLineId: f => f.properties.name
     });
     
     
-
-    // 2. Capa de destinos de las migraciones
-    var pointLayer = L.timeDimension.layer.geoJson(L.geoJSON(data, {
-        filter: f => f.geometry.type === 'Point' && f.properties.id >= 10  && f.properties.id <= 14,
-        pointToLayer: (f, latlng) => {
-            var marker = L.marker(latlng, {
-                icon: L.icon({
-                    iconUrl: iconUrlpathDestinationMigrationHomoHeidel,
-                    iconSize: [45, 45],
-                    shadowSize: [45, 45],
-                    shadowAnchor: [17, 23]
-                })
-            });
-            // Bind a popup for click (if you still want it)
-            //marker.bindPopup(f.properties.title);
-            // Bind a tooltip to show the title permanently
-            marker.bindTooltip(f.properties.title, {
-                permanent: true,
-                direction: 'left',
-                offset: [-6, -5],
-                className: 'marker-tooltip'
-            });
-            return marker;
-        }
-        /*
-        pointToLayer: (f, latlng) => L.marker(latlng, {
-            icon:
-                L.icon({
-                    iconUrl: iconUrlpathDestinationMigrationHomoHeidel,
-                    iconSize: [45, 45],
-                    shadowSize: [45, 45],
-                    shadowAnchor: [17, 23]
-                })
-        }).bindPopup(f.properties.title)
-        */
-    }), {
-      updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
-      duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
-      timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
-      addlastPoint: false,                  // Evita saltos al final
-      timeField: function(feature) {
-        // Convert each time from seconds to milliseconds
-        return feature.properties.times.map(t => t * 1000);
-      }
-    });
-
-
         // 2. Capa de destinos de las migraciones
         var pointLayerAllele = L.timeDimension.layer.geoJson(L.geoJSON(data, {
             filter: f => f.geometry.type === 'Point' && f.properties.id === 66,
@@ -223,9 +147,6 @@ const allTimes = data.features
                         shadowAnchor: [10, 11]
                     })
                 });
-                // Bind a popup for click (if you still want it)
-                //marker.bindPopup(f.properties.title);
-                // Bind a tooltip to show the title permanently
                 marker.bindTooltip(f.properties.title, {
                     permanent: true,
                     direction: 'left',
@@ -234,20 +155,9 @@ const allTimes = data.features
                 });
                 return marker;
             }
-            /*
-            pointToLayer: (f, latlng) => L.marker(latlng, {
-                icon:
-                    L.icon({
-                        iconUrl: iconUrlpathDestinationMigrationHomoHeidel,
-                        iconSize: [45, 45],
-                        shadowSize: [45, 45],
-                        shadowAnchor: [17, 23]
-                    })
-            }).bindPopup(f.properties.title)
-            */
         }), {
           updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
-          duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
+          duration: "PT1S",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
           timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
           addlastPoint: false,                  // Evita saltos al final
           timeField: function(feature) {
@@ -258,221 +168,14 @@ const allTimes = data.features
 
     const validEvents = this.validateEvents(allEvents);
     
-    geoJsonData = this.createGeoJsonData4(validEvents);
-
-    // Capa de marcadores
-    var pointMarkerLayer = L.timeDimension.layer.geoJson(L.geoJSON(geoJsonData, {
-        pointToLayer:  this.createEventMarker.bind(this)
-    }), {
-      updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
-      duration: 10000, //"PT1S", // 3000,//"PT16M",  //"PT1S"                // Duración total = Fin - Inicio (76 minutos)
-      timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
-      addlastPoint: false                  // Evita saltos al final
-    });
-
-
-        // 1. Capa de área glaciar
-        var areaLayerHielo = L.timeDimension.layer.geoJson(L.geoJSON(data, {
-            filter: f => f.properties.id === 100,
-              style: function(feature) {
-                if (feature.properties.mag === "-1")
-                {
-                    return {
-                        fillColor: "#FFFFFF",
-                        fillOpacity: 0.0,
-                        color: "#FFFFFF",
-                        weight: 2,
-                        opacity: 0.0,
-                        };
-               }
-               else
-                {
-                    return {
-                        fillColor: feature.properties.mag,
-                        fillOpacity: 0.9,
-                        color: feature.properties.mag,
-                        weight: 2
-                        }
-               }
-               }
-              }), {
-                 updateTimeDimensionMode: 'replace',  // Mantiene el objeto visible durante todo el rango
-                 duration: timeLineTimeDelayIce,//"PT16M", // Duración total = Fin - Inicio (76 minutos)
-                 //timeInterval: "PT11S",//"PT16M", //"2019-11-23T12:01:05Z/2019-11-23T13:17:05Z"//timeInterval: "PT1S" // Mismo que duration para rango continuo
-                 addlastPoint: false   // Evita saltos al final
-          });
-
-        // 1. Capa de la tierra que emerge
-        var areaLayerTierra = L.timeDimension.layer.geoJson(L.geoJSON(data, {
-            filter: f => f.properties.id > 999,
-              style: function(feature) {
-                if (feature.properties.mag === "-1")
-                {
-                    return {
-                        fillColor: "#00FF00",
-                        fillOpacity: 0.0,
-                        color: "#00FF00",
-                        weight: 2,
-                        opacity: 0.0,
-                        };
-               }
-               else
-                {
-                    return {
-                        fillColor: feature.properties.mag,
-                        fillOpacity: 1,
-                        color: feature.properties.mag,
-                        //weight: 2
-                        }
-               }
-                }
-              }), {
-                 updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
-                 duration: timeLineTimeDelayLand,//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
-                 timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
-                 addlastPoint: false                  // Evita saltos al final
-          });
-
-         // Capa del crecimiento poblacional
-          var areaLayerPoblacion = L.timeDimension.layer.geoJson(L.geoJSON(data, {
-            filter: f => f.properties.id === 20,
-              style: function(feature) {
-
-                const currentTime = map.timeDimension.getCurrentTime();
-                const currentMag = getCurrentMag(currentTime, feature.properties.place);
-
-                if (feature.properties.mag === "-1")
-                {
-                    return {
-                        fillColor: GetColorByPopulation(currentMag),
-                        fillOpacity: 0.0,
-                        color: GetColorByPopulation(currentMag),
-                        weight: 2,
-                        opacity: 0.0,
-                        };
-               }
-               else
-                {
-                   return {
-                       color: GetColorByPopulation(currentMag),
-                       fillOpacity: 0.5,
-                       fillColor: GetColorByPopulation(currentMag),
-                       weight: 2,
-                       opacity: 0.5,
-                   }
-               }                
-             },
-             onEachFeature: function (feature, layer) {
-                const currentTime1 = map.timeDimension.getCurrentTime();
-                const currentMag1 = getCurrentMag(currentTime1, feature.properties.place);
-                let nf = new Intl.NumberFormat('en-US');
-                if (feature.properties.id == 20) {
-                    layer.bindPopup(L.popup({
-                        closeOnClick: false,
-                        autoClose: false
-                    }).setContent(feature.properties.place+", "+currentMag1+" people."));
-                    //}).setContent(feature.properties.place+", "+nf.format(currentMag)+" people."));
-                }
-            },
-              }), {
-                 updateTimeDimensionMode: 'intersect',  // Mantiene el objeto visible durante todo el rango
-                 duration: "PT16M",//"PT16M",                  // Duración total = Fin - Inicio (76 minutos)
-                 timeInterval: "PT11S",//"PT16M",              // Mismo que duration para rango continuo
-                 addlastPoint: false                  // Evita saltos al final
-          });
-
-
-        // 1. Configuración inicial de la capa de eventos (como en tu ejemplo que funciona)
-        var eventLayer = L.layerGroup();
-
-// 2. Llamada AJAX modificada para TimeDimension
-        $.ajax({
-            type: 'GET',
-            url: '/business-gestion/events/',
-            error: function () {
-                Swal.fire({
-                    icon: "error",
-                    title: "No se pudieron cargar los datos.",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            },
-            dataType: 'json',
-            success: function (response) {
-                var data = response.results;
-
-                // Limpiar la capa antes de añadir nuevos eventos
-                eventLayer.clearLayers();
-
-                data.forEach(function (event) {
-                    var nameLoad = event.event_name;
-                    var descriptionLoad = event.description;
-                    var referenceLoad = event.reference;
-                    var iconUrlCurrentMarkerLoad = event.event_icon || event.event_type_info.icon;
-                    var galleryLoad = event.event_gallery;
-
-                    // Procesar cada marcador del evento
-                    event.markers.forEach(function (marker) {
-                        var latitudeLoad = marker.latitude;
-                        var longitudeLoad = marker.longitude;
-
-                        // Crear el marcador
-                        var markerObj = L.marker([latitudeLoad, longitudeLoad], {
-                            icon: L.icon({
-                                iconUrl: iconUrlCurrentMarkerLoad,
-                                iconSize: [25, 41],
-                                shadowSize: [41, 41],
-                                shadowAnchor: [13, 20]
-                            }),
-                            riseOnHover: true
-                        });
-
-                        // Configurar el evento click para el modal
-                        markerObj.on('click', function () {
-                            document.getElementById('eventName').innerHTML = nameLoad;
-                            document.getElementById('eventDescription').innerHTML = descriptionLoad;
-                            document.getElementById('eventReference').innerHTML = referenceLoad;
-
-                            var eventImagesDiv = document.getElementById('eventImages');
-                            eventImagesDiv.innerHTML = '';
-
-                            if (galleryLoad && galleryLoad.length > 0) {
-                                galleryLoad.forEach(function (image) {
-                                    var cardHtml = `
-                                <div class="card m-2" style="width: 100px;">
-                                    <a href="${image.image}" data-lightbox="event-gallery" data-title="${image.name}">
-                                        <img src="${image.image}" class="card-img-top" alt="${image.name}" style="width: 100%; height: auto;">
-                                    </a>
-                                </div>
-                            `;
-                                    eventImagesDiv.innerHTML += cardHtml;
-                                });
-                            } else {
-                                eventImagesDiv.innerHTML = '<p>There are no images available for this event.</p>';
-                            }
-
-                            $('#eventModal').modal('show');
-                        });
-
-                        // Añadir el marcador a la capa
-                        eventLayer.addLayer(markerObj);
-                    });
-                });
-
-                // Si necesitas manejar el tiempo, puedes usar esto:
-                if (data.length > 0 && data[0].start_date) {
-                    // Configurar el control de tiempo si es necesario
-                    // timeDimension.setCurrentTime(new Date(data[0].start_date));
-                }
-            }
-        });
+    //geoJsonData = this.createGeoJsonData4(validEvents);
        
-       areaLayerTierra.addTo(map);
-       areaLayerPoblacion.addTo(map);
-       areaLayerHielo.addTo(map);
+       // areaLayerTierra.addTo(map);
+       //areaLayerPoblacion.addTo(map);
+       //areaLayerHielo.addTo(map);
        lineLayer.addTo(map);
-       pointLayer.addTo(map);
-       pointMarkerLayer.addTo(map);
+       //pointLayer.addTo(map);
+       //pointMarkerLayer.addTo(map);
        pointLayerAllele.addTo(map);
     
      // creación de las capas bases y adición al control de capas del mapa
@@ -484,11 +187,13 @@ const allTimes = data.features
     
     const overlays = {
         'Migration Trace Route': lineLayer,
+        /*
         'Migration Points': pointLayer,
         'Glacials': areaLayerHielo,
         'Population by Region': areaLayerPoblacion,
         'Land Emerge': areaLayerTierra,
         'Marker Layer': markerLayer,
+        */
         'Migration Allele': pointLayerAllele
     };
     

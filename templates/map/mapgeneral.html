@@ -239,7 +239,7 @@
                                                 <option value="-315000/-13044" selected>Homo Sapiens Migrations</option>
                                                 <option value="-15000/2025">From 15000 YBP to year 2026</option>
                                                 <option value="-2100000/-804400">Homo Erectus Migrations</option>
-                                                <option value="-700000/-100456">Heidelbergensis Migrations</option>
+                                                <option value="-700000/-100456">Heidelbergensis, Neanderthals and Denisovans</option>
                                                 <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
                                             </select>
                                         </div>
@@ -266,7 +266,7 @@
                                             <option value="-315000/-13044" selected>Homo Sapiens Migrations</option>
                                             <option value="-15000/2025">From 15000 YBP to year 2026</option>
                                             <option value="-2100000/-804400">Homo Erectus Migrations</option>
-                                            <option value="-700000/-100456">Heidelbergensis Migrations</option>
+                                            <option value="-700000/-100456">Heidelbergensis, Neanderthals and Denisovans</option>
                                             <option value="-130000/-115000">-130000 to -115000 High Temperature</option>
                                         </select>
                                     </div>
@@ -526,6 +526,8 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                     var iconUrlpathDestinationMigration = "{% static 'assets/dist/Leaflet/primitive-man4.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHeidel = "{% static 'assets/dist/Leaflet/primitive-man1.png' %}";
                                     var iconUrlpathDestinationMigrationHomoHerectus = "{% static 'assets/dist/Leaflet/primitive-man25.png' %}";
+                                    var iconUrlpathDestinationMigrationdenisovans = "{% static 'assets/dist/Leaflet/denisovan.png' %}";
+                                    var iconUrlpathDestinationMigrationneandertales = "{% static 'assets/dist/Leaflet/neandertal.png' %}";
                                     var iconUrlpathDestinationMigrationAllele = "{% static 'assets/dist/Leaflet/buble1.png' %}";
 
                                     // Función para crear la leyenda deslizante
@@ -563,6 +565,8 @@ var timeRangeSelect = document.getElementById('timeRangeMigraions').querySelecto
                                         speciesSection.innerHTML = '<h5>Humans, Glacials and Land</h5>' +
                                             '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #FF5733"></span></div><span>Homo Erectus</span></div>' +
                                             '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #3398FF"></span></div><span>Homo Heidelbergensis</span></div>' +
+                                            '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/neandertal.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #07a4d4"></span></div><span>Neanderthals</span></div>' +
+                                            '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/denisovan.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #e0b939"></span></div><span>Denisovans</span></div>' +
                                             '<div class="legend-item"><div class="species-container"><i class="icon" style="background-image: url({% static 'assets/dist/Leaflet/primitive-man1.png' %});background-repeat: no-repeat;"></i><span class="color-line horizontal" style="background: #33FF57"></span></div><span>Homo Sapiens</span></div>' +
                                             '<div class="legend-item"><i style="background: #FFFFFF; border: 1px solid #999"></i><span>Glacials</span></div>' +
                                             '<div class="legend-item"><i style="background: #676a4a; border: 1px solid #999"></i><span>Land Emerge</span></div>';
