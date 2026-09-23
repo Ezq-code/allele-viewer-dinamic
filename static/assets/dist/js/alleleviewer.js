@@ -51,6 +51,19 @@ var currentRegionFilter = null;
 var currentSearchTerm = "";
 var isRestoringViewerState = false;
 var latestStudiesRequestToken = 0;
+var timelineState = {
+  enabled: false,
+  min: null,
+  max: null,
+  current: null,
+  rangeStart: null,
+  rangeEnd: null,
+  playing: false,
+  timerId: null,
+  stepMs: 250,
+  ghostTrailEnabled: false,
+  ghostTrailOpacity: 0.22,
+};
 
 const nonGeneticGroupPalette = [
   "#e63946",
@@ -1406,6 +1419,7 @@ function child() {
     return;
   }
   datos = elemento.allele_nodes;
+  initializeTimelineState();
   assignNonGeneticGroupColors();
 
   datos.forEach((element) => {
@@ -1563,6 +1577,340 @@ function printFamily() {
   }
 
   return Array.from(familyMap.values());
+}
+
+function normalizeTimelineValue(value) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) {
+    return null;
+  }
+  return parsed;
+}
+
+function initializeTimelineState() {
+  timelineState.enabled = false;
+  timelineState.min = null;
+  timelineState.max = null;
+  timelineState.current = null;
+  timelineState.rangeStart = null;
+  timelineState.rangeEnd = null;
+  timelineState.playing = false;
+  if (timelineState.timerId) {
+    clearTimeout(timelineState.timerId);
+    timelineState.timerId = null;
+  }
+
+  if (!Array.isArray(datos) || datos.length === 0) {
+    return;
+  }
+
+  const validValues = datos
+    .map((node) => normalizeTimelineValue(node.timeline_appearence))
+    .filter((value) => value !== null);
+
+  if (validValues.length === 0) {
+    return;
+  }
+
+  timelineState.enabled = true;
+  timelineState.min = Math.min(...validValues);
+  timelineState.max = Math.max(...validValues);
+  timelineState.rangeStart = timelineState.min;
+  timelineState.rangeEnd = timelineState.max;
+  timelineState.current = timelineState.max;
+  syncTimelineControls();
+}
+
+function syncTimelineControls() {
+  if (!timelineState.enabled) {
+    return;
+  }
+
+  const slider = document.getElementById("timelineSlider");
+  if (slider) {
+    slider.min = String(timelineState.rangeStart ?? timelineState.min ?? 0);
+    slider.max = String(timelineState.rangeEnd ?? timelineState.max ?? 0);
+    slider.value = String(timelineState.current ?? timelineState.max ?? 0);
+  }
+
+  const rangeStart = document.getElementById("timelineRangeStart");
+  if (rangeStart) {
+    rangeStart.value = String(timelineState.rangeStart ?? timelineState.min ?? 0);
+    rangeStart.min = String(timelineState.min ?? 0);
+    rangeStart.max = String(timelineState.max ?? 0);
+  }
+
+  const rangeEnd = document.getElementById("timelineRangeEnd");
+  if (rangeEnd) {
+    rangeEnd.value = String(timelineState.rangeEnd ?? timelineState.max ?? 0);
+    rangeEnd.min = String(timelineState.min ?? 0);
+    rangeEnd.max = String(timelineState.max ?? 0);
+  }
+
+  const timeLabel = document.getElementById("timelineCurrentValue");
+  if (timeLabel) {
+    timeLabel.textContent = String(Math.round(Number(timelineState.current ?? timelineState.max ?? 0)));
+  }
+
+  const yearshow = document.getElementById("yearshow");
+  if (yearshow) {
+    yearshow.textContent = String(Math.round(Number(timelineState.current ?? timelineState.max ?? 0)));
+  }
+}
+
+function setTimelineCurrentValue(nextValue) {
+  if (!timelineState.enabled) {
+    return;
+  }
+
+  const safeNextValue = Number(nextValue);
+  const clamped = Math.min(
+    Math.max(safeNextValue, timelineState.rangeStart),
+    timelineState.rangeEnd
+  );
+
+  timelineState.current = clamped;
+  syncTimelineControls();
+  applyTimelineVisibility();
+}
+
+function setTimelineRange(startValue, endValue) {
+  if (!timelineState.enabled) {
+    return;
+  }
+
+  const safeStart = Number(startValue);
+  const safeEnd = Number(endValue);
+  timelineState.rangeStart = Math.min(Math.max(safeStart, timelineState.min), timelineState.max);
+  timelineState.rangeEnd = Math.min(Math.max(safeEnd, timelineState.min), timelineState.max);
+
+  if (timelineState.rangeStart > timelineState.rangeEnd) {
+    const swapped = timelineState.rangeStart;
+    timelineState.rangeStart = timelineState.rangeEnd;
+    timelineState.rangeEnd = swapped;
+  }
+
+  timelineState.current = Math.min(
+    Math.max(timelineState.current ?? timelineState.max, timelineState.rangeStart),
+    timelineState.rangeEnd
+  );
+
+  syncTimelineControls();
+  applyTimelineVisibility();
+}
+
+function resetTimelineRange() {
+  if (!timelineState.enabled) {
+    return;
+  }
+
+  timelineState.rangeStart = timelineState.min;
+  timelineState.rangeEnd = timelineState.max;
+  timelineState.current = timelineState.max;
+  timelineState.playing = false;
+  if (timelineState.timerId) {
+    clearTimeout(timelineState.timerId);
+    timelineState.timerId = null;
+  }
+  syncTimelineControls();
+  applyTimelineVisibility();
+}
+
+function nodePassesActiveVisibilityFilters(node) {
+  if (!node) {
+    return false;
+  }
+
+  if (currentRegionFilter && node.region !== currentRegionFilter) {
+    return false;
+  }
+
+  const serial = Number(node.number);
+  if (Array.isArray(currentFamilyData) && currentFamilyData.length > 0) {
+    const familyIsVisible = currentFamilyData.some((familyGroup) => {
+      const matchesNode = familyGroup.nodes.some((n) => Number(n.number) === serial);
+      return matchesNode && familyVisibility[familyGroup.family] !== false;
+    });
+
+    if (currentFamilyData.some((familyGroup) => familyGroup.nodes.some((n) => Number(n.number) === serial))) {
+      if (!familyIsVisible) {
+        return false;
+      }
+    }
+  }
+
+  if (Array.isArray(currentOrderData) && currentOrderData.length > 0) {
+    const matchingOrder = currentOrderData.find((group) =>
+      group.nodes.some((n) => Number(n.number) === serial)
+    );
+    if (matchingOrder && orderVisibility[matchingOrder.order] === false) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function applyTimelineVisibility() {
+  if (!timelineState.enabled || !Array.isArray(datos) || !viewer) {
+    return;
+  }
+
+  const currentValue = Number(timelineState.current ?? timelineState.max);
+  const startValue = Number(timelineState.rangeStart ?? timelineState.min ?? currentValue);
+  const endValue = Number(timelineState.rangeEnd ?? timelineState.max ?? currentValue);
+
+  datos.forEach((element) => {
+    const nodeTime = normalizeTimelineValue(element.timeline_appearence);
+    const isWithinRange = nodeTime === null || (nodeTime >= startValue && nodeTime <= endValue);
+    const shouldShow = nodeTime === null || nodeTime <= currentValue;
+    const passesFilters = nodePassesActiveVisibilityFilters(element);
+
+    if (!passesFilters || !isWithinRange || !shouldShow) {
+      viewer.setStyle(
+        { serial: element.number },
+        {
+          sphere: { hidden: true },
+          stick: { hidden: true },
+        }
+      );
+      return;
+    }
+
+    const isGhostTrail =
+      timelineState.ghostTrailEnabled &&
+      nodeTime !== null &&
+      nodeTime < currentValue;
+
+    const style = {
+      sphere: {
+        hidden: false,
+        color: resolveSphereColor(element) || undefined,
+        opacity: isGhostTrail ? timelineState.ghostTrailOpacity : 1,
+      },
+      stick: {
+        hidden: false,
+        color: resolveStickColor(element) || undefined,
+        opacity: isGhostTrail ? timelineState.ghostTrailOpacity : 1,
+      },
+    };
+
+    viewer.setStyle({ serial: element.number }, style);
+  });
+
+  syncTimelineControls();
+  viewer.render();
+}
+
+function toggleGhostTrailTimeline() {
+  if (!timelineState.enabled) {
+    return;
+  }
+
+  timelineState.ghostTrailEnabled = !timelineState.ghostTrailEnabled;
+  const toggleBtn = document.getElementById("timelineGhostTrailToggle");
+  if (toggleBtn) {
+    toggleBtn.textContent = timelineState.ghostTrailEnabled ? "Ghost: ON" : "Ghost: OFF";
+    toggleBtn.classList.toggle("btn-success", timelineState.ghostTrailEnabled);
+    toggleBtn.classList.toggle("btn-secondary", !timelineState.ghostTrailEnabled);
+  }
+  applyTimelineVisibility();
+}
+
+function ensureTimelineControls() {
+  if (!timelineState.enabled || document.getElementById("timelineControlPanel")) {
+    return;
+  }
+
+  const panel = document.createElement("div");
+  panel.id = "timelineControlPanel";
+  panel.className = "controlpanel";
+  panel.innerHTML = `
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <strong>Timeline</strong>
+      <span id="timelineCurrentValue">${Math.round(timelineState.current ?? timelineState.max ?? 0)}</span>
+    </div>
+    <input
+      id="timelineSlider"
+      type="range"
+      min="${timelineState.min ?? 0}"
+      max="${timelineState.max ?? 0}"
+      value="${timelineState.current ?? timelineState.max ?? 0}"
+      step="1"
+      class="form-control-range w-100"
+    />
+    <div class="mt-2 d-flex justify-content-between">
+      <button type="button" class="btn btn-sm btn-warning" onclick="toggleTimelinePlayback()">
+        <i class="fas fa-play"></i>
+      </button>
+      <button type="button" class="btn btn-sm btn-info" onclick="setTimelineCurrentValue(Number(document.getElementById('timelineSlider').value) - 1)">
+        <i class="fas fa-step-backward"></i>
+      </button>
+      <button type="button" class="btn btn-sm btn-info" onclick="setTimelineCurrentValue(Number(document.getElementById('timelineSlider').value) + 1)">
+        <i class="fas fa-step-forward"></i>
+      </button>
+    </div>
+  `;
+
+  const slider = panel.querySelector("#timelineSlider");
+  slider.addEventListener("input", function (event) {
+    setTimelineCurrentValue(event.target.value);
+  });
+
+  const host = document.getElementById("timelineModal") || document.body;
+  host.appendChild(panel);
+}
+
+function toggleTimelinePlayback() {
+  if (!timelineState.enabled) {
+    return;
+  }
+
+  const button = document.querySelector("#timelineControlPanel button.btn-warning");
+
+  if (timelineState.playing) {
+    timelineState.playing = false;
+    if (timelineState.timerId) {
+      clearTimeout(timelineState.timerId);
+      timelineState.timerId = null;
+    }
+    if (button) {
+      button.innerHTML = '<i class="fas fa-play"></i>';
+    }
+    return;
+  }
+
+  timelineState.playing = true;
+  if (button) {
+    button.innerHTML = '<i class="fas fa-pause"></i>';
+  }
+
+  const advance = () => {
+    if (!timelineState.playing) {
+      return;
+    }
+
+    const currentValue = Number(timelineState.current ?? timelineState.max);
+    const nextValue = Math.min(currentValue + 1, timelineState.rangeEnd);
+
+    if (nextValue >= timelineState.rangeEnd) {
+      timelineState.playing = false;
+      if (timelineState.timerId) {
+        clearTimeout(timelineState.timerId);
+        timelineState.timerId = null;
+      }
+      if (button) {
+        button.innerHTML = '<i class="fas fa-play"></i>';
+      }
+      setTimelineCurrentValue(timelineState.rangeEnd);
+      return;
+    }
+
+    setTimelineCurrentValue(nextValue);
+    timelineState.timerId = setTimeout(advance, timelineState.stepMs);
+  };
+
+  timelineState.timerId = setTimeout(advance, timelineState.stepMs);
 }
 
 // Asigna un color único a cada familia del arreglo currentFamilyData.
@@ -2349,6 +2697,10 @@ function applyRegionFilter(region, suppressMessage = false) {
       );
     }
   });
+  if (timelineState.enabled) {
+    applyTimelineVisibility();
+    return true;
+  }
   viewer.render();
   return true;
 }
@@ -2373,6 +2725,9 @@ function resetGraficView() {
       }
     );
   });
+  if (timelineState.enabled) {
+    applyTimelineVisibility();
+  }
   // viewer.render();
 }
 
@@ -2678,6 +3033,39 @@ function animationWindows() {
     icon: "nav-icon fas fa-vr-cardboard",
 
     body: ` <div class=" d-flex justify-content-center"><h3 id='yearshow'>years</h3></div>
+    <div class="mb-2">
+      <div class="d-flex justify-content-between small text-white mb-1">
+        <span>Start</span>
+        <span>End</span>
+      </div>
+      <div class="d-flex gap-2">
+        <input
+          id="timelineRangeStart"
+          type="number"
+          min="${timelineState.min ?? 0}"
+          max="${timelineState.max ?? 0}"
+          value="${timelineState.rangeStart ?? timelineState.min ?? 0}"
+          class="form-control form-control-sm flex-fill"
+        />
+        <input
+          id="timelineRangeEnd"
+          type="number"
+          min="${timelineState.min ?? 0}"
+          max="${timelineState.max ?? 0}"
+          value="${timelineState.rangeEnd ?? timelineState.max ?? 0}"
+          class="form-control form-control-sm flex-fill"
+        />
+      </div>
+      <input
+        id="timelineSlider"
+        type="range"
+        min="${timelineState.min ?? 0}"
+        max="${timelineState.max ?? 0}"
+        value="${timelineState.current ?? timelineState.max ?? 0}"
+        step="1"
+        class="form-control-range w-100 mt-2"
+      />
+    </div>
     <div class="btn-group d-flex justify-content-center mb-2">
                     <button
                       type="button"
@@ -2712,10 +3100,55 @@ function animationWindows() {
                       onclick="avanzar(datos)"
                     >
                       <i class="nav-icon fas fa-forward"></i>
-                    </button>                   
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      title="Reset range"
+                      onclick="resetTimelineRange()"
+                    >
+                      <i class="nav-icon fas fa-redo"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      id="timelineGhostTrailToggle"
+                      title="Toggle ghost trail"
+                      onclick="toggleGhostTrailTimeline()"
+                    >
+                      Ghost: OFF
+                    </button>
 
                   </div>`,
   });
+
+  const ghostToggle = document.getElementById("timelineGhostTrailToggle");
+  if (ghostToggle) {
+    ghostToggle.textContent = timelineState.ghostTrailEnabled ? "Ghost: ON" : "Ghost: OFF";
+    ghostToggle.classList.toggle("btn-success", timelineState.ghostTrailEnabled);
+    ghostToggle.classList.toggle("btn-secondary", !timelineState.ghostTrailEnabled);
+  }
+
+  const slider = document.getElementById("timelineSlider");
+  if (slider) {
+    slider.addEventListener("input", function (event) {
+      setTimelineCurrentValue(event.target.value);
+      if (document.getElementById("yearshow")) {
+        document.getElementById("yearshow").textContent = Math.round(Number(event.target.value));
+      }
+    });
+  }
+
+  const rangeStart = document.getElementById("timelineRangeStart");
+  const rangeEnd = document.getElementById("timelineRangeEnd");
+  if (rangeStart && rangeEnd) {
+    rangeStart.addEventListener("change", function () {
+      setTimelineRange(Number(rangeStart.value), Number(rangeEnd.value));
+    });
+    rangeEnd.addEventListener("change", function () {
+      setTimelineRange(Number(rangeStart.value), Number(rangeEnd.value));
+    });
+  }
 }
 
 // Cambia la velocidad de reproducción entre presets configurados.
