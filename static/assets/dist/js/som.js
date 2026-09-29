@@ -266,7 +266,9 @@ let momentoActual = 0;
 let datosOriginales = null;
 let intervaloReproduccion = null;
 let reproduciendo = false;
-let celdasAcumuladas = new Map(); // NUEVO: Para acumulación de celdas
+let celdasAcumuladas = new Map(); 
+const MOMENT_INTERVAL_MS = 1500; 
+//let velocidadReproduccion = 1500;
 
 // Cache de estilos por color
 const colorStyleCache = new Map();
@@ -2134,7 +2136,7 @@ function iniciarReproduccion() {
         }
         const siguiente = momentoActual + 1;
         repintarConMomento(siguiente);
-    }, 1500);
+    }, velocidadReproduccion);  //MOMENT_INTERVAL_MS
 }
 
 function detenerReproduccion() {
@@ -2224,7 +2226,14 @@ function inicializarControlesMomentos() {
                     <option value="${idx}" ${idx === momentoActual ? 'selected' : ''}>${m.id}. ${m.nombre}</option>
                 `).join('')}
             </select>
-            
+
+            <select id="select-velocidad" class="form-select form-select-sm" style="width: auto; min-width: 110px;" title="Playback speed">
+                <option value="6000">🐢 Slow (3s)</option>
+                <option value="3500" selected>▶ Normal (1.5s)</option>
+                <option value="1500">⏩ Fast (0.8s)</option>
+                <option value="800">⚡ Very fast (0.4s)</option>
+            </select>
+                        
             <span id="info-momento" style="display: none; font-size: 12px; padding: 4px 10px; background: #e9ecef; border-radius: 4px;">
             </span>
         </div>
@@ -2247,7 +2256,6 @@ function inicializarControlesMomentos() {
         irAMomento(MOMENTOS.length - 1);
     });
     
-    // ⭐ FIX: Selector de momentos - mejorado
     document.getElementById("select-momento")?.addEventListener("change", function() {
         const idx = parseInt(this.value);
         if (!isNaN(idx) && idx >= 0 && idx < MOMENTOS.length) {
@@ -2262,6 +2270,21 @@ function inicializarControlesMomentos() {
         }
     });
     
+    document.getElementById("select-velocidad")?.addEventListener("change", function() {
+        velocidadReproduccion = parseInt(this.value, 10);
+        // If currently playing, restart interval so the new speed takes effect immediately
+        if (reproduciendo) {
+            clearInterval(intervaloReproduccion);
+            intervaloReproduccion = setInterval(() => {
+                if (momentoActual >= MOMENTOS.length - 1) {
+                    detenerReproduccion();
+                    return;
+                }
+                repintarConMomento(momentoActual + 1);
+            }, velocidadReproduccion);
+        }
+    });
+
     actualizarContadorMomento();
     actualizarEstadoBotones();
 }
