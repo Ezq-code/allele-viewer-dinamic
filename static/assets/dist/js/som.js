@@ -24,7 +24,7 @@ const CELL_CONFIG = {
     MAX_HEADER_WIDTH: '33px',
     MIN_FIRST_COL_WIDTH: '50px',
     MAX_FIRST_COL_WIDTH: '80px',
-    HEADER_HEIGHT: '90px',
+    HEADER_HEIGHT: '50px', //90
     CELL_HEIGHT: '18px',
     VERTICAL_TEXT_MAX_WIDTH: '70px',
 };
@@ -955,6 +955,58 @@ function numeroALetra(numero) {
     return resultado;
 }
 
+//====HELPER FUNCTION FOR PROTEIN NAMES========================
+function eliminarDuplicidad(proteinName) {
+    if (!proteinName || typeof proteinName !== "string") {
+        return proteinName || "";
+    }
+
+    let resultado = proteinName.trim();
+
+    // ---------- 1) Quitar separadores repetidos explícitos ----------
+    // Ej: "T20I, T20I" -> "T20I T20I" ; "T20I - T20I" -> "T20I T20I"
+    resultado = resultado.replace(/\s*[,|;]\s*/g, " ");
+
+    // ---------- 2) Caso "X X" o "X-X" -> detectar si son iguales ----------
+    // Divide por espacios y compara: si todos los tokens son iguales, deja uno solo
+    const tokensEspacio = resultado.split(/\s+/).filter(Boolean);
+    if (tokensEspacio.length > 1) {
+        const primero = tokensEspacio[0];
+        const todosIguales = tokensEspacio.every((t) => t === primero);
+        if (todosIguales) {
+            return primero;
+        }
+    }
+
+    // ---------- 3) Caso "T20IT20I" (sin separador, string completo x2) ----------
+    // Si la mitad del string es igual a la otra mitad, deja la mitad
+    const len = resultado.length;
+    if (len > 1 && len % 2 === 0) {
+        const mitad = len / 2;
+        const primera = resultado.slice(0, mitad);
+        const segunda = resultado.slice(mitad);
+        if (primera === segunda) {
+            return primera;
+        }
+    }
+
+    // ---------- 4) Caso "ABCABCABC" (string completo xN, N>=2) ----------
+    // Busca el patrón más pequeño que, repetido N veces, reconstruya el string
+    for (let size = 1; size <= len / 2; size++) {
+        if (len % size !== 0) continue;
+        const patron = resultado.slice(0, size);
+        const repetido = patron.repeat(len / size);
+        if (repetido === resultado) {
+            return patron;
+        }
+    }
+
+    // ---------- 5) Fallback: no se detectó duplicidad ----------
+    return resultado;
+}
+// ============================================
+
+
 // ============================================
 // 3. RENDERIZAR TABLA ESTILO EXCEL
 // ============================================
@@ -1092,12 +1144,12 @@ function renderizarTablaExcel(data) {
             const dims = calcularDimensionesTextoRotado(proteinName, headerFontSize);
             const cellWidth = dims.width;
             const cellHeight = dims.height;
-            
+
             th.style.minWidth = cellWidth + "px";
             th.style.maxWidth = cellWidth + "px";
             th.style.width = cellWidth + "px";
             th.style.minHeight = cellHeight + "px";
-            th.style.height = cellHeight + "px";
+            th.style.height = 45 + "px";  //cellHeight
             th.style.backgroundColor = "#f3f3f3";
             th.style.position = "sticky";
             th.style.top = "0";
@@ -1109,38 +1161,24 @@ function renderizarTablaExcel(data) {
             th.style.verticalAlign = "middle";
             th.style.overflow = "hidden";
             th.style.whiteSpace = "nowrap";
-            
-            const div = document.createElement("div");
-            div.textContent = proteinName || "";
-            div.className = "vertical-text";
-            div.style.display = "flex";
-            div.style.alignItems = "center";
-            div.style.justifyContent = "center";
-            div.style.width = "100%";
-            div.style.height = "100%";
-            div.style.transform = "rotate(-90deg)";
-            div.style.whiteSpace = "nowrap";
-            div.style.fontWeight = "bold";
-            div.style.fontSize = headerFontSize;
-            div.style.padding = "0px";
-            div.style.margin = "0px";
-            div.style.lineHeight = "1.1";
-            div.style.maxWidth = "none";
-            div.style.overflow = "visible";
-            div.style.textOverflow = "clip";
-            div.style.color = "#000000";
-            div.style.letterSpacing = "0px";
-            
-            const textSpan = document.createElement("span");
-            textSpan.textContent = proteinName || "";
-            textSpan.style.display = "inline-block";
-            div.appendChild(textSpan);
-            
+
+            const inner = document.createElement("div");
+            inner.textContent = eliminarDuplicidad(proteinName) //proteinName || "";   
+            inner.style.display = "inline-block";
+            inner.style.transform = "rotate(-90deg)";
+            inner.style.transformOrigin = "center center";
+            inner.style.whiteSpace = "nowrap";
+            inner.style.fontWeight = "bold";
+            inner.style.fontSize = headerFontSize;
+            inner.style.lineHeight = "1";
+            inner.style.color = "#000000";
+            inner.style.pointerEvents = "none";
+
             if (proteinName && proteinName.length > 6) {
-                div.title = proteinName;
+                inner.title = proteinName;
             }
-            
-            th.appendChild(div);
+
+            th.appendChild(inner);
             headerRow.appendChild(th);
         });
         
@@ -1565,7 +1603,9 @@ function renderizarTablaExcelConMomento(data, momento) {
     if (matriz.length > 0 && matriz[0]) {
         for (let idxCol = 1; idxCol < matriz[0].length; idxCol++) {
             const celdaProteina = matriz[0][idxCol];
-            proteinNames.push(celdaProteina.valor || "");
+            //proteinNames.push(celdaProteina.valor || "");
+            const valorOriginal = celdaProteina.valor || "";
+            proteinNames.push(eliminarDuplicidad(valorOriginal));   
         }
     }
     
@@ -1661,12 +1701,12 @@ function renderizarTablaExcelConMomento(data, momento) {
             const dims = calcularDimensionesTextoRotado(proteinName, headerFontSize);
             const cellWidth = dims.width;
             const cellHeight = dims.height;
-            
+
             th.style.minWidth = cellWidth + "px";
             th.style.maxWidth = cellWidth + "px";
             th.style.width = cellWidth + "px";
             th.style.minHeight = cellHeight + "px";
-            th.style.height = cellHeight + "px";
+            th.style.height = 45 + "px";  // cellHeight
             th.style.backgroundColor = "#f3f3f3";
             th.style.position = "sticky";
             th.style.top = "0";
@@ -1678,38 +1718,25 @@ function renderizarTablaExcelConMomento(data, momento) {
             th.style.verticalAlign = "middle";
             th.style.overflow = "hidden";
             th.style.whiteSpace = "nowrap";
-            
-            const div = document.createElement("div");
-            div.textContent = proteinName || "";
-            div.className = "vertical-text";
-            div.style.display = "flex";
-            div.style.alignItems = "center";
-            div.style.justifyContent = "center";
-            div.style.width = "100%";
-            div.style.height = "100%";
-            div.style.transform = "rotate(-90deg)";
-            div.style.whiteSpace = "nowrap";
-            div.style.fontWeight = "bold";
-            div.style.fontSize = headerFontSize;
-            div.style.padding = "0px";
-            div.style.margin = "0px";
-            div.style.lineHeight = "1.1";
-            div.style.maxWidth = "none";
-            div.style.overflow = "visible";
-            div.style.textOverflow = "clip";
-            div.style.color = "#000000";
-            div.style.letterSpacing = "0px";
-            
-            const textSpan = document.createElement("span");
-            textSpan.textContent = proteinName || "";
-            textSpan.style.display = "inline-block";
-            div.appendChild(textSpan);
-            
+
+            // Un solo nodo, un solo texto, rotado con CSS
+            const inner = document.createElement("div");
+            inner.textContent = eliminarDuplicidad(proteinName); //proteinName || "";  
+            inner.style.display = "inline-block";
+            inner.style.transform = "rotate(-90deg)";
+            inner.style.transformOrigin = "center center";
+            inner.style.whiteSpace = "nowrap";
+            inner.style.fontWeight = "bold";
+            inner.style.fontSize = headerFontSize;
+            inner.style.lineHeight = "1";
+            inner.style.color = "#000000";
+            inner.style.pointerEvents = "none";
+
             if (proteinName && proteinName.length > 6) {
-                div.title = proteinName;
+                inner.title = proteinName;
             }
-            
-            th.appendChild(div);
+
+            th.appendChild(inner);
             headerRow.appendChild(th);
         });
         
