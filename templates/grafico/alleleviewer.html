@@ -115,6 +115,27 @@
                   <i class="nav-icon fas fa-globe-africa text-success "></i>
                 </button>
 
+                <!-- Botón Comparar estudios (E3-US-007) -->
+                <button
+                  type="button"
+                  class="btn btn-tool"
+                  title="Compare studies"
+                  id="btnCompare"
+                  onclick="abrirModalComparacion()"
+                >
+                  <i class="fas fa-columns text-warning"></i>
+                </button>
+                <!-- Botón Cerrar comparación -->
+                <button
+                  type="button"
+                  class="btn btn-tool"
+                  title="Close comparison"
+                  id="btnCloseCompare"
+                  hidden
+                  onclick="cerrarModoComparacion()"
+                >
+                  <i class="fas fa-times-circle text-danger"></i>
+                </button>
                 <button
                   type="button"
                   class="btn btn-tool"
@@ -253,14 +274,40 @@
                 </div>
               </div>
             <!-- /.card-header -->
-            <div class="card-body">
-               
-              <div
-                id="container"
-                style="width: 100%; height: 600px; position: relative"
-                data-style="stick"
-                data-ui="true"
-              ></div>
+
+            <!-- Controles de comparacion A/B (US-007/US-008) -->
+            <div id="comparison-controls" hidden style="padding: 6px 15px; background:#1c1c1c; border-top: 1px solid #333; margin-top: 1px;">
+              <div class="d-flex align-items-center flex-wrap" style="gap:8px">
+                <button class="btn btn-info btn-sm" id="btnToggleSync" title="Sync ON - click to disable" onclick="toggleSync()">
+                  <i class="fas fa-link"></i> Sync
+                </button>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Diff filter">
+                  <button type="button" class="btn btn-outline-light active" id="diffFilter-all" onclick="setDiffFilter('all')">All</button>
+                  <button type="button" class="btn btn-outline-light" id="diffFilter-common" onclick="setDiffFilter('common')">Common</button>
+                  <button type="button" class="btn btn-outline-light" id="diffFilter-onlyA" onclick="setDiffFilter('onlyA')">Only A</button>
+                  <button type="button" class="btn btn-outline-light" id="diffFilter-onlyB" onclick="setDiffFilter('onlyB')">Only B</button>
+                </div>
+                <div id="diff-legend" class="ml-2" style="font-size:12px;"></div>
+              </div>
+            </div>
+
+            <div class="card-body" style="padding:0">
+              <div id="viewer-wrapper" style="display:block; width:100%; position:relative; overflow:hidden">
+                <!-- Etiquetas de los viewers -->
+                <div id="viewer-label-a" hidden style="position:absolute;top:6px;left:6px;z-index:10;background:rgba(0,0,0,0.55);color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;">A: Current study</div>
+                <div id="viewer-label-b" hidden style="position:absolute;top:6px;left:calc(50% + 6px);z-index:10;background:rgba(0,0,0,0.55);color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;">B: Study B</div>
+
+                <div
+                  id="container"
+                  style="width: 100%; height: 600px; position: relative; display:inline-block; vertical-align:top"
+                  data-style="stick"
+                  data-ui="true"
+                ></div>
+                <div
+                  id="container2"
+                  style="width: 0; height: 600px; position: relative; display:none; vertical-align:top"
+                ></div>
+              </div>
             </div>
             <!-- /.card-body -->
           </div>
@@ -508,6 +555,44 @@
     <!-- /.modal-content this is a test -->
   </div>
   <!-- /.modal-dialog -->
+</div>
+
+<!-- Modal Comparacion A/B (US-007) -->
+<div class="modal fade" id="modal-compare" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h4 class="modal-title"><i class="fas fa-columns mr-2"></i>Compare Studies A/B</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6 border-right">
+            <h6><i class="fas fa-circle text-primary mr-1"></i>Study A</h6>
+            <!-- Cuando hay un estudio cargado se muestra el label; si no, el select -->
+            <input type="text" class="form-control" id="compareStudyALabel" readonly style="background:#2a2a2a;color:#ccc;display:none;">
+            <select class="form-control" id="selectStudyA"></select>
+          </div>
+          <div class="col-md-6">
+            <h6><i class="fas fa-circle text-warning mr-1"></i>Study B</h6>
+            <select class="form-control" id="selectStudyB"></select>
+          </div>
+        </div>
+        <div class="mt-3 text-muted small">
+          <i class="fas fa-info-circle mr-1"></i>
+          Both viewers will synchronize rotation, zoom and pan. You can disable sync after loading.
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-warning" onclick="activarModoComparacion()">
+          <i class="fas fa-columns mr-1"></i>Compare
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- map modal -->
