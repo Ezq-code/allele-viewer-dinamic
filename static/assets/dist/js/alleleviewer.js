@@ -3375,3 +3375,516 @@ function removeHeatmap() {
   var cb = document.getElementById("show_heatmap");
   if (cb) cb.checked = false;
 }
+
+// ============================================================
+// EPICA E3: Comparacion entre estudios (A/B) — US-007 + US-008
+// ============================================================
+
+// Estado de la comparacion
+var comparisonMode = false;
+var datosB = null;
+var selectedStudyIdB = null;
+var syncEnabled = true;
+var nonGeneticGroupColorBySerialB = {};
+var syncAnimationFrameId = null;
+var lastSyncView = null;
+var syncLockA = false;
+var syncLockB = false;
+var currentDiffFilter = "all"; // "all" | "common" | "onlyA" | "onlyB"
+var diffSetsCache = null; // { common: Set, onlyA: Set, onlyB: Set } por allele serial
+
+// Abre la modal de seleccion de Estudio B
+function abrirModalComparacion() {
+  if (!Array.isArray(globalData) || globalData.length === 0) {
+    Swal.fire({
+      icon: "warning",
+      title: "No studies available",
+      text: "Please select a gene first so studies are loaded.",
+      showConfirmButton: false,
+      timer: 2500,
+    });
+    return;
+  }
+
+  const currentStudyId = localStorage.getItem("selectedStudyId");
+  const hasCurrentStudy = currentStudyId && globalData.some(function(s) { return String(s.id) === String(currentStudyId); });
+
+  const selectB = document.getElementById("selectStudyB");
+  const selectA = document.getElementById("selectStudyA");
+  const labelA = document.getElementById("compareStudyALabel");
+  if (!selectB) return;
+  selectB.innerHTML = "";
+
+  if (hasCurrentStudy) {
+    // Modo normal: Estudio A fijo, solo elegir B
+    const currentStudy = globalData[findPosition(globalData, currentStudyId)];
+    if (labelA) {
+      labelA.value = currentStudy.study_type_display + " (ID " + currentStudy.id + ")";
+      labelA.style.display = "";
+    }
+    if (selectA) selectA.style.display = "none";
+
+    let addedCount = 0;
+    globalData.forEach(function(study) {
+      if (String(study.id) !== String(currentStudyId)) {
+        selectB.add(new Option(study.study_type_display + " (ID " + study.id + ")", study.id));
+        addedCount++;
+      }
+    });
+
+    if (addedCount === 0) {
+      Swal.fire({ icon: "info", title: "No other studies", text: "There are no other studies available for comparison.", showConfirmButton: false, timer: 2500 });
+      return;
+    }
+  } else {
+    // Sin estudio cargado: permitir elegir tanto A como B
+    if (labelA) labelA.style.display = "none";
+    if (selectA) {
+      selectA.style.display = "";
+      selectA.innerHTML = "";
+      globalData.forEach(function(study) {
+        selectA.add(new Option(study.study_type_display + " (ID " + study.id + ")", study.id));
+      });
+    }
+    globalData.forEach(function(study) {
+      selectB.add(new Option(study.study_type_display + " (ID " + study.id + ")", study.id));
+    });
+    // Pre-seleccionar B en el segundo estudio si hay mas de uno
+    if (selectB.options.length > 1) selectB.selectedIndex = 1;
+  }
+
+  if (globalData.length < 2) {
+    Swal.fire({ icon: "info", title: "Not enough studies", text: "At least two studies are required to compare.", showConfirmButton: false, timer: 2500 });
+    return;
+  }
+
+  $("#modal-compare").modal("show");
+}
+
+// Carga y aplica los estilos al viewer2 con los nodos del estudio B
+function applyStylesToViewer2() {
+  if (!viewer2 || !Array.isArray(datosB)) return;
+
+  // Calcular grupos de conexion para estudios no geneticos
+  _assignGroupColorsForViewer(viewer2, datosB, nonGeneticGroupColorBySerialB);
+
+  const studyB = globalData[findPosition(globalData, selectedStudyIdB)];
+  const isGenB = studyB && studyB.study_type_display === GENETIC_ALLELE_STUDY_TYPE;
+
+  datosB.forEach(function(node) {
+    var sphereColor, stickColor;
+    if (isGenB) {
+      sphereColor = null;
+      stickColor = "spectrum";
+    } else {
+      sphereColor = nonGeneticGroupColorBySerialB[node.number] || "#3a86ff";
+      stickColor = nonGeneticGroupColorBySerialB[node.number] || "#3a86ff";
+    }
+    viewer2.setStyle(
+      { serial: node.number },
+      {
+        sphere: {
+          radius: (node.sphere_radius || nonGeneticBaseSphereRadius),
+          color: sphereColor || undefined,
+        },
+        stick: {
+          color: stickColor,
+          radius: node.stick_radius,
+          showNonBonded: false,
+        },
+      }
+    );
+  });
+}
+
+// Calcula grupos conectados para un viewer/datos arbitrarios (version parametrizada de assignNonGeneticGroupColors)
+function _assignGroupColorsForViewer(viewerInstance, nodesData, colorMap) {
+  // limpiar
+  Object.keys(colorMap).forEach(function(k) { delete colorMap[k]; });
+  if (!Array.isArray(nodesData) || nodesData.length === 0) return;
+
+  var model = viewerInstance.getModel();
+  if (!model || !Array.isArray(model.atoms)) return;
+
+  var nodesSerialSet = new Set(nodesData.map(function(n) { return Number(n.number); }));
+  var atomsBySerial = new Map();
+  model.atoms.forEach(function(atom) {
+    if (atom && nodesSerialSet.has(Number(atom.serial))) {
+      atomsBySerial.set(Number(atom.serial), atom);
+    }
+  });
+
+  var visited = new Set();
+  var groupIndex = 0;
+
+  nodesSerialSet.forEach(function(serial) {
+    if (visited.has(serial)) return;
+    var groupColor = nonGeneticGroupPalette[groupIndex % nonGeneticGroupPalette.length];
+    groupIndex++;
+    var queue = [serial];
+    visited.add(serial);
+    while (queue.length > 0) {
+      var cur = queue.shift();
+      colorMap[cur] = groupColor;
+      var atom = atomsBySerial.get(cur);
+      if (!atom || !Array.isArray(atom.bonds)) continue;
+      atom.bonds.forEach(function(bondedIdx) {
+        var bonded = model.atoms[bondedIdx];
+        if (bonded && !visited.has(Number(bonded.serial)) && nodesSerialSet.has(Number(bonded.serial))) {
+          visited.add(Number(bonded.serial));
+          queue.push(Number(bonded.serial));
+        }
+      });
+    }
+  });
+}
+
+// Activa el modo de comparacion split-view
+function activarModoComparacion() {
+  const studyBId = document.getElementById("selectStudyB") && document.getElementById("selectStudyB").value;
+  if (!studyBId) return;
+
+  const studyB = globalData[findPosition(globalData, studyBId)];
+  if (!studyB) {
+    Swal.fire({ icon: "error", title: "Study not found", showConfirmButton: true });
+    return;
+  }
+  const pdbB = obtenerPdbPorDefectoDelEstudio(studyB);
+  if (!pdbB || !pdbB.pdb_content) {
+    Swal.fire({ icon: "warning", title: "No PDB files available for Study B.", showConfirmButton: false, timer: 2500 });
+    return;
+  }
+
+  // Si no hay estudio A cargado, cargarlo primero desde selectStudyA
+  const currentStudyId = localStorage.getItem("selectedStudyId");
+  const hasCurrentStudy = currentStudyId && globalData.some(function(s) { return String(s.id) === String(currentStudyId); });
+  if (!hasCurrentStudy) {
+    const selectA = document.getElementById("selectStudyA");
+    const studyAId = selectA && selectA.value;
+    if (!studyAId) {
+      Swal.fire({ icon: "warning", title: "Select Study A", showConfirmButton: false, timer: 2000 });
+      return;
+    }
+    if (String(studyAId) === String(studyBId)) {
+      Swal.fire({ icon: "warning", title: "Select different studies", text: "Study A and Study B must be different.", showConfirmButton: false, timer: 2500 });
+      return;
+    }
+    const studyA = globalData[findPosition(globalData, studyAId)];
+    if (!studyA) {
+      Swal.fire({ icon: "error", title: "Study A not found", showConfirmButton: true });
+      return;
+    }
+    const pdbA = obtenerPdbPorDefectoDelEstudio(studyA);
+    if (!pdbA || !pdbA.pdb_content) {
+      Swal.fire({ icon: "warning", title: "No PDB files available for Study A.", showConfirmButton: false, timer: 2500 });
+      return;
+    }
+    // Cargar en viewer principal (replica de selectUrl)
+    actualizarSelectPdbPorStudyId(studyAId);
+    localStorage.setItem("selectedStudyId", String(studyAId));
+    localStorage.setItem("pdb", pdbA.pdb_content);
+    graficar_string(pdbA.pdb_content);
+  }
+
+  selectedStudyIdB = studyBId;
+  datosB = studyB.allele_nodes;
+  comparisonMode = true;
+  diffSetsCache = null;
+  currentDiffFilter = "all";
+
+  // Ajustar layout: primero hacer visible container2 para que el browser asigne dimensiones
+  // reales antes de crear el viewer (3Dmol necesita un elemento con width/height > 0)
+  var wrapper = document.getElementById("viewer-wrapper");
+  if (wrapper) {
+    wrapper.style.display = "flex";
+    wrapper.style.flexDirection = "row";
+  }
+  var cont1 = document.getElementById("container");
+  var cont2 = document.getElementById("container2");
+  if (cont1) { cont1.style.width = "50%"; cont1.style.flex = "1"; }
+  if (cont2) { cont2.style.display = "inline-block"; cont2.style.width = "50%"; cont2.style.flex = "1"; }
+
+  // Mostrar controles y etiquetas antes de crear el viewer para que el layout fluya
+  var compControls = document.getElementById("comparison-controls");
+  if (compControls) compControls.hidden = false;
+
+  var btnCompare = document.getElementById("btnCompare");
+  if (btnCompare) btnCompare.hidden = true;
+
+  var btnClose = document.getElementById("btnCloseCompare");
+  if (btnClose) btnClose.hidden = false;
+
+  var labelA = document.getElementById("viewer-label-a");
+  var labelB = document.getElementById("viewer-label-b");
+  if (labelA) labelA.hidden = false;
+  if (labelB) {
+    labelB.textContent = "B: " + studyB.study_type_display + " (ID " + studyB.id + ")";
+    labelB.hidden = false;
+  }
+
+  // Dar un tick al browser para que calcule el tamaño real de container2 antes de
+  // que 3Dmol lo mida internamente al crear el viewer
+  setTimeout(function() {
+    // Crear/reiniciar viewer2
+    if (viewer2) {
+      try { viewer2.clear(); } catch(e) {}
+    }
+    var el2 = document.getElementById("container2");
+    viewer2 = $3Dmol.createViewer(el2, {
+      defaultcolors: $3Dmol.rasmolElementColors,
+      controls: "trackball orbit fps scroll dnd",
+    });
+
+    // Replicar exactamente la misma secuencia que graficar_string + child():
+    // 1. addModel  2. setClickable  3. setCameraParameters  4. setStyle  5. zoomTo  6. zoom  7. render
+    viewer2.addModel(pdbB.pdb_content, "pdb", { assignBonds: false });
+    viewer2.setClickable({}, true, function(atom) { /* sin popup en viewer2 por ahora */ });
+    viewer2.setCameraParameters({ fov: 2, z: 300 });
+    applyStylesToViewer2();
+    viewer2.zoomTo();
+    viewer2.zoom(5, 1000);
+    viewer2.render();
+
+    // Iniciar sincronizacion tras la animacion inicial de zoom (1000 ms)
+    syncEnabled = true;
+    _actualizarBotonSync();
+    setTimeout(function() {
+      iniciarSincronizacion();
+      // Aplicar diff colores una vez que ambos viewers están listos
+      aplicarColorDiff();
+    }, 1200);
+  }, 50);
+
+  $("#modal-compare").modal("hide");
+}
+
+// Cierra el modo de comparacion y restaura el layout original
+function cerrarModoComparacion() {
+  comparisonMode = false;
+  datosB = null;
+  selectedStudyIdB = null;
+  diffSetsCache = null;
+  currentDiffFilter = "all";
+
+  detenerSincronizacion();
+
+  if (viewer2) {
+    try { viewer2.clear(); } catch(e) {}
+    viewer2 = null;
+  }
+
+  var wrapper = document.getElementById("viewer-wrapper");
+  if (wrapper) wrapper.style.display = "";
+  var cont1 = document.getElementById("container");
+  var cont2 = document.getElementById("container2");
+  if (cont1) { cont1.style.width = "100%"; cont1.style.flex = ""; }
+  if (cont2) { cont2.style.display = "none"; cont2.style.width = ""; cont2.style.flex = ""; }
+
+  var compControls = document.getElementById("comparison-controls");
+  if (compControls) compControls.hidden = true;
+
+  var btnCompare = document.getElementById("btnCompare");
+  if (btnCompare) btnCompare.hidden = false;
+
+  var btnClose = document.getElementById("btnCloseCompare");
+  if (btnClose) btnClose.hidden = true;
+
+  var labelA = document.getElementById("viewer-label-a");
+  var labelB = document.getElementById("viewer-label-b");
+  if (labelA) labelA.hidden = true;
+  if (labelB) labelB.hidden = true;
+
+  // Restaurar colores originales del viewer A
+  if (viewer && Array.isArray(datos)) {
+    child();
+  }
+}
+
+// Inicia la sincronizacion de camara entre viewer y viewer2
+function iniciarSincronizacion() {
+  detenerSincronizacion();
+  var lastA = null;
+  var lastB = null;
+
+  function syncLoop() {
+    if (!comparisonMode || !viewer2) return;
+
+    if (syncEnabled) {
+      try {
+        var viewA = viewer.getView();
+        var viewB = viewer2.getView();
+
+        var aChanged = !lastA || JSON.stringify(viewA) !== JSON.stringify(lastA);
+        var bChanged = !lastB || JSON.stringify(viewB) !== JSON.stringify(lastB);
+
+        if (aChanged && !syncLockB) {
+          syncLockA = true;
+          viewer2.setView(viewA);
+          viewer2.render();
+          syncLockA = false;
+          lastA = viewA;
+          lastB = viewA;
+        } else if (bChanged && !syncLockA) {
+          syncLockB = true;
+          viewer.setView(viewB);
+          viewer.render();
+          syncLockB = false;
+          lastB = viewB;
+          lastA = viewB;
+        }
+      } catch(e) {}
+    }
+
+    syncAnimationFrameId = requestAnimationFrame(syncLoop);
+  }
+  syncAnimationFrameId = requestAnimationFrame(syncLoop);
+}
+
+// Detiene la sincronizacion de camara
+function detenerSincronizacion() {
+  if (syncAnimationFrameId) {
+    cancelAnimationFrame(syncAnimationFrameId);
+    syncAnimationFrameId = null;
+  }
+}
+
+// Alterna la sincronizacion de camara
+function toggleSync() {
+  syncEnabled = !syncEnabled;
+  _actualizarBotonSync();
+}
+
+function _actualizarBotonSync() {
+  var btn = document.getElementById("btnToggleSync");
+  if (!btn) return;
+  if (syncEnabled) {
+    btn.classList.remove("btn-secondary");
+    btn.classList.add("btn-info");
+    btn.title = "Sync ON - click to disable";
+  } else {
+    btn.classList.remove("btn-info");
+    btn.classList.add("btn-secondary");
+    btn.title = "Sync OFF - click to enable";
+  }
+}
+
+// ============================================================
+// US-008: Resaltado de diferencias A/B
+// ============================================================
+var DIFF_COLOR_COMMON = "#aaaaaa";
+var DIFF_COLOR_ONLY_A = "#4A90D9"; // azul
+var DIFF_COLOR_ONLY_B = "#E07B39"; // naranja
+
+// Calcula los sets de diferencias entre datos A y B (por campo allele)
+function _calcularDiffSets() {
+  if (diffSetsCache) return diffSetsCache;
+  if (!Array.isArray(datos) || !Array.isArray(datosB)) return null;
+
+  var allelesA = new Set(datos.map(function(n) { return n.allele; }));
+  var allelesB = new Set(datosB.map(function(n) { return n.allele; }));
+  var common = new Set();
+  var onlyA = new Set();
+  var onlyB = new Set();
+
+  allelesA.forEach(function(a) { if (allelesB.has(a)) common.add(a); else onlyA.add(a); });
+  allelesB.forEach(function(b) { if (!allelesA.has(b)) onlyB.add(b); });
+
+  diffSetsCache = { common: common, onlyA: onlyA, onlyB: onlyB };
+  return diffSetsCache;
+}
+
+// Aplica los colores de diferencia a ambos viewers segun el filtro activo
+function aplicarColorDiff() {
+  if (!comparisonMode || !Array.isArray(datos) || !Array.isArray(datosB)) return;
+  var sets = _calcularDiffSets();
+  if (!sets) return;
+
+  var filter = currentDiffFilter;
+
+  // Viewer A
+  datos.forEach(function(node) {
+    var isCommon = sets.common.has(node.allele);
+    var isOnlyA = sets.onlyA.has(node.allele);
+
+    var hidden = false;
+    if (filter === "common" && !isCommon) hidden = true;
+    if (filter === "onlyA" && !isOnlyA) hidden = true;
+    if (filter === "onlyB") hidden = true; // todos de A ocultos en filtro "soloB"
+
+    var color = isCommon ? DIFF_COLOR_COMMON : DIFF_COLOR_ONLY_A;
+    viewer.setStyle(
+      { serial: node.number },
+      {
+        sphere: { radius: node.sphere_radius || nonGeneticBaseSphereRadius, color: color, hidden: hidden },
+        stick: { color: color, radius: node.stick_radius, showNonBonded: false, hidden: hidden },
+      }
+    );
+  });
+  viewer.render();
+
+  // Viewer B
+  datosB.forEach(function(node) {
+    var isCommon = sets.common.has(node.allele);
+    var isOnlyB = sets.onlyB.has(node.allele);
+
+    var hidden = false;
+    if (filter === "common" && !isCommon) hidden = true;
+    if (filter === "onlyB" && !isOnlyB) hidden = true;
+    if (filter === "onlyA") hidden = true; // todos de B ocultos en filtro "soloA"
+
+    var color = isCommon ? DIFF_COLOR_COMMON : DIFF_COLOR_ONLY_B;
+    viewer2.setStyle(
+      { serial: node.number },
+      {
+        sphere: { radius: node.sphere_radius || nonGeneticBaseSphereRadius, color: color, hidden: hidden },
+        stick: { color: color, radius: node.stick_radius, showNonBonded: false, hidden: hidden },
+      }
+    );
+  });
+  viewer2.render();
+
+  _actualizarLeyendaDiff();
+  _actualizarBotonesFiltro();
+}
+
+// Establece el filtro rapido de diferencias y redibuja
+function setDiffFilter(filter) {
+  currentDiffFilter = filter;
+  aplicarColorDiff();
+}
+
+// Actualiza la leyenda de diff
+function _actualizarLeyendaDiff() {
+  var sets = _calcularDiffSets();
+  if (!sets) return;
+  var el = document.getElementById("diff-legend");
+  if (!el) return;
+  el.innerHTML =
+    '<span class="badge mr-1" style="background:' + DIFF_COLOR_COMMON + ';color:#222">&#9679; Common (' + sets.common.size + ')</span>' +
+    '<span class="badge mr-1" style="background:' + DIFF_COLOR_ONLY_A + ';color:#fff">&#9679; Only A (' + sets.onlyA.size + ')</span>' +
+    '<span class="badge mr-1" style="background:' + DIFF_COLOR_ONLY_B + ';color:#fff">&#9679; Only B (' + sets.onlyB.size + ')</span>';
+}
+
+// Actualiza estado visual de los botones de filtro
+function _actualizarBotonesFiltro() {
+  ["all", "common", "onlyA", "onlyB"].forEach(function(f) {
+    var btn = document.getElementById("diffFilter-" + f);
+    if (!btn) return;
+    if (currentDiffFilter === f) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+}
+
+// Stub exportable para integracion futura con US-001 (export de estado de escena)
+function getComparisonState() {
+  if (!comparisonMode) return null;
+  return {
+    active: true,
+    studyIdB: selectedStudyIdB,
+    syncEnabled: syncEnabled,
+    diffFilter: currentDiffFilter,
+  };
+}
