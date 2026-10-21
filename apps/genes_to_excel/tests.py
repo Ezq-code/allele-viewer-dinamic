@@ -173,12 +173,15 @@ def test_xslx_reader_loads_dataframe_and_validates_required_columns():
     mocked_excel = MagicMock()
     mocked_excel.sheet_names = ["Sheet1"]
 
-    with patch(
-        "apps.genes_to_excel.utils.excel_structure_validator.pd.ExcelFile",
-        return_value=mocked_excel,
-    ), patch(
-        "apps.genes_to_excel.utils.excel_structure_validator.pd.read_excel",
-        return_value=frame,
+    with (
+        patch(
+            "apps.genes_to_excel.utils.excel_structure_validator.pd.ExcelFile",
+            return_value=mocked_excel,
+        ),
+        patch(
+            "apps.genes_to_excel.utils.excel_structure_validator.pd.read_excel",
+            return_value=frame,
+        ),
     ):
         reader = XslxReader("dummy.xlsx")
 
@@ -190,12 +193,15 @@ def test_xslx_reader_raises_when_required_columns_are_missing():
     mocked_excel = MagicMock()
     mocked_excel.sheet_names = ["Sheet1"]
 
-    with patch(
-        "apps.genes_to_excel.utils.excel_structure_validator.pd.ExcelFile",
-        return_value=mocked_excel,
-    ), patch(
-        "apps.genes_to_excel.utils.excel_structure_validator.pd.read_excel",
-        return_value=frame,
+    with (
+        patch(
+            "apps.genes_to_excel.utils.excel_structure_validator.pd.ExcelFile",
+            return_value=mocked_excel,
+        ),
+        patch(
+            "apps.genes_to_excel.utils.excel_structure_validator.pd.read_excel",
+            return_value=frame,
+        ),
     ):
         with pytest.raises(ValueError, match="Invalid file structure"):
             XslxReader("dummy.xlsx")
@@ -256,9 +262,10 @@ def test_task_sends_failed_event_with_first_error_when_aborted():
         "total_rows": 5504,
     }
 
-    with patch("apps.genes_to_excel.tasks.XslxReader") as reader_cls, patch(
-        "apps.genes_to_excel.tasks.send_pusher_trigger_task"
-    ) as mocked_pusher:
+    with (
+        patch("apps.genes_to_excel.tasks.XslxReader") as reader_cls,
+        patch("apps.genes_to_excel.tasks.send_pusher_trigger_task") as mocked_pusher,
+    ):
         reader_instance = reader_cls.return_value
         reader_instance.proccess_file.return_value = fake_results
 

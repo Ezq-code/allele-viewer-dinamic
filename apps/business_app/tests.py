@@ -592,19 +592,26 @@ def test_fill_predecessors_and_sucessors_updates_allele_nodes_by_study_classific
     mocked_queryset = MagicMock()
     mocked_queryset.all.return_value = [node]
 
-    with patch(
-        "apps.business_app.tasks.Study.objects.get",
-        return_value=SimpleNamespace(
-            study_type=SimpleNamespace(classification=StudyType.CLASSIFICATION.ALLELE)
+    with (
+        patch(
+            "apps.business_app.tasks.Study.objects.get",
+            return_value=SimpleNamespace(
+                study_type=SimpleNamespace(
+                    classification=StudyType.CLASSIFICATION.ALLELE
+                )
+            ),
         ),
-    ), patch(
-        "apps.business_app.models.allele_node.AlleleNode.objects.filter",
-        return_value=mocked_queryset,
-    ), patch(
-        "apps.business_app.models.allele_node.AlleleNode.objects.bulk_update"
-    ) as mocked_bulk_update, patch(
-        "apps.business_app.tasks._get_graph_info",
-        side_effect=[{1, 10}, {10, 11}],
+        patch(
+            "apps.business_app.models.allele_node.AlleleNode.objects.filter",
+            return_value=mocked_queryset,
+        ),
+        patch(
+            "apps.business_app.models.allele_node.AlleleNode.objects.bulk_update"
+        ) as mocked_bulk_update,
+        patch(
+            "apps.business_app.tasks._get_graph_info",
+            side_effect=[{1, 10}, {10, 11}],
+        ),
     ):
         from apps.business_app.tasks import (
             fill_predecessors_and_sucessors_for_all_nodes,
@@ -622,19 +629,26 @@ def test_fill_predecessors_and_sucessors_updates_protein_nodes_by_study_classifi
     mocked_queryset = MagicMock()
     mocked_queryset.all.return_value = [node]
 
-    with patch(
-        "apps.business_app.tasks.Study.objects.get",
-        return_value=SimpleNamespace(
-            study_type=SimpleNamespace(classification=StudyType.CLASSIFICATION.PROTEIN)
+    with (
+        patch(
+            "apps.business_app.tasks.Study.objects.get",
+            return_value=SimpleNamespace(
+                study_type=SimpleNamespace(
+                    classification=StudyType.CLASSIFICATION.PROTEIN
+                )
+            ),
         ),
-    ), patch(
-        "apps.business_app.models.protein_node.ProteinNode.objects.filter",
-        return_value=mocked_queryset,
-    ), patch(
-        "apps.business_app.models.protein_node.ProteinNode.objects.bulk_update"
-    ) as mocked_bulk_update, patch(
-        "apps.business_app.tasks._get_graph_info",
-        side_effect=[{2, 20}, {20, 21}],
+        patch(
+            "apps.business_app.models.protein_node.ProteinNode.objects.filter",
+            return_value=mocked_queryset,
+        ),
+        patch(
+            "apps.business_app.models.protein_node.ProteinNode.objects.bulk_update"
+        ) as mocked_bulk_update,
+        patch(
+            "apps.business_app.tasks._get_graph_info",
+            side_effect=[{2, 20}, {20, 21}],
+        ),
     ):
         from apps.business_app.tasks import (
             fill_predecessors_and_sucessors_for_all_nodes,
@@ -727,15 +741,21 @@ def test_proccess_individual_processor_class_sends_pusher_on_success(
 
     from apps.business_app.tasks import proccess_individual_processor_class
 
-    with patch(
-        "apps.business_app.tasks.SiteConfiguration.get_solo",
-        return_value=SimpleNamespace(upload_to_drive=False),
-    ), patch(
-        "apps.business_app.tasks.XslxToPdbByAlleleStudy",
-        return_value=processor_ok,
-    ) as mocked_cls, patch("apps.business_app.tasks.create_graph"), patch(
-        "apps.business_app.tasks.fill_predecessors_and_sucessors_for_all_nodes"
-    ), patch("apps.business_app.tasks.send_pusher_trigger_task.delay") as mocked_pusher:
+    with (
+        patch(
+            "apps.business_app.tasks.SiteConfiguration.get_solo",
+            return_value=SimpleNamespace(upload_to_drive=False),
+        ),
+        patch(
+            "apps.business_app.tasks.XslxToPdbByAlleleStudy",
+            return_value=processor_ok,
+        ) as mocked_cls,
+        patch("apps.business_app.tasks.create_graph"),
+        patch("apps.business_app.tasks.fill_predecessors_and_sucessors_for_all_nodes"),
+        patch(
+            "apps.business_app.tasks.send_pusher_trigger_task.delay"
+        ) as mocked_pusher,
+    ):
         mocked_cls.__name__ = "XslxToPdbByAlleleStudy"
 
         proccess_individual_processor_class.run(
@@ -781,15 +801,19 @@ def test_proccess_individual_processor_class_does_not_send_pusher_when_no_study(
 
     from apps.business_app.tasks import proccess_individual_processor_class
 
-    with patch(
-        "apps.business_app.tasks.SiteConfiguration.get_solo",
-        return_value=SimpleNamespace(upload_to_drive=False),
-    ), patch(
-        "apps.business_app.tasks.XslxToPdbByAlleleStudy",
-        return_value=processor_no_study,
-    ) as mocked_cls, patch(
-        "apps.business_app.tasks.send_pusher_trigger_task.delay"
-    ) as mocked_pusher:
+    with (
+        patch(
+            "apps.business_app.tasks.SiteConfiguration.get_solo",
+            return_value=SimpleNamespace(upload_to_drive=False),
+        ),
+        patch(
+            "apps.business_app.tasks.XslxToPdbByAlleleStudy",
+            return_value=processor_no_study,
+        ) as mocked_cls,
+        patch(
+            "apps.business_app.tasks.send_pusher_trigger_task.delay"
+        ) as mocked_pusher,
+    ):
         mocked_cls.__name__ = "XslxToPdbByAlleleStudy"
 
         # No debe lanzar AttributeError
