@@ -1,7 +1,6 @@
 import os
 from io import BytesIO
 import logging
-import json
 
 import pandas as pd
 from django.core.files.base import ContentFile
